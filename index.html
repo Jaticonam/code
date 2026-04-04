@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Landing Base - Wooly</title>
+
+  <!-- TIPOGRAFÍA -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;800&display=swap" rel="stylesheet">
+
+  <!-- ICONOS -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --color-primary: #1d8299;
+      --color-secondary: #f7b1d6;
+      --color-secondary-strong: #f286be; /* NUEVO COLOR */
+      --color-accent: #f5b025;
+
+      --color-bg: #f8fafb;
+      --color-text: #121826;
+      --color-muted: #64748b;
+
+      --color-whatsapp: #25D366;
+      --color-icon-bg: #e8f6f9;
+
+      --radius: 20px;
+      --shadow: 0 10px 24px rgba(29,130,153,0.2);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 160px;
+      margin: 20px auto;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--color-primary);
+    }
+
+    p {
+      color: var(--color-muted);
+      margin-bottom: 25px;
+    }
+
+    /* =========================================================
+       FRASE DOBLE LÍNEA (NUEVA SECCIÓN)
+    ========================================================= */
+    .phrase-section {
+      margin: 30px 0;
+      padding: 20px;
+    }
+
+    .phrase {
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .phrase span {
+      display: block;
+    }
+
+    .highlight {
+      color: var(--color-secondary-strong);
+    }
+
+    /* =========================================================
+       ICONOS
+    ========================================================= */
+    .icon-box {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-icon-bg);
+      border-radius: 16px;
+      color: var(--color-primary);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 30px 0;
+    }
+
+    .feature {
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 22px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-weight: 700;
+      margin: 6px;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      border: 2px solid var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn-whatsapp {
+      background: var(--color-whatsapp);
+      color: white;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .social {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      color: var(--color-primary);
+      transition: var(--transition);
+    }
+
+    .social:hover {
+      transform: translateY(-4px);
+      color: var(--color-secondary);
+    }
+
+    .footer-text {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.8s ease;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container fade-up">
+
+    <!-- LOGO -->
+    <img 
+      src="https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1" 
+      alt="Logo Wooly"
+      class="logo"
+    />
+
+    <!-- HERO -->
+    <h1>Insumos que se venden solos</h1>
+    <p>Para negocios que quieren vender más y mejores ganacias</p>
+
+    <!-- FRASE DOBLE LÍNEA -->
+    <div class="phrase-section">
+      <p class="phrase">
+        <span>El que compra al por mayor vende más</span>
+        <span>pero el que compra inteligente <span class="highlight">factura</span></span>
+      </p>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="features">
+      <div class="feature">
+        <div class="icon-box"><i data-lucide="box"></i></div>
+        Productos
+      </div>
+      <div class="feature">
+        <div class="icon-box"><i data-lucide="truck"></i></div>
+        Envíos
+      </div>
+      <div class="feature">
+        <div class="icon-box"><i data-lucide="badge-check"></i></div>
+        Calidad
+      </div>
+    </div>
+
+    <!-- BOTONES -->
+    <a href="#" class="btn btn-primary">
+      <i data-lucide="shopping-cart"></i> Ver catálogo
+    </a>
+
+    <a href="#" class="btn btn-secondary">
+      <i data-lucide="eye"></i> Conocer más
+    </a>
+
+    <a href="#" class="btn btn-whatsapp">
+      <i data-lucide="message-circle"></i> WhatsApp
+    </a>
+
+    <!-- FOOTER -->
+    <div class="footer">
+
+      <div class="socials">
+        <a href="#" class="social"><i data-lucide="instagram"></i></a>
+        <a href="#" class="social"><i data-lucide="facebook"></i></a>
+        <a href="#" class="social"><i data-lucide="phone"></i></a>
+      </div>
+
+      <p class="footer-text">
+        Wooly Import Store — Perú<br>
+        Envíos a todo el país
+      </p>
+
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>
