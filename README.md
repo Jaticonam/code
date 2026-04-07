@@ -1,6 +1,6 @@
 # Proyecto React
 
-Proyecto creado con Vite + React
+Aplicación desarrollada con Vite + React.
 
 ## Instalación
 npm install
@@ -10,3 +10,6 @@ npm run dev
 
 ## Build
 npm run build
+
+## Preview
+npm run preview
