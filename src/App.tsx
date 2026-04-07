@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import HomePage from "./pages/HomePage.tsx";
 import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
@@ -17,12 +18,18 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          {/* Landing principal */}
+          <Route path="/" element={<HomePage />} />
+
+          {/* Catálogo */}
+          <Route path="/catalogo" element={<Index />} />
           <Route path="/catalogo/producto.html" element={<ProductDetail />} />
           <Route path="/catalogo/categoria.html" element={<CategoryPage />} />
-          {/* Legacy routes redirect */}
+
+          {/* Legacy routes */}
           <Route path="/producto/:id" element={<ProductDetail />} />
           <Route path="/categoria/:id" element={<CategoryPage />} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

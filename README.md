@@ -1,3 +1,12 @@
-# Welcome to your Lovable project
+# Proyecto React
 
-TODO: Document your project here
+Proyecto creado con Vite + React
+
+## Instalación
+npm install
+
+## Desarrollo
+npm run dev
+
+## Build
+npm run build

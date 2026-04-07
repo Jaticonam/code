@@ -135,11 +135,23 @@ export function CartSidebar({
                         );
                       })}
                     </div>
-                    <div className="flex items-center bg-muted rounded-2xl p-1 min-w-[90px]">
+                    <div className="flex items-center bg-muted rounded-2xl p-1 min-w-[110px]">
                       <button onClick={() => onChangeQty(item.id, -1)} className="w-8 h-8 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 transition-transform">
                         <Minus className="w-4 h-4" />
                       </button>
-                      <span className="flex-grow text-center text-xs font-black text-foreground">{item.qty}</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={9999}
+                        value={item.qty}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === "") { onSetQty(item.id, 1); return; }
+                          const n = parseInt(v, 10);
+                          if (!isNaN(n) && n >= 1 && n <= 9999) onSetQty(item.id, n);
+                        }}
+                        className="w-12 text-center text-xs font-black text-foreground bg-transparent outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
                       <button onClick={() => onChangeQty(item.id, 1)} className="w-8 h-8 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 transition-transform">
                         <Plus className="w-4 h-4" />
                       </button>

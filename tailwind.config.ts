@@ -113,6 +113,10 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        shine: {
+          "0%": { left: "-75%" },
+          "100%": { left: "125%" },
+        },
         "pulse-aura": {
           "0%": { boxShadow: "0 0 0 0 hsl(var(--primary) / 0.4)" },
           "70%": { boxShadow: "0 0 0 15px hsl(var(--primary) / 0)" },

@@ -205,8 +205,20 @@ const ProductDetailPage = () => {
                     <button onClick={() => setQty((q) => Math.max(1, q - 1))} className="w-10 h-10 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 transition-transform">
                       <Minus className="w-4 h-4" />
                     </button>
-                    <span className="w-12 text-center text-lg font-black text-foreground">{qty}</span>
-                    <button onClick={() => setQty((q) => q + 1)} className="w-10 h-10 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 transition-transform">
+                    <input
+                      type="number"
+                      min={1}
+                      max={9999}
+                      value={qty}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (v === "") { setQty(1); return; }
+                        const n = parseInt(v, 10);
+                        if (!isNaN(n) && n >= 1 && n <= 9999) setQty(n);
+                      }}
+                      className="w-16 text-center text-lg font-black text-foreground bg-transparent outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    <button onClick={() => setQty((q) => Math.min(9999, q + 1))} className="w-10 h-10 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 transition-transform">
                       <Plus className="w-4 h-4" />
                     </button>
                   </div>
@@ -216,7 +228,7 @@ const ProductDetailPage = () => {
                   className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-black text-base capitalize tracking-wide shadow-lg shadow-primary/20 hover:bg-dark active:scale-[0.98] transition-all flex items-center justify-center gap-3"
                 >
                   <ShoppingCart className="w-5 h-5" />
-                  Agregar al carrito — S/ {(minPrice * qty).toFixed(2)}
+                  Agregar al carrito — S/ {(getEffectivePrice({ ...product, qty } as any) * qty).toFixed(2)}
                 </button>
               </div>
             )}
