@@ -1,9 +1,23 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, ShoppingCart, Lock, CheckCircle, AlertTriangle, Clock, XCircle, ZoomIn, Minus, Plus, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  PlusCircle,
+  Lock,
+  CheckCircle,
+  AlertTriangle,
+  Clock,
+  XCircle,
+  ZoomIn,
+  Minus,
+  Plus,
+  Share2,
+} from "lucide-react";
+
 import { useCart } from "@/hooks/use-cart";
-import { fetchProducts, getMinPrice, isProductAvailable, getEffectivePrice } from "@/lib/products";
+import { fetchProducts, isProductAvailable } from "@/lib/products";
 import { Product } from "@/types/product";
+
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { CartSidebar } from "@/components/CartSidebar";
 import { NotificationStack, showNotification } from "@/components/NotificationStack";
@@ -13,25 +27,56 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { ProductCard } from "@/components/ProductCard";
 
 const TIER_DISPLAY = [
-  { qty: 1, key: "price_1" as const, label: "1 unidad", color: "bg-primary text-primary-foreground" },
-  { qty: 3, key: "price_3" as const, label: "3+ unidades", color: "bg-tertiary text-tertiary-foreground" },
-  { qty: 12, key: "price_12" as const, label: "12+ unidades", color: "bg-secondary text-secondary-foreground" },
-  { qty: 50, key: "price_50" as const, label: "50+ unidades", color: "bg-purple-500 text-primary-foreground" },
-  { qty: 100, key: "price_100" as const, label: "100+ unidades", color: "bg-dark text-primary-foreground" },
+  { qty: 1, key: "price_1" as const, label: "1u" },
+  { qty: 3, key: "price_3" as const, label: "3u+" },
+  { qty: 12, key: "price_12" as const, label: "12u+" },
+  { qty: 50, key: "price_50" as const, label: "50u+" },
+  { qty: 100, key: "price_100" as const, label: "100u+" },
 ];
+
+const getUnitPrice = (qty: number, p: Product) => {
+  if (qty >= 100 && p.price_100) return p.price_100;
+  if (qty >= 50 && p.price_50) return p.price_50;
+  if (qty >= 12 && p.price_12) return p.price_12;
+  if (qty >= 3 && p.price_3) return p.price_3;
+  return p.price_1 || 0;
+};
+
+const getNextTier = (qty: number, p: Product) => {
+  if (qty < 3 && p.price_3) return { qty: 3, price: p.price_3 };
+  if (qty < 12 && p.price_12) return { qty: 12, price: p.price_12 };
+  if (qty < 50 && p.price_50) return { qty: 50, price: p.price_50 };
+  if (qty < 100 && p.price_100) return { qty: 100, price: p.price_100 };
+  return null;
+};
 
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id") || paramId;
   const navigate = useNavigate();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
   const [qty, setQty] = useState(1);
+  const [viewers, setViewers] = useState(Math.floor(Math.random() * 8) + 6);
 
-  const { cart, addToCart, removeFromCart, changeQty, setExactQty, totalItems, totalPrice, savings } = useCart();
+  const [lastTier, setLastTier] = useState(1);
+  const [showUnlock, setShowUnlock] = useState(false);
+  const [pricePulse, setPricePulse] = useState(false);
+
+  const {
+    cart,
+    addToCart,
+    removeFromCart,
+    changeQty,
+    setExactQty,
+    totalItems,
+    totalPrice,
+    savings,
+  } = useCart();
 
   useEffect(() => {
     fetchProducts().then((p) => {
@@ -40,46 +85,107 @@ const ProductDetailPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setViewers(Math.floor(Math.random() * 8) + 6);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, []);
+
   const product = products.find((p) => p.id === id);
   const available = product ? isProductAvailable(product) : false;
-  const minPrice = product ? getMinPrice(product) : 0;
 
-  // Productos relacionados: misma categoría, excluyendo el actual
+  const unitPrice = product ? getUnitPrice(qty, product) : 0;
+  const total = unitPrice * qty;
+  const nextTier = product ? getNextTier(qty, product) : null;
+
+  const savingsByQty =
+    product && product.price_1 > unitPrice
+      ? (product.price_1 - unitPrice) * qty
+      : 0;
+
+  useEffect(() => {
+    if (!product) return;
+
+    let currentTier = 1;
+
+    if (qty >= 100 && product.price_100) currentTier = 100;
+    else if (qty >= 50 && product.price_50) currentTier = 50;
+    else if (qty >= 12 && product.price_12) currentTier = 12;
+    else if (qty >= 3 && product.price_3) currentTier = 3;
+
+    setPricePulse(true);
+    const pulseTimer = setTimeout(() => setPricePulse(false), 220);
+
+    if (currentTier !== lastTier) {
+      setShowUnlock(true);
+      setLastTier(currentTier);
+
+      const unlockTimer = setTimeout(() => setShowUnlock(false), 1800);
+
+      return () => {
+        clearTimeout(pulseTimer);
+        clearTimeout(unlockTimer);
+      };
+    }
+
+    return () => clearTimeout(pulseTimer);
+  }, [qty, product, lastTier]);
+
   const related = product
     ? products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4)
     : [];
 
   const handleAddToCart = useCallback(() => {
     if (!product || !available) return;
+
     for (let i = 0; i < qty; i++) {
       addToCart(product);
     }
-    showNotification("¡Agregado con Éxito!", `${qty}x ${product.title}`);
+
+    showNotification("🔥 Agregado", `${qty}x ${product.title}`);
   }, [product, available, qty, addToCart]);
 
   const handleShare = useCallback(() => {
     if (!product) return;
+
     if (navigator.share) {
-      navigator.share({ title: product.title, text: product.description, url: window.location.href });
+      navigator.share({
+        title: product.title,
+        text: product.description,
+        url: window.location.href,
+      });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      showNotification("¡Enlace copiado!", "Comparte este producto");
+      showNotification("🔗 Enlace copiado", "Comparte este producto");
     }
   }, [product]);
 
-  // Stock info
-  let stockText = "próximamente";
-  let stockColorClass = "bg-muted text-muted-foreground border-border";
+  let stockText = "Próximo";
+  let stockColorClass = "text-muted-foreground";
   let StockIcon = Clock;
+
   if (product) {
     if (!product.price_1 || product.price_1 <= 0 || product.stock === null || product.stock === undefined) {
-      stockText = "próximamente"; StockIcon = Clock;
+      stockText = "Próximo";
+      stockColorClass = "text-muted-foreground";
+      StockIcon = Clock;
     } else if (product.stock === 0) {
-      stockText = "agotado"; stockColorClass = "bg-destructive/10 text-destructive border-destructive/20"; StockIcon = XCircle;
+      stockText = "Agotado";
+      stockColorClass = "text-destructive";
+      StockIcon = XCircle;
     } else if (product.stock <= 3) {
-      stockText = `¡Solo quedan ${product.stock} unidades!`; stockColorClass = "bg-tertiary/10 text-tertiary border-tertiary/20"; StockIcon = AlertTriangle;
+      stockText = "Últimos";
+      stockColorClass = "text-tertiary";
+      StockIcon = AlertTriangle;
+    } else if (product.stock <= 10) {
+      stockText = "Limitado";
+      stockColorClass = "text-secondary";
+      StockIcon = AlertTriangle;
     } else {
-      stockText = `${product.stock} unidades disponibles`; stockColorClass = "bg-success/10 text-success border-success/20"; StockIcon = CheckCircle;
+      stockText = "Disponible";
+      stockColorClass = "text-success";
+      StockIcon = CheckCircle;
     }
   }
 
@@ -98,7 +204,10 @@ const ProductDetailPage = () => {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <p className="text-muted-foreground font-black text-lg">Producto no encontrado</p>
-        <button onClick={() => navigate("/")} className="bg-primary text-primary-foreground px-6 py-3 rounded-2xl font-black text-sm">
+        <button
+          onClick={() => navigate("/")}
+          className="bg-primary text-primary-foreground px-6 py-3 rounded-2xl font-black text-sm"
+        >
           Volver al catálogo
         </button>
       </div>
@@ -109,19 +218,31 @@ const ProductDetailPage = () => {
     <div className="min-h-screen bg-background pb-40">
       <NotificationStack />
 
-      {/* Header */}
+      {/* HEADER */}
       <header className="sticky top-0 z-[100] w-full flex flex-col shadow-sm">
         <CountdownTimer />
         <div className="bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 md:py-4">
           <div className="max-w-7xl mx-auto flex items-center gap-4">
-            <button onClick={() => navigate(-1)} className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+            >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <div className="flex-grow">
-              <h1 className="text-sm md:text-base font-black text-foreground truncate">{product.title}</h1>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{product.id} · {product.category}</p>
+
+            <div className="flex-grow min-w-0">
+              <h1 className="text-sm md:text-base font-black text-foreground truncate">
+                {product.title}
+              </h1>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                {product.id}
+              </p>
             </div>
-            <button onClick={handleShare} className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors">
+
+            <button
+              onClick={handleShare}
+              className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+            >
               <Share2 className="w-5 h-5" />
             </button>
           </div>
@@ -130,110 +251,187 @@ const ProductDetailPage = () => {
 
       <main className="max-w-5xl mx-auto px-4 md:px-6 mt-6 md:mt-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          {/* ========== IMAGEN ========== */}
+          {/* IMAGEN */}
           <div className="relative">
-            <div className="aspect-square overflow-hidden rounded-3xl bg-muted border border-border shadow-lg group cursor-zoom-in"
+            <div
+              className="aspect-square overflow-hidden rounded-3xl bg-muted border border-border shadow-lg group cursor-zoom-in"
               onClick={() => setZoomImage({ src: product.img, title: product.title })}
             >
               <img
                 src={product.img}
                 alt={product.title}
-                className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${!available ? "opacity-60 grayscale-[50%]" : ""}`}
+                className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${
+                  !available ? "opacity-60 grayscale-[50%]" : ""
+                }`}
               />
-              <div className="absolute top-4 left-4 bg-red-600 text-primary-foreground text-[9px] font-black px-3 py-1.5 rounded-lg shadow-lg animate-pop-in uppercase tracking-widest">
-                CYBERMOM ✨
+
+              <div className="absolute top-4 left-4 bg-red-600 text-primary-foreground text-[9px] font-black px-3 py-1.5 rounded-lg shadow-lg uppercase tracking-widest">
+                🎯 CYBERMOM
               </div>
+
               <div className="absolute bottom-4 right-4 bg-card/80 backdrop-blur-sm p-2 rounded-xl text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
                 <ZoomIn className="w-5 h-5" />
               </div>
             </div>
           </div>
 
-          {/* ========== INFO ========== */}
+          {/* INFO */}
           <div className="flex flex-col gap-6">
-            {/* Título y descripción */}
-            <div>
-              <h2 className="text-2xl md:text-3xl font-black text-foreground leading-tight mb-3">{product.title}</h2>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{product.description}</p>
-            </div>
-
-            {/* Stock */}
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${stockColorClass} border w-fit`}>
-              <StockIcon className="w-4 h-4" />
-              <span className="text-[11px] font-black tracking-wide">{stockText}</span>
-            </div>
-
-            {/* ========== TABLA DE PRECIOS ========== */}
-            <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
-              <h3 className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-4">Precios por volumen</h3>
-              <div className="space-y-2">
-                {TIER_DISPLAY.filter((t) => {
-                  const val = product[t.key];
-                  return val !== null && val !== undefined && val > 0;
-                }).map((t) => (
-                  <div key={t.key} className="flex items-center justify-between py-2 px-3 rounded-xl hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black ${t.color}`}>{t.qty}</span>
-                      <span className="text-sm font-bold text-foreground">{t.label}</span>
-                    </div>
-                    <span className="text-lg font-black text-primary">S/ {product[t.key]!.toFixed(2)}</span>
-                  </div>
-                ))}
+            {/* título + descripción */}
+            <div className="text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap mb-3">
+                <span className="text-[11px] text-muted-foreground font-semibold">
+                  {product.id}
+                </span>
+                <span className="px-2 py-1 rounded-full bg-muted text-[10px] font-semibold text-foreground uppercase tracking-wide">
+                  {product.category}
+                </span>
               </div>
+
+              <h2 className="text-2xl md:text-3xl font-black text-foreground leading-tight mb-3">
+                {product.title}
+              </h2>
+
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                {product.description}
+              </p>
             </div>
 
-            {/* ========== PRECIO PRINCIPAL ========== */}
-            <div className="flex items-end gap-3">
-              <div>
-                <span className="text-xs font-black text-muted-foreground uppercase tracking-widest block mb-1">Desde</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-lg font-black text-muted-foreground">S/</span>
-                  <span className="text-5xl font-black text-primary tracking-tighter">{minPrice.toFixed(2)}</span>
-                </div>
+            {/* stock + viendo ahora */}
+            <div className="flex items-center justify-center md:justify-start gap-4 flex-wrap">
+              <div className={`inline-flex items-center gap-2 ${stockColorClass}`}>
+                <StockIcon className="w-4 h-4" />
+                <span className="text-[12px] font-bold">{stockText}</span>
               </div>
-              {minPrice < product.price_1 && (
-                <span className="text-xl text-muted-foreground line-through font-black mb-1">S/ {product.price_1.toFixed(2)}</span>
+
+              {available && (
+                <p className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[12px] font-bold">
+                  👀 {viewers} viendo ahora
+                </p>
               )}
             </div>
 
-            {/* ========== SELECTOR CANTIDAD + BOTÓN ========== */}
-            {available && (
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4">
-                  <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">Cantidad:</span>
-                  <div className="flex items-center bg-muted rounded-2xl p-1">
-                    <button onClick={() => setQty((q) => Math.max(1, q - 1))} className="w-10 h-10 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 transition-transform">
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      max={9999}
-                      value={qty}
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        if (v === "") { setQty(1); return; }
-                        const n = parseInt(v, 10);
-                        if (!isNaN(n) && n >= 1 && n <= 9999) setQty(n);
-                      }}
-                      className="w-16 text-center text-lg font-black text-foreground bg-transparent outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                    <button onClick={() => setQty((q) => Math.min(9999, q + 1))} className="w-10 h-10 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 transition-transform">
-                      <Plus className="w-4 h-4" />
-                    </button>
+            {/* fila de precios */}
+            <div className="flex flex-wrap justify-center md:justify-start gap-2">
+              {TIER_DISPLAY.map((t) => {
+                const val = product[t.key];
+                if (!val) return null;
+
+                const active =
+                  (t.qty === 1 && qty < 3) ||
+                  (t.qty === 3 && qty >= 3 && qty < 12) ||
+                  (t.qty === 12 && qty >= 12 && qty < 50) ||
+                  (t.qty === 50 && qty >= 50 && qty < 100) ||
+                  (t.qty === 100 && qty >= 100);
+
+                const colorMap = {
+                  price_1: active
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-primary/10 text-primary border-primary/20",
+                  price_3: active
+                    ? "bg-tertiary text-tertiary-foreground border-tertiary"
+                    : "bg-tertiary/10 text-tertiary border-tertiary/20",
+                  price_12: active
+                    ? "bg-secondary text-secondary-foreground border-secondary"
+                    : "bg-secondary/10 text-secondary border-secondary/20",
+                  price_50: active
+                    ? "bg-purple-500 text-white border-purple-500"
+                    : "bg-purple-500/10 text-purple-600 border-purple-500/20",
+                  price_100: active
+                    ? "bg-dark text-white border-dark"
+                    : "bg-dark/10 text-dark border-dark/20",
+                };
+
+                return (
+                  <div
+                    key={t.key}
+                    className={`px-3 py-2 rounded-xl border transition-all text-center min-w-[86px] shadow-sm ${
+                      colorMap[t.key]
+                    } ${active ? "scale-[1.03]" : ""}`}
+                  >
+                    <p className="text-[10px] font-black uppercase tracking-wide">{t.label}</p>
+                    <p className="text-sm font-black mt-1">S/ {val.toFixed(2)}</p>
                   </div>
-                </div>
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-black text-base capitalize tracking-wide shadow-lg shadow-primary/20 hover:bg-dark active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+                );
+              })}
+            </div>
+
+            {/* precio actual */}
+            <div className="text-center md:text-left">
+              <div className="flex items-end justify-center md:justify-start gap-2">
+                <span className="text-lg md:text-xl font-black text-muted-foreground">S/</span>
+                <span
+                  className={`text-5xl md:text-6xl font-black text-primary tracking-tight leading-none transition-transform duration-200 ${
+                    pricePulse ? "scale-105" : "scale-100"
+                  }`}
                 >
-                  <ShoppingCart className="w-5 h-5" />
-                  Agregar al carrito — S/ {(getEffectivePrice({ ...product, qty } as any) * qty).toFixed(2)}
+                  {unitPrice.toFixed(2)}
+                </span>
+              </div>
+
+              {showUnlock && (
+                <p className="text-success font-bold text-sm mt-2">
+                  🎉 Mejor precio desbloqueado
+                </p>
+              )}
+
+              {qty > 1 && (
+                <p className="text-sm text-foreground mt-2">
+                  Total: <strong>S/ {total.toFixed(2)}</strong>
+                </p>
+              )}
+
+              {savingsByQty > 0 && (
+                <p className="text-success font-semibold text-sm mt-1">
+                  💰 Estás pagando <strong>S/ {unitPrice.toFixed(2)}</strong> en lugar de{" "}
+                  <span className="line-through opacity-70">S/ {product.price_1.toFixed(2)}</span>
+                </p>
+              )}
+
+              {nextTier && (
+                <p className="text-primary text-sm font-semibold mt-1">
+                  🔥 Agrega {nextTier.qty - qty} más y baja a S/ {nextTier.price.toFixed(2)}
+                </p>
+              )}
+            </div>
+
+            {/* cantidad */}
+            {available && (
+              <div className="flex justify-center md:justify-start items-center gap-4">
+                <button
+                  onClick={() => setQty((q) => Math.max(1, q - 1))}
+                  className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-foreground hover:bg-border transition-colors"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+
+                <span className="text-2xl font-black text-foreground min-w-[32px] text-center">
+                  {qty}
+                </span>
+
+                <button
+                  onClick={() => setQty((q) => q + 1)}
+                  className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-foreground hover:bg-border transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
             )}
-            {!available && (
-              <button disabled className="w-full bg-muted text-muted-foreground py-4 rounded-2xl font-black text-base cursor-not-allowed flex items-center justify-center gap-3">
+
+            {/* botón */}
+            {available ? (
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-black text-base shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+              >
+                <PlusCircle className="w-5 h-5" />
+                Agregar a caja — S/ {total.toFixed(2)}
+              </button>
+            ) : (
+              <button
+                disabled
+                className="w-full bg-muted text-muted-foreground py-4 rounded-2xl font-black text-base cursor-not-allowed flex items-center justify-center gap-3"
+              >
                 <Lock className="w-5 h-5" />
                 No disponible
               </button>
@@ -241,16 +439,22 @@ const ProductDetailPage = () => {
           </div>
         </div>
 
-        {/* ========== PRODUCTOS RELACIONADOS ========== */}
+        {/* relacionados */}
         {related.length > 0 && (
           <section className="mt-16">
-            <h3 className="text-lg font-black text-foreground mb-6 tracking-tight">También te puede interesar</h3>
+            <h3 className="text-lg md:text-xl font-black text-foreground mb-6 tracking-tight">
+              También te puede interesar
+            </h3>
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
               {related.map((r) => (
                 <ProductCard
                   key={r.id}
                   product={r}
-                  onAddToCart={(p) => { addToCart(p); showNotification("¡Agregado!", p.title); }}
+                  onAddToCart={(p) => {
+                    addToCart(p);
+                    showNotification("¡Agregado!", p.title);
+                  }}
                   onImageClick={(src, title) => setZoomImage({ src, title })}
                 />
               ))}
@@ -259,15 +463,27 @@ const ProductDetailPage = () => {
         )}
       </main>
 
-      {/* Flotantes */}
+      {/* extras */}
       <FloatingButtons cartCount={totalItems} onCartClick={() => setCartOpen(true)} />
       <RecentActivity products={products} />
+
       <CartSidebar
-        isOpen={cartOpen} onClose={() => setCartOpen(false)} cart={cart}
-        totalItems={totalItems} totalPrice={totalPrice} savings={savings}
-        onRemove={removeFromCart} onChangeQty={changeQty} onSetQty={setExactQty}
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        cart={cart}
+        totalItems={totalItems}
+        totalPrice={totalPrice}
+        savings={savings}
+        onRemove={removeFromCart}
+        onChangeQty={changeQty}
+        onSetQty={setExactQty}
       />
-      <ImageZoomModal src={zoomImage?.src ?? null} title={zoomImage?.title ?? ""} onClose={() => setZoomImage(null)} />
+
+      <ImageZoomModal
+        src={zoomImage?.src ?? null}
+        title={zoomImage?.title ?? ""}
+        onClose={() => setZoomImage(null)}
+      />
     </div>
   );
 };
