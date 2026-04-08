@@ -15,7 +15,7 @@ export function FloatingButtons({ cartCount, onCartClick }: FloatingButtonsProps
       >
         <ShoppingBag className="w-5 h-5" />
         <span>
-          Mi Pedido{" "}
+          Mi Caja{" "}
           <strong className="bg-primary-foreground/95 text-primary px-2 py-0.5 rounded-xl text-[11px] font-black shadow-md ml-1 inline-block transition-transform">
             {cartCount}
           </strong>

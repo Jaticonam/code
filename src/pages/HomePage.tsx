@@ -46,13 +46,13 @@ function StatBox({ target, label, color, started }: { target: number; label: str
 /* ── Categories data ── */
 const CATEGORIES = [
   { id: "flores", label: "Flores & rosas", icon: Flower2, cls: "c-pink" },
-  { id: "peluches", label: "Peluches", icon: Heart, cls: "c-teal" },
-  { id: "papel-coreano", label: "Papel coreano", icon: ScrollText, cls: "c-gold" },
+  { id: "peluches", label: "Peluches top", icon: Heart, cls: "c-teal" },
+  { id: "papeles", label: "Papel coreano", icon: ScrollText, cls: "c-gold" },
   { id: "cajas", label: "Cajas & bolsas", icon: Package, cls: "c-soft" },
-  { id: "cintas", label: "Cintas & deco", icon: Ribbon, cls: "c-pink" },
-  { id: "globos", label: "Globos", icon: Circle, cls: "c-teal" },
-  { id: "accesorios", label: "Accesorios", icon: Puzzle, cls: "c-gold" },
-  { id: "hot-wheels", label: "Hot Wheels", icon: Car, cls: "c-soft" },
+  { id: "cintas", label: "Cintas & decoración", icon: Ribbon, cls: "c-pink" },
+  { id: "globos", label: "Globos varios", icon: Circle, cls: "c-teal" },
+  { id: "accesorios", label: "Accesorios & Herramientas", icon: Puzzle, cls: "c-gold" },
+  { id: "hotwheels", label: "HotWheels Colección", icon: Car, cls: "c-soft" },
 ];
 
 const COLOR_MAP: Record<string, { icon: string; bg: string }> = {
@@ -64,17 +64,17 @@ const COLOR_MAP: Record<string, { icon: string; bg: string }> = {
 
 /* ── Stats data ── */
 const STATS = [
-  { target: 3500, label: "Emprendedores atendidos", color: "#1D8298" },
+  { target: 1500, label: "Emprendedores atendidos", color: "#1D8298" },
   { target: 800, label: "Productos varios", color: "#F391A0" },
-  { target: 24, label: "Ciudades alcanzadas", color: "#F9B233" },
-  { target: 15000, label: "Pedidos despachados", color: "#6A5A8A" },
+  { target: 39, label: "Ciudades alcanzadas", color: "#F9B233" },
+  { target: 3800, label: "Pedidos despachados", color: "#6A5A8A" },
 ];
 
 /* ── VIP benefits ── */
 const VIP_BENEFITS = [
   { icon: Zap, title: "Precios por cajón y preventas", desc: "Compra con mejores precios y asegura mercadería antes de su llegada." },
-  { icon: Video, title: "Videollamadas de compra", desc: "Te mostramos los productos en tiempo real para que compres con mayor seguridad." },
-  { icon: Users, title: "Grupo VIP de WhatsApp", desc: "Recibe información prioritaria sobre ingresos, promociones y oportunidades." },
+  { icon: Video, title: "Videollamadas de compra directa", desc: "Te mostramos los productos en tiempo real para que compres con mayor seguridad." },
+  { icon: Users, title: "Grupo VIP de WhatsApp", desc: "Recibe información prioritaria sobre preventas, promociones y oportunidades." },
 ];
 
 /* ── Main component ── */
@@ -128,12 +128,15 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-[clamp(2.2rem,9vw,3.2rem)] font-extrabold leading-[1.05] tracking-tighter text-primary mb-4">
-            Insumos que se venden <span className="bg-gradient-to-br from-secondary to-[#ff9eb5] bg-clip-text text-transparent block">solos</span>
-          </h1>
+          Convierte insumos en ventas <br />
+          <span className="bg-gradient-to-br from-secondary to-[#ff9eb5] bg-clip-text text-transparent">
+            desde tu primera caja
+          </span>
+        </h1>
 
-          <p className="text-lg text-muted-foreground font-light mb-8">
-            Ya diste el primer paso. Ahora estás en el lugar donde los negocios crecen.
-          </p>
+          <div className="reveal bg-accent/10 border border-accent/20 rounded-[20px] p-4 mb-8 text-sm font-semibold text-foreground">
+          🚀 Diseñado para emprendedores que quieren vender más sin complicarse
+        </div>
 
           {/* Simple process bar */}
           <div className="reveal flex items-center justify-between bg-card rounded-[25px] p-5 shadow-sm mb-8">
@@ -155,14 +158,14 @@ export default function HomePage() {
               Ver catálogo
             </Link>
             <a
-              href="https://wa.me/51936188636"
+              href="https://wa.me/c/51936188636"
               target="_blank"
               rel="noopener noreferrer"
               className="relative rounded-[22px] py-5 px-3 font-extrabold text-[0.95rem] flex flex-col items-center gap-2 bg-gradient-to-br from-primary to-[#30a5c0] text-primary-foreground shadow-[0_10px_20px_rgba(29,130,153,0.3)] overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
             >
               <ShineOverlay />
               <MessageCircle className="w-5 h-5" />
-              WhatsApp
+              Comprar por WhatsApp
             </a>
           </div>
 
@@ -174,7 +177,7 @@ export default function HomePage() {
 
       {/* --- CATEGORÍAS --- */}
       <section className="max-w-[600px] mx-auto px-4 mb-12">
-        <SectionHeader title="Categorías" subtitle="Encuentra lo mejor para tu negocio" />
+        <SectionHeader title="🚀 Compra rápida por Categorías" subtitle="Explora nuestras categorías y encuentra al instante los productos que realmente necesitas. ¡Todo organizado para que tu compra sea rápida y fácil!" />
         <div className="grid grid-cols-2 gap-4">
           {CATEGORIES.map((cat) => {
             const colors = COLOR_MAP[cat.cls];
@@ -200,14 +203,14 @@ export default function HomePage() {
 
       {/* --- PROCESO PASO A PASO --- */}
       <section className="max-w-[600px] mx-auto px-4 mb-12">
-        <SectionHeader title="Así de simple funciona" subtitle="Realizar tu pedido es muy sencillo, sigue los pasos:" />
+        <SectionHeader title="¿Ya sabes como comprar en Wooly?" subtitle="Realizar tu pedido es muy sencillo, te explico en  5 pasos:" />
         <div className="reveal bg-card rounded-[35px] p-8 shadow-sm space-y-6">
           {[
-            { n: 1, t: "Apertura de caja", d: "Empiezas tu pedido con el mínimo de S/ 30." },
-            { n: 2, t: "Acumulación de productos", d: "Elige los modelos que deseas (desde 3 unidades por producto)." },
-            { n: 3, t: "Cotización", d: "Te enviamos el total actualizado de tu pedido." },
-            { n: 4, t: "Datos y pago", d: "Nos envías tus datos de envío y realizas el pago." },
-            { n: 5, t: "Envío a tu ciudad 🚚", d: "Despachamos por Shalom con seguro incluido." },
+            { n: 1, t: "Apertura tu caja mayorista 📦", d: "Comienza tu pedido mayorista desde S/ 30. Luego entra al catálogo o escríbenos por WhatsApp y elige lo que necesitas." },
+            { n: 2, t: "Acumula tu caja a tu ritmo 🛒", d: "Agrega productos desde 3, 12 unidades o por cajón. Cuando tengas todo listo, dale en enviar pedido." },
+            { n: 3, t: "Recibe tu cotización 💌", d: "Te enviamos el detalle completo con precios claros para que revises y confirmes las cantidades y que todo esté correcto." },
+            { n: 4, t: "Confirma y paga 💳", d: "Realiza tu pago por el medio que prefieras (Yape o Transferencia BCP) y comparte tus datos de envío de forma segura." },
+            { n: 5, t: "Enviamos a tu ciudad 🚚", d: "Preparamos y alistamos tu pedido, embalamos con cuidado y lo enviamos con seguro de caja por Shalom Pro." }
           ].map((s) => (
             <div key={s.n} className="flex gap-5">
               <div className="w-10 h-10 rounded-xl bg-secondary/30 text-secondary-foreground flex items-center justify-center font-extrabold shrink-0">{s.n}</div>
@@ -325,10 +328,10 @@ export default function HomePage() {
       {/* --- SOCIAL --- */}
       <div className="flex justify-center gap-5 mb-10">
         {[
-          { href: "https://www.tiktok.com/@wooly_import_store", icon: Sparkles, label: "TikTok" },
-          { href: "https://www.instagram.com/wooly.import", icon: Heart, label: "Instagram" },
-          { href: "https://www.facebook.com/woolyimport", icon: Users, label: "Facebook" },
-          { href: "mailto:contacto@wooly.com", icon: Send, label: "Email" },
+          { href: "https://www.tiktok.com/@woolyimports", icon: Sparkles, label: "TikTok" },
+          { href: "https://www.instagram.com/woolyimports", icon: Heart, label: "Instagram" },
+          { href: "https://www.facebook.com/woolyimports", icon: Users, label: "Facebook" },
+          { href: "mailto:woolyimports@gmail.com", icon: Send, label: "Email" },
         ].map((s) => (
           <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}
             className="w-[50px] h-[50px] rounded-[15px] bg-card shadow-sm flex items-center justify-center text-primary transition-all hover:-translate-y-1.5 hover:text-secondary">
