@@ -60,7 +60,10 @@ const ProductDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
+
   const [qty, setQty] = useState(1);
+  const [qtyInput, setQtyInput] = useState("1");
+
   const [viewers, setViewers] = useState(Math.floor(Math.random() * 8) + 6);
 
   const [lastTier, setLastTier] = useState(1);
@@ -77,7 +80,7 @@ const ProductDetailPage = () => {
     totalPrice,
     savings,
   } = useCart();
-
+  
   useEffect(() => {
     fetchProducts().then((p) => {
       setProducts(p);
@@ -95,13 +98,21 @@ const ProductDetailPage = () => {
   const product = products.find((p) => p.id === id);
   const available = product ? isProductAvailable(product) : false;
 
-  const unitPrice = product ? getUnitPrice(qty, product) : 0;
-  const total = unitPrice * qty;
-  const nextTier = product ? getNextTier(qty, product) : null;
+  const parsedQtyInput =
+    qtyInput.trim() !== "" && /^\d+$/.test(qtyInput)
+      ? parseInt(qtyInput, 10)
+      : null;
+
+  const isQtyInputValid = parsedQtyInput !== null && parsedQtyInput >= 1;
+  const effectiveQty = isQtyInputValid ? parsedQtyInput : qty;
+
+  const unitPrice = product ? getUnitPrice(effectiveQty, product) : 0;
+  const total = unitPrice * effectiveQty;
+  const nextTier = product ? getNextTier(effectiveQty, product) : null;
 
   const savingsByQty =
     product && product.price_1 > unitPrice
-      ? (product.price_1 - unitPrice) * qty
+      ? (product.price_1 - unitPrice) * effectiveQty
       : 0;
 
   useEffect(() => {
@@ -109,10 +120,10 @@ const ProductDetailPage = () => {
 
     let currentTier = 1;
 
-    if (qty >= 100 && product.price_100) currentTier = 100;
-    else if (qty >= 50 && product.price_50) currentTier = 50;
-    else if (qty >= 12 && product.price_12) currentTier = 12;
-    else if (qty >= 3 && product.price_3) currentTier = 3;
+    if (effectiveQty >= 100 && product.price_100) currentTier = 100;
+    else if (effectiveQty >= 50 && product.price_50) currentTier = 50;
+    else if (effectiveQty >= 12 && product.price_12) currentTier = 12;
+    else if (effectiveQty >= 3 && product.price_3) currentTier = 3;
 
     setPricePulse(true);
     const pulseTimer = setTimeout(() => setPricePulse(false), 220);
@@ -130,21 +141,83 @@ const ProductDetailPage = () => {
     }
 
     return () => clearTimeout(pulseTimer);
-  }, [qty, product, lastTier]);
+  }, [effectiveQty, product, lastTier]);
+
+  useEffect(() => {
+    setQty(1);
+    setQtyInput("1");
+    setLastTier(1);
+    setShowUnlock(false);
+    setPricePulse(false);
+  }, [id]);
 
   const related = product
     ? products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4)
     : [];
 
-  const handleAddToCart = useCallback(() => {
-    if (!product || !available) return;
+  const updateQty = useCallback((newQty: number) => {
+    const safeQty = Math.max(1, Math.floor(newQty));
+    setQty(safeQty);
+    setQtyInput(String(safeQty));
+  }, []);
 
-    for (let i = 0; i < qty; i++) {
-      addToCart(product);
+  const handleQtyInputChange = useCallback((value: string) => {
+    if (value === "") {
+      setQtyInput("");
+      return;
     }
 
-    showNotification("🔥 Agregado", `${qty}x ${product.title}`);
-  }, [product, available, qty, addToCart]);
+    if (!/^\d+$/.test(value)) return;
+
+    setQtyInput(value);
+
+    const parsed = parseInt(value, 10);
+    if (!isNaN(parsed) && parsed >= 1) {
+      setQty(parsed);
+    }
+  }, []);
+
+  const handleQtyInputBlur = useCallback(() => {
+    if (qtyInput === "") return;
+
+    const parsed = parseInt(qtyInput, 10);
+
+    if (isNaN(parsed) || parsed < 1) {
+      setQtyInput("");
+      return;
+    }
+
+    const safeQty = Math.floor(parsed);
+    setQty(safeQty);
+    setQtyInput(String(safeQty));
+  }, [qtyInput]);
+
+  const handleQtyInputKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        e.currentTarget.blur();
+      }
+
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        updateQty(effectiveQty + 1);
+      }
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        updateQty(Math.max(1, effectiveQty - 1));
+      }
+    },
+    [effectiveQty, updateQty]
+  );
+
+  const handleAddToCart = useCallback(() => {
+    if (!product || !available || !isQtyInputValid) return;
+
+    addToCart(product, parsedQtyInput);
+
+    showNotification("🔥 Agregado", `${parsedQtyInput}x ${product.title}`);
+  }, [product, available, isQtyInputValid, parsedQtyInput, addToCart]);
 
   const handleShare = useCallback(() => {
     if (!product) return;
@@ -318,11 +391,11 @@ const ProductDetailPage = () => {
                 if (!val) return null;
 
                 const active =
-                  (t.qty === 1 && qty < 3) ||
-                  (t.qty === 3 && qty >= 3 && qty < 12) ||
-                  (t.qty === 12 && qty >= 12 && qty < 50) ||
-                  (t.qty === 50 && qty >= 50 && qty < 100) ||
-                  (t.qty === 100 && qty >= 100);
+                  (t.qty === 1 && effectiveQty < 3) ||
+                  (t.qty === 3 && effectiveQty >= 3 && effectiveQty < 12) ||
+                  (t.qty === 12 && effectiveQty >= 12 && effectiveQty < 50) ||
+                  (t.qty === 50 && effectiveQty >= 50 && effectiveQty < 100) ||
+                  (t.qty === 100 && effectiveQty >= 100);
 
                 const colorMap = {
                   price_1: active
@@ -375,7 +448,7 @@ const ProductDetailPage = () => {
                 </p>
               )}
 
-              {qty > 1 && (
+              {effectiveQty > 1 && (
                 <p className="text-sm text-foreground mt-2">
                   Total: <strong>S/ {total.toFixed(2)}</strong>
                 </p>
@@ -390,7 +463,13 @@ const ProductDetailPage = () => {
 
               {nextTier && (
                 <p className="text-primary text-sm font-semibold mt-1">
-                  🔥 Agrega {nextTier.qty - qty} más y baja a S/ {nextTier.price.toFixed(2)}
+                  🔥 Agrega {nextTier.qty - effectiveQty} más y baja a S/ {nextTier.price.toFixed(2)}
+                </p>
+              )}
+
+              {!isQtyInputValid && (
+                <p className="text-destructive font-semibold text-sm mt-2">
+                  Ingresa una cantidad válida para continuar
                 </p>
               )}
             </div>
@@ -399,19 +478,32 @@ const ProductDetailPage = () => {
             {available && (
               <div className="flex justify-center md:justify-start items-center gap-4">
                 <button
-                  onClick={() => setQty((q) => Math.max(1, q - 1))}
+                  type="button"
+                  onClick={() => updateQty(effectiveQty - 1)}
                   className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-foreground hover:bg-border transition-colors"
+                  aria-label="Disminuir cantidad"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
 
-                <span className="text-2xl font-black text-foreground min-w-[32px] text-center">
-                  {qty}
-                </span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={qtyInput}
+                  onChange={(e) => handleQtyInputChange(e.target.value)}
+                  onBlur={handleQtyInputBlur}
+                  onKeyDown={handleQtyInputKeyDown}
+                  placeholder="0"
+                  className="w-24 h-12 rounded-xl border-2 border-border bg-background text-center text-2xl font-black text-foreground outline-none focus:border-primary placeholder:text-muted-foreground/50"
+                  aria-label="Cantidad"
+                />
 
                 <button
-                  onClick={() => setQty((q) => q + 1)}
+                  type="button"
+                  onClick={() => updateQty(effectiveQty + 1)}
                   className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-foreground hover:bg-border transition-colors"
+                  aria-label="Aumentar cantidad"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -422,10 +514,17 @@ const ProductDetailPage = () => {
             {available ? (
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-black text-base shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+                disabled={!isQtyInputValid}
+                className={`w-full py-4 rounded-2xl font-black text-base shadow-xl transition-all flex items-center justify-center gap-3 ${
+                  isQtyInputValid
+                    ? "bg-primary text-primary-foreground hover:scale-[1.02] active:scale-[0.98]"
+                    : "bg-muted text-muted-foreground cursor-not-allowed shadow-none"
+                }`}
               >
                 <PlusCircle className="w-5 h-5" />
-                Agregar a caja — S/ {total.toFixed(2)}
+                {isQtyInputValid
+                  ? `Agregar a caja — S/ ${total.toFixed(2)}`
+                  : "Ingresa una cantidad"}
               </button>
             ) : (
               <button
@@ -452,7 +551,7 @@ const ProductDetailPage = () => {
                   key={r.id}
                   product={r}
                   onAddToCart={(p) => {
-                    addToCart(p);
+                    addToCart(p, 1);
                     showNotification("¡Agregado!", p.title);
                   }}
                   onImageClick={(src, title) => setZoomImage({ src, title })}
