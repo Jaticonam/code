@@ -1,4 +1,3 @@
-// Producto tal como viene del raw data o Google Sheets
 export interface Product {
   id: string;
   title: string;
@@ -24,7 +23,6 @@ export interface Category {
   icon: string;
 }
 
-// Tiers de precio para lógica de descuentos por volumen
 export const PRICE_TIERS = [
   { qty: 100, key: "price_100" as const, cls: "bg-dark text-primary-foreground", label: "100u+" },
   { qty: 50, key: "price_50" as const, cls: "bg-purple-500 text-primary-foreground", label: "50u+" },
