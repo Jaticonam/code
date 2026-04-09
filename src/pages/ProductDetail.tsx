@@ -92,6 +92,20 @@ const ProductDetailPage = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }, 0);
+
+    setQty(1);
+
+    return () => clearTimeout(timer);
+  }, [id]);
+
   const product = products.find((p) => p.id === id);
   const available = product ? isProductAvailable(product) : false;
 
@@ -132,9 +146,19 @@ const ProductDetailPage = () => {
     return () => clearTimeout(pulseTimer);
   }, [qty, product, lastTier]);
 
-  const related = product
-    ? products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4)
-    : [];
+ const related = product
+  ? (() => {
+      const sameCategory = products.filter(
+        (p) => p.category === product.category && p.id !== product.id
+      );
+
+      const otherCategories = products.filter(
+        (p) => p.category !== product.category && p.id !== product.id
+      );
+
+      return [...sameCategory.slice(0, 4), ...otherCategories.slice(0, 4)];
+    })()
+  : [];
 
   const handleAddToCart = useCallback(() => {
     if (!product || !available) return;
@@ -443,10 +467,10 @@ const ProductDetailPage = () => {
         {related.length > 0 && (
           <section className="mt-16">
             <h3 className="text-lg md:text-xl font-black text-foreground mb-6 tracking-tight">
-              También te puede interesar
+              Productos que complementan tu compra
             </h3>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6">
               {related.map((r) => (
                 <ProductCard
                   key={r.id}
