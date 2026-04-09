@@ -12,23 +12,6 @@ import {
 import { CartItem } from "@/types/product";
 import { getEffectivePrice } from "@/lib/products";
 
-const CART_NOTES_KEY = "wooly_cart_notes";
-
-function loadCartNotes(): Record<string, string> {
-  try {
-    const saved = localStorage.getItem(CART_NOTES_KEY);
-    return saved ? JSON.parse(saved) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveCartNotes(notes: Record<string, string>) {
-  try {
-    localStorage.setItem(CART_NOTES_KEY, JSON.stringify(notes));
-  } catch {}
-}
-
 interface CartSidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,8 +22,9 @@ interface CartSidebarProps {
   onRemove: (id: string) => void;
   onChangeQty: (id: string, delta: number) => void;
   onSetQty: (id: string, qty: number | null) => void;
+  onChangeNote: (id: string, note: string) => void;
+  onClearCart: () => void;
 }
-
 const CART_TIERS = [
   { qty: 1, key: "price_1" as const, cls: "active-1", label: "1u" },
   { qty: 3, key: "price_3" as const, cls: "active-3", label: "3u" },
@@ -82,18 +66,22 @@ function getTierUnlockMessage(item: CartItem): string | null {
   return null;
 }
 
-function checkout(cart: CartItem[], total: string, savings: number) {
+function checkout(
+  cart: CartItem[],
+  total: string,
+  savings: number,
+  onClearCart: () => void,
+  onClose: () => void
+) {
   if (cart.length === 0) return;
 
-  const notes = loadCartNotes();
-
-  let m = "🚨 *NUEVO PEDIDO WOOLY - MAYORISTAS*\n\n";
+  let m = "*NUEVO PEDIDO WOOLY - MAYORISTAS*\n\n";
   m += "Hola, deseo pedir lo siguiente:\n\n";
 
   cart.forEach((i) => {
     const p = getEffectivePrice(i);
     const subtotal = p * i.qty;
-    const note = notes[i.id]?.trim();
+    const note = i.note?.trim().replace(/\s+/g, " ");
 
     m += `• *[ ${i.id} ]* | *${i.title}*\n`;
     m += `  Cantidad: ${i.qty} u\n`;
@@ -101,7 +89,7 @@ function checkout(cart: CartItem[], total: string, savings: number) {
     m += `  Subtotal: S/${subtotal.toFixed(2)}\n`;
 
     if (note) {
-      m += `  Detalle: ${note}\n`;
+      m += `*Detalle:* ${note}\n`;
     }
 
     m += "\n";
@@ -116,8 +104,14 @@ function checkout(cart: CartItem[], total: string, savings: number) {
 
   m += "\nConfirmar disponibilidad, gracias.";
 
-  window.open(`https://wa.me/51936188636?text=${encodeURIComponent(m)}`, "_blank");
-}
+  const url = `https://wa.me/51936188636?text=${encodeURIComponent(m)}`;
+  window.open(url, "_blank");
+
+    setTimeout(() => {
+      onClearCart();
+      onClose();
+    }, 300);
+  }
 
 function QtyInput({
   item,
@@ -163,41 +157,30 @@ function QtyInput({
   );
 }
 
-function NoteTextarea({ item }: { item: CartItem }) {
-  const [value, setValue] = useState("");
+function NoteTextarea({
+  item,
+  onChangeNote,
+}: {
+  item: CartItem;
+  onChangeNote: (id: string, note: string) => void;
+}) {
   const ref = useRef<HTMLTextAreaElement | null>(null);
-
-  useEffect(() => {
-    const notes = loadCartNotes();
-    setValue(notes[item.id] || "");
-  }, [item.id]);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     el.style.height = "0px";
     el.style.height = `${el.scrollHeight}px`;
-  }, [value]);
-
-  const handleChange = (next: string) => {
-    setValue(next);
-    const notes = loadCartNotes();
-    notes[item.id] = next;
-    saveCartNotes(notes);
-  };
+  }, [item.note]);
 
   return (
     <div className="mt-1">
-      <label className="block text-[10px] font-bold text-muted-foreground mb-2 uppercase tracking-wide">
-        Detalles del pedido <span className="normal-case opacity-70">(opcional)</span>
-      </label>
-
-      <textarea
+     <textarea
         ref={ref}
         rows={1}
-        value={value}
-        onChange={(e) => handleChange(e.target.value)}
-        placeholder="Detalla tu pedido. Ej.: 02 rojos, 04 azules"
+        value={item.note || ""}
+        onChange={(e) => onChangeNote(item.id, e.target.value)}
+        placeholder="Detalla tu pedido. Ej.: 2 rojos, 4 azules, con moño, etc."
         className="w-full resize-none overflow-hidden rounded-2xl border border-border bg-muted/60 px-4 py-3 text-[12px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-primary focus:bg-background transition-colors"
       />
     </div>
@@ -209,11 +192,13 @@ function CartRow({
   onRemove,
   onChangeQty,
   onSetQty,
+  onChangeNote,
 }: {
   item: CartItem;
   onRemove: (id: string) => void;
   onChangeQty: (id: string, delta: number) => void;
   onSetQty: (id: string, qty: number | null) => void;
+  onChangeNote: (id: string, note: string) => void;
 }) {
   const activePrice = getEffectivePrice(item);
   const subtotal = activePrice * item.qty;
@@ -377,7 +362,7 @@ function CartRow({
         </div>
       </div>
 
-      <NoteTextarea item={item} />
+      <NoteTextarea item={item} onChangeNote={onChangeNote} />
     </div>
   );
 }
@@ -392,6 +377,8 @@ export function CartSidebar({
   onRemove,
   onChangeQty,
   onSetQty,
+  onChangeNote,
+  onClearCart,
 }: CartSidebarProps) {
   if (!isOpen) return null;
 
@@ -444,6 +431,7 @@ export function CartSidebar({
                 onRemove={onRemove}
                 onChangeQty={onChangeQty}
                 onSetQty={onSetQty}
+                onChangeNote={onChangeNote}
               />
             ))
           )}
@@ -488,7 +476,15 @@ export function CartSidebar({
           </div>
 
           <button
-            onClick={() => checkout(cart, totalPrice.toFixed(2), savings)}
+            onClick={() =>
+              checkout(
+                cart,
+                totalPrice.toFixed(2),
+                savings,
+                onClearCart,
+                onClose
+              )
+            }
             disabled={cart.length === 0}
             className={`w-full py-4 rounded-2xl font-black text-sm capitalize tracking-wide transition-all flex items-center justify-center gap-3 ${
               cart.length > 0

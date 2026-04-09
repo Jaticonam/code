@@ -22,7 +22,18 @@ const Index = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
 
-  const { cart, addToCart, removeFromCart, changeQty, setExactQty, totalItems, totalPrice, savings } = useCart();
+const {
+  cart,
+  addToCart,
+  totalItems,
+  totalPrice,
+  savings,
+  removeFromCart,
+  changeQty,
+  setExactQty,
+  setItemNote,
+  clearCart,
+} = useCart();
 
   useEffect(() => {
     fetchProducts().then((p) => {
@@ -124,6 +135,8 @@ const Index = () => {
         onRemove={removeFromCart}
         onChangeQty={changeQty}
         onSetQty={setExactQty}
+        onChangeNote={setItemNote}
+        onClearCart={clearCart}
       />
       <ImageZoomModal
         src={zoomImage?.src ?? null}

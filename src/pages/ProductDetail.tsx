@@ -76,6 +76,7 @@ const ProductDetailPage = () => {
     removeFromCart,
     changeQty,
     setExactQty,
+    setItemNote, // 👈 ESTE ES CLAVE
     totalItems,
     totalPrice,
     savings,
@@ -600,6 +601,7 @@ const ProductDetailPage = () => {
         onRemove={removeFromCart}
         onChangeQty={changeQty}
         onSetQty={setExactQty}
+        onChangeNote={setItemNote}
       />
 
       <ImageZoomModal
