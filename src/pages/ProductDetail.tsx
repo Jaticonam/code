@@ -53,6 +53,7 @@ const getNextTier = (qty: number, p: Product) => {
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
+  const currentCategory = searchParams.get("cat") || "";
   const id = searchParams.get("id") || paramId;
   const navigate = useNavigate();
 
@@ -303,10 +304,16 @@ const ProductDetailPage = () => {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <p className="text-muted-foreground font-black text-lg">Producto no encontrado</p>
         <button
-          onClick={() => navigate("/")}
-          className="bg-primary text-primary-foreground px-6 py-3 rounded-2xl font-black text-sm"
+          onClick={() =>
+            navigate(
+              currentCategory
+                ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
+                : "/catalogo"
+            )
+          }
+          className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
         >
-          Volver al catálogo
+          <ArrowLeft className="w-5 h-5" />
         </button>
       </div>
     );

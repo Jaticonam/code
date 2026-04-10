@@ -54,7 +54,10 @@ const CategoryPage = () => {
         <CountdownTimer />
         <div className="bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 md:py-4">
           <div className="max-w-7xl mx-auto flex items-center gap-4">
-            <button onClick={() => navigate("/")} className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={() => navigate("/catalogo")}
+              className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+            >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
