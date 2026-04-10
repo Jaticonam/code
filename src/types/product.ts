@@ -10,6 +10,8 @@ export interface Product {
   price_100: number | null;
   stock: number | null;
   img: string;
+  status?: string;
+  badges?: string[];
 }
 
 export interface CartItem extends Product {

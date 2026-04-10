@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   PlusCircle,
-  Lock,
   CheckCircle,
   AlertTriangle,
   Clock,
@@ -24,9 +23,95 @@ const TIER_TAGS = [
   { key: "price_100" as const, label: "100u+", cls: "bg-dark/90" },
 ];
 
+const BADGE_STYLE_RULES = [
+  {
+    keywords: ["preventa", "pre venta", "lanzamiento", "proximamente", "próximamente"],
+    className: "bg-green-500 text-white",
+    animation: "animate-pulse",
+  },
+  {
+    keywords: ["nuevo", "new"],
+    className: "bg-purple-600 text-white",
+    animation: "animate-pulse",
+  },
+  {
+    keywords: ["oferta", "promo", "promocion", "promoción", "descuento"],
+    className: "bg-red-600 text-white",
+    animation: "",
+  },
+  {
+    keywords: ["cyber", "cybermom", "campaña", "campana"],
+    className: "bg-rose-700 text-white",
+    animation: "",
+  },
+  {
+    keywords: ["top", "top ventas", "destacado", "recomendado"],
+    className: "bg-amber-500 text-white",
+    animation: "",
+  },
+  {
+    keywords: ["premium", "exclusivo", "vip"],
+    className: "bg-slate-800 text-white",
+    animation: "",
+  },
+  {
+    keywords: ["regalo", "gift", "detalle"],
+    className: "bg-pink-600 text-white",
+    animation: "",
+  },
+];
+
+function normalizeBadgeText(badge: string): string {
+  return badge
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function getBadgePresentation(badge: string) {
+  const value = normalizeBadgeText(badge);
+
+  const matchedRule = BADGE_STYLE_RULES.find((rule) =>
+    rule.keywords.some((keyword) => value.includes(keyword))
+  );
+
+  if (matchedRule) {
+    return {
+      className: matchedRule.className,
+      animation: matchedRule.animation,
+    };
+  }
+
+  return {
+    className: "bg-black/80 text-white",
+    animation: "",
+  };
+}
+
+function getBadgeAnimationClass(badge: string): string {
+  const value = badge
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .toLowerCase()
+    .trim();
+
+  if (value.includes("preventa") || value.includes("nuevo")) {
+    return "animate-pulse";
+  }
+
+  if (value.includes("oferta") || value.includes("cyber")) {
+    return "animate-bounce";
+  }
+
+  return "";
+}
+
 export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
   const navigate = useNavigate();
   const available = isProductAvailable(p);
+  const isPreventa = (p.status || "").trim().toLowerCase() === "preventa";
   const minPrice = getMinPrice(p);
 
   const [viewers, setViewers] = useState(Math.floor(Math.random() * 8) + 6);
@@ -40,10 +125,10 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const goToDetail = () => navigate(`/catalogo/producto.html?id=${p.id}`);
+  const goToDetail = () => navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
 
   const handleAdd = () => {
-    if (!available) return;
+    if (!available || isPreventa) return;
 
     onAddToCart(p);
     setAdded(true);
@@ -51,11 +136,26 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
     setTimeout(() => setAdded(false), 1200);
   };
 
+  const handleWhatsApp = () => {
+    const message =
+      `Hola, quiero más información sobre este producto:%0A%0A` +
+      `ID: ${p.id}%0A` +
+      `Producto: ${p.title}%0A` +
+      `Categoría: ${p.category}`;
+
+    const url = `https://wa.me/51936188636?text=${message}`;
+    window.open(url, "_blank");
+  };
+
   let stockText: string;
   let stockColorClass: string;
   let StockIcon: typeof CheckCircle;
 
-  if (!p.price_1 || p.price_1 <= 0 || p.stock === null || p.stock === undefined) {
+  if (isPreventa) {
+    stockText = "Preventa";
+    stockColorClass = "bg-green-100 text-green-700";
+    StockIcon = Clock;
+  } else if (!p.price_1 || p.price_1 <= 0 || p.stock === null || p.stock === undefined) {
     stockText = "Próximo";
     stockColorClass = "bg-muted text-muted-foreground";
     StockIcon = Clock;
@@ -79,26 +179,41 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
 
   return (
     <div className="bg-card rounded-[20px] md:rounded-[28px] border border-border p-2.5 md:p-4 flex flex-col shadow-sm text-center transition-all duration-400 hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
-
       {/* Imagen */}
       <div className="relative aspect-square overflow-hidden rounded-[14px] md:rounded-[20px] mb-2.5 bg-muted">
         <img
-          src={p.img}
+          src={p.img || "/placeholder.svg"}
           alt={p.title}
           onClick={goToDetail}
           className={`cursor-pointer w-full h-full object-cover transition-transform duration-700 hover:scale-110 ${
-            !available ? "opacity-60 grayscale-[50%]" : ""
+            !available && !isPreventa ? "opacity-60 grayscale-[50%]" : ""
           }`}
           loading="lazy"
         />
 
-        {/* Badge campaña */}
-        <div className="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-md shadow uppercase tracking-widest">
-          🎯 CyberMom
-        </div>
+        {/* Badges dinámicos */}
+        {p.badges && p.badges.length > 0 && (
+          <div className="absolute top-2 left-2 flex flex-col gap-1.5 items-start max-w-[75%] z-10">
+            {p.badges.map((badge, index) => {
+              const presentation = getBadgePresentation(badge);
 
+              return (
+                <div
+                  key={`${p.id}-badge-${index}`}
+                  className={[
+                    "text-[10px] md:text-[11px] font-semibold px-3 py-1 rounded-full leading-tight tracking-normal backdrop-blur-sm border border-white/10 shadow-md",
+                    presentation.className,
+                    presentation.animation,
+                  ].join(" ")}
+                >
+                  {badge}
+                </div>
+              );
+            })}
+          </div>
+        )}
         {/* Precios por volumen */}
-        {available && (
+        {available && !isPreventa && (
           <div className="absolute bottom-2 right-2 flex flex-col gap-1 items-end">
             {TIER_TAGS.map((t, i) =>
               p[t.key] ? (
@@ -117,7 +232,6 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
 
       {/* Info */}
       <div className="px-1 md:px-2 flex-grow flex flex-col justify-between">
-
         {/* Meta */}
         <div className="flex items-center justify-center gap-2 mb-1.5 flex-wrap">
           <span className="text-[10px] text-muted-foreground font-semibold">
@@ -133,7 +247,7 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
         <h3
           onClick={goToDetail}
           className={`cursor-pointer hover:text-primary transition-colors font-extrabold text-[15px] md:text-[17px] line-clamp-2 leading-snug ${
-            !available ? "opacity-60" : ""
+            !available && !isPreventa ? "opacity-60" : ""
           }`}
         >
           {p.title}
@@ -141,65 +255,92 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
 
         {/* Descripción */}
         <p className="text-[12px] text-muted-foreground mt-1.5 line-clamp-2">
-          {p.description}
+          {p.description || (isPreventa ? "Consulta más información sobre esta preventa." : "")}
         </p>
 
         {/* Texto campaña */}
-        {available && (
+        {available && !isPreventa && (
           <p className="text-[12px] text-primary font-semibold mt-2">
             🔥 Precios de campaña
           </p>
         )}
 
+        {isPreventa && (
+          <p className="text-[12px] text-green-600 font-semibold mt-2">
+            🚀 Disponible para consulta anticipada
+          </p>
+        )}
+
         {/* Precio */}
         <div className="mt-3 pt-3 border-t border-border flex flex-col items-center gap-1">
-          <span className="text-[13px] text-muted-foreground line-through font-semibold">
-            S/{p.price_1 ? p.price_1.toFixed(1) : "-.--"}
-          </span>
+          {isPreventa ? (
+            <>
+              <span className="text-[13px] text-muted-foreground font-semibold">
+                Próximamente
+              </span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-[13px] text-muted-foreground">💬</span>
+                <span className="text-[20px] md:text-[22px] font-black text-green-600 tracking-tight">
+                  Consultar
+                </span>
+              </div>
+              <span className="text-[11px] text-muted-foreground font-medium">
+                Te brindamos más información por WhatsApp
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="text-[13px] text-muted-foreground line-through font-semibold">
+                S/{p.price_1 ? p.price_1.toFixed(1) : "-.--"}
+              </span>
 
-          <div className="flex items-baseline gap-1">
-            <span className="text-[13px] text-muted-foreground">S/</span>
-            <span className="text-[26px] md:text-[30px] font-black text-primary tracking-tight">
-              {minPrice.toFixed(1)}
-            </span>
-          </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-[13px] text-muted-foreground">S/</span>
+                <span className="text-[26px] md:text-[30px] font-black text-primary tracking-tight">
+                  {minPrice.toFixed(1)}
+                </span>
+              </div>
 
-          <span className="text-[11px] text-muted-foreground font-medium">
-            💡 Mejor precio por volumen
-          </span>
+              <span className="text-[11px] text-muted-foreground font-medium">
+                💡 Mejor precio por volumen
+              </span>
+            </>
+          )}
         </div>
 
         {/* Stock */}
-        <div className={`mt-2 inline-flex items-center justify-center gap-1 px-3 py-1 rounded-full text-[10px] font-semibold ${stockColorClass}`}>
+        <div
+          className={`mt-2 inline-flex items-center justify-center gap-1 px-3 py-1 rounded-full text-[10px] font-semibold ${stockColorClass}`}
+        >
           <StockIcon className="w-3 h-3" />
           {stockText}
         </div>
 
-        {/* Personas viendo (MEJORADO) */}
-        {available && (
+        {/* Personas viendo */}
+        {(available || isPreventa) && (
           <p className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold mt-1">
             👀 {viewers} viendo ahora
           </p>
         )}
 
-        {/* Botón PRO */}
+        {/* Botón */}
         <button
-          onClick={handleAdd}
-          disabled={!available}
-          className={`
-            w-full flex items-center justify-center gap-1.5
-            py-2 rounded-lg text-[12px] font-semibold
-            transition-all duration-200
-            ${
-              added
-                ? "bg-success text-white"
-                : available
-                ? "bg-primary/95 text-primary-foreground active:scale-[0.96]"
-                : "bg-muted text-muted-foreground cursor-not-allowed"
-            }
-          `}
+          onClick={isPreventa ? handleWhatsApp : handleAdd}
+          disabled={!available && !isPreventa}
+          className={[
+            "w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[12px] font-semibold transition-all duration-200",
+            isPreventa
+              ? "bg-green-500 text-white hover:bg-green-600"
+              : added
+              ? "bg-success text-white"
+              : available
+              ? "bg-primary/95 text-primary-foreground active:scale-[0.96]"
+              : "bg-muted text-muted-foreground cursor-not-allowed",
+          ].join(" ")}
         >
-          {added ? (
+          {isPreventa ? (
+            <span>Consultar por WhatsApp</span>
+          ) : added ? (
             <>
               <CheckCircle className="w-4 h-4" />
               <span>Agregado</span>
@@ -213,7 +354,6 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
             <span>Agotado</span>
           )}
         </button>
-
       </div>
     </div>
   );

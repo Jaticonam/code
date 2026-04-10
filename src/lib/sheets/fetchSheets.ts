@@ -132,5 +132,5 @@ export async function loadAllProducts(): Promise<Product[]> {
   return results
     .flat()
     .sort((a, b) => b.priority - a.priority)
-    .map(({ badge, priority, status, updated_at, ...product }) => product);
+    .map(({ priority, updated_at, ...product }) => product);
 }
