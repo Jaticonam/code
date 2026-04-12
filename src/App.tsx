@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+
 import HomePage from "./pages/HomePage.tsx";
 import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
@@ -16,7 +17,12 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+
+      <BrowserRouter
+        future={{
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
           {/* Landing principal */}
           <Route path="/" element={<HomePage />} />
@@ -30,7 +36,7 @@ const App = () => (
           <Route path="/producto/:id" element={<ProductDetail />} />
           <Route path="/categoria/:id" element={<CategoryPage />} />
 
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

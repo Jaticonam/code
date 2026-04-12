@@ -112,7 +112,11 @@ async function loadCategoryProducts(source: SheetSource) {
 
   validateHeaders(headers, source);
 
-  const normalized = rows.map((row) =>
+  const meaningfulRows = rows.filter((row) =>
+    Object.values(row).some((value) => (value ?? "").trim() !== "")
+  );
+
+  const normalized = meaningfulRows.map((row) =>
     normalizeProduct(row, source.category)
   );
 
@@ -132,5 +136,5 @@ export async function loadAllProducts(): Promise<Product[]> {
   return results
     .flat()
     .sort((a, b) => b.priority - a.priority)
-    .map(({ priority, updated_at, ...product }) => product);
+    .map(({ updated_at, ...product }) => product);
 }

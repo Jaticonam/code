@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
+import { PRICE_TIERS } from "@/config/priceTiers";
 import {
   ArrowLeft,
   PlusCircle,
@@ -18,7 +19,6 @@ import {
 import { useCart } from "@/hooks/use-cart";
 import { fetchProducts, isProductAvailable } from "@/lib/products";
 import { Product } from "@/types/product";
-
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { CartSidebar } from "@/components/CartSidebar";
 import { NotificationStack, showNotification } from "@/components/NotificationStack";
@@ -26,14 +26,7 @@ import { RecentActivity } from "@/components/RecentActivity";
 import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { ProductCard } from "@/components/ProductCard";
-
-const TIER_DISPLAY = [
-  { qty: 1, key: "price_1" as const, label: "1u" },
-  { qty: 3, key: "price_3" as const, label: "3u+" },
-  { qty: 12, key: "price_12" as const, label: "12u+" },
-  { qty: 50, key: "price_50" as const, label: "50u+" },
-  { qty: 100, key: "price_100" as const, label: "100u+" },
-];
+import { ProductSkeleton } from "@/components/skeletons/ProductSkeleton";
 
 const getUnitPrice = (qty: number, p: Product) => {
   if (qty >= 100 && p.price_100) return p.price_100;
@@ -65,7 +58,6 @@ const ProductDetailPage = () => {
 
   const [qty, setQty] = useState(1);
   const [qtyInput, setQtyInput] = useState("1");
-
   const [viewers, setViewers] = useState(Math.floor(Math.random() * 8) + 6);
 
   const [lastTier, setLastTier] = useState(1);
@@ -78,12 +70,12 @@ const ProductDetailPage = () => {
     removeFromCart,
     changeQty,
     setExactQty,
-    setItemNote, // 👈 ESTE ES CLAVE
+    setItemNote,
     totalItems,
     totalPrice,
     savings,
   } = useCart();
-  
+
   useEffect(() => {
     fetchProducts().then((p) => {
       setProducts(p);
@@ -95,6 +87,7 @@ const ProductDetailPage = () => {
     const interval = setInterval(() => {
       setViewers(Math.floor(Math.random() * 8) + 6);
     }, 7000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -108,6 +101,10 @@ const ProductDetailPage = () => {
     }, 0);
 
     setQty(1);
+    setQtyInput("1");
+    setLastTier(1);
+    setShowUnlock(false);
+    setPricePulse(false);
 
     return () => clearTimeout(timer);
   }, [id]);
@@ -122,7 +119,6 @@ const ProductDetailPage = () => {
 
   const isQtyInputValid = parsedQtyInput !== null && parsedQtyInput >= 1;
   const effectiveQty = isQtyInputValid ? parsedQtyInput : qty;
-
   const unitPrice = product ? getUnitPrice(effectiveQty, product) : 0;
   const total = unitPrice * effectiveQty;
   const nextTier = product ? getNextTier(effectiveQty, product) : null;
@@ -160,27 +156,19 @@ const ProductDetailPage = () => {
     return () => clearTimeout(pulseTimer);
   }, [effectiveQty, product, lastTier]);
 
-  useEffect(() => {
-    setQty(1);
-    setQtyInput("1");
-    setLastTier(1);
-    setShowUnlock(false);
-    setPricePulse(false);
-  }, [id]);
+  const related = product
+    ? (() => {
+        const sameCategory = products.filter(
+          (p) => p.category === product.category && p.id !== product.id
+        );
 
- const related = product
-  ? (() => {
-      const sameCategory = products.filter(
-        (p) => p.category === product.category && p.id !== product.id
-      );
+        const otherCategories = products.filter(
+          (p) => p.category !== product.category && p.id !== product.id
+        );
 
-      const otherCategories = products.filter(
-        (p) => p.category !== product.category && p.id !== product.id
-      );
-
-      return [...sameCategory.slice(0, 4), ...otherCategories.slice(0, 4)];
-    })()
-  : [];
+        return [...sameCategory.slice(0, 4), ...otherCategories.slice(0, 4)];
+      })()
+    : [];
 
   const updateQty = useCallback((newQty: number) => {
     const safeQty = Math.max(1, Math.floor(newQty));
@@ -239,10 +227,9 @@ const ProductDetailPage = () => {
   );
 
   const handleAddToCart = useCallback(() => {
-    if (!product || !available || !isQtyInputValid) return;
+    if (!product || !available || !isQtyInputValid || parsedQtyInput === null) return;
 
     addToCart(product, parsedQtyInput);
-
     showNotification("🔥 Agregado", `${parsedQtyInput}x ${product.title}`);
   }, [product, available, isQtyInputValid, parsedQtyInput, addToCart]);
 
@@ -290,14 +277,7 @@ const ProductDetailPage = () => {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-center">
-          <div className="w-16 h-16 bg-primary/20 rounded-2xl mx-auto mb-4" />
-          <p className="text-muted-foreground font-bold text-sm">Cargando producto...</p>
-        </div>
-      </div>
-    );
+    return <ProductSkeleton />;
   }
 
   if (!product) {
@@ -324,7 +304,6 @@ const ProductDetailPage = () => {
     <div className="min-h-screen bg-background pb-40">
       <NotificationStack />
 
-      {/* HEADER */}
       <header className="sticky top-0 z-[100] w-full flex flex-col shadow-sm">
         <CountdownTimer />
         <div className="bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 md:py-4">
@@ -357,7 +336,6 @@ const ProductDetailPage = () => {
 
       <main className="max-w-5xl mx-auto px-4 md:px-6 mt-6 md:mt-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          {/* IMAGEN */}
           <div className="relative">
             <div
               className="aspect-square overflow-hidden rounded-3xl bg-muted border border-border shadow-lg group cursor-zoom-in"
@@ -400,12 +378,8 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* INFO */}
           <div className="flex flex-col gap-6">
-            {/* título + descripción */}
             <div className="text-center md:text-left">
-              
-
               <h2 className="text-2xl md:text-3xl font-black text-foreground leading-tight mb-3">
                 {product.title}
               </h2>
@@ -415,7 +389,6 @@ const ProductDetailPage = () => {
               </p>
             </div>
 
-            {/* stock + viendo ahora */}
             <div className="flex items-center justify-center md:justify-start gap-4 flex-wrap">
               <div className={`inline-flex items-center gap-2 ${stockColorClass}`}>
                 <StockIcon className="w-4 h-4" />
@@ -429,9 +402,8 @@ const ProductDetailPage = () => {
               )}
             </div>
 
-            {/* fila de precios */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-2">
-              {TIER_DISPLAY.map((t) => {
+            <div className="flex flex-wrap justify-center md:justify-start gap-1.5">
+              {PRICE_TIERS.map((t) => {
                 const val = product[t.key];
                 if (!val) return null;
 
@@ -444,37 +416,42 @@ const ProductDetailPage = () => {
 
                 const colorMap = {
                   price_1: active
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-primary/10 text-primary border-primary/20",
+                    ? "bg-primary text-primary-foreground border-primary shadow-lg"
+                    : "bg-primary/10 text-primary border-primary/20 hover:bg-primary/15",
                   price_3: active
-                    ? "bg-tertiary text-tertiary-foreground border-tertiary"
-                    : "bg-tertiary/10 text-tertiary border-tertiary/20",
+                    ? "bg-tertiary text-tertiary-foreground border-tertiary shadow-lg"
+                    : "bg-tertiary/10 text-tertiary border-tertiary/20 hover:bg-tertiary/15",
                   price_12: active
-                    ? "bg-secondary text-secondary-foreground border-secondary"
-                    : "bg-secondary/10 text-secondary border-secondary/20",
+                    ? "bg-secondary text-secondary-foreground border-secondary shadow-lg"
+                    : "bg-secondary/10 text-secondary border-secondary/20 hover:bg-secondary/15",
                   price_50: active
-                    ? "bg-purple-500 text-white border-purple-500"
-                    : "bg-purple-500/10 text-purple-600 border-purple-500/20",
+                    ? "bg-purple-500 text-white border-purple-500 shadow-lg"
+                    : "bg-purple-500/10 text-purple-600 border-purple-500/20 hover:bg-purple-500/15",
                   price_100: active
-                    ? "bg-dark text-white border-dark"
-                    : "bg-dark/10 text-dark border-dark/20",
+                    ? "bg-dark text-white border-dark shadow-lg"
+                    : "bg-dark/10 text-dark border-dark/20 hover:bg-dark/15",
                 };
 
                 return (
-                  <div
+                  <button
                     key={t.key}
-                    className={`px-3 py-2 rounded-xl border transition-all text-center min-w-[86px] shadow-sm ${
+                    type="button"
+                    onClick={() => updateQty(t.qty)}
+                    className={`px-2.5 py-2 rounded-xl border transition-all duration-200 text-center min-w-[74px] md:min-w-[78px] shadow-sm cursor-pointer ${
                       colorMap[t.key]
-                    } ${active ? "scale-[1.03]" : ""}`}
+                    } ${active ? "scale-[1.03]" : "hover:scale-[1.02]"}`}
                   >
-                    <p className="text-[10px] font-black uppercase tracking-wide">{t.label}</p>
-                    <p className="text-sm font-black mt-1">S/ {val.toFixed(2)}</p>
-                  </div>
+                    <p className="text-[11px] md:text-[11px] font-black tracking-wide leading-none">
+                      {t.label}
+                    </p>
+                    <p className="text-[13px] md:text-sm font-black mt-1 leading-none">
+                      S/ {val.toFixed(2)}
+                    </p>
+                  </button>
                 );
               })}
             </div>
-
-            {/* precio actual */}
+            
             <div className="text-center md:text-left">
               <div className="flex items-end justify-center md:justify-start gap-2">
                 <span className="text-lg md:text-xl font-black text-muted-foreground">S/</span>
@@ -519,7 +496,6 @@ const ProductDetailPage = () => {
               )}
             </div>
 
-            {/* cantidad */}
             {available && (
               <div className="flex justify-center md:justify-start items-center gap-4">
                 <button
@@ -555,7 +531,6 @@ const ProductDetailPage = () => {
               </div>
             )}
 
-            {/* botón */}
             {available ? (
               <button
                 onClick={handleAddToCart}
@@ -583,7 +558,6 @@ const ProductDetailPage = () => {
           </div>
         </div>
 
-        {/* relacionados */}
         {related.length > 0 && (
           <section className="mt-16">
             <h3 className="text-lg md:text-xl font-black text-foreground mb-6 tracking-tight">
@@ -607,7 +581,6 @@ const ProductDetailPage = () => {
         )}
       </main>
 
-      {/* extras */}
       <FloatingButtons cartCount={totalItems} onCartClick={() => setCartOpen(true)} />
       <RecentActivity products={products} />
 

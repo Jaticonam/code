@@ -9,15 +9,15 @@ import {
   Clock,
   XCircle,
 } from "lucide-react";
-import { Product } from "@/types/product";
+import { CartItem, Product } from "@/types/product";
 import { getMinPrice, isProductAvailable } from "@/lib/products";
 
 interface ProductCardProps {
   product: Product;
+  cart?: CartItem[];
   onAddToCart: (product: Product) => void;
-  onImageClick: (src: string, title: string) => void;
+  onImageClick?: (src: string, title: string) => void;
 }
-
 
 const BADGE_STYLE_RULES = [
   {
@@ -57,15 +57,21 @@ const BADGE_STYLE_RULES = [
   },
 ];
 
-  
-export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
+export function ProductCard({
+  product: p,
+  cart = [],
+  onAddToCart,
+}: ProductCardProps) {
   const navigate = useNavigate();
   const available = isProductAvailable(p);
   const isPreventa = (p.status || "").trim().toLowerCase() === "preventa";
   const minPrice = getMinPrice(p);
 
+  const cartItem = cart.find((item) => item.id === p.id);
+  const qtyInCart = cartItem?.qty ?? 0;
+  const isInCart = qtyInCart > 0;
+
   const [viewers, setViewers] = useState(Math.floor(Math.random() * 8) + 6);
-  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,11 +85,7 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
 
   const handleAdd = () => {
     if (!available || isPreventa) return;
-
     onAddToCart(p);
-    setAdded(true);
-
-    setTimeout(() => setAdded(false), 1200);
   };
 
   const handleWhatsApp = () => {
@@ -129,7 +131,6 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
 
   return (
     <div className="bg-card rounded-[20px] md:rounded-[28px] border border-border p-2.5 md:p-4 flex flex-col shadow-sm text-center transition-all duration-400 hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
-      {/* Imagen */}
       <div className="relative aspect-square overflow-hidden rounded-[14px] md:rounded-[20px] mb-2.5 bg-muted">
         <img
           src={p.img || "/placeholder.svg"}
@@ -141,7 +142,6 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
           loading="lazy"
         />
 
-        {/* Badges dinámicos */}
         {p.badges && p.badges.length > 0 && (
           <div className="absolute top-2 left-2 flex flex-col gap-1.5 items-start max-w-[75%] z-10">
             {sortBadges(p.badges)
@@ -164,26 +164,42 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
               })}
           </div>
         )}
-        
-        {/* Precios por volumen */}
+
+        {isInCart && (
+          <div className="absolute top-2 right-2 z-10">
+            <div className="inline-flex items-center gap-1 rounded-full bg-green-600 text-white px-2 py-1 shadow-md">
+              <CheckCircle className="w-3.5 h-3.5" />
+              <span className="text-[10px] md:text-[11px] font-bold leading-none">
+                {qtyInCart} en caja
+              </span>
+            </div>
+          </div>
+        )}
+
         {available && !isPreventa && (
           <div className="absolute bottom-2 right-2 flex flex-col gap-1 items-end">
-            {getAvailablePriceTiers(p).map((t, i) => (
-              <div
-                key={t.key}
-                className={`${t.className} text-white text-[10px] font-black px-2 py-0.5 rounded shadow`}
-                style={{ animationDelay: `${i * 80}ms` }}
-              >
-                S/{(p[t.key] ?? 0).toFixed(1)}
-              </div>
-            ))}
+            {getAvailablePriceTiers(p).map((t, i) => {
+              const price = p[t.key];
+
+              if (typeof price !== "number" || !Number.isFinite(price) || price <= 0) {
+                return null;
+              }
+
+              return (
+                <div
+                  key={t.key}
+                  className={`${t.className} price-badge-bounce text-[11px] font-black px-2.5 py-1 rounded-md shadow`}
+                  style={{ animationDelay: `${i * 120}ms` }}
+                >
+                  {t.label} S/{price.toFixed(1)}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* Info */}
       <div className="px-1 md:px-2 flex-grow flex flex-col justify-between">
-        {/* Meta */}
         <div className="flex items-center justify-center gap-2 mb-1.5 flex-wrap">
           <span className="text-[10px] text-muted-foreground font-semibold">
             {p.id}
@@ -194,7 +210,6 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
           </span>
         </div>
 
-        {/* Título */}
         <h3
           onClick={goToDetail}
           className={`cursor-pointer hover:text-primary transition-colors font-extrabold text-[15px] md:text-[17px] line-clamp-2 leading-snug ${
@@ -204,12 +219,10 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
           {p.title}
         </h3>
 
-        {/* Descripción */}
         <p className="text-[12px] text-muted-foreground mt-1.5 line-clamp-2">
           {p.description || (isPreventa ? "Consulta más información sobre esta preventa." : "")}
         </p>
 
-        {/* Texto campaña */}
         {available && !isPreventa && (
           <p className="text-[12px] text-primary font-semibold mt-2">
             🔥 Precios de campaña
@@ -222,7 +235,6 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
           </p>
         )}
 
-        {/* Precio */}
         <div className="mt-3 pt-3 border-t border-border flex flex-col items-center gap-1">
           {isPreventa ? (
             <>
@@ -259,7 +271,6 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
           )}
         </div>
 
-        {/* Stock */}
         <div
           className={`mt-2 inline-flex items-center justify-center gap-1 px-3 py-1 rounded-full text-[10px] font-semibold ${stockColorClass}`}
         >
@@ -267,14 +278,12 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
           {stockText}
         </div>
 
-        {/* Personas viendo */}
         {(available || isPreventa) && (
           <p className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold mt-1">
             👀 {viewers} viendo ahora
           </p>
         )}
 
-        {/* Botón */}
         <button
           onClick={isPreventa ? handleWhatsApp : handleAdd}
           disabled={!available && !isPreventa}
@@ -282,8 +291,8 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
             "w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[12px] font-semibold transition-all duration-200",
             isPreventa
               ? "bg-green-500 text-white hover:bg-green-600"
-              : added
-              ? "bg-success text-white"
+              : isInCart
+              ? "bg-green-600 text-white hover:bg-green-700 active:scale-[0.96]"
               : available
               ? "bg-primary/95 text-primary-foreground active:scale-[0.96]"
               : "bg-muted text-muted-foreground cursor-not-allowed",
@@ -291,16 +300,18 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
         >
           {isPreventa ? (
             <span>Consultar por WhatsApp</span>
-          ) : added ? (
-            <>
-              <CheckCircle className="w-4 h-4" />
-              <span>Agregado</span>
-            </>
           ) : available ? (
-            <>
-              <PlusCircle className="w-4 h-4" />
-              <span>Agregar a caja</span>
-            </>
+            isInCart ? (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                <span>Agregar más</span>
+              </>
+            ) : (
+              <>
+                <PlusCircle className="w-4 h-4" />
+                <span>Agregar a caja</span>
+              </>
+            )
           ) : (
             <span>Agotado</span>
           )}

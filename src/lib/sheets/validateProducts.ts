@@ -6,12 +6,16 @@ function normalizeStatus(status: string): string {
 
 export function validateProducts(products: SheetProduct[]): SheetProduct[] {
   const seen = new Set<string>();
+  const allowedStatuses = new Set(["publicado", "preventa"]);
 
   return products.filter((p) => {
     const status = normalizeStatus(p.status);
 
     if (!p.id) {
-      console.warn("Producto descartado: sin id");
+      console.warn("Producto descartado: sin id", {
+        title: p.title,
+        status: p.status,
+      });
       return false;
     }
 
@@ -25,13 +29,13 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
       return false;
     }
 
-    // Ocultos o borradores no entran
-    if (status === "draft" || status === "hidden") {
+    // Solo leemos productos con status permitido
+    if (!allowedStatuses.has(status)) {
       return false;
     }
 
     // Publicado: debe estar listo para vender
-    if (status === "Publicado") {
+    if (status === "publicado") {
       if (Number.isNaN(p.price_1) || p.price_1 <= 0) {
         console.warn("Producto publicado descartado: price_1 inválido ->", p.id);
         return false;
@@ -46,12 +50,6 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
     // Preventa: puede entrar con información parcial
     if (status === "preventa") {
       // Solo exigimos id + title, ya validados arriba.
-      // Si luego quieres, aquí podemos exigir imagen mínima.
-    }
-
-    // Si viene cualquier otro status raro, mejor no mostrarlo
-    if (status !== "publicado" && status !== "preventa") {
-      return false;
     }
 
     seen.add(p.id);

@@ -10,6 +10,7 @@ export interface Product {
   price_100: number | null;
   stock: number | null;
   img: string;
+  priority: number;
   status?: string;
   badges?: string[];
 }
