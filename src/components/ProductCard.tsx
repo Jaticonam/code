@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
+import { getAvailablePriceTiers } from "@/config/priceTiers";
 import {
   PlusCircle,
   CheckCircle,
@@ -16,12 +18,6 @@ interface ProductCardProps {
   onImageClick: (src: string, title: string) => void;
 }
 
-const TIER_TAGS = [
-  { key: "price_3" as const, label: "3u+", cls: "bg-tertiary/90" },
-  { key: "price_12" as const, label: "12u+", cls: "bg-secondary/90" },
-  { key: "price_50" as const, label: "50u+", cls: "bg-purple-500/90" },
-  { key: "price_100" as const, label: "100u+", cls: "bg-dark/90" },
-];
 
 const BADGE_STYLE_RULES = [
   {
@@ -61,53 +57,7 @@ const BADGE_STYLE_RULES = [
   },
 ];
 
-function normalizeBadgeText(badge: string): string {
-  return badge
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
-}
-
-function getBadgePresentation(badge: string) {
-  const value = normalizeBadgeText(badge);
-
-  const matchedRule = BADGE_STYLE_RULES.find((rule) =>
-    rule.keywords.some((keyword) => value.includes(keyword))
-  );
-
-  if (matchedRule) {
-    return {
-      className: matchedRule.className,
-      animation: matchedRule.animation,
-    };
-  }
-
-  return {
-    className: "bg-black/80 text-white",
-    animation: "",
-  };
-}
-
-function getBadgeAnimationClass(badge: string): string {
-  const value = badge
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .toLowerCase()
-    .trim();
-
-  if (value.includes("preventa") || value.includes("nuevo")) {
-    return "animate-pulse";
-  }
-
-  if (value.includes("oferta") || value.includes("cyber")) {
-    return "animate-bounce";
-  }
-
-  return "";
-}
-
+  
 export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
   const navigate = useNavigate();
   const available = isProductAvailable(p);
@@ -194,38 +144,39 @@ export function ProductCard({ product: p, onAddToCart }: ProductCardProps) {
         {/* Badges dinámicos */}
         {p.badges && p.badges.length > 0 && (
           <div className="absolute top-2 left-2 flex flex-col gap-1.5 items-start max-w-[75%] z-10">
-            {p.badges.map((badge, index) => {
-              const presentation = getBadgePresentation(badge);
+            {sortBadges(p.badges)
+              .slice(0, 2)
+              .map((badge, index) => {
+                const presentation = getBadgePresentation(badge);
 
-              return (
-                <div
-                  key={`${p.id}-badge-${index}`}
-                  className={[
-                    "text-[10px] md:text-[11px] font-semibold px-3 py-1 rounded-full leading-tight tracking-normal backdrop-blur-sm border border-white/10 shadow-md",
-                    presentation.className,
-                    presentation.animation,
-                  ].join(" ")}
-                >
-                  {badge}
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={`${p.id}-badge-${index}`}
+                    className={[
+                      "text-[10px] md:text-[11px] font-semibold px-3 py-1 rounded-full leading-tight tracking-normal backdrop-blur-sm border border-white/10 shadow-md",
+                      presentation.className,
+                      presentation.animation,
+                    ].join(" ")}
+                  >
+                    {badge}
+                  </div>
+                );
+              })}
           </div>
         )}
+        
         {/* Precios por volumen */}
         {available && !isPreventa && (
           <div className="absolute bottom-2 right-2 flex flex-col gap-1 items-end">
-            {TIER_TAGS.map((t, i) =>
-              p[t.key] ? (
-                <div
-                  key={t.key}
-                  className={`${t.cls} text-white text-[10px] font-black px-2 py-0.5 rounded shadow`}
-                  style={{ animationDelay: `${i * 80}ms` }}
-                >
-                  {t.label} S/{p[t.key]!.toFixed(1)}
-                </div>
-              ) : null
-            )}
+            {getAvailablePriceTiers(p).map((t, i) => (
+              <div
+                key={t.key}
+                className={`${t.className} text-white text-[10px] font-black px-2 py-0.5 rounded shadow`}
+                style={{ animationDelay: `${i * 80}ms` }}
+              >
+                S/{(p[t.key] ?? 0).toFixed(1)}
+              </div>
+            ))}
           </div>
         )}
       </div>

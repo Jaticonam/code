@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
 import {
   ArrowLeft,
   PlusCircle,
@@ -370,9 +371,28 @@ const ProductDetailPage = () => {
                 }`}
               />
 
-              <div className="absolute top-4 left-4 bg-red-600 text-primary-foreground text-[9px] font-black px-3 py-1.5 rounded-lg shadow-lg uppercase tracking-widest">
-                🎯 CYBERMOM
-              </div>
+              {product.badges && product.badges.length > 0 && (
+                <div className="absolute top-4 left-4 flex flex-col gap-2 items-start max-w-[75%] z-10">
+                  {sortBadges(product.badges)
+                    .slice(0, 3)
+                    .map((badge, index) => {
+                      const presentation = getBadgePresentation(badge);
+
+                      return (
+                        <div
+                          key={`${product.id}-detail-image-badge-${index}`}
+                          className={[
+                            "px-3 py-1.5 rounded-full text-[10px] md:text-[11px] font-semibold leading-tight tracking-normal border border-white/10 shadow-md backdrop-blur-sm",
+                            presentation.className,
+                            presentation.animation,
+                          ].join(" ")}
+                        >
+                          {badge}
+                        </div>
+                      );
+                    })}
+                </div>
+              )}
 
               <div className="absolute bottom-4 right-4 bg-card/80 backdrop-blur-sm p-2 rounded-xl text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
                 <ZoomIn className="w-5 h-5" />
@@ -384,14 +404,7 @@ const ProductDetailPage = () => {
           <div className="flex flex-col gap-6">
             {/* título + descripción */}
             <div className="text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap mb-3">
-                <span className="text-[11px] text-muted-foreground font-semibold">
-                  {product.id}
-                </span>
-                <span className="px-2 py-1 rounded-full bg-muted text-[10px] font-semibold text-foreground uppercase tracking-wide">
-                  {product.category}
-                </span>
-              </div>
+              
 
               <h2 className="text-2xl md:text-3xl font-black text-foreground leading-tight mb-3">
                 {product.title}
