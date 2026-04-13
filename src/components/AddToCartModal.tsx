@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, X } from "lucide-react";
 import { Product } from "@/types/product";
+import { Package } from "lucide-react";
 
 interface AddToCartModalProps {
   open: boolean;
@@ -9,6 +10,8 @@ interface AddToCartModalProps {
   onClose: () => void;
   onAddExtra: (qty: number) => void;
   onOpenCart: () => void;
+  secondaryActionLabel?: string;
+  onSecondaryAction?: () => void;
 }
 
 function getNextTier(product: Product, qty: number) {
@@ -36,7 +39,10 @@ export function AddToCartModal({
   onClose,
   onAddExtra,
   onOpenCart,
+  secondaryActionLabel,
+  onSecondaryAction,
 }: AddToCartModalProps) {
+
   const [pulse, setPulse] = useState(false);
 
   const nextTier = product ? getNextTier(product, currentQty) : null;
@@ -95,24 +101,24 @@ export function AddToCartModal({
 
             <div>
               <p className="text-[12px] text-slate-500">
-                Ya tienes {currentQty} unidad{currentQty !== 1 ? "es" : ""} de este producto
+                Vas con {currentQty} unidad{currentQty !== 1 ? "es" : ""}
               </p>
 
               {nextTier ? (
                 <p className="text-[13px] text-slate-700 mt-1">
-                  Si completas{" "}
+                  Con{" "}
                   <span className="font-extrabold text-primary">
                     {nextTier.targetQty} unidades
-                  </span>
-                  , pagas{" "}
+                  </span>{" "}
+                  bajas a{" "}
                   <span className="font-extrabold text-primary">
                     S/{nextTier.unitPrice.toFixed(1)}
                   </span>{" "}
-                  por unidad.
+                  c/u
                 </p>
               ) : (
-                <p className="text-[13px] text-slate-700 mt-1">
-                  Ya tienes el mejor precio para este producto.
+                <p className="text-[13px] text-green-600 font-semibold mt-1">
+                  Ya tienes el mejor precio 🔥
                 </p>
               )}
             </div>
@@ -123,20 +129,21 @@ export function AddToCartModal({
         {hasUpsell && (
           <div className="mt-3 rounded-xl bg-primary/10 border border-primary/15 p-3">
             <p className="text-[12px] font-bold text-slate-800">
-              Agrega {missingQty} más y mejora tu precio
+              Estás a {missingQty} más para bajar el precio… ¡Aprovecha! 😏
             </p>
           </div>
         )}
 
         {/* BOTONES */}
         <div className="mt-4 space-y-2">
+          
           <div className="grid grid-cols-2 gap-2">
             {hasUpsell ? (
               <button
                 onClick={() => onAddExtra(missingQty)}
                 className="w-full rounded-xl bg-primary text-white py-2.5 text-[13px] font-bold active:scale-[0.97]"
               >
-                Aumenta +{missingQty}
+                Bajar precio (+{missingQty})
               </button>
             ) : (
               <button
@@ -148,19 +155,21 @@ export function AddToCartModal({
             )}
 
             <button
-            onClick={onClose}
-            className="w-full rounded-xl bg-secondary/10 text-secondary py-2.5 px-3 text-[13px] font-semibold hover:bg-secondary/20 active:scale-[0.97] transition-all duration-200"
+              onClick={onSecondaryAction ?? onClose}
+              className="w-full rounded-xl border-2 border-secondary/40 bg-secondary/5 text-secondary py-2.5 px-3 text-[13px] font-semibold hover:bg-secondary/10 hover:border-secondary/60 active:scale-[0.98] transition-all duration-200"
             >
-            Seguir comprando
+              {secondaryActionLabel ?? "Seguir acumulando"}
             </button>
           </div>
 
           <button
             onClick={onOpenCart}
-            className="w-full rounded-xl bg-slate-800 text-white py-2.5 text-[13px] font-bold"
+            className="w-full rounded-xl bg-primary text-white py-2.5 text-[13px] font-bold flex items-center justify-center gap-2 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 shadow-sm"
           >
+            <Package className="w-4 h-4" />
             Ver mi caja
           </button>
+
         </div>
       </div>
     </div>

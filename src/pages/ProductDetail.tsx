@@ -1,7 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
-import { PRICE_TIERS } from "@/config/priceTiers";
 import {
   ArrowLeft,
   PlusCircle,
@@ -16,9 +14,12 @@ import {
   Share2,
 } from "lucide-react";
 
+import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
+import { PRICE_TIERS } from "@/config/priceTiers";
 import { useCart } from "@/hooks/use-cart";
 import { fetchProducts, isProductAvailable } from "@/lib/products";
 import { Product } from "@/types/product";
+
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { CartSidebar } from "@/components/CartSidebar";
 import { NotificationStack, showNotification } from "@/components/NotificationStack";
@@ -27,39 +28,45 @@ import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductSkeleton } from "@/components/skeletons/ProductSkeleton";
+import { AddToCartModal } from "@/components/AddToCartModal";
 
-const getUnitPrice = (qty: number, p: Product) => {
-  if (qty >= 100 && p.price_100) return p.price_100;
-  if (qty >= 50 && p.price_50) return p.price_50;
-  if (qty >= 12 && p.price_12) return p.price_12;
-  if (qty >= 3 && p.price_3) return p.price_3;
-  return p.price_1 || 0;
+const getUnitPrice = (qty: number, product: Product) => {
+  if (qty >= 100 && product.price_100) return product.price_100;
+  if (qty >= 50 && product.price_50) return product.price_50;
+  if (qty >= 12 && product.price_12) return product.price_12;
+  if (qty >= 3 && product.price_3) return product.price_3;
+  return product.price_1 || 0;
 };
 
-const getNextTier = (qty: number, p: Product) => {
-  if (qty < 3 && p.price_3) return { qty: 3, price: p.price_3 };
-  if (qty < 12 && p.price_12) return { qty: 12, price: p.price_12 };
-  if (qty < 50 && p.price_50) return { qty: 50, price: p.price_50 };
-  if (qty < 100 && p.price_100) return { qty: 100, price: p.price_100 };
+const getNextTier = (qty: number, product: Product) => {
+  if (qty < 3 && product.price_3) return { qty: 3, price: product.price_3 };
+  if (qty < 12 && product.price_12) return { qty: 12, price: product.price_12 };
+  if (qty < 50 && product.price_50) return { qty: 50, price: product.price_50 };
+  if (qty < 100 && product.price_100) return { qty: 100, price: product.price_100 };
   return null;
 };
 
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
   const currentCategory = searchParams.get("cat") || "";
   const id = searchParams.get("id") || paramId;
-  const navigate = useNavigate();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [cartOpen, setCartOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
 
   const [qty, setQty] = useState(1);
   const [qtyInput, setQtyInput] = useState("1");
-  const [viewers, setViewers] = useState(Math.floor(Math.random() * 8) + 6);
+  const [modalQty, setModalQty] = useState(0);
 
+  const [viewers, setViewers] = useState(() => Math.floor(Math.random() * 8) + 6);
   const [lastTier, setLastTier] = useState(1);
   const [showUnlock, setShowUnlock] = useState(false);
   const [pricePulse, setPricePulse] = useState(false);
@@ -77,8 +84,8 @@ const ProductDetailPage = () => {
   } = useCart();
 
   useEffect(() => {
-    fetchProducts().then((p) => {
-      setProducts(p);
+    fetchProducts().then((data) => {
+      setProducts(data);
       setLoading(false);
     });
   }, []);
@@ -102,15 +109,26 @@ const ProductDetailPage = () => {
 
     setQty(1);
     setQtyInput("1");
+    setModalQty(0);
     setLastTier(1);
     setShowUnlock(false);
     setPricePulse(false);
+    setAddModalOpen(false);
 
     return () => clearTimeout(timer);
   }, [id]);
 
-  const product = products.find((p) => p.id === id);
+  const product = useMemo(
+    () => products.find((item) => item.id === id),
+    [products, id]
+  );
+
   const available = product ? isProductAvailable(product) : false;
+
+  const currentCartQty = useMemo(() => {
+    if (!product) return 0;
+    return cart.find((item) => item.id === product.id)?.qty ?? 0;
+  }, [cart, product]);
 
   const parsedQtyInput =
     qtyInput.trim() !== "" && /^\d+$/.test(qtyInput)
@@ -119,6 +137,7 @@ const ProductDetailPage = () => {
 
   const isQtyInputValid = parsedQtyInput !== null && parsedQtyInput >= 1;
   const effectiveQty = isQtyInputValid ? parsedQtyInput : qty;
+
   const unitPrice = product ? getUnitPrice(effectiveQty, product) : 0;
   const total = unitPrice * effectiveQty;
   const nextTier = product ? getNextTier(effectiveQty, product) : null;
@@ -156,19 +175,19 @@ const ProductDetailPage = () => {
     return () => clearTimeout(pulseTimer);
   }, [effectiveQty, product, lastTier]);
 
-  const related = product
-    ? (() => {
-        const sameCategory = products.filter(
-          (p) => p.category === product.category && p.id !== product.id
-        );
+  const related = useMemo(() => {
+    if (!product) return [];
 
-        const otherCategories = products.filter(
-          (p) => p.category !== product.category && p.id !== product.id
-        );
+    const sameCategory = products.filter(
+      (item) => item.category === product.category && item.id !== product.id
+    );
 
-        return [...sameCategory.slice(0, 4), ...otherCategories.slice(0, 4)];
-      })()
-    : [];
+    const otherCategories = products.filter(
+      (item) => item.category !== product.category && item.id !== product.id
+    );
+
+    return [...sameCategory.slice(0, 4), ...otherCategories.slice(0, 4)];
+  }, [products, product]);
 
   const updateQty = useCallback((newQty: number) => {
     const safeQty = Math.max(1, Math.floor(newQty));
@@ -229,9 +248,50 @@ const ProductDetailPage = () => {
   const handleAddToCart = useCallback(() => {
     if (!product || !available || !isQtyInputValid || parsedQtyInput === null) return;
 
+    const nextQtyInCart = currentCartQty + parsedQtyInput;
+
     addToCart(product, parsedQtyInput);
-    showNotification("🔥 Agregado", `${parsedQtyInput}x ${product.title}`);
-  }, [product, available, isQtyInputValid, parsedQtyInput, addToCart]);
+    setModalQty(nextQtyInCart);
+    setAddModalOpen(true);
+
+
+  }, [
+    product,
+    available,
+    isQtyInputValid,
+    parsedQtyInput,
+    currentCartQty,
+    addToCart,
+  ]);
+
+  const handleCloseAddModal = useCallback(() => {
+    setAddModalOpen(false);
+  }, []);
+
+  const handleOpenCartFromModal = useCallback(() => {
+    setAddModalOpen(false);
+    setCartOpen(true);
+  }, []);
+
+  const handleAddExtraFromModal = useCallback(
+    (extraQty: number) => {
+      if (!product || extraQty <= 0) return;
+
+      const nextQty = modalQty + extraQty;
+
+      addToCart(product, extraQty);
+      setModalQty(nextQty);
+      setQty(nextQty);
+      setQtyInput(String(nextQty));
+     
+    },
+    [product, modalQty, addToCart]
+  );
+
+  const handleContinueAccumulating = useCallback(() => {
+    setAddModalOpen(false);
+    navigate("/catalogo");
+  }, [navigate]);
 
   const handleShare = useCallback(() => {
     if (!product) return;
@@ -403,16 +463,16 @@ const ProductDetailPage = () => {
             </div>
 
             <div className="flex flex-wrap justify-center md:justify-start gap-1.5">
-              {PRICE_TIERS.map((t) => {
-                const val = product[t.key];
-                if (!val) return null;
+              {PRICE_TIERS.map((tier) => {
+                const value = product[tier.key];
+                if (!value) return null;
 
                 const active =
-                  (t.qty === 1 && effectiveQty < 3) ||
-                  (t.qty === 3 && effectiveQty >= 3 && effectiveQty < 12) ||
-                  (t.qty === 12 && effectiveQty >= 12 && effectiveQty < 50) ||
-                  (t.qty === 50 && effectiveQty >= 50 && effectiveQty < 100) ||
-                  (t.qty === 100 && effectiveQty >= 100);
+                  (tier.qty === 1 && effectiveQty < 3) ||
+                  (tier.qty === 3 && effectiveQty >= 3 && effectiveQty < 12) ||
+                  (tier.qty === 12 && effectiveQty >= 12 && effectiveQty < 50) ||
+                  (tier.qty === 50 && effectiveQty >= 50 && effectiveQty < 100) ||
+                  (tier.qty === 100 && effectiveQty >= 100);
 
                 const colorMap = {
                   price_1: active
@@ -430,28 +490,28 @@ const ProductDetailPage = () => {
                   price_100: active
                     ? "bg-dark text-white border-dark shadow-lg"
                     : "bg-dark/10 text-dark border-dark/20 hover:bg-dark/15",
-                };
+                } as const;
 
                 return (
                   <button
-                    key={t.key}
+                    key={tier.key}
                     type="button"
-                    onClick={() => updateQty(t.qty)}
+                    onClick={() => updateQty(tier.qty)}
                     className={`px-2.5 py-2 rounded-xl border transition-all duration-200 text-center min-w-[74px] md:min-w-[78px] shadow-sm cursor-pointer ${
-                      colorMap[t.key]
+                      colorMap[tier.key]
                     } ${active ? "scale-[1.03]" : "hover:scale-[1.02]"}`}
                   >
                     <p className="text-[11px] md:text-[11px] font-black tracking-wide leading-none">
-                      {t.label}
+                      {tier.label}
                     </p>
                     <p className="text-[13px] md:text-sm font-black mt-1 leading-none">
-                      S/ {val.toFixed(2)}
+                      S/ {value.toFixed(2)}
                     </p>
                   </button>
                 );
               })}
             </div>
-            
+
             <div className="text-center md:text-left">
               <div className="flex items-end justify-center md:justify-start gap-2">
                 <span className="text-lg md:text-xl font-black text-muted-foreground">S/</span>
@@ -565,13 +625,13 @@ const ProductDetailPage = () => {
             </h3>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6">
-              {related.map((r) => (
+              {related.map((relatedProduct) => (
                 <ProductCard
-                  key={r.id}
-                  product={r}
-                  onAddToCart={(p) => {
-                    addToCart(p, 1);
-                    showNotification("¡Agregado!", p.title);
+                  key={relatedProduct.id}
+                  product={relatedProduct}
+                  onAddToCart={(item) => {
+                    addToCart(item, 1);
+                    showNotification("¡Agregado!", item.title);
                   }}
                   onImageClick={(src, title) => setZoomImage({ src, title })}
                 />
@@ -595,6 +655,17 @@ const ProductDetailPage = () => {
         onChangeQty={changeQty}
         onSetQty={setExactQty}
         onChangeNote={setItemNote}
+      />
+
+      <AddToCartModal
+        open={addModalOpen}
+        product={product}
+        currentQty={modalQty}
+        onClose={handleCloseAddModal}
+        onAddExtra={handleAddExtraFromModal}
+        onOpenCart={handleOpenCartFromModal}
+        secondaryActionLabel="Seguir acumulando"
+        onSecondaryAction={handleContinueAccumulating}
       />
 
       <ImageZoomModal
