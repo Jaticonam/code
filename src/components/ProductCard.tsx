@@ -65,6 +65,8 @@ export function ProductCard({
   const navigate = useNavigate();
   const available = isProductAvailable(p);
   const isPreventa = (p.status || "").trim().toLowerCase() === "preventa";
+  const isOutOfStock = !isPreventa && !!p.price_1 && p.stock === 0;
+  const showWhatsAppButton = isPreventa || isOutOfStock;
   const minPrice = getMinPrice(p);
   const getBestTier = (product: Product) => {
     const tiers = [
@@ -109,11 +111,29 @@ export function ProductCard({
   };
 
   const handleWhatsApp = () => {
-    const message =
-      `Hola, quiero más información sobre este producto:%0A%0A` +
-      `ID: ${p.id}%0A` +
-      `Producto: ${p.title}%0A` +
-      `Categoría: ${p.category}`;
+    let message = "";
+
+    if (isPreventa) {
+      message =
+        `Hola, quiero información sobre este producto en preventa:%0A%0A` +
+        `ID: ${p.id}%0A` +
+        `Producto: ${p.title}%0A` +
+        `Categoría: ${p.category}`;
+        
+    } else if (isOutOfStock) {
+      message =
+        `Hola, quiero pedir reposición de este producto:%0A%0A` +
+        `ID: ${p.id}%0A` +
+        `Producto: ${p.title}%0A` +
+        `Categoría: ${p.category}`;
+        
+    } else {
+      message =
+        `Hola, quiero más información sobre este producto:%0A%0A` +
+        `ID: ${p.id}%0A` +
+        `Producto: ${p.title}%0A` +
+        `Categoría: ${p.category}`;
+    }
 
     const url = `https://wa.me/51936188636?text=${message}`;
     window.open(url, "_blank");
@@ -127,25 +147,36 @@ export function ProductCard({
     stockText = "Preventa";
     stockColorClass = "bg-green-100 text-green-700";
     StockIcon = Clock;
+
   } else if (!p.price_1 || p.price_1 <= 0 || p.stock === null || p.stock === undefined) {
     stockText = "Próximo";
     stockColorClass = "bg-muted text-muted-foreground";
     StockIcon = Clock;
+
   } else if (p.stock === 0) {
     stockText = "Agotado";
     stockColorClass = "bg-destructive/10 text-destructive";
     StockIcon = XCircle;
-  } else if (p.stock <= 3) {
-    stockText = "Últimos";
-    stockColorClass = "bg-tertiary/10 text-tertiary";
+
+  } else if (p.stock <= 12) {
+    // 🔥 SOLO AQUÍ mostramos número
+    stockText = `Últimas unidades:${p.stock}`;
+    stockColorClass = "bg-red-100 text-red-600";
     StockIcon = AlertTriangle;
-  } else if (p.stock <= 10) {
-    stockText = "Limitado";
-    stockColorClass = "bg-secondary/10 text-secondary";
+
+  } else if (p.stock <= 36) {
+    stockText = "Stock limitado";
+    stockColorClass = "bg-orange-100 text-orange-600";
     StockIcon = AlertTriangle;
+
+  } else if (p.stock <= 50) {
+    stockText = "Stock disponible";
+    stockColorClass = "bg-green-100 text-green-700";
+    StockIcon = CheckCircle;
+
   } else {
-    stockText = "Disponible";
-    stockColorClass = "bg-success/10 text-success";
+    stockText = "🚀 Alto stock disponible";
+    stockColorClass = "bg-emerald-100 text-emerald-700";
     StockIcon = CheckCircle;
   }
 
@@ -243,49 +274,46 @@ export function ProductCard({
           {p.description || (isPreventa ? "Consulta más información sobre esta preventa." : "")}
         </p>
 
-        {available && !isPreventa && (
-          <p className="text-[12px] text-primary font-semibold mt-2">
-            🔥 Precios de campaña
-          </p>
-        )}
-
         {isPreventa && (
           <p className="text-[12px] text-green-600 font-semibold mt-2">
             🚀 Disponible para consulta anticipada
           </p>
         )}
 
-        <div className="mt-3 pt-3 border-t border-border flex flex-col items-center gap-1">
+        <div className="mt-3 pt-3 border-t border-border flex flex-col items-center gap-1.5">
           {isPreventa ? (
             <>
               <span className="text-[13px] text-muted-foreground font-semibold">
                 Próximamente
               </span>
+
               <div className="flex items-baseline gap-1">
                 <span className="text-[13px] text-muted-foreground">💬</span>
                 <span className="text-[20px] md:text-[22px] font-black text-green-600 tracking-tight">
                   Consultar
                 </span>
               </div>
+
               <span className="text-[11px] text-muted-foreground font-medium">
                 Te brindamos más información por WhatsApp
               </span>
             </>
           ) : (
             <>
-            {/*}
-              <span className="text-[13px] text-muted-foreground line-through font-semibold">
-                S/{p.price_1 ? p.price_1.toFixed(1) : "-.--"}
-              </span>
-            */}
+              <div className="flex items-baseline justify-center gap-1">
+                <span className="text-[13px] text-muted-foreground font-semibold">S/</span>
+                <span className="text-[26px] md:text-[30px] font-black text-primary tracking-tight leading-none">
+                  {p.price_1.toFixed(1)}
+                </span>
+              </div>
 
-              <span className="text-[26px] md:text-[30px] font-black text-primary tracking-tight">
-                {p.price_1.toFixed(1)}
+              <span className="text-[11px] text-muted-foreground font-medium">
+                Precio por unidad
               </span>
 
               {showBestTierMessage && (
-                <span className="text-[11px] text-muted-foreground font-medium">
-                  🔥 Agrega {bestTier.qty} y paga S/ {bestTier.price.toFixed(1)} c/u
+                <span className="inline-flex items-center justify-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+                  🔥 Lleva {bestTier.qty} y paga S/ {bestTier.price.toFixed(1)} c/u
                 </span>
               )}
             </>
@@ -306,11 +334,11 @@ export function ProductCard({
         )}
 
         <button
-          onClick={isPreventa ? handleWhatsApp : handleAdd}
-          disabled={!available && !isPreventa}
+          onClick={showWhatsAppButton ? handleWhatsApp : handleAdd}
+          disabled={!available && !showWhatsAppButton}
           className={[
             "w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[12px] font-semibold transition-all duration-200",
-            isPreventa
+            showWhatsAppButton
               ? "bg-green-500 text-white hover:bg-green-600"
               : isInCart
               ? "bg-green-600 text-white hover:bg-green-700 active:scale-[0.96]"
@@ -319,8 +347,12 @@ export function ProductCard({
               : "bg-muted text-muted-foreground cursor-not-allowed",
           ].join(" ")}
         >
-          {isPreventa ? (
-            <span>Consultar por WhatsApp</span>
+          {showWhatsAppButton ? (
+            <>
+              <span>
+                {isPreventa ? "Consultar por WhatsApp" : "Pedir reposición"}
+              </span>
+            </>
           ) : available ? (
             isInCart ? (
               <>

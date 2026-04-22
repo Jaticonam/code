@@ -3,23 +3,78 @@ import { Timer } from "lucide-react";
 
 type UrgencyLevel = "normal" | "warning" | "danger";
 
+const dispatchDays = [1, 3, 5]; // lunes, miércoles, viernes
+const cutoffHour = 16; // 4PM
+
+const dayNames = [
+  "domingo",
+  "lunes",
+  "martes",
+  "miércoles",
+  "jueves",
+  "viernes",
+  "sábado",
+];
+
+// 🔥 MOTOR: calcula próximo despacho real
+const getNextDispatch = () => {
+  const now = new Date();
+  const today = now.getDay();
+
+  const isDispatchToday = dispatchDays.includes(today);
+
+  const todayCutoff = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    cutoffHour,
+    0,
+    0
+  );
+
+  // ✅ HOY
+  if (isDispatchToday && now < todayCutoff) {
+    return {
+      date: todayCutoff,
+      mode: "today" as const,
+    };
+  }
+
+  // 🔄 BUSCAR SIGUIENTE
+  for (let i = 1; i <= 7; i++) {
+    const next = new Date(now);
+    next.setDate(now.getDate() + i);
+
+    if (dispatchDays.includes(next.getDay())) {
+      next.setHours(cutoffHour, 0, 0);
+
+      return {
+        date: next,
+        mode: "next" as const,
+      };
+    }
+  }
+
+  return {
+    date: todayCutoff,
+    mode: "next" as const,
+  };
+};
+
 export function CountdownTimer() {
   const [time, setTime] = useState("00h : 00m : 00s");
   const [urgency, setUrgency] = useState<UrgencyLevel>("normal");
+  const [mode, setMode] = useState<"today" | "next">("next");
+  const [labelText, setLabelText] = useState("");
 
   useEffect(() => {
     const update = () => {
       const now = new Date();
-      const end = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        23,
-        59,
-        59
-      );
+      const { date, mode } = getNextDispatch();
 
-      const diff = end.getTime() - now.getTime();
+      setMode(mode);
+
+      const diff = date.getTime() - now.getTime();
 
       if (diff <= 0) {
         setTime("00h : 00m : 00s");
@@ -35,13 +90,44 @@ export function CountdownTimer() {
 
       const minutesLeft = Math.floor(diff / 60000);
 
-      if (minutesLeft <= 60) {
-        setUrgency("danger"); // 🔴
-      } else if (minutesLeft <= 180) {
-        setUrgency("warning"); // 🟡
+      // 🎯 URGENCIA
+      if (minutesLeft <= 90) {
+        setUrgency("danger");
+      } else if (minutesLeft <= 240) {
+        setUrgency("warning");
       } else {
-        setUrgency("normal"); // 🟢
+        setUrgency("normal");
       }
+
+      // 📆 DÍA + DIFERENCIA
+      const diffDays = Math.ceil(
+        (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      const dispatchDayName = dayNames[date.getDay()];
+
+      // 🧠 COPY FINAL (VENDEN)
+      let text = "";
+
+      if (mode === "today") {
+        if (minutesLeft <= 90) {
+          text = "🔥 Últimos minutos — sale hoy";
+        } else if (minutesLeft <= 240) {
+          text = "🚚 Sale hoy — aprovecha ahora";
+        } else {
+          text = "🚚 Sale hoy — solo quedan";
+        }
+      } else {
+        if (diffDays === 1) {
+          text = `📦 Sale mañana (${dispatchDayName}) — asegura tu pedido hoy`;
+        } else if (diffDays === 2) {
+          text = `📦 Sale en 2 días (${dispatchDayName}) — asegura tu pedido hoy`;
+        } else {
+          text = `📦 Sale ${dispatchDayName} — deja tu pedido listo`;
+        }
+      }
+
+      setLabelText(text);
     };
 
     update();
@@ -49,6 +135,7 @@ export function CountdownTimer() {
     return () => clearInterval(id);
   }, []);
 
+  // 🎨 ESTILOS (los tuyos intactos)
   const bannerClass =
     urgency === "danger"
       ? "bg-gradient-to-r from-red-700 via-red-600 to-red-700 border-red-500"
@@ -57,9 +144,7 @@ export function CountdownTimer() {
       : "bg-gradient-to-r from-emerald-500 via-green-400 to-emerald-500 border-emerald-300";
 
   const textColor =
-    urgency === "warning"
-      ? "text-slate-900"
-      : "text-white";
+    urgency === "warning" ? "text-slate-900" : "text-white";
 
   const timerBoxClass =
     urgency === "danger"
@@ -67,13 +152,6 @@ export function CountdownTimer() {
       : urgency === "warning"
       ? "bg-white text-amber-600 shadow-[0_0_15px_rgba(245,158,11,0.4)]"
       : "bg-white text-green-600 shadow-[0_0_15px_rgba(34,197,94,0.4)]";
-
-  const labelText =
-    urgency === "danger"
-      ? "🔥 Última hora"
-      : urgency === "warning"
-      ? "⏳ Se está acabando"
-      : "Ofertas activas hoy";
 
   return (
     <div
@@ -86,7 +164,7 @@ export function CountdownTimer() {
       />
 
       <span
-        className={`text-[10px] md:text-sm font-black uppercase tracking-widest ${textColor}`}
+        className={`text-[10px] md:text-sm font-black tracking-widest ${textColor}`}
       >
         {labelText}
       </span>
@@ -100,4 +178,4 @@ export function CountdownTimer() {
       </div>
     </div>
   );
-}
+} 

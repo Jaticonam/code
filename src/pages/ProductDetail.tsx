@@ -124,6 +124,13 @@ const ProductDetailPage = () => {
   );
 
   const available = product ? isProductAvailable(product) : false;
+  const isPreventa =
+    (product?.status || "").trim().toLowerCase() === "preventa";
+
+  const isOutOfStock =
+    !!product && !isPreventa && !!product.price_1 && product.stock === 0;
+
+  const showWhatsAppButton = isPreventa || isOutOfStock;
 
   const currentCartQty = useMemo(() => {
     if (!product) return 0;
@@ -160,19 +167,29 @@ const ProductDetailPage = () => {
     setPricePulse(true);
     const pulseTimer = setTimeout(() => setPricePulse(false), 220);
 
-    if (currentTier !== lastTier) {
+    let unlockTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // 🔥 SUBE DE TIER
+    if (currentTier > lastTier && currentTier > 1) {
       setShowUnlock(true);
-      setLastTier(currentTier);
 
-      const unlockTimer = setTimeout(() => setShowUnlock(false), 1800);
-
-      return () => {
-        clearTimeout(pulseTimer);
-        clearTimeout(unlockTimer);
-      };
+      unlockTimer = setTimeout(() => {
+        setShowUnlock(false);
+      }, 1800);
     }
 
-    return () => clearTimeout(pulseTimer);
+    // 🔴 BAJA DE TIER
+    if (currentTier < lastTier) {
+      setShowUnlock(false);
+    }
+
+    setLastTier(currentTier);
+
+    return () => {
+      clearTimeout(pulseTimer);
+      if (unlockTimer) clearTimeout(unlockTimer);
+    };
+
   }, [effectiveQty, product, lastTier]);
 
   const related = useMemo(() => {
@@ -308,12 +325,34 @@ const ProductDetailPage = () => {
     }
   }, [product]);
 
+  const handleWhatsApp = useCallback(() => {
+    if (!product) return;
+
+    let message = "";
+
+    if (isPreventa) {
+      message =
+        `Hola, quiero información sobre este producto en preventa:%0A%0A` +
+        `ID: ${product.id}%0AProducto: ${product.title}`;
+    } else if (isOutOfStock) {
+      message =
+        `Hola, quiero pedir reposición de este producto:%0A%0A` +
+        `ID: ${product.id}%0AProducto: ${product.title}`;
+    }
+
+    window.open(`https://wa.me/51936188636?text=${message}`, "_blank");
+  }, [product, isPreventa, isOutOfStock]);
+
   let stockText = "Próximo";
   let stockColorClass = "text-muted-foreground";
   let StockIcon = Clock;
 
   if (product) {
-    if (!product.price_1 || product.price_1 <= 0 || product.stock === null || product.stock === undefined) {
+    if (isPreventa) {
+      stockText = "Preventa";
+      stockColorClass = "text-green-700";
+      StockIcon = Clock;
+    } else if (!product.price_1 || product.price_1 <= 0 || product.stock === null || product.stock === undefined) {
       stockText = "Próximo";
       stockColorClass = "text-muted-foreground";
       StockIcon = Clock;
@@ -321,17 +360,21 @@ const ProductDetailPage = () => {
       stockText = "Agotado";
       stockColorClass = "text-destructive";
       StockIcon = XCircle;
-    } else if (product.stock <= 3) {
-      stockText = "Últimos";
-      stockColorClass = "text-tertiary";
+    } else if (product.stock <= 12) {
+      stockText = `Últimas unidades: ${product.stock}`;
+      stockColorClass = "text-red-600";
       StockIcon = AlertTriangle;
-    } else if (product.stock <= 10) {
-      stockText = "Limitado";
-      stockColorClass = "text-secondary";
+    } else if (product.stock <= 36) {
+      stockText = "Stock limitado";
+      stockColorClass = "text-orange-600";
       StockIcon = AlertTriangle;
+    } else if (product.stock <= 50) {
+      stockText = "Disponible para volumen";
+      stockColorClass = "text-green-700";
+      StockIcon = CheckCircle;
     } else {
-      stockText = "Disponible";
-      stockColorClass = "text-success";
+      stockText = "🚀 Alto stock disponible";
+      stockColorClass = "text-emerald-700";
       StockIcon = CheckCircle;
     }
   }
@@ -521,6 +564,7 @@ const ProductDetailPage = () => {
                   }`}
                 >
                   {unitPrice.toFixed(2)}
+
                 </span>
               </div>
 
@@ -591,7 +635,15 @@ const ProductDetailPage = () => {
               </div>
             )}
 
-            {available ? (
+            {showWhatsAppButton ? (
+              <button
+                onClick={handleWhatsApp}
+                className="w-full py-4 rounded-2xl font-black text-base shadow-xl transition-all flex items-center justify-center gap-3 bg-green-500 text-white hover:bg-green-600"
+              >
+                <PlusCircle className="w-5 h-5" />
+                {isPreventa ? "Consultar por WhatsApp" : "Pedir reposición"}
+              </button>
+            ) : available ? (
               <button
                 onClick={handleAddToCart}
                 disabled={!isQtyInputValid}
@@ -606,15 +658,7 @@ const ProductDetailPage = () => {
                   ? `Agregar a caja — S/ ${total.toFixed(2)}`
                   : "Ingresa una cantidad"}
               </button>
-            ) : (
-              <button
-                disabled
-                className="w-full bg-muted text-muted-foreground py-4 rounded-2xl font-black text-base cursor-not-allowed flex items-center justify-center gap-3"
-              >
-                <Lock className="w-5 h-5" />
-                No disponible
-              </button>
-            )}
+            ) : null}
           </div>
         </div>
 
