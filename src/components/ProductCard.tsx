@@ -66,6 +66,26 @@ export function ProductCard({
   const available = isProductAvailable(p);
   const isPreventa = (p.status || "").trim().toLowerCase() === "preventa";
   const minPrice = getMinPrice(p);
+  const getBestTier = (product: Product) => {
+    const tiers = [
+      { qty: 1, price: Number(product.price_1) },
+      { qty: 3, price: Number(product.price_3) },
+      { qty: 12, price: Number(product.price_12) },
+      { qty: 50, price: Number(product.price_50) },
+      { qty: 100, price: Number(product.price_100) },
+    ].filter((tier) => tier.price > 0);
+
+    if (!tiers.length) return null;
+
+    return [...tiers].sort((a, b) => a.price - b.price || a.qty - b.qty)[0];
+  };
+  
+  const bestTier = getBestTier(p);
+
+  const showBestTierMessage =
+    bestTier &&
+    bestTier.qty > 1 &&
+    p.price_1 > bestTier.price;
 
   const cartItem = cart.find((item) => item.id === p.id);
   const qtyInCart = cartItem?.qty ?? 0;
@@ -253,20 +273,21 @@ export function ProductCard({
             </>
           ) : (
             <>
+            {/*}
               <span className="text-[13px] text-muted-foreground line-through font-semibold">
                 S/{p.price_1 ? p.price_1.toFixed(1) : "-.--"}
               </span>
+            */}
 
-              <div className="flex items-baseline gap-1">
-                <span className="text-[13px] text-muted-foreground">S/</span>
-                <span className="text-[26px] md:text-[30px] font-black text-primary tracking-tight">
-                  {minPrice.toFixed(1)}
-                </span>
-              </div>
-
-              <span className="text-[11px] text-muted-foreground font-medium">
-                💡 Mejor precio por volumen
+              <span className="text-[26px] md:text-[30px] font-black text-primary tracking-tight">
+                {p.price_1.toFixed(1)}
               </span>
+
+              {showBestTierMessage && (
+                <span className="text-[11px] text-muted-foreground font-medium">
+                  🔥 Agrega {bestTier.qty} y paga S/ {bestTier.price.toFixed(1)} c/u
+                </span>
+              )}
             </>
           )}
         </div>
