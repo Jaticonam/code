@@ -118,13 +118,11 @@ export function CountdownTimer() {
           text = "🚚 Sale hoy — solo quedan";
         }
       } else {
-        if (diffDays === 1) {
-          text = `📦 Sale mañana (${dispatchDayName}) — asegura tu pedido hoy`;
-        } else if (diffDays === 2) {
-          text = `📦 Sale en 2 días (${dispatchDayName}) — asegura tu pedido hoy`;
-        } else {
-          text = `📦 Sale ${dispatchDayName} — deja tu pedido listo`;
-        }
+        const isTomorrow = diffDays === 1;
+
+        text = isTomorrow
+          ? `📦 Sale mañana (${dispatchDayName}) — asegura tu pedido hoy`
+          : `📦 Sale ${dispatchDayName} — asegura tu pedido hoy`;
       }
 
       setLabelText(text);
