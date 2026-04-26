@@ -3,6 +3,8 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Search, SearchX } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { fetchProducts } from "@/lib/products";
+import { searchProducts } from "@/lib/search";
+import { sortByCommercialPriority } from "@/lib/sort";
 import { Product, CATEGORIES } from "@/types/product";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { CategoryFilter } from "@/components/CategoryFilter";
@@ -66,22 +68,16 @@ const CategoryPage = () => {
   }, [products, activeCategory]);
 
   const filteredProducts = useMemo(() => {
-    const term = categorySearch.trim().toLowerCase();
+    const term = categorySearch.trim();
 
-    if (!term) return categoryProducts;
+    if (!term) return sortByCommercialPriority(categoryProducts);
 
-    return categoryProducts.filter((p) => {
-      const name = p.name?.toLowerCase() ?? "";
-      const code = p.code?.toLowerCase() ?? "";
-      const description = p.description?.toLowerCase() ?? "";
+    const inside = searchProducts(categoryProducts, term);
 
-      return (
-        name.includes(term) ||
-        code.includes(term) ||
-        description.includes(term)
-      );
-    });
-  }, [categoryProducts, categorySearch]);
+    if (inside.length > 0) return sortByCommercialPriority(inside);
+
+    return sortByCommercialPriority(searchProducts(products, term));
+  }, [categoryProducts, products, categorySearch]);
 
   const handleCategorySelect = useCallback((id: string) => {
     if (id === "todas") {

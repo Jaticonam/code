@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { SearchX } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { fetchProducts } from "@/lib/products";
+import { searchProducts } from "@/lib/search";
+import { sortByCommercialPriority } from "@/lib/sort";
 import { Product, CATEGORIES } from "@/types/product";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { HeaderBar } from "@/components/HeaderBar";
@@ -15,8 +17,9 @@ import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { AddToCartModal } from "@/components/AddToCartModal";
 import { CatalogSkeleton } from "@/components/skeletons/CatalogSkeleton";
 
-const CAMPAIGN_MIN_PRIORITY = 90;
-const FEATURED_MIN_PRIORITY = 80;
+const TOP_PRIORITY = 100;
+const STRONG_PRIORITY = 80;
+const HIGHLIGHT_PRIORITY = 50;
 
 const Index = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -86,44 +89,63 @@ const Index = () => {
     : 0;
 
   const filteredProducts = useMemo(() => {
-    let list = products;
+    const term = searchQuery.trim();
 
-    if (activeCategory !== "todas") {
-      list = list.filter((p) => p.category === activeCategory);
+    if (activeCategory === "todas") {
+      return term ? searchProducts(products, term) : products;
     }
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter(
-        (p) =>
-          p.id.toLowerCase().includes(q) ||
-          p.title.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q)
-      );
-    }
+    const categoryProducts = products.filter((p) => p.category === activeCategory);
 
-    return list;
+    if (!term) return categoryProducts;
+
+    const inside = searchProducts(categoryProducts, term);
+
+    if (inside.length > 0) return inside;
+
+    return searchProducts(products, term);
   }, [products, activeCategory, searchQuery]);
 
   const showPriorityBlocks = activeCategory === "todas" && !searchQuery.trim();
 
-  const campaignProducts = useMemo(() => {
+  const topProducts = useMemo(() => {
     if (!showPriorityBlocks) return [];
-    return products.filter((p) => p.priority >= CAMPAIGN_MIN_PRIORITY);
+
+    return sortByCommercialPriority(
+      products.filter((p) => (p.priority || 0) >= TOP_PRIORITY)
+    );
   }, [products, showPriorityBlocks]);
 
-  const featuredProducts = useMemo(() => {
+  const strongProducts = useMemo(() => {
     if (!showPriorityBlocks) return [];
-    return products.filter(
-      (p) =>
-        p.priority >= FEATURED_MIN_PRIORITY &&
-        p.priority < CAMPAIGN_MIN_PRIORITY
+
+    return sortByCommercialPriority(
+      products.filter(
+        (p) =>
+          (p.priority || 0) >= STRONG_PRIORITY &&
+          (p.priority || 0) < TOP_PRIORITY
+      )
+    );
+  }, [products, showPriorityBlocks]);
+
+  const highlightProducts = useMemo(() => {
+    if (!showPriorityBlocks) return [];
+
+    return sortByCommercialPriority(
+      products.filter(
+        (p) =>
+          (p.priority || 0) >= HIGHLIGHT_PRIORITY &&
+          (p.priority || 0) < STRONG_PRIORITY
+      )
     );
   }, [products, showPriorityBlocks]);
 
   const regularProducts = useMemo(() => {
-    if (!showPriorityBlocks) return filteredProducts;
-    return filteredProducts.filter((p) => p.priority < FEATURED_MIN_PRIORITY);
+    if (!showPriorityBlocks) return sortByCommercialPriority(filteredProducts);
+
+    return sortByCommercialPriority(
+      filteredProducts.filter((p) => (p.priority || 0) < HIGHLIGHT_PRIORITY)
+    );
   }, [filteredProducts, showPriorityBlocks]);
 
   const renderGrid = (items: Product[]) => (
@@ -168,49 +190,62 @@ const Index = () => {
           </div>
         ) : (
           <div className="space-y-8">
-            {showPriorityBlocks && campaignProducts.length > 0 && (
-              <section className="space-y-3">
-                <div className="px-2 md:px-0">
-                  <h2 className="text-lg md:text-xl font-black text-foreground">
-                    🔥 Productos de campaña
-                  </h2>
-                  <p className="text-[12px] text-muted-foreground font-medium">
-                    Lo más fuerte de la vitrina ahora mismo.
-                  </p>
-                </div>
-                {renderGrid(campaignProducts)}
-              </section>
-            )}
+           {showPriorityBlocks && topProducts.length > 0 && (
+            <section className="space-y-3">
+              <div className="px-2 md:px-0">
+                <h2 className="text-lg md:text-xl font-black text-foreground">
+                  🔥 Lo más vendido hoy
+                </h2>
+                <p className="text-[12px] text-muted-foreground font-medium">
+                  Productos con mayor rotación ahora mismo.
+                </p>
+              </div>
+              {renderGrid(topProducts)}
+            </section>
+          )}
 
-            {showPriorityBlocks && featuredProducts.length > 0 && (
-              <section className="space-y-3">
-                <div className="px-2 md:px-0">
-                  <h2 className="text-lg md:text-xl font-black text-foreground">
-                    ⭐ Destacados
-                  </h2>
-                  <p className="text-[12px] text-muted-foreground font-medium">
-                    Selección con mejor prioridad dentro del catálogo.
-                  </p>
-                </div>
-                {renderGrid(featuredProducts)}
-              </section>
-            )}
+          {showPriorityBlocks && strongProducts.length > 0 && (
+            <section className="space-y-3">
+              <div className="px-2 md:px-0">
+                <h2 className="text-lg md:text-xl font-black text-foreground">
+                  ⭐ Recomendados para vender rápido
+                </h2>
+                <p className="text-[12px] text-muted-foreground font-medium">
+                  Seleccionados para vender fácil y mover stock.
+                </p>
+              </div>
+              {renderGrid(strongProducts)}
+            </section>
+          )}
 
-            {regularProducts.length > 0 && (
-              <section className="space-y-3">
-                <div className="px-2 md:px-0">
-                  <h2 className="text-lg md:text-xl font-black text-foreground">
-                    {showPriorityBlocks ? "🛍️ Catálogo" : "🛍️ Resultados"}
-                  </h2>
-                  <p className="text-[12px] text-muted-foreground font-medium">
-                    {showPriorityBlocks
-                      ? "Todo el resto del catálogo ordenado por prioridad."
-                      : "Productos encontrados según tu búsqueda o categoría."}
-                  </p>
-                </div>
-                {renderGrid(regularProducts)}
-              </section>
-            )}
+          {showPriorityBlocks && highlightProducts.length > 0 && (
+            <section className="space-y-3">
+              <div className="px-2 md:px-0">
+                <h2 className="text-lg md:text-xl font-black text-foreground">
+                  🟡 Oportunidades del catálogo
+                </h2>
+                <p className="text-[12px] text-muted-foreground font-medium">
+                  Opciones para ampliar tu oferta y comprar con estrategia.
+                </p>
+              </div>
+              {renderGrid(highlightProducts)}
+            </section>
+          )} 
+          {regularProducts.length > 0 && (
+            <section className="space-y-3">
+              <div className="px-2 md:px-0">
+                <h2 className="text-lg md:text-xl font-black text-foreground">
+                  {showPriorityBlocks ? "🛍️ Todo el catálogo" : "🛍️ Resultados"}
+                </h2>
+                <p className="text-[12px] text-muted-foreground font-medium">
+                  {showPriorityBlocks
+                    ? "Explora todos los productos disponibles para tu negocio."
+                    : "Productos encontrados según tu búsqueda o categoría."}
+                </p>
+              </div>
+              {renderGrid(regularProducts)}
+            </section>
+          )}
           </div>
         )}
       </main>
