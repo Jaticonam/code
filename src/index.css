@@ -1,75 +1,204 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   BASE + TOKENS
+======================================== */
+
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 215 28% 25%;
+    --w-primary: #1d8299;
+    --w-primary-dark: #156f84;
+    --w-primary-soft: #e8f6f9;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 28% 25%;
+    --w-secondary: #f7b1d6;
+    --w-secondary-strong: #f286be;
+    --w-secondary-soft: #fff0f7;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 28% 25%;
+    --w-accent: #f5b025;
+    --w-accent-soft: #fff8e6;
 
-    --primary: 191 67% 36%;
-    --primary-foreground: 0 0% 100%;
+    --w-bg: #f8fafc;
+    --w-surface: #ffffff;
+    --w-text: #0f172a;
+    --w-muted: #64748b;
+    --w-border: #e2e8f0;
 
-    --secondary: 338 83% 73%;
-    --secondary-foreground: 0 0% 100%;
+    --w-whatsapp: #25d366;
+    --w-whatsapp-dark: #1ead54;
 
-    --tertiary: 39 91% 55%;
-    --tertiary-foreground: 0 0% 100%;
-
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-
-    --accent: 39 93% 58%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-
-    --whatsapp: 142 70% 49%;
-    --whatsapp-dark: 164 56% 34%;
-
-    --dark: 222 47% 11%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 191 67% 36%;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --font-brand: 'Plus Jakarta Sans', 'Inter', sans-serif;
   }
 
   * {
-    @apply border-border;
+    border-color: var(--w-border);
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--w-bg);
+    color: var(--w-text);
+    font-family: var(--font-brand);
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
   }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+  }
 }
 
+/* ========================================
+   UTILITIES SEGURAS
+======================================== */
+
 @layer utilities {
+  /* ===== ESPACIADO ===== */
+
+  .section-sm {
+    padding: 2rem 0;
+  }
+
+  .section {
+    padding: 2.5rem 0;
+  }
+
+  .section-lg {
+    padding: 3.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .section-sm {
+      padding: 3rem 0;
+    }
+
+    .section {
+      padding: 4rem 0;
+    }
+
+    .section-lg {
+      padding: 5rem 0;
+    }
+  }
+
+  .home-container {
+    @apply mx-auto max-w-7xl px-5 md:px-6;
+  }
+
+  .home-section {
+    @apply section home-container;
+  }
+
+  /* ===== TIPOGRAFÍA HOME ===== */
+
+  .home-kicker {
+    @apply mb-2 block text-[11px] font-bold uppercase tracking-[0.18em] md:text-xs;
+    color: var(--w-primary);
+  }
+
+  .home-title {
+    @apply max-w-2xl text-2xl font-extrabold leading-snug tracking-tight md:text-4xl;
+    color: var(--w-text);
+  }
+
+  .home-title-sm {
+    @apply max-w-2xl text-xl font-extrabold leading-snug tracking-tight md:text-3xl;
+    color: var(--w-text);
+  }
+
+  .home-title-center {
+    @apply mx-auto max-w-2xl text-center text-2xl font-extrabold leading-snug tracking-tight md:text-4xl;
+    color: var(--w-text);
+  }
+
+  .home-description {
+    @apply mt-3 max-w-xl text-sm font-medium leading-relaxed md:text-base;
+    color: var(--w-muted);
+  }
+
+  .home-description-center {
+    @apply mx-auto mt-3 max-w-xl text-center text-sm font-medium leading-relaxed md:text-base;
+    color: var(--w-muted);
+  }
+
+  .home-section-head {
+    @apply mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between;
+  }
+
+  /* ===== BOTONES HOME ===== */
+
+  .home-pill-link {
+    @apply inline-flex w-fit items-center gap-2 rounded-full border px-5 py-3 text-sm font-bold transition;
+    border-color: var(--w-border);
+    color: var(--w-text);
+  }
+
+  .home-pill-link:hover {
+    background: var(--w-primary);
+    color: white;
+    border-color: var(--w-primary);
+  }
+
+  /* ===== BOTONES CONTROLADOS ===== */
+
+  .btn-w-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold text-white transition-all hover:-translate-y-1 hover:shadow-lg;
+    background-color: var(--w-primary);
+  }
+
+  .btn-w-primary:hover {
+    background-color: var(--w-primary-dark);
+  }
+
+  .btn-w-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold text-white transition-all hover:-translate-y-1 hover:shadow-lg;
+    background-color: var(--w-whatsapp);
+  }
+
+  .btn-w-whatsapp:hover {
+    background-color: var(--w-whatsapp-dark);
+  }
+
+  /* ===== CARDS ===== */
+
+  .card-w {
+    @apply rounded-[28px] border bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)];
+    border-color: var(--w-border);
+  }
+
+  /* ===== GLASS ===== */
+
+  .glass-w {
+    @apply relative overflow-hidden rounded-[30px] bg-white/85 shadow-[0_30px_90px_rgba(15,23,42,0.2)] ring-1 ring-white/30 backdrop-blur-xl;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .glass-w::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-transparent opacity-60;
+  }
+
+  /* ===== CATEGORÍAS HOME ===== */
+
+  .image-bottom-fade {
+    @apply absolute inset-x-0 bottom-0 h-[52%] bg-gradient-to-t from-black/80 via-black/20 to-transparent;
+  }
+
+  .category-card-kicker {
+    @apply mb-2 block text-[10px] font-extrabold uppercase tracking-[0.16em] drop-shadow-md md:text-xs;
+    color: var(--w-secondary);
+  }
+
+  .category-card-title {
+    @apply text-2xl font-extrabold tracking-tight text-white drop-shadow-md md:text-3xl;
+  }
+
+  /* ===== SCROLL ===== */
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -79,140 +208,62 @@
     scrollbar-width: none;
   }
 
-  @keyframes priceBadgeFloat {
-    0%, 100% {
+  /* ===== ANIMACIONES ===== */
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  .fade-up {
+    animation: fadeUp 0.5s ease-out both;
+  }
+
+  @keyframes zoomSlow {
+    from {
+      transform: scale(1);
+    }
+
+    to {
+      transform: scale(1.06);
+    }
+  }
+
+  .hero-zoom {
+    animation: zoomSlow 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes badgeFloat {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
     50% {
       transform: translateY(-2px);
     }
   }
 
-  @keyframes priceBadgeFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(6px) scale(0.96);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+  .badge-anim {
+    animation: badgeFloat 2.5s ease-in-out infinite;
   }
 
-  @keyframes badgeBreath {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.04);
-      opacity: 0.96;
-    }
-  }
+  /* ===== SKELETON ===== */
 
-  @keyframes badgeBounceSoft {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    30% {
-      transform: translateY(-3px);
-    }
-    60% {
-      transform: translateY(1px);
-    }
-  }
-
-  @keyframes badgeShimmer {
-    0% {
-      transform: translateX(-120%);
-      opacity: 0;
-    }
-    20% {
-      opacity: 0.4;
-    }
-    60% {
-      transform: translateX(180%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateX(180%);
-      opacity: 0;
-    }
-  }
-
-  .price-badge-anim {
-    animation:
-      priceBadgeFadeIn 0.35s ease-out both,
-      priceBadgeFloat 2.6s ease-in-out infinite;
-    will-change: transform, opacity;
-  }
-
-  .price-badge-breath {
-    animation: badgeBreath 2.8s ease-in-out infinite;
-    will-change: transform, opacity;
-  }
-
-  .price-badge-bounce {
-    animation: badgeBounceSoft 1.8s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  .price-badge-shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .price-badge-shimmer::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(
-      120deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.25) 50%,
-      transparent 100%
-    );
-    animation: badgeShimmer 3.5s ease-in-out infinite;
-  }
-  @keyframes badgePopIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.9) translateY(6px);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-
-  @keyframes badgeBounceSoft {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    30% {
-      transform: translateY(-4px);
-    }
-    60% {
-      transform: translateY(1px);
-    }
-  }
-
-  .price-badge-pop {
-    animation:
-      badgePopIn 0.35s ease-out both,
-      badgeBounceSoft 1.8s ease-in-out infinite;
-    will-change: transform, opacity;
-  }
-  .catalog-skeleton {
+  .skeleton {
     position: relative;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.06);
   }
 
-  .catalog-skeleton::after {
+  .skeleton::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -223,10 +274,10 @@
       rgba(255, 255, 255, 0.6),
       transparent
     );
-    animation: catalog-skeleton-shimmer 1.2s infinite;
+    animation: shimmer 1.2s infinite;
   }
 
-  @keyframes catalog-skeleton-shimmer {
+  @keyframes shimmer {
     100% {
       transform: translateX(100%);
     }
