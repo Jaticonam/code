@@ -5,14 +5,54 @@ import { Tags } from "lucide-react";
 import HomeSectionHeader from "./HomeSectionHeader";
 
 const categories = [
-  { name: "Flores & Rosas", tag: "Detalles especiales", slug: "flores", image: "https://woolyimports.com/og/flores.jpg" },
-  { name: "Peluches", tag: "Suaves y tiernos", slug: "peluches", image: "https://woolyimports.com/og/peluches.jpg" },
-  { name: "Papel Coreano", tag: "Envolturas premium", slug: "papeles", image: "https://woolyimports.com/og/papeles.jpg" },
-  { name: "Cajas & Bolsas", tag: "Empaques perfectos", slug: "cajas", image: "https://woolyimports.com/og/cajas.jpg" },
-  { name: "Cintas & Deco", tag: "Toques finales", slug: "cintas", image: "https://woolyimports.com/og/cintas.jpg" },
-  { name: "Globos", tag: "Celebraciones", slug: "globos", image: "https://woolyimports.com/og/globos.jpg" },
-  { name: "Herramientas", tag: "Para crear", slug: "accesorios", image: "https://woolyimports.com/og/accesorios.jpg" },
-  { name: "Hot Wheels", tag: "Coleccionables", slug: "hotwheels", image: "https://woolyimports.com/og/hotwheels.jpg" },
+  { 
+    name: "Flores & Rosas", 
+    tag: "Alta demanda", 
+    slug: "flores", 
+    image: "https://woolyimports.com/og/flores.jpg" 
+  },
+  { 
+    name: "Peluches", 
+    tag: "Sube ticket", 
+    slug: "peluches", 
+    image: "https://woolyimports.com/og/peluches.jpg" 
+  },
+  { 
+    name: "Papel Coreano", 
+    tag: "Acabado premium", 
+    slug: "papeles", 
+    image: "https://woolyimports.com/og/papeles.jpg" 
+  },
+  { 
+    name: "Cajas & Bolsas", 
+    tag: "Empaque listo", 
+    slug: "cajas", 
+    image: "https://woolyimports.com/og/cajas.jpg" 
+  },
+  { 
+    name: "Cintas & Deco", 
+    tag: "Detalle clave", 
+    slug: "cintas", 
+    image: "https://woolyimports.com/og/cintas.jpg" 
+  },
+  { 
+    name: "Globos", 
+    tag: "Venta rápida", 
+    slug: "globos", 
+    image: "https://woolyimports.com/og/globos.jpg" 
+  },
+  { 
+    name: "Accesorios", 
+    tag: "Producción total", 
+    slug: "accesorios", 
+    image: "https://woolyimports.com/og/accesorios.jpg" 
+  },
+  { 
+    name: "Hot Wheels", 
+    tag: "Alta rotación", 
+    slug: "hotwheels", 
+    image: "https://woolyimports.com/og/hotwheels.jpg" 
+  },
 ];
 
 const loopCategories = [...categories, ...categories];
@@ -47,7 +87,7 @@ export default function CategoriesSection() {
       <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <HomeSectionHeader
           icon={Tags}
-          kicker="Categorías que venden"
+          kicker="Categorías más vendidas"
           title="Elige productos que ya tienen salida"
           description="Arma tu pedido por categorías, combina productos estratégicamente y compra más rápido sin perder margen."
         />

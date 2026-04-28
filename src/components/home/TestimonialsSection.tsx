@@ -1,59 +1,59 @@
-import { Quote, Star, Store, MapPin } from "lucide-react";
+import { Quote, Star, MapPin } from "lucide-react";
 import HomeSectionHeader from "./HomeSectionHeader";
 
 const testimonials = [
   {
     number: "1",
-    label: "verificado",
-    business: "detalles maría",
-    city: "arequipa",
-    product: "cajas y papel coreano",
-    text: "compré cajas y papel coreano, armé 30 ramos para campaña y vendí todo en pocos días.",
+    label: "capital",
+    business: "Regalos luz",
+    city: "lima",
+    product: "Peluches y Globos",
+    text: "los peluches y globos se movieron rápido. en una semana ya había recuperado inversión.",
     color: "primary",
   },
   {
     number: "2",
-    label: "campaña",
-    business: "regalos luz",
-    city: "lima",
-    product: "peluches y globos",
-    text: "los peluches y globos se movieron rápido. en una semana ya había recuperado inversión.",
+    label: "Campaña",
+    business: "Floería María",
+    city: "Arequipa",
+    product: "Cajas y Papel Coreano",
+    text: "Compré cajas y papel coreano, armé 30 ramos para campaña y vendí todo en pocos días.",
     color: "secondary",
   },
   {
     number: "3",
     label: "asesoría",
-    business: "florería el jardín",
-    city: "cusco",
-    product: "flores y accesorios",
-    text: "me ayudaron a elegir productos para mi tienda y no me equivoqué. todo salió muy bien.",
+    business: "Florería El Jardín",
+    city: "Cusco",
+    product: "Flores y Accesorios",
+    text: "Me ayudaron a elegir productos para mi tienda y no me equivoqué. todo salió muy bien.",
     color: "accent",
   },
   {
     number: "4",
     label: "mayorista",
-    business: "detalles rosé",
-    city: "tacna",
+    business: "Detalles Rosé",
+    city: "trujillo",
     product: "papeles y cintas",
     text: "comprar por caja me ayudó a mejorar margen. ahora planifico mis campañas con más orden.",
     color: "primary",
   },
   {
     number: "5",
-    label: "rápido",
-    business: "sorpresas vale",
-    city: "moquegua",
-    product: "globos y cajas",
-    text: "la atención fue rápida y el pedido llegó bien embalado. eso da confianza para volver a comprar.",
+    label: "Rápido",
+    business: "Sorpresas Vale",
+    city: "Cajamarca",
+    product: "Globos y Cajas",
+    text: "La atención fue rápida y el pedido llegó bien embalado. eso da confianza para volver a comprar.",
     color: "secondary",
   },
   {
     number: "6",
     label: "stock",
-    business: "florería luna",
-    city: "puno",
-    product: "flores artificiales",
-    text: "encontré variedad y pude completar stock para varios pedidos. eso me salvó la campaña.",
+    business: "Florería Luna",
+    city: "Iquitos",
+    product: "Flores Artificiales",
+    text: "Encontré variedad y pude completar stock para varios pedidos. eso me salvó la campaña.",
     color: "accent",
   },
 ];
@@ -97,57 +97,56 @@ export default function TestimonialsSection() {
           return (
             <article
               key={`${item.business}-${item.city}`}
-              className="group relative overflow-hidden rounded-[30px] border border-slate-200/70 bg-white p-7 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+              className="group relative overflow-hidden rounded-[30px] border border-slate-200/70 bg-white p-6 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
             >
               <div
-                className={`pointer-events-none absolute -right-4 -top-8 z-0 select-none text-[120px] font-black leading-none text-slate-200/70 transition-colors duration-500 ${styles.number}`}
+                className={`pointer-events-none absolute right-7 top-6 z-0 select-none text-[90px] font-black leading-none text-slate-200/60 transition-colors duration-500 ${styles.number}`}
               >
                 {item.number}
               </div>
 
-              <div className="relative z-10 mb-6 flex items-center justify-between">
-                <div
-                  className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f7b1d6]/20 text-[#f286be] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
-                >
-                  <Quote className="h-7 w-7" />
+              <div className="relative z-10 mb-4 flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f7b1d6]/20 text-[#f286be] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
+                  >
+                    <Quote className="h-5 w-5" />
+                  </div>
+
+                  <div className="min-w-0 leading-tight">
+                    <strong
+                      className={`block truncate text-[15px] font-semibold text-slate-950 transition-colors duration-300 ${styles.title}`}
+                    >
+                      {item.business}
+                    </strong>
+
+                    <span className="mt-1 flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-500">
+                      <MapPin className="h-3 w-3 shrink-0" />
+                      {item.city}
+                    </span>
+                  </div>
                 </div>
 
                 <span
-                  className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-sm ${styles.label}`}
+                  className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-sm ${styles.label}`}
                 >
                   {item.label}
                 </span>
               </div>
 
-              <div className="relative z-10 mb-4 flex gap-1 text-[#f5b025]">
+              <div className="relative z-10 mb-3 flex gap-1 text-[#f5b025]">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Star key={index} className="h-4 w-4 fill-current" />
                 ))}
               </div>
 
-              <p className="relative z-10 mb-6 text-sm font-medium leading-relaxed text-slate-700">
+              <p className="relative z-10 mb-4 text-sm font-medium leading-relaxed text-slate-700">
                 “{item.text}”
               </p>
 
-              <div className="relative z-10 border-t border-slate-100 pt-4">
-                <div className="mb-2 flex items-center gap-2">
-                  <Store className="h-4 w-4 text-[#1d8299]" />
-                  <strong
-                    className={`text-sm font-black text-slate-950 transition-colors duration-300 ${styles.title}`}
-                  >
-                    {item.business}
-                  </strong>
-                </div>
-
-                <div className="mb-3 flex items-center gap-2 text-xs font-semibold text-slate-500">
-                  <MapPin className="h-4 w-4" />
-                  <span>{item.city}</span>
-                </div>
-
-                <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-[11px] font-bold text-slate-600">
-                  compró: {item.product}
-                </span>
-              </div>
+              <span className="relative z-10 inline-flex rounded-full bg-slate-100 px-3 py-1 text-[11px] font-bold text-slate-600">
+                compró: {item.product}
+              </span>
             </article>
           );
         })}

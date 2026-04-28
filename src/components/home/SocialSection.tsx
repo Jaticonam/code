@@ -14,8 +14,8 @@ import {
 const socials = [
   {
     label: "video",
-    title: "tiktok",
-    description: "contenido viral",
+    title: "TikTok",
+    description: "Contenido divertido",
     icon: TikTokIcon,
     link: "https://www.tiktok.com/@woolyimports",
     normalIcon: "bg-[#f7b1d6]/20 text-[#f286be] border-[#f7b1d6]/40",
@@ -24,8 +24,8 @@ const socials = [
   },
   {
     label: "comunidad",
-    title: "facebook",
-    description: "promos y novedades",
+    title: "Facebook",
+    description: "Promos y Novedades",
     icon: FacebookIcon,
     link: "https://www.facebook.com/WoolyImports/",
     normalIcon: "bg-[#1d8299]/10 text-[#1d8299] border-[#1d8299]/20",
@@ -34,8 +34,8 @@ const socials = [
   },
   {
     label: "visual",
-    title: "instagram",
-    description: "ideas y campañas",
+    title: "Instagram",
+    description: "Ideas y Campañas",
     icon: InstagramIcon,
     link: "https://www.instagram.com/woolyimports/",
     normalIcon: "bg-[#f7b1d6]/20 text-[#f286be] border-[#f7b1d6]/40",
@@ -44,8 +44,8 @@ const socials = [
   },
   {
     label: "ideas",
-    title: "pinterest",
-    description: "inspiración",
+    title: "Pinterest",
+    description: "Inspiración",
     icon: PinterestIcon,
     link: "https://www.pinterest.com/woolyimports/",
     normalIcon: "bg-[#f5b025]/10 text-[#f5b025] border-[#f5b025]/30",
@@ -54,8 +54,8 @@ const socials = [
   },
   {
     label: "noticias",
-    title: "x",
-    description: "actualizaciones",
+    title: "X",
+    description: "Actualizaciones",
     icon: XIcon,
     link: "https://x.com/woolyimports",
     normalIcon: "bg-[#1d8299]/10 text-[#1d8299] border-[#1d8299]/20",
@@ -64,8 +64,8 @@ const socials = [
   },
   {
     label: "video",
-    title: "youtube",
-    description: "demostraciones",
+    title: "YouTube",
+    description: "Demostraciones",
     icon: YoutubeIcon,
     link: "https://www.youtube.com/@WoolyImports",
     normalIcon: "bg-[#f7b1d6]/20 text-[#f286be] border-[#f7b1d6]/40",
@@ -74,8 +74,8 @@ const socials = [
   },
   {
     label: "reseñas",
-    title: "google",
-    description: "opiniones reales",
+    title: "Google",
+    description: "Opiniones reales",
     icon: GoogleIcon,
     link: "https://www.google.com/search?q=Wooly+import+Per%C3%BA",
     normalIcon: "bg-[#1d8299]/10 text-[#1d8299] border-[#1d8299]/20",
@@ -89,9 +89,9 @@ export default function SocialSection() {
     <section className="home-container pt-8 pb-12 md:pt-10 md:pb-14">
       <HomeSectionHeader
         icon={Sparkles}
-        kicker="conecta con wooly"
-        title="síguenos y mantente actualizado"
-        description="contenido, tendencias y oportunidades en nuestras plataformas."
+        kicker="Conecta con wooly"
+        title="Síguenos y mantente actualizado"
+        description="Contenido, tendencias y oportunidades en nuestras plataformas."
         align="center"
       />
 

@@ -82,9 +82,9 @@ export default function FeaturedProductsSection() {
       <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <HomeSectionHeader
           icon={Flame}
-          kicker="selección estratégica"
-          title="Lo más vendido ahora mismo"
-          description="productos elegidos por rotación, margen y oportunidad comercial para que armes tu caja con estrategia."
+          kicker="alta rotación"
+          title="Productos que se venden solos"
+          description="Elige lo que ya está funcionando y empieza a vender desde hoy."
         />
       </div>
 

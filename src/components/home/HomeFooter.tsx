@@ -23,7 +23,7 @@ export default function HomeFooter() {
 
         {/* descripción */}
         <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-white/70">
-          tu proveedor confiable en tacna. abastecemos insumos mayoristas
+          Tu proveedor confiable en tacna. abastecemos insumos mayoristas
           para que tu negocio crezca con productos que sí se venden.
         </p>
 
@@ -34,7 +34,7 @@ export default function HomeFooter() {
             to="/catalogo"
             className="transition-all duration-300 hover:scale-105 hover:text-white"
           >
-            catálogo
+            Catálogo
           </Link>
 
           <a
@@ -42,14 +42,11 @@ export default function HomeFooter() {
             target="_blank"
             className="transition-all duration-300 hover:scale-105 hover:text-white"
           >
-            precios por cajón
+            Packs
           </a>
 
-          <a
-            href="#howtobySection"
-            className="transition-all duration-300 hover:scale-105 hover:text-white"
-          >
-            envíos
+          <a href="#shipping">
+            Envíos
           </a>
 
           <a
@@ -57,7 +54,7 @@ export default function HomeFooter() {
             target="_blank"
             className="transition-all duration-300 hover:scale-105 hover:text-white"
           >
-            contacto
+            Contactos
           </a>
         </div>
 

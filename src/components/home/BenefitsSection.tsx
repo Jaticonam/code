@@ -12,55 +12,55 @@ import HomeSectionHeader from "./HomeSectionHeader";
 const pillars = [
   {
     number: "1",
-    label: "clave",
-    title: "Variedad de productos",
+    label: "ventaja",
+    title: "Variedad real",
     description:
-      "Encuentra insumos para regalos, florerías y campañas en un solo lugar.",
+      "Todo lo que necesitas para vender, sin cambiar de proveedor.",
     icon: Layers,
     color: "primary",
   },
   {
     number: "2",
-    label: "clave",
+    label: "beneficio",
     title: "Alta rotación",
     description:
-      "Productos en tendencia para que vendas rápido y sin estancarte.",
+      "Productos que se venden rápido y liberan tu inversión.",
     icon: RotateCw,
     color: "secondary",
   },
   {
     number: "3",
-    label: "clave",
-    title: "Calidad garantizada",
+    label: "garantía",
+    title: "Calidad que vende",
     description:
-      "Insumos que elevan el valor percibido de tus productos.",
+      "Mejor presentación, mayor valor y clientes más satisfechos.",
     icon: ShieldCheck,
     color: "accent",
   },
   {
     number: "4",
-    label: "clave",
-    title: "Todo en un solo lugar",
+    label: "eficiencia",
+    title: "Compra inteligente",
     description:
-      "Compra todo sin perder tiempo buscando proveedores.",
+      "Ahorra tiempo y dinero comprando todo en un solo lugar.",
     icon: Store,
     color: "primary",
   },
   {
     number: "5",
-    label: "clave",
-    title: "Soporte y asesoría",
+    label: "soporte",
+    title: "Asesoría directa",
     description:
-      "Te guiamos por WhatsApp para que compres mejor.",
+      "Te ayudamos por WhatsApp a elegir mejor y vender más.",
     icon: Headphones,
     color: "secondary",
   },
   {
     number: "6",
-    label: "clave",
-    title: "Envíos a todo el Perú",
+    label: "logística",
+    title: "Envío nacional",
     description:
-      "Despachamos rápido y seguro a nivel nacional.",
+      "Recibe tu pedido rápido y sin complicaciones en todo el Perú.",
     icon: MapPin,
     color: "accent",
   },
@@ -90,15 +90,14 @@ const colorStyles = {
 export default function BenefitsSection() {
   return (
     <section className="home-container pt-10 pb-12 md:pt-14 md:pb-16">
-      
+
       <HomeSectionHeader
         icon={Sparkles}
-        kicker="por qué comprar en Wooly"
-        title="más que productos, una ventaja para tu negocio"
-        description="trabajamos para que compres mejor, vendas más rápido y atiendas tus campañas sin complicarte."
+        kicker="ventajas reales"
+        title="Compra mejor. Vende más."
+        description="Todo lo que necesitas para vender rápido, sin perder tiempo ni dinero."
         align="center"
       />
-
       <div className="flex flex-wrap justify-center gap-6 md:gap-8">
         {pillars.map((item) => {
           const Icon = item.icon;
