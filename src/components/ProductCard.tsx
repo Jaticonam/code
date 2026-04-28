@@ -175,13 +175,13 @@ export function ProductCard({
     StockIcon = CheckCircle;
 
   } else {
-    stockText = "🚀 Alto stock disponible";
+    stockText = "🚀 Alto stock";
     stockColorClass = "bg-emerald-100 text-emerald-700";
     StockIcon = CheckCircle;
   }
 
   return (
-    <div className="bg-card rounded-[20px] md:rounded-[28px] border border-border p-2.5 md:p-4 flex flex-col shadow-sm text-center transition-all duration-400 hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
+    <div className="card-product flex flex-col text-center p-2.5 md:p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-square overflow-hidden rounded-[14px] md:rounded-[20px] mb-2.5 bg-muted">
         <img
           src={p.img || "/placeholder.svg"}
@@ -204,7 +204,7 @@ export function ProductCard({
                   <div
                     key={`${p.id}-badge-${index}`}
                     className={[
-                      "text-[10px] md:text-[11px] font-semibold px-3 py-1 rounded-full leading-tight tracking-normal backdrop-blur-sm border border-white/10 shadow-md",
+                      "text-[10px] md:text-[11px] font-bold px-3 py-1 rounded-full leading-tight tracking-normal backdrop-blur-sm border border-white/10 shadow-md",
                       presentation.className,
                       presentation.animation,
                     ].join(" ")}
@@ -228,7 +228,7 @@ export function ProductCard({
         )}
 
         {available && !isPreventa && (
-          <div className="absolute bottom-2 right-2 flex flex-col gap-1 items-end">
+          <div className="absolute bottom-2 right-2 flex flex-col gap-1.5 items-end">
             {getAvailablePriceTiers(p).map((t, i) => {
               const price = p[t.key];
 
@@ -239,7 +239,7 @@ export function ProductCard({
               return (
                 <div
                   key={t.key}
-                  className={`${t.className} price-badge-bounce text-[11px] font-black px-2.5 py-1 rounded-md shadow`}
+                  className={`${t.className} price-badge-bounce`}
                   style={{ animationDelay: `${i * 120}ms` }}
                 >
                   {t.label} S/{price.toFixed(1)}
@@ -280,7 +280,7 @@ export function ProductCard({
           </p>
         )}
 
-        <div className="mt-3 pt-3 border-t border-border flex flex-col items-center gap-1.5">
+        <div className="mt-3 pt-3 border-t border-[#eef2f6] flex flex-col items-center gap-1.5">
           {isPreventa ? (
             <>
               <span className="text-[13px] text-muted-foreground font-semibold">
@@ -302,7 +302,7 @@ export function ProductCard({
             <>
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-[13px] text-muted-foreground font-semibold">S/</span>
-                <span className="text-[26px] md:text-[30px] font-black text-primary tracking-tight leading-none">
+                <span className="text-[26px] md:text-[30px] font-black text-[#1d8299] tracking-tight leading-none">
                   {p.price_1.toFixed(1)}
                 </span>
               </div>
@@ -328,7 +328,7 @@ export function ProductCard({
         </div>
 
         {(available || isPreventa) && (
-          <p className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold mt-1">
+          <p className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-[#1d8299]/10 text-[#1d8299] text-[11px] font-bold mt-1">
             👀 {viewers} viendo ahora
           </p>
         )}
@@ -337,15 +337,18 @@ export function ProductCard({
           onClick={showWhatsAppButton ? handleWhatsApp : handleAdd}
           disabled={!available && !showWhatsAppButton}
           className={[
-            "w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[12px] font-semibold transition-all duration-200",
-            showWhatsAppButton
-              ? "bg-green-500 text-white hover:bg-green-600"
-              : isInCart
-              ? "bg-green-600 text-white hover:bg-green-700 active:scale-[0.96]"
-              : available
-              ? "bg-primary/95 text-primary-foreground active:scale-[0.96]"
-              : "bg-muted text-muted-foreground cursor-not-allowed",
-          ].join(" ")}
+          "w-full flex items-center justify-center gap-1.5 rounded-2xl transition-all duration-200",
+          "text-[11px] md:text-[13px]",
+          "py-2 md:py-3",
+          "font-semibold md:font-bold",
+          showWhatsAppButton
+            ? "btn-shop-whatsapp"
+            : isInCart
+            ? "btn-shop-primary"
+            : available
+            ? "btn-shop-primary"
+            : "bg-muted text-muted-foreground cursor-not-allowed",
+        ].join(" ")}
         >
           {showWhatsAppButton ? (
             <>

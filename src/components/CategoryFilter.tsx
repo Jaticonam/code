@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Category } from "@/types/product";
 
 interface CategoryFilterProps {
@@ -19,7 +18,9 @@ export function CategoryFilter({
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const allCategory = categories.find((c) => c.id === "all") ?? categories[0];
-  const scrollableCategories = categories.filter((c) => c.id !== allCategory?.id);
+  const scrollableCategories = categories.filter(
+    (c) => c.id !== allCategory?.id
+  );
 
   const updateScrollState = () => {
     const el = scrollRef.current;
@@ -58,15 +59,10 @@ export function CategoryFilter({
     });
   };
 
-  const buttonBaseClass =
-    "rounded-2xl border-2 inline-flex items-center gap-2 whitespace-nowrap font-black tracking-wide capitalize transition-all duration-300 shrink-0";
-
   const getButtonClass = (id: string) =>
-    `${buttonBaseClass} ${
-      active === id
-        ? "bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.03]"
-        : "bg-card border-border text-muted-foreground hover:border-muted-foreground/30"
-    }`;
+    active === id
+      ? "filter-chip-active scale-[1.04]"
+      : "filter-chip";
 
   return (
     <div className="w-full">
@@ -75,12 +71,15 @@ export function CategoryFilter({
         {categories.map((c) => (
           <button
             key={c.id}
+            type="button"
             onClick={() => onSelect(c.id)}
             title={c.name}
-            className={`${getButtonClass(c.id)} px-5 py-3 text-[12px]`}
+            className={getButtonClass(c.id)}
           >
             <span className="shrink-0">{c.icon}</span>
-            <span className="max-w-[120px] truncate">{c.name}</span>
+            <span className="max-w-[120px] truncate tracking-tight">
+              {c.name}
+            </span>
           </button>
         ))}
       </div>
@@ -88,30 +87,29 @@ export function CategoryFilter({
       {/* Mobile */}
       <div className="md:hidden px-2 pb-6">
         <div className="relative flex items-center gap-2">
-
           {/* Todos fijo */}
           {allCategory && (
             <button
+              type="button"
               onClick={() => onSelect(allCategory.id)}
               title={allCategory.name}
-              className={`${getButtonClass(allCategory.id)} px-4 py-2.5 text-[11px] relative z-10`}
+              className={`${getButtonClass(allCategory.id)} relative z-10`}
             >
               <span className="shrink-0">{allCategory.icon}</span>
-              <span className="max-w-[78px] truncate">{allCategory.name}</span>
+              <span className="max-w-[78px] truncate tracking-tight">
+                {allCategory.name}
+              </span>
             </button>
           )}
 
           {/* Contenedor deslizable */}
           <div className="relative min-w-0 flex-1">
-
-            {/* Fade izquierdo */}
             {canScrollLeft && (
-              <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-background to-transparent" />
+              <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-[var(--w-bg)] to-transparent" />
             )}
 
-            {/* Fade derecho */}
             {canScrollRight && (
-              <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-background to-transparent" />
+              <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-[var(--w-bg)] to-transparent" />
             )}
 
             <div
@@ -121,27 +119,32 @@ export function CategoryFilter({
               {scrollableCategories.map((c) => (
                 <button
                   key={c.id}
+                  type="button"
                   onClick={() => onSelect(c.id)}
                   title={c.name}
-                  className={`${getButtonClass(c.id)} px-4 py-2.5 text-[11px]`}
+                  className={getButtonClass(c.id)}
                 >
                   <span className="shrink-0">{c.icon}</span>
-                  <span className="max-w-[90px] truncate">{c.name}</span>
+                  <span className="max-w-[90px] truncate tracking-tight">
+                    {c.name}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Botón SOLO derecha */}
+          {/* Ver más */}
           <button
             type="button"
             onClick={() => scrollByAmount("right")}
             aria-label="Ver más categorías"
-            className={`px-3 py-2.5 rounded-2xl border-2 border-dashed bg-card text-muted-foreground ${
+            className={[
+              "inline-flex h-[42px] min-w-[42px] items-center justify-center rounded-2xl border bg-white text-lg font-black transition-all duration-200",
+              "text-[var(--w-primary)] border-[#d8e2ed] hover:border-[var(--w-primary)] hover:bg-[var(--w-primary-soft)]",
               canScrollRight
                 ? "opacity-100"
-                : "opacity-40 pointer-events-none"
-            }`}
+                : "opacity-40 pointer-events-none",
+            ].join(" ")}
           >
             ›
           </button>

@@ -1,14 +1,41 @@
 import type { Product } from "@/types/product";
 
 export const PRICE_TIERS = [
-  { qty: 1, key: "price_1" as const, label: "1u", className: "bg-primary text-primary-foreground" },
-  { qty: 3, key: "price_3" as const, label: "3u+", className: "bg-tertiary text-tertiary-foreground" },
-  { qty: 12, key: "price_12" as const, label: "12u+", className: "bg-secondary text-secondary-foreground" },
-  { qty: 50, key: "price_50" as const, label: "50u+", className: "bg-purple-500 text-white" },
-  { qty: 100, key: "price_100" as const, label: "100u+", className: "bg-dark text-white" },
+  {
+    qty: 1,
+    key: "price_1" as const,
+    label: "1u",
+    className: "price-tier-1",
+  },
+  {
+    qty: 3,
+    key: "price_3" as const,
+    label: "3u+",
+    className: "price-tier-3",
+  },
+  {
+    qty: 12,
+    key: "price_12" as const,
+    label: "12u+",
+    className: "price-tier-12",
+  },
+  {
+    qty: 50,
+    key: "price_50" as const,
+    label: "50u+",
+    className: "price-tier-50",
+  },
+  {
+    qty: 100,
+    key: "price_100" as const,
+    label: "100u+",
+    className: "price-tier-100",
+  },
 ] as const;
 
-export const VOLUME_PRICE_TIERS = PRICE_TIERS.filter((tier) => tier.key !== "price_1");
+export const VOLUME_PRICE_TIERS = PRICE_TIERS.filter(
+  (tier) => tier.key !== "price_1"
+);
 
 export function getAvailablePriceTiers(product: Product) {
   return VOLUME_PRICE_TIERS.filter((tier) => {

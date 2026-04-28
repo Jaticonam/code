@@ -23,18 +23,27 @@
 
     --w-bg: #f8fafc;
     --w-surface: #ffffff;
-    --w-text: #0f172a;
+    --w-text: #475569;
     --w-muted: #64748b;
     --w-border: #e2e8f0;
 
     --w-whatsapp: #25d366;
     --w-whatsapp-dark: #1ead54;
 
+    --w-radius-sm: 14px;
+    --w-radius-md: 20px;
+    --w-radius-lg: 28px;
+
+    --w-shadow-soft: 0 12px 35px rgba(15, 23, 42, 0.08);
+    --w-shadow-strong: 0 18px 50px rgba(15, 23, 42, 0.12);
+
     --font-brand: 'Plus Jakarta Sans', 'Inter', sans-serif;
   }
 
-  * {
-    border-color: var(--w-border);
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
   }
 
   body {
@@ -49,6 +58,167 @@
   h2,
   h3 {
     letter-spacing: -0.02em;
+  }
+}
+
+/* ========================================
+   COMPONENTES GLOBALES CONTROLADOS
+======================================== */
+
+@layer components {
+  /* ===== BOTONES SHOP / CATÁLOGO ===== */
+
+  .btn-shop-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0;
+    background-color: var(--w-primary);
+  }
+
+  .btn-shop-primary:hover {
+    background-color: var(--w-primary-dark);
+  }
+
+  .btn-shop-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0;
+    color: var(--w-primary-dark);
+    border-color: var(--w-primary);
+    background-color: var(--w-primary-soft);
+  }
+
+  .btn-shop-secondary:hover {
+    color: white;
+    background-color: var(--w-primary);
+  }
+
+  .btn-shop-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0;
+    background-color: var(--w-whatsapp);
+  }
+
+  .btn-shop-whatsapp:hover {
+    background-color: var(--w-whatsapp-dark);
+  }
+
+  .btn-shop-pink {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0;
+    background-color: var(--w-secondary-strong);
+  }
+
+  .btn-shop-pink:hover {
+    background-color: #df6aad;
+  }
+
+  /* ===== PRICE BADGES (CATÁLOGO - CLEAN) ===== */
+
+  .price-tier-3,
+  .price-tier-12,
+  .price-tier-50,
+  .price-tier-100 {
+    @apply inline-flex items-center justify-center px-2.5 py-[4px] text-[12px] font-black leading-none shadow-[0_4px_10px_rgba(0,0,0,0.15)];
+    border-radius: 8px; /* curva perfecta */
+  }
+
+  /* 3 unidades */
+  .price-tier-3 {
+    background-color: #f5b025;
+    color: white;
+  }
+
+  /* 12 unidades */
+  .price-tier-12 {
+    background-color: #f286be;
+    color: white;
+  }
+
+  /* 50 unidades */
+  .price-tier-50 {
+    background-color: #8b5cf6;
+    color: white;
+  }
+
+  /* 100 unidades */
+  .price-tier-100 {
+    background-color: #020617;
+    color: white;
+  }
+    
+
+  /* ===== FILTROS / CHIPS ===== */
+
+  .filter-chip {
+    @apply inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-[11px] md:text-[12px] font-semibold transition-all duration-200;
+    background-color: white;
+    border: 1.5px solid #d8e2ed;
+    color: #475569; /* 🔥 más suave */
+    letter-spacing: -0.01em;
+  }
+  .filter-chip-active {
+    @apply inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-[11px] md:text-[12px] font-bold text-white shadow-md transition-all duration-200;
+    background-color: var(--w-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .filter-chip:hover {
+    color: var(--w-primary-dark);
+    border-color: var(--w-primary);
+    background-color: var(--w-primary-soft);
+  }
+
+  .filter-chip-active {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-extrabold text-white shadow-lg transition-all duration-200;
+    background-color: var(--w-primary);
+  }
+
+  /* ===== CARDS ===== */
+
+  .card-home {
+    @apply rounded-[28px] border bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)];
+    border-color: var(--w-border);
+  }
+
+  .card-product {
+    @apply rounded-[24px] border bg-white shadow-[0_4px_10px_rgba(0,0,0,0.15)] transition-all duration-200 hover:-translate-y-1 hover:shadow-xl;
+    border-color: #dbe5ee;
+  }
+
+  .card-shop {
+    @apply rounded-[26px] border bg-white shadow-[0_14px_40px_rgba(15,23,42,0.08)];
+    border-color: #dbe5ee;
+  }
+
+  .card-w {
+    @apply card-home;
+  }
+
+  /* ===== BOTONES LEGACY CONTROLADOS ===== */
+
+  .btn-w-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold text-white transition-all hover:-translate-y-1 hover:shadow-lg;
+    background-color: var(--w-primary);
+  }
+
+  .btn-w-primary:hover {
+    background-color: var(--w-primary-dark);
+  }
+
+  .btn-w-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold text-white transition-all hover:-translate-y-1 hover:shadow-lg;
+    background-color: var(--w-whatsapp);
+  }
+
+  .btn-w-whatsapp:hover {
+    background-color: var(--w-whatsapp-dark);
+  }
+
+  /* ===== GLASS SOLO PARA HOME / BRANDING ===== */
+
+  .glass-w {
+    @apply relative overflow-hidden rounded-[30px] bg-white/85 shadow-[0_30px_90px_rgba(15,23,42,0.2)] ring-1 ring-white/30 backdrop-blur-xl;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .glass-w::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-transparent opacity-60;
   }
 }
 
@@ -83,6 +253,23 @@
     .section-lg {
       padding: 5rem 0;
     }
+  }
+  /* ===== PRICE BADGE FLOAT ===== */
+
+  @keyframes priceBadgeFloat {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  .price-badge-bounce {
+    animation: priceBadgeFloat 2.4s ease-in-out infinite;
+    will-change: transform;
   }
 
   .home-container {
@@ -141,45 +328,6 @@
     background: var(--w-primary);
     color: white;
     border-color: var(--w-primary);
-  }
-
-  /* ===== BOTONES CONTROLADOS ===== */
-
-  .btn-w-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold text-white transition-all hover:-translate-y-1 hover:shadow-lg;
-    background-color: var(--w-primary);
-  }
-
-  .btn-w-primary:hover {
-    background-color: var(--w-primary-dark);
-  }
-
-  .btn-w-whatsapp {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold text-white transition-all hover:-translate-y-1 hover:shadow-lg;
-    background-color: var(--w-whatsapp);
-  }
-
-  .btn-w-whatsapp:hover {
-    background-color: var(--w-whatsapp-dark);
-  }
-
-  /* ===== CARDS ===== */
-
-  .card-w {
-    @apply rounded-[28px] border bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)];
-    border-color: var(--w-border);
-  }
-
-  /* ===== GLASS ===== */
-
-  .glass-w {
-    @apply relative overflow-hidden rounded-[30px] bg-white/85 shadow-[0_30px_90px_rgba(15,23,42,0.2)] ring-1 ring-white/30 backdrop-blur-xl;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-  }
-
-  .glass-w::before {
-    content: "";
-    @apply pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-transparent opacity-60;
   }
 
   /* ===== CATEGORÍAS HOME ===== */
@@ -253,6 +401,7 @@
 
   .badge-anim {
     animation: badgeFloat 2.5s ease-in-out infinite;
+    letter-spacing: -0.01em;
   }
 
   /* ===== SKELETON ===== */
@@ -283,3 +432,4 @@
     }
   }
 }
+
