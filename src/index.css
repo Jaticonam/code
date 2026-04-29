@@ -374,20 +374,62 @@
     animation: fadeUp 0.5s ease-out both;
   }
 
-  @keyframes zoomSlow {
-    from {
-      transform: scale(1);
+  /* ========================================
+   HERO SLIDER - CLEAN & PREMIUM
+======================================== */
+
+/* ===== ANIMACIÓN DE FONDO ===== */
+
+@keyframes heroZoomSlow {
+    0% {
+      transform: scale(1) translate3d(0, 0, 0);
     }
 
-    to {
-      transform: scale(1.06);
+    50% {
+      transform: scale(1.02) translate3d(-1%, -1%, 0);
+    }
+
+    100% {
+      transform: scale(1.04) translate3d(1%, 1%, 0);
     }
   }
 
   .hero-zoom {
-    animation: zoomSlow 12s ease-in-out infinite alternate;
+    animation: heroZoomSlow 16s ease-in-out infinite alternate;
+    will-change: transform;
   }
 
+  /* ===== ENTRADA DEL CARD (IMAGEN PRIMERO) ===== */
+
+  @keyframes heroCardIn {
+    0% {
+      opacity: 0;
+      transform: translateY(26px) scale(0.98);
+    }
+
+    50% {
+      opacity: 0;
+      transform: translateY(26px) scale(0.98);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .animate-heroCardIn {
+    animation: heroCardIn 2.6s ease-out both;
+  }
+
+  /* ===== OPTIMIZACIÓN RENDER ===== */
+
+  .hero-zoom,
+  .animate-heroCardIn {
+    transform: translateZ(0);
+  }
+
+ 
   @keyframes badgeFloat {
     0%,
     100% {
