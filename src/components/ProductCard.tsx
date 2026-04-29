@@ -19,6 +19,19 @@ interface ProductCardProps {
   onImageClick?: (src: string, title: string) => void;
 }
 
+const getCategoryColor = (cat: string) => {
+  const c = cat.toLowerCase();
+
+  if (c.includes("flor")) return "bg-pink-100 text-pink-600";
+  if (c.includes("cinta")) return "bg-purple-100 text-purple-600";
+  if (c.includes("caja")) return "bg-amber-100 text-amber-700";
+  if (c.includes("papel")) return "bg-blue-100 text-blue-600";
+  if (c.includes("globo")) return "bg-red-100 text-red-600";
+  if (c.includes("peluche")) return "bg-orange-100 text-orange-600";
+
+  return "bg-slate-100 text-slate-600";
+};
+
 const BADGE_STYLE_RULES = [
   {
     keywords: ["preventa", "pre venta", "lanzamiento", "proximamente", "próximamente"],
@@ -256,7 +269,12 @@ export function ProductCard({
             {p.id}
           </span>
 
-          <span className="px-2 py-[2px] rounded-full bg-muted text-[9px] font-semibold text-foreground uppercase tracking-wide">
+          <span
+            className={[
+              "px-2.5 py-[3px] rounded-full text-[10px] font-bold uppercase tracking-tight",
+              getCategoryColor(p.category),
+            ].join(" ")}
+          >
             {p.category}
           </span>
         </div>

@@ -107,6 +107,50 @@
     background-color: #df6aad;
   }
 
+ /* ===== FLOATING BUTTONS ===== */
+
+  .floating-btn {
+    @apply inline-flex items-center justify-center gap-2.5 rounded-[30px] px-4 py-3 text-[12px] font-bold tracking-tight text-white shadow-md transition-all duration-200 hover:-translate-y-1 hover:scale-105 active:scale-[0.94] md:px-6 md:py-3.5 md:text-[13px];
+  }
+
+  /* contador */
+  .floating-btn-count {
+    @apply inline-flex min-w-6 items-center justify-center rounded-full bg-white px-2 py-0.5 text-[11px] font-black shadow-sm;
+    color: var(--w-primary);
+  }
+
+  /* ===== BOTONES PRINCIPALES ===== */
+
+  /* 🛒 Mi Caja */
+  .floating-btn-cart {
+    background-color: var(--w-primary);
+    box-shadow: 0 14px 30px rgba(29, 130, 153, 0.28);
+  }
+
+  .floating-btn-cart:hover {
+    background-color: var(--w-primary-dark);
+  }
+
+  /* 📦 Ver Catálogo */
+  .floating-btn-catalog {
+    background-color: var(--w-secondary-strong);
+    box-shadow: 0 14px 30px rgba(242, 134, 190, 0.3);
+  }
+
+  .floating-btn-catalog:hover {
+    background-color: #df6aad;
+  }
+
+  /* 💬 Asesora */
+  .floating-btn-whatsapp {
+    background-color: var(--w-whatsapp);
+    box-shadow: 0 14px 30px rgba(37, 211, 102, 0.28);
+  }
+
+  .floating-btn-whatsapp:hover {
+    background-color: var(--w-whatsapp-dark);
+  }
+
   /* ===== PRICE BADGES (CATÁLOGO - CLEAN) ===== */
 
   .price-tier-3,
