@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Search, SearchX } from "lucide-react";
+import { ArrowLeft, SearchX } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { fetchProducts } from "@/lib/products";
 import { searchProducts } from "@/lib/search";
@@ -15,6 +15,7 @@ import { RecentActivity } from "@/components/RecentActivity";
 import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { AddToCartModal } from "@/components/AddToCartModal";
 import { CategorySkeleton } from "@/components/skeletons/CategorySkeleton";
+import { SearchInput } from "@/components/SearchInput";
 
 const CategoryPage = () => {
   const { id: paramCategoryId } = useParams<{ id: string }>();
@@ -145,27 +146,13 @@ const CategoryPage = () => {
               </div>
 
               {/* Buscador */}
-              <div className="relative flex-1 min-w-0">
-                <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/70" />
-
-                <input
-                  type="text"
+              <div className="flex-1 min-w-0">
+                <SearchInput
                   value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.target.value)}
+                  onChange={setCategorySearch}
+                  products={categoryProducts}
                   placeholder={`¿Qué buscas en ${categoryInfo?.name?.toLowerCase() || "esta categoría"}?`}
-                  className="w-full h-11 md:h-12 rounded-2xl bg-muted border border-transparent pl-11 pr-10 text-sm font-semibold text-foreground placeholder:text-muted-foreground/80 outline-none transition-all focus:bg-background focus:border-primary/20 focus:ring-4 focus:ring-primary/10"
                 />
-
-                {hasSearch && (
-                  <button
-                    type="button"
-                    onClick={() => setCategorySearch("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label="Limpiar búsqueda"
-                  >
-                    <SearchX className="w-4 h-4" />
-                  </button>
-                )}
               </div>
             </div>
           </div>

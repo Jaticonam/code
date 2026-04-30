@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SearchX } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { fetchProducts } from "@/lib/products";
@@ -26,6 +26,15 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("todas");
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.restoreSearch) {
+      setSearchQuery(location.state.restoreSearch);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+  
   const [cartOpen, setCartOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
 

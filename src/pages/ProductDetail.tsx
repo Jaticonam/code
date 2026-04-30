@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   ArrowLeft,
   PlusCircle,
-  Lock,
   CheckCircle,
   AlertTriangle,
   Clock,
@@ -29,6 +28,13 @@ import { ProductCard } from "@/components/ProductCard";
 import { ProductSkeleton } from "@/components/skeletons/ProductSkeleton";
 import { AddToCartModal } from "@/components/AddToCartModal";
 
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
+
 const getUnitPrice = (qty: number, product: Product) => {
   if (qty >= 100 && product.price_100) return product.price_100;
   if (qty >= 50 && product.price_50) return product.price_50;
@@ -44,13 +50,6 @@ const getNextTier = (qty: number, product: Product) => {
   if (qty < 100 && product.price_100) return { qty: 100, price: product.price_100 };
   return null;
 };
-
-import {
-  useParams,
-  useNavigate,
-  useSearchParams,
-  useLocation
-} from "react-router-dom";
 
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
@@ -134,6 +133,7 @@ const ProductDetailPage = () => {
   );
 
   const available = product ? isProductAvailable(product) : false;
+
   const isPreventa =
     (product?.status || "").trim().toLowerCase() === "preventa";
 
@@ -179,7 +179,6 @@ const ProductDetailPage = () => {
 
     let unlockTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // 🔥 SUBE DE TIER
     if (currentTier > lastTier && currentTier > 1) {
       setShowUnlock(true);
 
@@ -188,7 +187,6 @@ const ProductDetailPage = () => {
       }, 1800);
     }
 
-    // 🔴 BAJA DE TIER
     if (currentTier < lastTier) {
       setShowUnlock(false);
     }
@@ -199,8 +197,41 @@ const ProductDetailPage = () => {
       clearTimeout(pulseTimer);
       if (unlockTimer) clearTimeout(unlockTimer);
     };
-
   }, [effectiveQty, product, lastTier]);
+
+  useEffect(() => {
+    const handleBackspace = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      if (isTyping) return;
+
+      if (e.key === "Backspace") {
+        e.preventDefault();
+
+        if (fromSearch) {
+          navigate("/catalogo", {
+            state: {
+              restoreSearch: searchQuery,
+            },
+          });
+          return;
+        }
+
+        navigate(-1);
+      }
+    };
+
+    window.addEventListener("keydown", handleBackspace);
+
+    return () => {
+      window.removeEventListener("keydown", handleBackspace);
+    };
+  }, [navigate, fromSearch, searchQuery]);
 
   const related = useMemo(() => {
     if (!product) return [];
@@ -280,8 +311,6 @@ const ProductDetailPage = () => {
     addToCart(product, parsedQtyInput);
     setModalQty(nextQtyInCart);
     setAddModalOpen(true);
-
-
   }, [
     product,
     available,
@@ -310,7 +339,6 @@ const ProductDetailPage = () => {
       setModalQty(nextQty);
       setQty(nextQty);
       setQtyInput(String(nextQty));
-     
     },
     [product, modalQty, addToCart]
   );
@@ -362,7 +390,12 @@ const ProductDetailPage = () => {
       stockText = "Preventa";
       stockColorClass = "text-green-700";
       StockIcon = Clock;
-    } else if (!product.price_1 || product.price_1 <= 0 || product.stock === null || product.stock === undefined) {
+    } else if (
+      !product.price_1 ||
+      product.price_1 <= 0 ||
+      product.stock === null ||
+      product.stock === undefined
+    ) {
       stockText = "Próximo";
       stockColorClass = "text-muted-foreground";
       StockIcon = Clock;
@@ -417,47 +450,61 @@ const ProductDetailPage = () => {
     <div className="min-h-screen bg-background pb-40">
       <NotificationStack />
 
-      <header className="sticky top-0 z-[100] w-full flex flex-col shadow-sm">
+      <header className="sticky top-0 z-[100] w-full flex flex-col">
         <CountdownTimer />
-        <div className="bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 md:py-4">
-          <div className="max-w-7xl mx-auto flex items-center gap-4">
+
+        <div className="bg-white/90 backdrop-blur-md border-b border-[#e2e8f0] shadow-sm px-4 py-3 md:py-4">
+          <div className="max-w-6xl mx-auto flex items-center gap-3">
+
+            {/* 🔙 BACK */}
             <button
-              onClick={() => navigate(-1)}
-              className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => {
+                if (fromSearch) {
+                  navigate("/catalogo", {
+                    state: { restoreSearch: searchQuery },
+                  });
+                  return;
+                }
+                navigate(-1);
+              }}
+              className="p-2 bg-[#f1f5f9] rounded-xl text-[#334155] hover:bg-[#e2e8f0] transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
 
+            {/* 📦 INFO */}
             <div className="flex-grow min-w-0">
-              <h1 className="text-sm md:text-base font-black text-foreground truncate">
+              <h1 className="text-base md:text-lg font-extrabold tracking-tight text-[#0f172a] truncate">
                 {product.title}
               </h1>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              <p className="text-[11px] text-[#94a3b8] font-semibold">
                 {product.id}
               </p>
             </div>
 
+            {/* 🔗 SHARE */}
             <button
               onClick={handleShare}
-              className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 bg-[#f1f5f9] rounded-xl text-[#334155] hover:bg-[#e2e8f0] transition-colors"
             >
               <Share2 className="w-5 h-5" />
             </button>
+
           </div>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-4 md:px-6 mt-6 md:mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
           <div className="relative">
             <div
-              className="aspect-square overflow-hidden rounded-3xl bg-muted border border-border shadow-lg group cursor-zoom-in"
+              className="aspect-square overflow-hidden rounded-3xl bg-white border border-[#e2e8f0] shadow-[0_10px_30px_rgba(0,0,0,0.08)] group cursor-zoom-in"
               onClick={() => setZoomImage({ src: product.img, title: product.title })}
             >
               <img
                 src={product.img}
                 alt={product.title}
-                className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${
+                className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${
                   !available ? "opacity-60 grayscale-[50%]" : ""
                 }`}
               />
@@ -485,37 +532,53 @@ const ProductDetailPage = () => {
                 </div>
               )}
 
-              <div className="absolute bottom-4 right-4 bg-card/80 backdrop-blur-sm p-2 rounded-xl text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute bottom-4 right-4 bg-white/80 backdrop-blur-md border border-[#e2e8f0] p-2 rounded-xl text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
                 <ZoomIn className="w-5 h-5" />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 card-shop p-6 md:p-7 bg-white">
             <div className="text-center md:text-left">
-              <h2 className="text-2xl md:text-3xl font-black text-foreground leading-tight mb-3">
+              <h2 className="text-2xl md:text-[28px] tracking-tight font-black text-foreground leading-tight mb-3">
                 {product.title}
               </h2>
 
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+              <p className="text-sm md:text-base text-[#64748b] leading-relaxed">
                 {product.description}
               </p>
             </div>
 
-            <div className="flex items-center justify-center md:justify-start gap-4 flex-wrap">
-              <div className={`inline-flex items-center gap-2 ${stockColorClass}`}>
+            <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
+  
+              {/* 🔥 STOCK BADGE REVIVIDO */}
+              <div
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-bold ${
+                  isPreventa
+                    ? "bg-green-50 text-green-700"
+                    : isOutOfStock
+                      ? "bg-red-50 text-red-600"
+                      : stockText.includes("Últimas")
+                        ? "bg-red-50 text-red-600"
+                        : stockText === "Stock limitado"
+                          ? "bg-orange-50 text-orange-600"
+                          : "bg-emerald-50 text-emerald-700"
+                }`}
+              >
                 <StockIcon className="w-4 h-4" />
-                <span className="text-[12px] font-bold">{stockText}</span>
+                <span>{stockText}</span>
               </div>
 
+              {/* 👀 VIEWERS */}
               {available && (
-                <p className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[12px] font-bold">
+                <p className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e6f2f5] text-[#1d8299] text-[12px] font-bold">
                   👀 {viewers} viendo ahora
                 </p>
               )}
+
             </div>
 
-            <div className="flex flex-wrap justify-center md:justify-start gap-1.5">
+            <div className="flex flex-wrap justify-center md:justify-start gap-2">
               {PRICE_TIERS.map((tier) => {
                 const value = product[tier.key];
                 if (!value) return null;
@@ -527,34 +590,28 @@ const ProductDetailPage = () => {
                   (tier.qty === 50 && effectiveQty >= 50 && effectiveQty < 100) ||
                   (tier.qty === 100 && effectiveQty >= 100);
 
-                const colorMap = {
-                  price_1: active
-                    ? "bg-primary text-primary-foreground border-primary shadow-lg"
-                    : "bg-primary/10 text-primary border-primary/20 hover:bg-primary/15",
-                  price_3: active
-                    ? "bg-tertiary text-tertiary-foreground border-tertiary shadow-lg"
-                    : "bg-tertiary/10 text-tertiary border-tertiary/20 hover:bg-tertiary/15",
-                  price_12: active
-                    ? "bg-secondary text-secondary-foreground border-secondary shadow-lg"
-                    : "bg-secondary/10 text-secondary border-secondary/20 hover:bg-secondary/15",
-                  price_50: active
-                    ? "bg-purple-500 text-white border-purple-500 shadow-lg"
-                    : "bg-purple-500/10 text-purple-600 border-purple-500/20 hover:bg-purple-500/15",
-                  price_100: active
-                    ? "bg-dark text-white border-dark shadow-lg"
-                    : "bg-dark/10 text-dark border-dark/20 hover:bg-dark/15",
-                } as const;
+                const tierStyle = active
+                  ? "bg-[#1d8299] text-white border-[#1d8299] shadow-md"
+                  : tier.qty === 3
+                    ? "bg-[#fff7e6] text-[#f59e0b] border-[#f6d28b] hover:bg-[#fff1cc]"
+                    : tier.qty === 12
+                      ? "bg-[#fff0f7] text-[#f286be] border-[#f6bfdc] hover:bg-[#ffe3f1]"
+                      : tier.qty === 50
+                        ? "bg-[#f3efff] text-[#8b5cf6] border-[#d8ccff] hover:bg-[#ebe3ff]"
+                        : tier.qty === 100
+                          ? "bg-[#f1f5f9] text-[#0f172a] border-[#cbd5e1] hover:bg-[#e2e8f0]"
+                          : "bg-white text-[#1d8299] border-[#d8e2ed] hover:bg-[#f0f8fa]";
 
                 return (
                   <button
                     key={tier.key}
                     type="button"
                     onClick={() => updateQty(tier.qty)}
-                    className={`px-2.5 py-2 rounded-xl border transition-all duration-200 text-center min-w-[74px] md:min-w-[78px] shadow-sm cursor-pointer ${
-                      colorMap[tier.key]
-                    } ${active ? "scale-[1.03]" : "hover:scale-[1.02]"}`}
+                    className={`px-3 py-2 rounded-2xl border transition-all duration-200 text-center min-w-[82px] shadow-sm cursor-pointer ${tierStyle} ${
+                      active ? "scale-[1.04]" : "hover:scale-[1.03]"
+                    }`}
                   >
-                    <p className="text-[11px] md:text-[11px] font-black tracking-wide leading-none">
+                    <p className="text-[11px] font-black tracking-wide leading-none">
                       {tier.label}
                     </p>
                     <p className="text-[13px] md:text-sm font-black mt-1 leading-none">
@@ -569,12 +626,11 @@ const ProductDetailPage = () => {
               <div className="flex items-end justify-center md:justify-start gap-2">
                 <span className="text-lg md:text-xl font-black text-muted-foreground">S/</span>
                 <span
-                  className={`text-5xl md:text-6xl font-black text-primary tracking-tight leading-none transition-transform duration-200 ${
+                  className={`text-4xl md:text-5xl font-black text-[#1d8299] tracking-tight leading-none transition-transform duration-200 ${
                     pricePulse ? "scale-105" : "scale-100"
                   }`}
                 >
                   {unitPrice.toFixed(2)}
-
                 </span>
               </div>
 
@@ -591,15 +647,18 @@ const ProductDetailPage = () => {
               )}
 
               {savingsByQty > 0 && (
-                <p className="text-success font-semibold text-sm mt-1">
+                <p className="text-green-600 font-bold text-sm md:text-base mt-1">
                   💰 Estás pagando <strong>S/ {unitPrice.toFixed(2)}</strong> en lugar de{" "}
-                  <span className="line-through opacity-70">S/ {product.price_1.toFixed(2)}</span>
+                  <span className="line-through opacity-70">
+                    S/ {product.price_1.toFixed(2)}
+                  </span>
                 </p>
               )}
 
               {nextTier && (
-                <p className="text-primary text-sm font-semibold mt-1">
-                  🔥 Agrega {nextTier.qty - effectiveQty} más y baja a S/ {nextTier.price.toFixed(2)}
+                <p className="text-[#1d8299] text-sm font-semibold mt-1">
+                  🔥 Agrega {nextTier.qty - effectiveQty} más y baja a S/{" "}
+                  {nextTier.price.toFixed(2)}
                 </p>
               )}
 
@@ -615,7 +674,7 @@ const ProductDetailPage = () => {
                 <button
                   type="button"
                   onClick={() => updateQty(effectiveQty - 1)}
-                  className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-foreground hover:bg-border transition-colors"
+                  className="w-10 h-10 bg-[#f1f5f9] rounded-xl flex items-center justify-center text-[#334155] hover:bg-[#e2e8f0] transition-colors"
                   aria-label="Disminuir cantidad"
                 >
                   <Minus className="w-4 h-4" />
@@ -630,14 +689,14 @@ const ProductDetailPage = () => {
                   onBlur={handleQtyInputBlur}
                   onKeyDown={handleQtyInputKeyDown}
                   placeholder="0"
-                  className="w-24 h-12 rounded-xl border-2 border-border bg-background text-center text-2xl font-black text-foreground outline-none focus:border-primary placeholder:text-muted-foreground/50"
+                  className="w-24 h-12 rounded-xl border border-[#d8e2ed] bg-white text-center text-2xl font-black text-[#334155] shadow-sm outline-none focus:border-[#1d8299] placeholder:text-muted-foreground/50"
                   aria-label="Cantidad"
                 />
 
                 <button
                   type="button"
                   onClick={() => updateQty(effectiveQty + 1)}
-                  className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center text-foreground hover:bg-border transition-colors"
+                  className="w-10 h-10 bg-[#f1f5f9] rounded-xl flex items-center justify-center text-[#334155] hover:bg-[#e2e8f0] transition-colors"
                   aria-label="Aumentar cantidad"
                 >
                   <Plus className="w-4 h-4" />
@@ -648,7 +707,7 @@ const ProductDetailPage = () => {
             {showWhatsAppButton ? (
               <button
                 onClick={handleWhatsApp}
-                className="w-full py-4 rounded-2xl font-black text-base shadow-xl transition-all flex items-center justify-center gap-3 bg-green-500 text-white hover:bg-green-600"
+                className="btn-shop-whatsapp w-full py-4 text-base font-black flex items-center justify-center gap-3"
               >
                 <PlusCircle className="w-5 h-5" />
                 {isPreventa ? "Consultar por WhatsApp" : "Pedir reposición"}
@@ -659,7 +718,7 @@ const ProductDetailPage = () => {
                 disabled={!isQtyInputValid}
                 className={`w-full py-4 rounded-2xl font-black text-base shadow-xl transition-all flex items-center justify-center gap-3 ${
                   isQtyInputValid
-                    ? "bg-primary text-primary-foreground hover:scale-[1.02] active:scale-[0.98]"
+                    ? "bg-[#1d8299] text-white hover:bg-[#16677a] hover:scale-[1.02] active:scale-[0.98]"
                     : "bg-muted text-muted-foreground cursor-not-allowed shadow-none"
                 }`}
               >
