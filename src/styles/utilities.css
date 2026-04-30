@@ -1,0 +1,112 @@
+/* ===== UTILITIES ===== */
+/* Layout, textos reutilizables y helpers */
+
+@layer utilities {
+  /* Espaciado base de secciones */
+  .section-sm {
+    padding: 2rem 0;
+  }
+
+  .section {
+    padding: 2.5rem 0;
+  }
+
+  .section-lg {
+    padding: 3.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .section-sm {
+      padding: 3rem 0;
+    }
+
+    .section {
+      padding: 4rem 0;
+    }
+
+    .section-lg {
+      padding: 5rem 0;
+    }
+  }
+
+  /* Contenedores */
+  .home-container {
+    @apply mx-auto max-w-7xl px-5 md:px-6;
+  }
+
+  .home-section {
+    @apply section home-container;
+  }
+
+  /* Tipografía home */
+  .home-kicker {
+    @apply mb-2 block text-[11px] font-bold uppercase tracking-[0.18em] md:text-xs;
+    color: var(--w-primary);
+  }
+
+  .home-title {
+    @apply max-w-2xl text-2xl font-extrabold leading-snug tracking-tight md:text-4xl;
+    color: var(--w-text);
+  }
+
+  .home-title-sm {
+    @apply max-w-2xl text-xl font-extrabold leading-snug tracking-tight md:text-3xl;
+    color: var(--w-text);
+  }
+
+  .home-title-center {
+    @apply mx-auto max-w-2xl text-center text-2xl font-extrabold leading-snug tracking-tight md:text-4xl;
+    color: var(--w-text);
+  }
+
+  .home-description {
+    @apply mt-3 max-w-xl text-sm font-medium leading-relaxed md:text-base;
+    color: var(--w-muted);
+  }
+
+  .home-description-center {
+    @apply mx-auto mt-3 max-w-xl text-center text-sm font-medium leading-relaxed md:text-base;
+    color: var(--w-muted);
+  }
+
+  .home-section-head {
+    @apply mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between;
+  }
+
+  /* Link tipo píldora */
+  .home-pill-link {
+    @apply inline-flex w-fit items-center gap-2 rounded-full border px-5 py-3 text-sm font-bold transition;
+    border-color: var(--w-border);
+    color: var(--w-text);
+  }
+
+  .home-pill-link:hover {
+    background: var(--w-primary);
+    color: white;
+    border-color: var(--w-primary);
+  }
+
+  /* Categorías visuales */
+  .image-bottom-fade {
+    @apply absolute inset-x-0 bottom-0 h-[52%] bg-gradient-to-t from-black/80 via-black/20 to-transparent;
+  }
+
+  .category-card-kicker {
+    @apply mb-2 block text-[10px] font-extrabold uppercase tracking-[0.16em] drop-shadow-md md:text-xs;
+    color: var(--w-secondary);
+  }
+
+  .category-card-title {
+    @apply text-2xl font-extrabold tracking-tight text-white drop-shadow-md md:text-3xl;
+  }
+
+  /* Ocultar scrollbar visual */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

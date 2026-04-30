@@ -1,0 +1,66 @@
+/* ===== BASE & TOKENS ===== */
+/* Variables globales + configuración base del proyecto */
+
+@layer base {
+  :root {
+    /* Colores principales */
+    --w-primary: #1d8299;
+    --w-primary-dark: #156f84;
+    --w-primary-soft: #e8f6f9;
+
+    /* Secundarios */
+    --w-secondary: #f7b1d6;
+    --w-secondary-strong: #f286be;
+    --w-secondary-soft: #fff0f7;
+
+    /* Acentos */
+    --w-accent: #f5b025;
+    --w-accent-soft: #fff8e6;
+
+    /* Sistema */
+    --w-bg: #f8fafc;
+    --w-surface: #ffffff;
+    --w-text: #475569;
+    --w-muted: #64748b;
+    --w-border: #e2e8f0;
+
+    /* WhatsApp */
+    --w-whatsapp: #25d366;
+    --w-whatsapp-dark: #1ead54;
+
+    /* Bordes */
+    --w-radius-sm: 14px;
+    --w-radius-md: 20px;
+    --w-radius-lg: 28px;
+
+    /* Sombras */
+    --w-shadow-soft: 0 12px 35px rgba(15, 23, 42, 0.08);
+    --w-shadow-strong: 0 18px 50px rgba(15, 23, 42, 0.12);
+
+    /* Tipografía */
+    --font-brand: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  }
+
+  /* Reset base */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Base del sitio */
+  body {
+    background: var(--w-bg);
+    color: var(--w-text);
+    font-family: var(--font-brand);
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  /* Ajuste tipográfico */
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+  }
+}

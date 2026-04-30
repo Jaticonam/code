@@ -166,7 +166,11 @@ const Index = () => {
     <div className="min-h-screen bg-background pb-40">
       <header className="sticky top-0 z-[100] w-full flex flex-col shadow-sm">
         <CountdownTimer />
-        <HeaderBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <HeaderBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          products={products}
+        />
       </header>
 
       <main className="max-w-7xl mx-auto px-2 md:px-4 mt-6 md:mt-8">

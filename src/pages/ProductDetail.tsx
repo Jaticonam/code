@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   PlusCircle,
@@ -46,10 +45,21 @@ const getNextTier = (qty: number, product: Product) => {
   return null;
 };
 
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+  useLocation
+} from "react-router-dom";
+
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fromSearch = location.state?.fromSearch;
+  const searchQuery = location.state?.searchQuery;
 
   const currentCategory = searchParams.get("cat") || "";
   const id = searchParams.get("id") || paramId;

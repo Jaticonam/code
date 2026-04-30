@@ -1,0 +1,50 @@
+/* ========================================
+   HERO SLIDER
+======================================== */
+
+@layer utilities {
+  /* ===== ANIMACIÓN DE FONDO ===== */
+
+  @keyframes heroZoomSlow {
+    0% {
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+
+    50% {
+      transform: scale(1.02) translate3d(-1%, -1%, 0);
+    }
+
+    100% {
+      transform: scale(1.04) translate3d(1%, 1%, 0);
+    }
+  }
+
+  .hero-zoom {
+    animation: heroZoomSlow 16s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /* ===== ENTRADA DEL CARD ===== */
+
+  @keyframes heroCardIn {
+    0% {
+      opacity: 0;
+      transform: translateY(26px) scale(0.98);
+    }
+
+    50% {
+      opacity: 0;
+      transform: translateY(26px) scale(0.98);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .animate-heroCardIn {
+    animation: heroCardIn 2.6s ease-out both;
+    will-change: transform, opacity;
+  }
+}
