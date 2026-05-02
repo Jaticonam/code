@@ -33,12 +33,12 @@ const CART_TIERS = [
   { qty: 100, key: "price_100" as const, cls: "active-100", label: "100u" },
 ];
 
-const TIER_COLORS: Record<string, string> = {
-  "active-1": "bg-primary text-primary-foreground border-primary shadow-primary/20",
-  "active-3": "bg-tertiary text-tertiary-foreground border-tertiary shadow-tertiary/20",
-  "active-12": "bg-secondary text-secondary-foreground border-secondary shadow-secondary/20",
-  "active-50": "bg-purple-500 text-white border-purple-500 shadow-purple-500/20",
-  "active-100": "bg-dark text-primary-foreground border-dark shadow-black/20",
+const TIER_COLORS = {
+  "active-1": "active-1",
+  "active-3": "active-3",
+  "active-12": "active-12",
+  "active-50": "active-50",
+  "active-100": "active-100",
 };
 
 function getBubbleClass(item: CartItem): string {
@@ -59,10 +59,10 @@ function getActiveTierQty(item: CartItem): number {
 
 function getTierUnlockMessage(item: CartItem): string | null {
   const activeTier = getActiveTierQty(item);
-  if (activeTier >= 100) return "🔥 Mejor precio máximo activado";
-  if (activeTier >= 50) return "⚡ Precio mayorista fuerte activado";
-  if (activeTier >= 12) return "✨ Precio por volumen activado";
-  if (activeTier >= 3) return "🎉 Precio por pack activado";
+  if (activeTier >= 100) return "🔥 Precio por cajón activado";
+  if (activeTier >= 50) return "⚡ Precio máximoactivado";
+  if (activeTier >= 12) return "✨ Precio por pack activado";
+  if (activeTier >= 3) return "🎉 Precio por mayor activado";
   return null;
 }
 
@@ -181,7 +181,7 @@ function NoteTextarea({
         value={item.note || ""}
         onChange={(e) => onChangeNote(item.id, e.target.value)}
         placeholder="Detalla tu pedido. Ej.: 2 rojos, 4 azules, con moño, etc."
-        className="w-full resize-none overflow-hidden rounded-2xl border border-border bg-muted/60 px-4 py-3 text-[12px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-primary focus:bg-background transition-colors"
+        className="cart-note"
       />
     </div>
   );
@@ -248,42 +248,45 @@ function CartRow({
   }, [item]);
 
   return (
-    <div
-      className={`bg-card p-4 rounded-[28px] border border-border flex flex-col gap-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-[1px] ${
-        qtyPulse ? "scale-[1.01]" : "scale-100"
-      }`}
-    >
+    <div className={`cart-item-card ${qtyPulse ? "scale-[1.01]" : ""}`}>
       <div className="flex gap-4">
-        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-muted flex-shrink-0">
-          <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+        <div className="cart-product-img">
+          <img
+            src={item.img}
+            alt={item.title}
+            className="w-full h-full object-cover"
+          />
         </div>
 
         <div className="flex-grow text-left min-w-0">
           <div className="flex justify-between items-start gap-3">
             <div className="min-w-0">
-              <h4 className="text-[12px] font-black text-foreground leading-tight tracking-tight capitalize">
+              <h4 className="text-[13px] font-extrabold text-[#0f172a] leading-tight tracking-tight capitalize">
                 {item.title}
               </h4>
-              <p className="text-[10px] font-bold text-muted-foreground mt-1 uppercase tracking-wide">
+
+              <p className="text-[10px] font-bold text-[#94a3b8] mt-1 uppercase tracking-wide">
                 {item.id}
               </p>
             </div>
 
             <button
               onClick={() => onRemove(item.id)}
-              className="text-border hover:text-destructive transition-colors flex-shrink-0"
-              aria-label={`Eliminar ${item.title}`}
+              className="text-[#cbd5e1] hover:text-[#ef4444] transition-colors flex-shrink-0"
             >
               <Trash2 className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="mt-2 flex items-center justify-between gap-3">
-            <div className="flex items-baseline gap-1 min-w-0">
-              <span className="text-[9px] font-black text-muted-foreground uppercase">S/</span>
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <div className="flex items-baseline gap-1">
+              <span className="text-[10px] font-black text-[#94a3b8]">S/</span>
+
               <span
-                className={`text-xl font-black text-foreground tracking-tighter transition-all duration-300 ${
-                  pricePulse ? "scale-105 text-primary" : "scale-100"
+                className={`text-2xl font-black tracking-tighter transition-all duration-300 ${
+                  pricePulse
+                    ? "scale-105 text-[#1d8299]"
+                    : "text-[#0f172a]"
                 }`}
               >
                 {subtotal.toFixed(2)}
@@ -291,9 +294,9 @@ function CartRow({
             </div>
 
             <div
-              className={`px-3 py-1 rounded-full font-black text-[10px] transition-all duration-300 ${
-                getBubbleClass(item)
-              } ${pricePulse ? "scale-105 shadow-md" : "scale-100"}`}
+              className={`cart-unit-badge ${
+                pricePulse ? "scale-105 shadow-md" : ""
+              }`}
             >
               U: S/ {activePrice.toFixed(2)}
             </div>
@@ -301,10 +304,10 @@ function CartRow({
 
           {tierMessage && (
             <div
-              className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black transition-all duration-300 ${
+              className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${
                 tierFlash
-                  ? "bg-secondary/15 text-secondary scale-[1.03]"
-                  : "bg-muted text-muted-foreground"
+                  ? "bg-[#fff0f7] text-[#f286be] scale-[1.03]"
+                  : "bg-[#e6f2f5] text-[#1d8299]"
               }`}
             >
               <Zap className={`w-3.5 h-3.5 ${tierFlash ? "animate-pulse" : ""}`} />
@@ -325,10 +328,10 @@ function CartRow({
               <button
                 key={tier.qty}
                 onClick={() => onSetQty(item.id, tier.qty)}
-                className={`flex-1 h-[38px] rounded-[14px] border text-[11px] font-extrabold transition-all duration-300 ${
+                className={`cart-tier-btn ${
                   isActive
                     ? `${TIER_COLORS[tier.cls]} scale-[1.02] shadow-md`
-                    : "bg-muted text-muted-foreground border-transparent hover:bg-background"
+                    : "cart-tier-btn-muted"
                 }`}
               >
                 {tier.label}
@@ -337,26 +340,14 @@ function CartRow({
           })}
         </div>
 
-        <div
-          className={`flex items-center bg-muted rounded-2xl p-1 min-w-[116px] border border-border transition-all duration-300 ${
-            qtyPulse ? "shadow-md ring-2 ring-primary/10" : ""
-          }`}
-        >
-          <button
-            onClick={() => onChangeQty(item.id, -1)}
-            className="w-8 h-8 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 hover:scale-105 transition-transform"
-            aria-label={`Disminuir cantidad de ${item.title}`}
-          >
+        <div className={`cart-qty-box ${qtyPulse ? "ring-2 ring-[#1d8299]/10" : ""}`}>
+          <button onClick={() => onChangeQty(item.id, -1)} className="cart-qty-btn">
             <Minus className="w-4 h-4" />
           </button>
 
           <QtyInput item={item} onSetQty={onSetQty} />
 
-          <button
-            onClick={() => onChangeQty(item.id, 1)}
-            className="w-8 h-8 bg-card rounded-xl shadow-sm flex items-center justify-center text-primary active:scale-90 hover:scale-105 transition-transform"
-            aria-label={`Aumentar cantidad de ${item.title}`}
-          >
+          <button onClick={() => onChangeQty(item.id, 1)} className="cart-qty-btn">
             <Plus className="w-4 h-4" />
           </button>
         </div>
@@ -384,23 +375,24 @@ export function CartSidebar({
 
   return (
     <div
-      className="fixed inset-0 bg-foreground/60 backdrop-blur-sm z-[1500] flex justify-end"
+      className="fixed inset-0 z-[1500] flex justify-end bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-card h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300"
+        className="cart-panel animate-in slide-in-from-right duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-border flex justify-between items-center">
+        <div className="cart-header">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+            <div className="cart-icon-box">
               <ShoppingBag className="w-5 h-5" />
             </div>
+
             <div>
-              <h2 className="text-lg font-black text-foreground leading-none capitalize">
+              <h2 className="text-lg font-black leading-none text-[#0f172a]">
                 Mi Pedido
               </h2>
-              <span className="text-[10px] font-bold text-muted-foreground mt-1 uppercase">
+              <span className="mt-1 block text-[10px] font-bold uppercase tracking-wide text-[#1d8299]">
                 {cart.length} items seleccionados
               </span>
             </div>
@@ -408,19 +400,19 @@ export function CartSidebar({
 
           <button
             onClick={onClose}
-            className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+            className="cart-close-btn"
             aria-label="Cerrar carrito"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="flex-grow overflow-y-auto p-5 space-y-4 bg-muted/30">
+        <div className="cart-body">
           {cart.length === 0 ? (
-            <div className="py-20 flex flex-col items-center opacity-30 text-center">
-              <ShoppingBag className="w-12 h-12 mb-3" />
-              <p className="font-black text-[11px] capitalize tracking-wide">
-                Carrito Vacío
+            <div className="flex flex-col items-center justify-center py-20 text-center text-[#94a3b8]">
+              <ShoppingBag className="mb-3 h-12 w-12" />
+              <p className="text-[11px] font-black tracking-wide">
+                Carrito vacío
               </p>
             </div>
           ) : (
@@ -437,39 +429,41 @@ export function CartSidebar({
           )}
         </div>
 
-        <div className="p-8 bg-card border-t border-border">
+        <div className="cart-footer">
           {savings > 0 && (
-            <div className="mb-6 bg-secondary/10 border border-secondary/20 p-4 rounded-2xl flex items-center justify-between animate-in fade-in duration-300">
-              <div className="flex items-center gap-2 text-secondary">
+            <div className="cart-saving-box">
+              <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 fill-current animate-pulse" />
-                <span className="text-[11px] font-black tracking-tight capitalize">
-                  ¡Ahorro Wooly Aplicado!
+                <span className="text-[11px] font-black tracking-tight">
+                  ¡Ahorro Wooly aplicado!
                 </span>
               </div>
-              <span className="text-sm font-black text-secondary">
+
+              <span className="text-sm font-black">
                 - S/ {savings.toFixed(2)}
               </span>
             </div>
           )}
 
-          <div className="flex justify-between items-end mb-8">
+          <div className="mb-8 flex items-end justify-between">
             <div className="flex flex-col text-left">
-              <span className="text-[9px] font-black text-muted-foreground tracking-widest mb-1 capitalize">
-                Total Estimado
+              <span className="mb-1 text-[9px] font-black uppercase tracking-widest text-[#64748b]">
+                Total estimado
               </span>
+
               <div className="flex items-baseline gap-1">
-                <span className="text-xs font-black text-muted-foreground">S/</span>
-                <span className="text-4xl font-black text-foreground tracking-tighter transition-all duration-300">
+                <span className="text-xs font-black text-[#94a3b8]">S/</span>
+                <span className="text-4xl font-black tracking-tighter text-[#1d8299]">
                   {totalPrice.toFixed(2)}
                 </span>
               </div>
             </div>
 
-            <div className="bg-muted px-4 py-2 rounded-xl text-center border border-border">
-              <span className="block text-lg font-black text-foreground leading-none">
+            <div className="cart-total-box">
+              <span className="block text-lg font-black leading-none text-[#0f172a]">
                 {totalItems}
               </span>
-              <span className="text-[8px] font-bold text-muted-foreground tracking-tighter capitalize">
+              <span className="text-[8px] font-bold tracking-tight text-[#64748b]">
                 Unidades
               </span>
             </div>
@@ -486,14 +480,14 @@ export function CartSidebar({
               )
             }
             disabled={cart.length === 0}
-            className={`w-full py-4 rounded-2xl font-black text-sm capitalize tracking-wide transition-all flex items-center justify-center gap-3 ${
+            className={
               cart.length > 0
-                ? "bg-whatsapp hover:bg-whatsapp-dark text-primary-foreground shadow-lg shadow-whatsapp/30 active:scale-[0.98]"
-                : "bg-muted text-muted-foreground cursor-not-allowed"
-            }`}
+                ? "cart-checkout-btn"
+                : "w-full py-4 rounded-2xl font-black text-sm tracking-wide flex items-center justify-center gap-3 bg-[#f1f5f9] text-[#94a3b8] cursor-not-allowed"
+            }
           >
             <MessageCircle className="w-5 h-5" />
-            Confirmar Pedido
+            Confirmar pedido
           </button>
         </div>
       </div>

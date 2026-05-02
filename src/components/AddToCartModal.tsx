@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { CheckCircle2, X } from "lucide-react";
+import { CheckCircle2, X, Package } from "lucide-react";
 import { Product } from "@/types/product";
-import { Package } from "lucide-react";
 
 interface AddToCartModalProps {
   open: boolean;
@@ -42,7 +41,6 @@ export function AddToCartModal({
   secondaryActionLabel,
   onSecondaryAction,
 }: AddToCartModalProps) {
-
   const [pulse, setPulse] = useState(false);
 
   const nextTier = product ? getNextTier(product, currentQty) : null;
@@ -55,40 +53,43 @@ export function AddToCartModal({
     setPulse(true);
     const t = setTimeout(() => setPulse(false), 180);
     return () => clearTimeout(t);
-  }, [currentQty, open]);
+  }, [currentQty, open, nextTier]);
 
   if (!open || !product) return null;
 
   return (
-    <div className="fixed inset-0 z-[130] bg-black/45 backdrop-blur-[2px] flex items-center justify-center px-4">
-      <div className="w-full max-w-[360px] rounded-2xl bg-white shadow-2xl border border-slate-200 p-4 animate-in fade-in zoom-in-95 duration-200">
-        
+    <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/45 px-4 backdrop-blur-[2px]">
+      <div className="w-full max-w-[360px] animate-in fade-in zoom-in-95 duration-200 rounded-2xl border border-[#dbe5ee] bg-white p-4 shadow-2xl">
         {/* HEADER */}
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-3 min-w-0">
-            <div className="shrink-0 rounded-full bg-green-100 p-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
+          <div className="flex min-w-0 items-start gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#dcfce7] text-[#16a34a]">
+              <CheckCircle2 className="h-5 w-5" />
             </div>
 
             <div className="min-w-0">
-              <h3 className="text-[15px] font-extrabold text-slate-800">
+              <h3 className="text-[16px] font-extrabold leading-tight text-[#334155]">
                 Agregado a tu caja
               </h3>
-              <p className="text-[12px] text-slate-500 line-clamp-2">
+              <p className="line-clamp-1 text-[12px] font-medium text-[#64748b]">
                 {product.title}
               </p>
             </div>
           </div>
 
-          <button onClick={onClose}>
-            <X className="w-4 h-4 text-slate-400" />
+          <button
+            onClick={onClose}
+            className="rounded-full p-1 text-[#94a3b8] transition-colors hover:bg-[#f1f5f9] hover:text-[#334155]"
+            aria-label="Cerrar modal"
+          >
+            <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* BLOQUE INFO */}
         <div
           className={[
-            "mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 transition-all duration-200",
+            "mt-4 rounded-xl border border-[#dbe5ee] bg-[#f8fafc] p-3 transition-all duration-200",
             pulse ? "scale-[1.02]" : "",
           ].join(" ")}
         >
@@ -96,28 +97,28 @@ export function AddToCartModal({
             <img
               src={product.img || "/placeholder.svg"}
               alt={product.title}
-              className="w-14 h-14 rounded-lg object-cover"
+              className="h-14 w-14 shrink-0 rounded-lg object-cover"
             />
 
-            <div>
-              <p className="text-[12px] text-slate-500">
+            <div className="min-w-0">
+              <p className="text-[12px] font-medium text-[#64748b]">
                 Vas con {currentQty} unidad{currentQty !== 1 ? "es" : ""}
               </p>
 
               {nextTier ? (
-                <p className="text-[13px] text-slate-700 mt-1">
+                <p className="mt-1 text-[13px] leading-snug text-[#334155]">
                   Con{" "}
-                  <span className="font-extrabold text-primary">
+                  <span className="font-extrabold text-[#1d8299]">
                     {nextTier.targetQty} unidades
                   </span>{" "}
                   bajas a{" "}
-                  <span className="font-extrabold text-primary">
+                  <span className="font-extrabold text-[#1d8299]">
                     S/{nextTier.unitPrice.toFixed(1)}
                   </span>{" "}
                   c/u
                 </p>
               ) : (
-                <p className="text-[13px] text-green-600 font-semibold mt-1">
+                <p className="mt-1 text-[13px] font-semibold text-[#16a34a]">
                   Ya tienes el mejor precio 🔥
                 </p>
               )}
@@ -125,30 +126,29 @@ export function AddToCartModal({
           </div>
         </div>
 
-        {/* BLOQUE MENSAJE (TU COPY, SOLO MEJOR PALABRA) */}
+        {/* BLOQUE UPSELL */}
         {hasUpsell && (
-          <div className="mt-3 rounded-xl bg-primary/10 border border-primary/15 p-3">
-            <p className="text-[12px] font-bold text-slate-800">
-              Estás a {missingQty} más para bajar el precio… ¡Aprovecha! 😏
+          <div className="mt-3 rounded-xl border border-[#bfe5ed] bg-[#e6f6f8] p-3">
+            <p className="text-[12px] font-bold leading-snug text-[#334155]">
+              Estás a {missingQty} más para bajar el precio... ¡Aprovecha! 😏
             </p>
           </div>
         )}
 
         {/* BOTONES */}
         <div className="mt-4 space-y-2">
-          
           <div className="grid grid-cols-2 gap-2">
             {hasUpsell ? (
               <button
                 onClick={() => onAddExtra(missingQty)}
-                className="w-full rounded-xl bg-primary text-white py-2.5 text-[13px] font-bold active:scale-[0.97]"
+                className="w-full rounded-xl bg-[#1d8299] py-3 text-[13px] font-extrabold text-white transition-all duration-200 hover:bg-[#16697a] active:scale-[0.97]"
               >
                 Bajar precio (+{missingQty})
               </button>
             ) : (
               <button
                 disabled
-                className="w-full rounded-xl bg-green-100 text-green-700 py-2.5 text-[13px] font-bold"
+                className="w-full rounded-xl bg-[#dcfce7] py-3 text-[13px] font-bold text-[#16a34a]"
               >
                 ✓ Agregado
               </button>
@@ -156,20 +156,19 @@ export function AddToCartModal({
 
             <button
               onClick={onSecondaryAction ?? onClose}
-              className="w-full rounded-xl border-2 border-secondary/40 bg-secondary/5 text-secondary py-2.5 px-3 text-[13px] font-semibold hover:bg-secondary/10 hover:border-secondary/60 active:scale-[0.98] transition-all duration-200"
+              className="w-full rounded-xl border-2 border-[#f6bfdc] bg-white px-3 py-3 text-[13px] font-extrabold text-[#f286be] transition-all duration-200 hover:bg-[#fff0f7] active:scale-[0.98]"
             >
-              {secondaryActionLabel ?? "Seguir acumulando"}
+              {secondaryActionLabel ?? "Otro producto"}
             </button>
           </div>
 
           <button
             onClick={onOpenCart}
-            className="w-full rounded-xl bg-primary text-white py-2.5 text-[13px] font-bold flex items-center justify-center gap-2 hover:bg-primary/90 active:scale-[0.98] transition-all duration-200 shadow-sm"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1d8299] py-3 text-[13px] font-extrabold text-white transition-all duration-200 hover:bg-[#16697a] active:scale-[0.98]"
           >
-            <Package className="w-4 h-4" />
+            <Package className="h-4 w-4" />
             Ver mi caja
           </button>
-
         </div>
       </div>
     </div>

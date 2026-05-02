@@ -93,6 +93,23 @@ export function SearchInput({
     return null;
   }, [value]);
 
+  const resultsCount = useMemo(() => {
+    const term = value.trim().toLowerCase();
+    if (!term) return 0;
+
+    return products.filter((p) => {
+      const title = p.title?.toLowerCase() ?? "";
+      const id = p.id?.toLowerCase() ?? "";
+      const category = p.category?.toLowerCase() ?? "";
+
+      return (
+        title.includes(term) ||
+        id.includes(term) ||
+        category.includes(term)
+      );
+    }).length;
+  }, [value, products]);
+
   const goToProduct = (product: Product) => {
     const currentSearch = value.trim();
 
@@ -109,31 +126,36 @@ export function SearchInput({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (suggestions.length === 0) return;
+    const canShowResultsOption = hasValue;
+    const totalOptions = suggestions.length + (canShowResultsOption ? 1 : 0);
+
+    if (totalOptions === 0) return;
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((prev) =>
-        prev < suggestions.length - 1 ? prev + 1 : 0
-      );
+      setActiveIndex((prev) => (prev < totalOptions - 1 ? prev + 1 : 0));
       return;
     }
 
     if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((prev) =>
-        prev > 0 ? prev - 1 : suggestions.length - 1
-      );
+      setActiveIndex((prev) => (prev > 0 ? prev - 1 : totalOptions - 1));
       return;
     }
 
     if (e.key === "Enter") {
       e.preventDefault();
 
-      const selectedProduct =
-        activeIndex >= 0 ? suggestions[activeIndex] : suggestions[0];
+      // ✅ Producto seleccionado
+      if (activeIndex >= 0 && activeIndex < suggestions.length) {
+        goToProduct(suggestions[activeIndex]);
+        return;
+      }
 
-      goToProduct(selectedProduct);
+      // ✅ Ver todos los resultados / búsqueda normal
+      setActiveIndex(-1);
+      setIsFocused(false);
+      e.currentTarget.blur();
       return;
     }
 
@@ -157,6 +179,7 @@ export function SearchInput({
           onChange={(e) => {
             onChange(e.target.value);
             setActiveIndex(-1);
+            setIsFocused(true);
           }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 150)}
@@ -205,7 +228,7 @@ export function SearchInput({
         </div>
       )}
 
-      {(detectedCategory || suggestions.length > 0) && (
+      {isFocused && (detectedCategory || suggestions.length > 0) && (
         <div className="absolute left-0 right-0 top-full z-[120] mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
 
           {/* 🔥 Categoría detectada */}
@@ -263,7 +286,33 @@ export function SearchInput({
               <Search className="h-4 w-4 shrink-0 text-slate-300" />
             </button>
           ))}
+          {/* 🔥 NUEVO: VER TODOS LOS RESULTADOS */}
+            {hasValue && (
+              <button
+                type="button"
+                onMouseEnter={() => setActiveIndex(suggestions.length)}
+                onClick={() => {
+                  setActiveIndex(-1);
+                  setIsFocused(false);
+                }}
+                className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left border-t border-slate-100 transition ${
+                  activeIndex === suggestions.length
+                    ? "bg-[#e6f2f5]"
+                    : "bg-slate-50 hover:bg-slate-100"
+                }`}
+              >
+                <div>
+                  <p className="text-sm font-black text-[#1d8299]">
+                    🔎 Ver {resultsCount} resultado{resultsCount !== 1 ? "s" : ""}
+                  </p>
+                  <p className="text-[11px] font-semibold text-slate-400">
+                    Explorar resultados para “{value}”
+                  </p>
+                </div>
 
+                <Search className="h-4 w-4 shrink-0 text-slate-300" />
+              </button>
+            )}
         </div>
       )}
     </div>

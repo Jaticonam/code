@@ -777,7 +777,7 @@ const ProductDetailPage = () => {
         onClose={handleCloseAddModal}
         onAddExtra={handleAddExtraFromModal}
         onOpenCart={handleOpenCartFromModal}
-        secondaryActionLabel="Seguir acumulando"
+        secondaryActionLabel="Más productos"
         onSecondaryAction={handleContinueAccumulating}
       />
 
