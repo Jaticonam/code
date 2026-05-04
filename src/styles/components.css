@@ -185,7 +185,6 @@
     @apply pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-transparent opacity-60;
   }
 
-<<<<<<< HEAD
   /* ===== CART SIDEBAR REVIVE ===== */
 
   .cart-panel {
@@ -385,7 +384,7 @@
   .cart-tier-btn:active {
     transform: scale(0.96);
   }
-=======
+
   /* ===== HOME CATEGORIES (FULL MIGRATION SAFE) ===== */
 
   .home-categories-section {
@@ -451,5 +450,4 @@
     background-color: rgba(255, 255, 255, 0.2);
   }
   
->>>>>>> 3f174f2 (Mejora de categorysection mas limpio)
 }
