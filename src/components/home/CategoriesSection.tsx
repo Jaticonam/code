@@ -1,57 +1,72 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { Tags } from "lucide-react";
+import { ArrowRight, Tags } from "lucide-react";
 import HomeSectionHeader from "./HomeSectionHeader";
 
 const categories = [
   { 
     name: "Flores & Rosas", 
-    tag: "Alta demanda", 
+    tag: "Alta demanda",
+    description: "Ideales para ramos, campañas y ventas rápidas",
     slug: "flores", 
-    image: "https://woolyimports.com/og/flores.jpg" 
+    image: "https://woolyimports.com/og/flores.jpg",
+    priority: 100
   },
   { 
     name: "Peluches", 
-    tag: "Sube ticket", 
+    tag: "Sube ticket",
+    description: "Perfectos para aumentar el valor del pedido",
     slug: "peluches", 
-    image: "https://woolyimports.com/og/peluches.jpg" 
+    image: "https://woolyimports.com/og/peluches.jpg",
+    priority: 90
   },
   { 
     name: "Papel Coreano", 
-    tag: "Acabado premium", 
+    tag: "Acabado premium",
+    description: "Eleva la presentación de cualquier detalle",
     slug: "papeles", 
-    image: "https://woolyimports.com/og/papeles.jpg" 
+    image: "https://woolyimports.com/og/papeles.jpg",
+    priority: 85
   },
   { 
     name: "Cajas & Bolsas", 
-    tag: "Empaque listo", 
+    tag: "Empaque listo",
+    description: "Solución directa para empaquetar y vender",
     slug: "cajas", 
-    image: "https://woolyimports.com/og/cajas.jpg" 
+    image: "https://woolyimports.com/og/cajas.jpg",
+    priority: 95
   },
   { 
     name: "Cintas & Deco", 
-    tag: "Detalle clave", 
+    tag: "Detalle clave",
+    description: "El toque final que hace destacar el producto",
     slug: "cintas", 
-    image: "https://woolyimports.com/og/cintas.jpg" 
+    image: "https://woolyimports.com/og/cintas.jpg",
+    priority: 80
   },
   { 
     name: "Globos", 
-    tag: "Venta rápida", 
+    tag: "Venta rápida",
+    description: "Alta rotación en fechas y campañas",
     slug: "globos", 
-    image: "https://woolyimports.com/og/globos.jpg" 
+    image: "https://woolyimports.com/og/globos.jpg",
+    priority: 88
   },
   { 
     name: "Accesorios", 
-    tag: "Producción total", 
+    tag: "Producción total",
+    description: "Complementos para armar pedidos completos",
     slug: "accesorios", 
-    image: "https://woolyimports.com/og/accesorios.jpg" 
+    image: "https://woolyimports.com/og/accesorios.jpg",
+    priority: 75
   },
   { 
     name: "Hot Wheels", 
-    tag: "Alta rotación", 
+    tag: "Alta rotación",
+    description: "Producto coleccionable con alta demanda",
     slug: "hotwheels", 
-    image: "https://woolyimports.com/og/hotwheels.jpg" 
+    image: "https://woolyimports.com/og/hotwheels.jpg",
+    priority: 92
   },
 ];
 
@@ -65,9 +80,13 @@ export default function CategoriesSection() {
     const container = scrollRef.current;
     if (!container) return;
 
-    const isMobile = window.innerWidth < 768;
-    const intervalSpeed = isMobile ? 18 : 10;
-    const scrollStep = isMobile ? 2 : 3;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+    // 🔒 En móvil desactivamos auto-scroll
+    if (isMobile) return;
+
+    const intervalSpeed = 16;
+    const scrollStep = 1;
 
     const interval = window.setInterval(() => {
       if (isPaused.current) return;
@@ -83,8 +102,9 @@ export default function CategoriesSection() {
   }, []);
 
   return (
-    <section className="home-container pt-10 pb-4 md:pt-12 md:pb-0">
-      <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <section className="home-container home-categories-section">
+
+      <div className="home-categories-header">
         <HomeSectionHeader
           icon={Tags}
           kicker="Categorías más vendidas"
@@ -92,46 +112,65 @@ export default function CategoriesSection() {
           description="Arma tu pedido por categorías, combina productos estratégicamente y compra más rápido sin perder margen."
         />
       </div>
+
       <div
         ref={scrollRef}
         onMouseEnter={() => (isPaused.current = true)}
         onMouseLeave={() => (isPaused.current = false)}
         onTouchStart={() => (isPaused.current = true)}
         onTouchEnd={() => (isPaused.current = false)}
-        className="flex gap-5 overflow-x-auto scroll-smooth pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-6"
+        className="home-categories-track scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {loopCategories.map((cat, index) => (
           <Link
             key={`${cat.slug}-${index}`}
             to={`/catalogo/categoria.html?cat=${cat.slug}`}
-            className="group relative h-[360px] min-w-[260px] flex-shrink-0 overflow-hidden rounded-[26px] bg-slate-200 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl md:h-[430px] md:min-w-[340px] md:rounded-[30px]"
+            className="home-category-card group bg-slate-200 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl active:scale-[0.98] hover:ring-2 hover:ring-[#1d8299]/40"
           >
+            {/* Imagen */}
             <img
               src={cat.image}
               alt={cat.name}
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              className="home-category-image transition-transform duration-700 group-hover:scale-110"
             />
 
-            <div className="absolute inset-x-0 bottom-0 h-[52%] bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            {/* Overlay */}
+            <div className="home-category-overlay" />
 
-            <div className="absolute inset-x-0 bottom-0 z-10 p-6 md:p-7">
-              <span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#f7b1d6] drop-shadow-md md:text-xs">
-                {cat.tag}
+            {/* Contenido inferior (CLAVE para que no se suba) */}
+            <div className="home-category-content">
+
+              {/* Tag */}
+              <span className="home-category-tag drop-shadow-md">
+                🔥 {cat.tag}
               </span>
 
+              {/* Texto + flecha */}
               <div className="flex items-end justify-between gap-4">
-                <h3 className="text-2xl font-extrabold tracking-tight text-white drop-shadow-md md:text-3xl">
-                  {cat.name}
-                </h3>
 
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:bg-[#1d8299] md:h-12 md:w-12">
+                {/* Texto */}
+                <div className="flex max-w-[78%] flex-col gap-1">
+                  <h3 className="home-category-title drop-shadow-md">
+                    {cat.name}
+                  </h3>
+
+                  <p className="line-clamp-2 text-sm font-medium leading-snug text-white/85 drop-shadow-md md:text-[15px]">
+                    {cat.description}
+                  </p>
+                </div>
+
+                {/* Flecha */}
+                <span className="home-category-arrow mb-1 backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:bg-[#1d8299]">
                   <ArrowRight size={18} />
                 </span>
+
               </div>
             </div>
+
           </Link>
         ))}
       </div>
+
     </section>
   );
 }

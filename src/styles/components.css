@@ -185,6 +185,7 @@
     @apply pointer-events-none absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-transparent opacity-60;
   }
 
+<<<<<<< HEAD
   /* ===== CART SIDEBAR REVIVE ===== */
 
   .cart-panel {
@@ -384,4 +385,71 @@
   .cart-tier-btn:active {
     transform: scale(0.96);
   }
+=======
+  /* ===== HOME CATEGORIES (FULL MIGRATION SAFE) ===== */
+
+  .home-categories-section {
+    @apply pt-10 pb-4 md:pt-12 md:pb-0;
+  }
+
+  .home-categories-header {
+    @apply mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between;
+  }
+
+  .home-categories-track {
+    @apply flex gap-5 overflow-x-auto pb-6 md:gap-6;
+  }
+
+  /* CARD BASE */
+
+  .home-category-card {
+    @apply relative h-[360px] min-w-[260px] flex-shrink-0 overflow-hidden rounded-[26px] md:h-[430px] md:min-w-[340px] md:rounded-[30px];
+  }
+
+  /* IMAGE */
+
+  .home-category-image {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+
+  /* OVERLAY */
+
+  .home-category-overlay {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 52%;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85),
+      rgba(0, 0, 0, 0.25),
+      transparent
+    );
+  }
+
+  /* CONTENT */
+
+  .home-category-content {
+    @apply absolute inset-x-0 bottom-0 z-10 p-5 md:p-6;
+  }
+
+  .home-category-tag {
+    @apply mb-2 block text-[10px] font-extrabold uppercase tracking-[0.16em] md:text-xs;
+    color: #f7b1d6;
+  }
+
+  .home-category-info {
+    @apply flex items-end justify-between gap-4;
+  }
+
+  .home-category-title {
+    @apply text-2xl font-extrabold tracking-tight text-white md:text-3xl;
+  }
+
+  .home-category-arrow {
+    @apply flex h-10 w-10 items-center justify-center rounded-full text-white md:h-12 md:w-12;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+>>>>>>> 3f174f2 (Mejora de categorysection mas limpio)
 }
