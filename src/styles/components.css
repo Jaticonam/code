@@ -241,16 +241,6 @@
     color: #ffffff;
   }
 
-  .cart-tier-btn {
-    @apply flex-1 h-[38px] rounded-[14px] border text-[11px] font-extrabold transition-all duration-300;
-  }
-
-  .cart-tier-btn-muted {
-    background-color: #f1f5f9;
-    color: #64748b;
-    border-color: transparent;
-  }
-
   .cart-tier-btn-muted:hover {
     background-color: #e6f2f5;
     color: #1d8299;
