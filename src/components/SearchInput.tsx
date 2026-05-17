@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import type { Product } from "@/types/product";
 
 const TOP_SEARCHES = ["rosas", "cajas", "peluches", "papel coreano", "cintas"];
@@ -27,10 +27,22 @@ export function SearchInput({
   placeholder = "Busca productos, categorías o códigos...",
 }: SearchInputProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isFocused, setIsFocused] = useState(false);
+
+  // 🚀 INYECCIÓN DESDE URL (pegar aquí)
+    useEffect(() => {
+    const term = searchParams.get("search");
+
+    if (term) {
+      onChange(term.trim());
+      setIsFocused(false);
+      setActiveIndex(-1);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const handleShortcut = (e: KeyboardEvent) => {

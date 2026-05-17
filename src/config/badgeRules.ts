@@ -7,6 +7,20 @@ export interface BadgeRule {
 
 export const BADGE_RULES: BadgeRule[] = [
   {
+    keywords: [
+      "para papa",
+      "dia del padre",
+      "dia padre",
+      "padre",
+      "papa",
+      "father",
+    ],
+    className:
+    "bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_0_12px_rgba(37,99,235,0.28)]",
+    animation: "animate-pulse",
+    priority: 0,
+  },
+  {
     keywords: ["preventa", "pre venta", "lanzamiento", "proximamente", "próximamente"],
     className: "bg-green-500 text-white",
     animation: "animate-pulse",
@@ -19,7 +33,7 @@ export const BADGE_RULES: BadgeRule[] = [
     priority: 2,
   },
   {
-    keywords: ["cyber", "cybermom", "campaña", "campana"],
+    keywords: ["Promo Flash", "cybermom", "campaña", "campana"],
     className: "bg-rose-700 text-white",
     animation: "",
     priority: 3,
