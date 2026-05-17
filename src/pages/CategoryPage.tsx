@@ -1,21 +1,21 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SearchX } from "lucide-react";
-import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/store/cart/cart.store";
 import { fetchProducts } from "@/lib/products";
 import { searchProducts } from "@/lib/search";
 import { sortByCommercialPriority } from "@/lib/sort";
 import { Product, CATEGORIES } from "@/types/product";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { CategoryFilter } from "@/components/CategoryFilter";
-import { ProductCard } from "@/components/ProductCard";
-import { CartSidebar } from "@/components/CartSidebar";
-import { FloatingButtons } from "@/components/FloatingButtons";
+import { CategoryFilter } from "@/components/products/CategoryFilter";
+import { ProductCard } from "@/components/products/ProductCard";
+import { CartSidebar } from "@/components/cart/CartSidebar";
+import { FloatingButtons } from "@/components/layout/FloatingButtons";
 import { RecentActivity } from "@/components/RecentActivity";
 import { ImageZoomModal } from "@/components/ImageZoomModal";
-import { AddToCartModal } from "@/components/AddToCartModal";
+import { AddToCartModal } from "@/components/cart/AddToCartModal";
 import { CategorySkeleton } from "@/components/skeletons/CategorySkeleton";
-import { SearchInput } from "@/components/SearchInput";
+import { SearchInput } from "@/components/products/SearchInput";
 
 const CategoryPage = () => {
   const { id: paramCategoryId } = useParams<{ id: string }>();

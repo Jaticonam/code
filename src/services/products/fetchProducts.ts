@@ -1,5 +1,5 @@
 import type { Product } from "@/types/product";
-import { SHEETS_CONFIG, type SheetSource } from "./sheetsConfig";
+import { SHEETS_CONFIG, type SheetSource } from "./productsConfig";
 import { normalizeProduct } from "./normalizeProduct";
 import { validateProducts } from "./validateProducts";
 

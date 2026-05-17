@@ -46,7 +46,7 @@ export async function fetchProducts(): Promise<Product[]> {
   if (cached) return cached;
 
   try {
-    const { loadAllProducts } = await import("@/lib/sheets/fetchSheets");
+    const { loadAllProducts } = await import("@/services/products/fetchProducts");
     const products = await loadAllProducts();
 
     if (!products || products.length === 0) {

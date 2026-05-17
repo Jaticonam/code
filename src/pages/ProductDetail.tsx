@@ -14,19 +14,19 @@ import {
 
 import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
 import { PRICE_TIERS } from "@/config/priceTiers";
-import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/store/cart/cart.store";
 import { fetchProducts, isProductAvailable } from "@/lib/products";
 import { Product } from "@/types/product";
 
-import { FloatingButtons } from "@/components/FloatingButtons";
-import { CartSidebar } from "@/components/CartSidebar";
+import { FloatingButtons } from "@/components/layout/FloatingButtons";
+import { CartSidebar } from "@/components/cart/CartSidebar";
 import { NotificationStack, showNotification } from "@/components/NotificationStack";
 import { RecentActivity } from "@/components/RecentActivity";
 import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductCard } from "@/components/products/ProductCard";
 import { ProductSkeleton } from "@/components/skeletons/ProductSkeleton";
-import { AddToCartModal } from "@/components/AddToCartModal";
+import { AddToCartModal } from "@/components/cart/AddToCartModal";
 
 import {
   useParams,

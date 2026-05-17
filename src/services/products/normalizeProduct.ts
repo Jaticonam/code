@@ -1,5 +1,5 @@
 import type { Product } from "@/types/product";
-import type { SheetCategory } from "./sheetsConfig";
+import type { SheetCategory } from "./productsConfig";
 
 type CsvRow = Record<string, string>;
 

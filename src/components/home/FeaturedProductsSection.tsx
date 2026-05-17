@@ -2,15 +2,15 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, SearchX } from "lucide-react";
 
-import { useCart } from "../../hooks/use-cart";
+import { useCart } from "@/store/cart/cart.store";
 import { fetchProducts } from "../../lib/products";
 import { sortByCommercialPriority } from "../../lib/sort";
 import { Product } from "../../types/product";
 
-import { ProductCard } from "../ProductCard";
-import { CartSidebar } from "../CartSidebar";
-import { ImageZoomModal } from "../ImageZoomModal";
-import { AddToCartModal } from "../AddToCartModal";
+import { ProductCard } from "@/components/products/ProductCard";
+import { CartSidebar } from "@/components/cart/CartSidebar";
+import { ImageZoomModal } from "@/components/ImageZoomModal";
+import { AddToCartModal } from "@/components/cart/AddToCartModal";
 import { Flame } from "lucide-react";
 import HomeSectionHeader from "./HomeSectionHeader";
 

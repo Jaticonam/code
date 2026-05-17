@@ -1,4 +1,4 @@
-import { SearchInput } from "@/components/SearchInput";
+import { SearchInput } from "@/components/products/SearchInput";
 import type { Product } from "@/types/product";
 
 interface HeaderBarProps {
