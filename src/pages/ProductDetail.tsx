@@ -14,7 +14,7 @@ import {
 
 import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
 import { PRICE_TIERS } from "@/config/priceTiers";
-import { useCart } from "@/store/cart/cart.store";
+import { useCartStore } from "@/store/cart/cart.context";
 import { fetchProducts, isProductAvailable } from "@/lib/products";
 import { Product } from "@/types/product";
 
@@ -90,7 +90,7 @@ const ProductDetailPage = () => {
     totalItems,
     totalPrice,
     savings,
-  } = useCart();
+  } = useCartStore();
 
   useEffect(() => {
     fetchProducts().then((data) => {

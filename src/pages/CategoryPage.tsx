@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SearchX } from "lucide-react";
-import { useCart } from "@/store/cart/cart.store";
+import { useCartStore } from "@/store/cart/cart.context";
 import { fetchProducts } from "@/lib/products";
 import { searchProducts } from "@/lib/search";
 import { sortByCommercialPriority } from "@/lib/sort";
@@ -41,7 +41,7 @@ const CategoryPage = () => {
     totalItems,
     totalPrice,
     savings,
-  } = useCart();
+  } = useCartStore();
 
   useEffect(() => {
     fetchProducts().then((p) => {
