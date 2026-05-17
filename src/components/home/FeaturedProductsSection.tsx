@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, SearchX } from "lucide-react";
 
-import { useCartStore } from "@/store/cart/cart.context";
+import { useCartStore } from "@/store/cart";
 import { fetchProducts } from "../../lib/products";
 import { sortByCommercialPriority } from "../../lib/sort";
 import { Product } from "../../types/product";

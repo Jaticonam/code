@@ -14,7 +14,7 @@ import {
 
 import { getBadgePresentation, sortBadges } from "@/config/badgeRules";
 import { PRICE_TIERS } from "@/config/priceTiers";
-import { useCartStore } from "@/store/cart/cart.context";
+import { useCartStore } from "@/store/cart";
 import { fetchProducts, isProductAvailable } from "@/lib/products";
 import { Product } from "@/types/product";
 

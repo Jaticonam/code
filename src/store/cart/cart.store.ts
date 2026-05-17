@@ -8,6 +8,14 @@ import {
 } from "./cart.selectors";
 
 import {
+  addItemToCart,
+  removeItemFromCart,
+  changeCartItemQty,
+  setCartItemQty,
+  setCartItemNote,
+} from "./cart.actions";
+
+import {
   CART_KEY,
   loadCart,
   saveCart,
@@ -36,87 +44,56 @@ export function useCart() {
     return () => window.removeEventListener("storage", handler);
   }, []);
 
-  const addToCart = useCallback((product: Product, qty: number = 1) => {
-    const safeQty = Math.max(1, Math.floor(Number(qty) || 1));
-
-    setCart((prev) => {
-      const existing = prev.find((x) => x.id === product.id);
-
-      if (existing) {
-        return prev.map((x) =>
-          x.id === product.id
-            ? { ...x, qty: x.qty + safeQty }
-            : x
-        );
-      }
-
-      return [
-        ...prev,
-        {
-          ...product,
-          qty: safeQty,
-          note: "",
-        },
-      ];
-    });
-  }, []);
+  const addToCart = useCallback(
+    (product: Product, qty: number = 1) => {
+      setCart((prev) =>
+        addItemToCart(prev, product, qty)
+      );
+    },
+    []
+  );
 
   const removeFromCart = useCallback((id: string) => {
-    setCart((prev) => prev.filter((x) => x.id !== id));
-  }, []);
-
-  const changeQty = useCallback((id: string, delta: number) => {
     setCart((prev) =>
-      prev
-        .map((x) => {
-          if (x.id !== id) return x;
-
-          const newQty = x.qty + delta;
-
-          if (newQty <= 0) return null;
-
-          return { ...x, qty: newQty };
-        })
-        .filter(Boolean) as CartItem[]
+      removeItemFromCart(prev, id)
     );
   }, []);
 
-  const setExactQty = useCallback((id: string, qty: number | null) => {
-    setCart((prev) =>
-      prev
-        .map((x) => {
-          if (x.id !== id) return x;
-          if (qty === null) return x;
+  const changeQty = useCallback(
+    (id: string, delta: number) => {
+      setCart((prev) =>
+        changeCartItemQty(prev, id, delta)
+      );
+    },
+    []
+  );
 
-          const safeQty = Math.floor(Number(qty) || 0);
+  const setExactQty = useCallback(
+    (id: string, qty: number | null) => {
+      setCart((prev) =>
+        setCartItemQty(prev, id, qty)
+      );
+    },
+    []
+  );
 
-          if (safeQty <= 0) return null;
-
-          return { ...x, qty: safeQty };
-        })
-        .filter(Boolean) as CartItem[]
-    );
-  }, []);
-
-  const setItemNote = useCallback((id: string, note: string) => {
-    setCart((prev) =>
-      prev.map((x) =>
-        x.id === id
-          ? {
-              ...x,
-              note: note ?? "",
-            }
-          : x
-      )
-    );
-  }, []);
+  const setItemNote = useCallback(
+    (id: string, note: string) => {
+      setCart((prev) =>
+        setCartItemNote(prev, id, note)
+      );
+    },
+    []
+  );
 
   const clearCart = useCallback(() => {
     setCart([]);
   }, []);
 
   const totalItems = getTotalItems(cart);
+
   const totalPrice = getTotalPrice(cart);
+
   const savings = getTotalSavings(cart);
 
   return {
