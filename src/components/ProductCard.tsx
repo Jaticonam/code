@@ -32,109 +32,6 @@ const getCategoryColor = (cat: string) => {
   return "bg-slate-100 text-slate-600";
 };
 
-const BADGE_STYLE_RULES = [
-  {
-    priority: 1,
-    keywords: [
-      "para papá",
-      "para papa",
-      "dia del padre",
-      "día del padre",
-      "dia padre",
-      "día padre",
-      "padre",
-      "papá",
-      "papa",
-      "father",
-    ],
-    className:
-      "bg-gradient-to-r from-[#1e3a8a] to-[#1e40af] border border-[#f5b025]/30 text-[#f8fafc] shadow-[0_0_14px_rgba(245,176,37,0.18)]",
-    animation: "animate-pulse",
-  },
-
-  {
-    priority: 2,
-    keywords: [
-      "campaña",
-      "campana",
-      "temporada",
-      "san valentin",
-      "san valentín",
-      "navidad",
-      "madre",
-      "halloween",
-      "escolar",
-    ],
-    className: "bg-[#f5b025] text-slate-950",
-    animation: "",
-  },
-  {
-    priority: 3,
-    keywords: ["nuevo", "new", "novedad", "nuevo ingreso", "recién llegado"],
-    className: "bg-indigo-600 text-white",
-    animation: "animate-pulse",
-  },
-  {
-    priority: 4,
-    keywords: [
-      "oferta",
-      "promo",
-      "promocion",
-      "promoción",
-      "descuento",
-      "remate",
-      "liquidacion",
-      "liquidación",
-    ],
-    className: "bg-red-600 text-white",
-    animation: "",
-  },
-  {
-    priority: 5,
-    keywords: ["premium", "exclusivo", "vip", "especial", "edicion limitada", "edición limitada"],
-    className: "bg-slate-900 text-white",
-    animation: "",
-  },
-  {
-    priority: 6,
-    keywords: [
-      "mayorista",
-      "por mayor",
-      "caja",
-      "cajón",
-      "cajon",
-      "docena",
-      "pack",
-      "lote",
-      "bulk",
-    ],
-    className: "bg-[#1d8299] text-white",
-    animation: "",
-  },
-  {
-    priority: 7,
-    keywords: [
-      "top",
-      "top ventas",
-      "mas vendido",
-      "más vendido",
-      "alta rotacion",
-      "alta rotación",
-      "tendencia",
-      "destacado",
-      "recomendado",
-    ],
-    className: "bg-orange-600 text-white",
-    animation: "",
-  },
-  {
-    priority: 8,
-    keywords: ["stock limitado", "ultimas unidades", "últimas unidades", "agotando"],
-    className: "bg-red-700 text-white",
-    animation: "animate-pulse",
-  },
-];
-
 export function ProductCard({
   product: p,
   cart = [],
@@ -259,8 +156,8 @@ export function ProductCard({
   }
 
   return (
-    <div className="card-product flex flex-col text-center p-2.5 md:p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative aspect-square overflow-hidden rounded-[14px] md:rounded-[20px] mb-2.5 bg-muted">
+    <div className="card-product flex flex-col text-center p-[6px] md:p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div className="relative h-[340px] md:h-[300px] overflow-hidden rounded-[14px] md:rounded-[20px] mb-2.5 bg-muted">
         <img
           src={p.img || "/placeholder.svg"}
           alt={p.title}
