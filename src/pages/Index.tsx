@@ -263,6 +263,7 @@ const Index = () => {
         )}
       </main>
 
+     
       <FloatingButtons cartCount={totalItems} onCartClick={() => setCartOpen(true)} />
       <RecentActivity products={products} />
 
