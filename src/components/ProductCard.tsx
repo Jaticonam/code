@@ -32,44 +32,6 @@ const getCategoryColor = (cat: string) => {
   return "bg-slate-100 text-slate-600";
 };
 
-const BADGE_STYLE_RULES = [
-  {
-    keywords: ["preventa", "pre venta", "lanzamiento", "proximamente", "próximamente"],
-    className: "bg-green-500 text-white",
-    animation: "animate-pulse",
-  },
-  {
-    keywords: ["nuevo", "new"],
-    className: "bg-purple-600 text-white",
-    animation: "animate-pulse",
-  },
-  {
-    keywords: ["oferta", "promo", "promocion", "promoción", "descuento"],
-    className: "bg-red-600 text-white",
-    animation: "",
-  },
-  {
-    keywords: ["cyber", "cybermom", "campaña", "campana"],
-    className: "bg-rose-700 text-white",
-    animation: "",
-  },
-  {
-    keywords: ["top", "top ventas", "destacado", "recomendado"],
-    className: "bg-amber-500 text-white",
-    animation: "",
-  },
-  {
-    keywords: ["premium", "exclusivo", "vip"],
-    className: "bg-slate-800 text-white",
-    animation: "",
-  },
-  {
-    keywords: ["regalo", "gift", "detalle"],
-    className: "bg-pink-600 text-white",
-    animation: "",
-  },
-];
-
 export function ProductCard({
   product: p,
   cart = [],
@@ -194,8 +156,8 @@ export function ProductCard({
   }
 
   return (
-    <div className="card-product flex flex-col text-center p-2.5 md:p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative aspect-square overflow-hidden rounded-[14px] md:rounded-[20px] mb-2.5 bg-muted">
+    <div className="card-product flex flex-col text-center p-[6px] md:p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div className="relative h-[340px] md:h-[300px] overflow-hidden rounded-[14px] md:rounded-[20px] mb-2.5 bg-muted">
         <img
           src={p.img || "/placeholder.svg"}
           alt={p.title}

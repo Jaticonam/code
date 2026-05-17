@@ -15,6 +15,7 @@ import TestimonialsSection from "../components/home/TestimonialsSection";
 import FinalCTASection from "../components/home/FinalCTASection";
 import HomeFooter from "../components/home/HomeFooter";
 import SocialSection from "../components/home/SocialSection";
+import TikTokSection from "@/components/home/TikTokSection";
 
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { CartItem } from "@/types/product";
@@ -64,8 +65,9 @@ export default function HomePage() {
       <TopBar />
       <HomeHeader />
       <HeroSlider />
-      <CategoriesSection />
+      <TikTokSection />
       <FeaturedProductsSection />
+      <CategoriesSection />
       <HowToBuySection />
       <BenefitsSection />
       <StatsSection />

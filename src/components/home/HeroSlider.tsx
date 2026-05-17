@@ -1,324 +1,351 @@
-//import "./hero-slider.css";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  ArrowLeft,
-  ArrowRight,
-  MessageCircle,
-  ShieldCheck,
-  ShoppingBag,
-  Truck,
-  Eye,
-  ChevronRight,
-  PackageCheck,
-  TrendingUp,
-  Sparkles,
-  Boxes,
-} from "lucide-react";
-
-const slides = [
-  {
-    badge: "Mayorista para emprendedores",
-    title: "Insumos para",
-    highlight: "vender más",
-    text: "Compra flores, peluches, papeles, cajas y accesorios para armar pedidos rentables.",
-    image: "https://woolyimports.com/og/flores.jpg",
-    alert: "🔥 Todo para florerías y tiendas de regalos",
-    urgency: "Alta demanda por campaña",
-    primaryText: "Ver Catálogo",
-    primaryLink: "/catalogo",
-    secondaryText: "Cotizar por WhatsApp",
-    secondaryLink:
-      "https://wa.me/51936188636?text=Hola,%20quiero%20comprar%20insumos%20por%20mayor",
-    trust: "Precios por caja · Stock por campaña · Envíos a todo el Perú",
-    icon: TrendingUp,
-  },
-  {
-    badge: "Compra por volumen",
-    title: "Compra más,",
-    highlight: "Gana más",
-    text: "Arma tu caja mayorista y mejora tu margen desde el primer pedido.",
-    image: "https://woolyimports.com/og/papeles.jpg",
-    alert: "📦 Paquetes, docenas y cajones",
-    urgency: "Mejor precio por volumen",
-    primaryText: "Ver Categorías",
-    primaryLink: "/catalogo",
-    secondaryText: "Pedir asesoría",
-    secondaryLink:
-      "https://wa.me/51936188636?text=Hola,%20quiero%20asesoría%20para%20comprar%20por%20cajón",
-    trust: "Compra guiada · Atención directa · Despacho seguro",
-    icon: Boxes,
-  },
-  {
-    badge: "Campañas y preventas",
-    title: "Compra antes,",
-    highlight: "vende primero",
-    text: "Reserva productos para fechas fuertes antes de quedarte sin stock.",
-    image: "https://woolyimports.com/og/peluches.jpg",
-    alert: "🚀 Preventas y campañas activas",
-    urgency: "Stock limitado por campaña",
-    primaryText: "Ver Preventas",
-    primaryLink: "https://preventas.woolyimports.com/",
-    secondaryText: "Hablar con asesora",
-    secondaryLink:
-      "https://wa.me/51936188636?text=Hola,%20quiero%20información%20sobre%20preventas",
-    trust: "Novedades · Campañas · Oportunidades mayoristas",
-    icon: Sparkles,
-    externalPrimary: true,
-  },
-];
-
-function trackHeroAction(action: string, slideIndex: number, slideTitle: string) {
-  console.log("[HeroSlider]", {
-    action,
-    slide: slideIndex + 1,
-    title: slideTitle,
-  });
-}
+import React, { useEffect, useRef, useState } from "react";
+import "@/styles/hero.css";
 
 export default function HeroSlider() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({
+    days: "00",
+    hours: "00",
+    minutes: "00",
+    seconds: "00",
+  });
 
-  const nextSlide = () => setActive((prev) => (prev + 1) % slides.length);
-
-  const prevSlide = () =>
-    setActive((prev) => (prev - 1 + slides.length) % slides.length);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    if (paused) return;
+    const countdownDate = new Date();
+    countdownDate.setDate(countdownDate.getDate() + 15);
 
-    const interval = setInterval(nextSlide, 9500);
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = countdownDate.getTime() - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24))
+          .toString()
+          .padStart(2, "0"),
+        hours: Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        )
+          .toString()
+          .padStart(2, "0"),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+          .toString()
+          .padStart(2, "0"),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
+          .toString()
+          .padStart(2, "0"),
+      });
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [paused]);
+  }, []);
 
-  const goToSlide = (index: number) => {
-    setActive(index);
-    trackHeroAction("go_to_slide", index, slides[index].title);
-  };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const slide = slides[active];
-  const SlideIcon = slide.icon;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let particlesArray: Particle[] = [];
+    let animationFrameId: number;
+
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedY: number;
+      speedX: number;
+      opacity: number;
+      color: string;
+
+      constructor() {
+        this.x = Math.random() * canvas!.width;
+        this.y = Math.random() * canvas!.height;
+        this.size = Math.random() * 2.5 + 0.5;
+        this.speedY = Math.random() * -0.5 - 0.2;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+
+        const opacities = [0.1, 0.3, 0.5, 0.8];
+        this.opacity = opacities[Math.floor(Math.random() * opacities.length)];
+        this.color = `rgba(245, 176, 37, ${this.opacity})`;
+      }
+
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+
+        if (this.y < 0) {
+          this.y = canvas!.height;
+          this.x = Math.random() * canvas!.width;
+        }
+      }
+
+      draw() {
+        ctx!.fillStyle = this.color;
+        ctx!.beginPath();
+        ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx!.fill();
+
+        if (this.size > 2 && this.opacity > 0.4) {
+          ctx!.shadowBlur = 10;
+          ctx!.shadowColor = "#f5b025";
+        } else {
+          ctx!.shadowBlur = 0;
+        }
+      }
+    }
+
+    const init = () => {
+      particlesArray = [];
+      const numberOfParticles = (canvas.width * canvas.height) / 12000;
+
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    };
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+    animate();
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   return (
-    <section
-      className="relative min-h-[720px] overflow-hidden bg-slate-950 md:min-h-[calc(100vh-112px)]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={() => setPaused(true)}
-    >
-      {slides.map((item, index) => (
-        <div
-          key={item.badge}
-          className={`absolute inset-0 transition-all duration-1000 ${
-            index === active ? "opacity-100 scale-100" : "opacity-0 scale-105"
-          }`}
-        >
-          <img
-            src={item.image}
-            alt={item.badge}
-            className="h-full w-full object-cover hero-zoom"
-          />
+    <main className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#070b14] pt-20 pb-12 lg:pt-0 selection:bg-[#f5b025] selection:text-[#070b14] font-sans antialiased text-[#f8fafc]">
+      <div className="absolute inset-0 bg-pattern opacity-50 z-0"></div>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/45 via-slate-950/20 to-transparent" />
-        </div>
-      ))}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 z-0 pointer-events-none"
+      ></canvas>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-112px)] max-w-7xl items-end px-5 pb-20 pt-32 md:items-center md:px-6 md:py-14">
-        <div
-          key={active}
-          className="animate-heroCardIn relative max-w-2xl overflow-hidden rounded-[30px] border border-white/60 bg-white/85 p-5 shadow-[0_30px_90px_rgba(15,23,42,0.22)] ring-1 ring-white/30 backdrop-blur-xl md:rounded-[34px] md:p-10"
-        >
-          <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/45 via-white/10 to-transparent opacity-70" />
+      <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-[#1d8299]/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[#f5b025]/10 rounded-full blur-[100px] translate-x-1/3 translate-y-1/3 z-0 pointer-events-none"></div>
+      <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-white/5 rounded-full blur-[80px] z-0 pointer-events-none"></div>
 
-          <div className="relative z-10">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#f7b1d6]/40 bg-white/80 px-4 py-2 text-xs font-black tracking-wide text-[#f286be] shadow-sm md:mb-5">
-              <SlideIcon size={16} />
-              {slide.badge}
-            </div>
-
-            <h1 className="mb-4 text-[clamp(2.15rem,10vw,4.8rem)] font-black leading-[0.94] tracking-[-0.045em] text-[#1d8299] md:mb-5">
-              {slide.title}
-              <span className="block text-[#f286be]">{slide.highlight}</span>
-            </h1>
-
-            <p className="mb-4 max-w-xl text-sm font-semibold leading-relaxed text-slate-700 md:mb-5 md:text-lg">
-              {slide.text}
-            </p>
-
-            <div className="mb-3 flex justify-center">
-              <div className="inline-block text-center rounded-2xl border border-amber-200 bg-amber-50/90 px-5 py-2.5 text-sm font-bold text-slate-800 shadow-sm">
-                {slide.alert}
+      <div className="container relative z-10 mx-auto px-6 max-w-7xl">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+          <div className="flex flex-col space-y-8 animate-fade-in-up">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="glass-panel px-4 py-1.5 rounded-full flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f5b025] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f5b025]"></span>
+                </span>
+                <span className="text-xs font-semibold tracking-wider text-[#f5b025] uppercase">
+                  🔥 Temporada de alta rotación
+                </span>
               </div>
-            </div>
-            <div className="mb-5 flex justify-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-1.5 text-[11px] font-black uppercase tracking-wide text-red-600 shadow-sm">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
-                {slide.urgency}
+
+              <div className="px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-medium text-gray-300">
+                📦 Stock listo para campaña
               </div>
             </div>
 
-            <div className="mb-5 grid grid-cols-3 gap-3 rounded-3xl border border-white/80 bg-white/60 p-4 md:mb-6">
-              <MiniStep icon={Eye} title="Explora" text="Elige rápido" />
-              <MiniStep icon={ShoppingBag} title="Cotiza" text="Arma tu caja" />
-              <MiniStep icon={Truck} title="Recibe" text="En tu ciudad" />
+            <div className="space-y-2">
+              <h2 className="text-xl md:text-2xl font-medium text-gray-400">
+                La campaña ya comenzó.
+              </h2>
+
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1]">
+                Prepárate para <br />
+                <span className="text-gradient-gold">
+                  vender más este <br />
+                  Día del Padre.
+                </span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-gray-400 max-w-lg pt-4 leading-relaxed font-light">
+                Productos de alta rotación para emprendedores que quieren
+                aprovechar esta campaña y convertirla en más ventas.
+              </p>
             </div>
 
-            <div className="mb-5 flex flex-col gap-3 sm:flex-row">
-              {slide.externalPrimary ? (
-                <a
-                  href={slide.primaryLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() =>
-                    trackHeroAction("primary_cta", active, slide.title)
-                  }
-                  className="group inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#1d8299] px-6 py-4 text-sm font-black text-white shadow-[0_16px_32px_rgba(29,130,153,0.28)] transition-all hover:-translate-y-1 hover:bg-[#156f84]"
-                >
-                  <PackageCheck size={19} />
-                  {slide.primaryText}
-                  <ChevronRight
-                    size={16}
-                    className="transition-transform group-hover:translate-x-1"
-                  />
-                </a>
-              ) : (
-                <Link
-                  to={slide.primaryLink}
-                  onClick={() =>
-                    trackHeroAction("primary_cta", active, slide.title)
-                  }
-                  className="group inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#1d8299] px-6 py-4 text-sm font-black text-white shadow-[0_16px_32px_rgba(29,130,153,0.28)] transition-all hover:-translate-y-1 hover:bg-[#156f84]"
-                >
-                  <PackageCheck size={19} />
-                  {slide.primaryText}
-                  <ChevronRight
-                    size={16}
-                    className="transition-transform group-hover:translate-x-1"
-                  />
-                </Link>
-              )}
+            <div className="space-y-3 pt-2">
+              <p className="text-sm font-medium text-gray-400 uppercase tracking-widest">
+                ⏰ La campaña no espera
+              </p>
 
-              <a
-                href={slide.secondaryLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  trackHeroAction("whatsapp_cta", active, slide.title)
-                }
-                className="group inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 py-4 text-sm font-black text-white shadow-[0_16px_32px_rgba(37,211,102,0.25)] transition-all hover:-translate-y-1 hover:bg-[#1EAD54]"
+              <div className="flex gap-4">
+                {[
+                  { label: "Días", value: timeLeft.days, color: "text-white" },
+                  { label: "Horas", value: timeLeft.hours, color: "text-white" },
+                  { label: "Min", value: timeLeft.minutes, color: "text-white" },
+                  {
+                    label: "Seg",
+                    value: timeLeft.seconds,
+                    color: "text-[#f5b025]",
+                  },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="glass-panel flex flex-col items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-2xl"
+                  >
+                    <span
+                      className={`text-3xl md:text-4xl font-bold ${item.color}`}
+                    >
+                      {item.value}
+                    </span>
+                    <span
+                      className={`text-xs mt-1 uppercase tracking-wide ${
+                        item.color === "text-white"
+                          ? "text-gray-400"
+                          : "text-[#f5b025]"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button className="btn-premium bg-gradient-to-r from-[#f5b025] to-[#d49615] text-[#070b14] px-8 py-4 rounded-xl font-bold text-lg shadow-[0_0_20px_rgba(245,176,37,0.3)] hover:shadow-[0_0_30px_rgba(245,176,37,0.5)] flex items-center justify-center gap-2">
+                Ver productos de campaña
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  ></path>
+                </svg>
+              </button>
+
+              <button className="bg-[#25D366] text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-[0_10px_30px_rgba(37,211,102,0.35)] hover:bg-[#1EAD54] hover:shadow-[0_12px_35px_rgba(37,211,102,0.45)] transition-all duration-300 flex items-center justify-center gap-2">
+                Asesora WhatsApp
+              </button>
+            </div>
+
+            <div className="flex items-center gap-6 pt-4 border-t border-white/10">
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <svg
+                  className="w-5 h-5 text-[#1d8299]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
+                Envíos a todo el Perú
+              </div>
+
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <svg
+                  className="w-5 h-5 text-[#1d8299]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                Productos de alta rotación
+              </div>
+            </div>
+          </div>
+
+          <div className="relative w-full h-[500px] lg:h-[700px] flex items-center justify-center animate-zoom-cinematic mt-10 lg:mt-0">
+            <div className="relative w-full h-full max-w-lg flex items-center justify-center">
+              <div className="absolute w-3/4 h-3/4 bg-[#f5b025]/20 rounded-full blur-[80px] animate-pulse-glow z-0"></div>
+
+              <div
+                className="balloon w-24 h-24 absolute top-[10%] right-[10%] animate-float-slow"
+                style={{
+                  background:
+                    "radial-gradient(circle at 30% 30%, #475569, #0f172a)",
+                }}
               >
-                <MessageCircle size={19} />
-                {slide.secondaryText}
-              </a>
-            </div>
+                <div className="absolute bottom-[-40px] left-1/2 w-0.5 h-10 bg-white/20"></div>
+              </div>
 
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-              <ShieldCheck size={16} className="shrink-0 text-[#1d8299]" />
-              <span>{slide.trust}</span>
+              <div
+                className="balloon w-16 h-16 absolute top-[25%] left-[5%] animate-float-delayed"
+                style={{
+                  background:
+                    "radial-gradient(circle at 30% 30%, #c48b1a, #452c00)",
+                }}
+              >
+                <div className="absolute bottom-[-30px] left-1/2 w-0.5 h-8 bg-white/20"></div>
+              </div>
+
+              <div className="premium-box-container relative z-10 animate-float-slow">
+                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-64 h-12 bg-black/60 rounded-full blur-xl"></div>
+
+                <div className="absolute top-[-50px] left-1/2 -translate-x-1/2 w-48 h-48 bg-[#f5b025]/40 rounded-full blur-2xl z-[11]"></div>
+
+                <div className="premium-box flex items-center justify-center">
+                  <div className="absolute bottom-4 left-4 w-16 h-24 bg-black/40 rounded-md blur-[2px] transform -rotate-12"></div>
+                  <div className="absolute bottom-4 right-8 w-20 h-20 bg-black/40 rounded-full blur-[2px]"></div>
+                  <div className="box-glow"></div>
+
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1 border border-[#f5b025]/30 rounded text-[10px] text-[#f5b025] tracking-widest uppercase bg-black/50 backdrop-blur-sm">
+                    Wooly Exclusive
+                  </div>
+                </div>
+
+                <div className="premium-box-lid">
+                  <div className="box-ribbon-v"></div>
+                  <div className="box-ribbon-h"></div>
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/10 font-bold text-2xl tracking-widest">
+                    W
+                  </div>
+                </div>
+              </div>
+
+              <div className="absolute bottom-[10%] right-[15%] w-20 h-20 glass-panel rounded-xl rotate-12 flex items-center justify-center animate-float-delayed z-20">
+                <span className="text-3xl">🥃</span>
+              </div>
+
+              <div className="absolute bottom-[20%] left-[10%] w-16 h-16 glass-panel rounded-full flex items-center justify-center animate-float-slow z-20">
+                <span className="text-2xl">⌚</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/80 bg-white/80 px-4 py-3 shadow-lg backdrop-blur-xl md:bottom-6 md:left-auto md:right-8 md:translate-x-0">
-        <button
-          type="button"
-          onClick={() => {
-            prevSlide();
-            trackHeroAction("prev_slide", active, slide.title);
-          }}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-[#1d8299] transition hover:bg-[#1d8299] hover:text-white"
-          aria-label="slide anterior"
-        >
-          <ArrowLeft size={18} />
-        </button>
-
-        <div className="flex gap-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => goToSlide(index)}
-              className={`h-2.5 rounded-full transition-all ${
-                index === active
-                  ? "w-8 bg-[#1d8299]"
-                  : "w-2.5 bg-slate-400/50 hover:bg-[#f286be]"
-              }`}
-              aria-label={`ir al slide ${index + 1}`}
-            />
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            nextSlide();
-            trackHeroAction("next_slide", active, slide.title);
-          }}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-[#1d8299] transition hover:bg-[#1d8299] hover:text-white"
-          aria-label="slide siguiente"
-        >
-          <ArrowRight size={18} />
-        </button>
-      </div>
-
-      <style>{`
-        @keyframes heroCardIn {
-          0% {
-            opacity: 0;
-            transform: translateY(26px) scale(0.98);
-          }
-
-          50% {
-            opacity: 0;
-            transform: translateY(26px) scale(0.98);
-          }
-
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        .animate-heroCardIn {
-          animation: heroCardIn 2.6s ease-out both;
-        }
-
-        @keyframes heroZoomSlow {
-          0% {
-            transform: scale(1);
-          }
-
-          100% {
-            transform: scale(1.04);
-          }
-        }
-
-        .hero-zoom {
-          animation: heroZoomSlow 16s ease-in-out infinite alternate;
-        }
-      `}</style>
-    </section>
-  );
-}
-
-function MiniStep({
-  icon: Icon,
-  title,
-  text,
-}: {
-  icon: React.ElementType;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="text-center">
-      <Icon className="mx-auto mb-2 h-5 w-5 text-[#1d8299]" />
-      <p className="text-[11px] font-black text-slate-900">{title}</p>
-      <p className="hidden text-[11px] font-semibold text-slate-500 sm:block">
-        {text}
-      </p>
-    </div>
+    </main>
   );
 }
