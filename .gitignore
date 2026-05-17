@@ -35,3 +35,10 @@ dist-ssr
 # Misc
 coverage
 *.tsbuildinfo
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.env
+.env.local
