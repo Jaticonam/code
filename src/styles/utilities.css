@@ -2,7 +2,9 @@
 /* Layout, textos reutilizables y helpers */
 
 @layer utilities {
-  /* Espaciado base de secciones */
+
+  /* ===== ESPACIADO BASE ===== */
+
   .section-sm {
     padding: 2rem 0;
   }
@@ -16,6 +18,7 @@
   }
 
   @media (min-width: 768px) {
+
     .section-sm {
       padding: 3rem 0;
     }
@@ -29,16 +32,38 @@
     }
   }
 
-  /* Contenedores */
+  /* ===== CONTENEDORES ===== */
+
   .home-container {
-    @apply mx-auto max-w-7xl px-5 md:px-6;
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-container {
+      padding-inline: 1.5rem;
+    }
   }
 
   .home-section {
-    @apply section home-container;
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding: 2.5rem 0;
+    padding-inline: 1.25rem;
   }
 
-  /* Tipografía home */
+  @media (min-width: 768px) {
+    .home-section {
+      padding: 4rem 0;
+      padding-inline: 1.5rem;
+    }
+  }
+
+  /* ===== TIPOGRAFÍA HOME ===== */
+
   .home-kicker {
     @apply mb-2 block text-[11px] font-bold uppercase tracking-[0.18em] md:text-xs;
     color: var(--w-primary);
@@ -73,7 +98,8 @@
     @apply mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between;
   }
 
-  /* Link tipo píldora */
+  /* ===== LINK PÍLDORA ===== */
+
   .home-pill-link {
     @apply inline-flex w-fit items-center gap-2 rounded-full border px-5 py-3 text-sm font-bold transition;
     border-color: var(--w-border);
@@ -86,10 +112,13 @@
     border-color: var(--w-primary);
   }
 
-  /* Categorías visuales */
+  /* ===== OVERLAYS ===== */
+
   .image-bottom-fade {
     @apply absolute inset-x-0 bottom-0 h-[52%] bg-gradient-to-t from-black/80 via-black/20 to-transparent;
   }
+
+  /* ===== CATEGORY CARDS ===== */
 
   .category-card-kicker {
     @apply mb-2 block text-[10px] font-extrabold uppercase tracking-[0.16em] drop-shadow-md md:text-xs;
@@ -100,7 +129,8 @@
     @apply text-2xl font-extrabold tracking-tight text-white drop-shadow-md md:text-3xl;
   }
 
-  /* Ocultar scrollbar visual */
+  /* ===== SCROLLBAR ===== */
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -109,4 +139,5 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
 }

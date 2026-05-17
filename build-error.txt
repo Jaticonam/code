@@ -1,0 +1,33 @@
+
+> vite_react_shadcn_ts@0.0.0 build
+> vite build
+
+[36mvite v5.4.19 [32mbuilding for production...[36m[39m
+transforming...
+Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[32mÔ£ô[39m 1872 modules transformed.
+rendering chunks...
+warnings when minifying css:
+Ôû▓ [WARNING] Unexpected "{" [css-syntax-error]
+
+    <stdin>:4613:5:
+      4613 Ôöé      {
+           ÔòÁ      ^
+
+
+Ôû▓ [WARNING] Unexpected "{" [css-syntax-error]
+
+    <stdin>:4621:5:
+      4621 Ôöé      {
+           ÔòÁ      ^
+
+
+computing gzip size...
+[2mdist/[22m[32mindex.html                            [39m[1m[2m  2.87 kB[22m[1m[22m[2m Ôöé gzip:   0.93 kB[22m
+[2mdist/[22m[35massets/index-ysrsMShH.css             [39m[1m[2m137.93 kB[22m[1m[22m[2m Ôöé gzip:  22.02 kB[22m
+[2mdist/[22m[36massets/fetchSheets-BU4W7nWg.js        [39m[1m[2m  3.55 kB[22m[1m[22m[2m Ôöé gzip:   1.74 kB[22m
+[2mdist/[22m[36massets/fallback-products-hLXIqj7h.js  [39m[1m[2m 73.41 kB[22m[1m[22m[2m Ôöé gzip:  17.32 kB[22m
+[2mdist/[22m[36massets/index-CKbt8oMT.js              [39m[1m[2m456.74 kB[22m[1m[22m[2m Ôöé gzip: 138.91 kB[22m
+[32mÔ£ô built in 2.43s[39m

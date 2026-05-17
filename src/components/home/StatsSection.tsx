@@ -143,7 +143,7 @@ export default function StatsSection() {
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    if (section) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
