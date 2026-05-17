@@ -16,14 +16,13 @@ import { RecentActivity } from "@/components/RecentActivity";
 import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
 import { CatalogSkeleton } from "@/components/skeletons/CatalogSkeleton";
+import { useProducts } from "@/hooks/products/useProducts";
 
 const TOP_PRIORITY = 100;
 const STRONG_PRIORITY = 80;
 const HIGHLIGHT_PRIORITY = 50;
 
 const Index = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("todas");
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
@@ -54,12 +53,10 @@ const Index = () => {
     clearCart,
   } = useCartStore();
 
-  useEffect(() => {
-    fetchProducts().then((p) => {
-      setProducts(p);
-      setLoading(false);
-    });
-  }, []);
+  const {
+    data: products = [],
+    isLoading: loading,
+  } = useProducts();
 
   const navigate = useNavigate();
 
