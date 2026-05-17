@@ -1,23 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
 import { CartItem, Product } from "@/types/product";
-import { getEffectivePrice } from "@/lib/products";
 
-const CART_KEY = "wooly_cart";
+import {
+  getTotalItems,
+  getTotalPrice,
+  getTotalSavings,
+} from "./cart.selectors";
 
-function loadCart(): CartItem[] {
-  try {
-    const saved = localStorage.getItem(CART_KEY);
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveCart(cart: CartItem[]) {
-  try {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  } catch {}
-}
+import {
+  CART_KEY,
+  loadCart,
+  saveCart,
+} from "./cart.persistence";
 
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>(() => loadCart());
@@ -28,21 +22,22 @@ export function useCart() {
 
   useEffect(() => {
     const handler = (e: StorageEvent) => {
-      if (e.key === CART_KEY) {
-        try {
-          setCart(e.newValue ? JSON.parse(e.newValue) : []);
-        } catch {
-          setCart([]);
-        }
+      if (e.key !== CART_KEY) return;
+
+      try {
+        setCart(e.newValue ? JSON.parse(e.newValue) : []);
+      } catch {
+        setCart([]);
       }
     };
 
     window.addEventListener("storage", handler);
+
     return () => window.removeEventListener("storage", handler);
   }, []);
 
   const addToCart = useCallback((product: Product, qty: number = 1) => {
-    const safeQty = Math.max(1, Math.floor(qty));
+    const safeQty = Math.max(1, Math.floor(Number(qty) || 1));
 
     setCart((prev) => {
       const existing = prev.find((x) => x.id === product.id);
@@ -71,41 +66,46 @@ export function useCart() {
   }, []);
 
   const changeQty = useCallback((id: string, delta: number) => {
-    setCart((prev) => {
-      return prev
+    setCart((prev) =>
+      prev
         .map((x) => {
           if (x.id !== id) return x;
 
           const newQty = x.qty + delta;
+
           if (newQty <= 0) return null;
 
           return { ...x, qty: newQty };
         })
-        .filter(Boolean) as CartItem[];
-    });
+        .filter(Boolean) as CartItem[]
+    );
   }, []);
 
   const setExactQty = useCallback((id: string, qty: number | null) => {
-    setCart((prev) => {
-      return prev
+    setCart((prev) =>
+      prev
         .map((x) => {
           if (x.id !== id) return x;
           if (qty === null) return x;
 
-          const safeQty = Math.floor(qty);
+          const safeQty = Math.floor(Number(qty) || 0);
+
           if (safeQty <= 0) return null;
 
           return { ...x, qty: safeQty };
         })
-        .filter(Boolean) as CartItem[];
-    });
+        .filter(Boolean) as CartItem[]
+    );
   }, []);
 
   const setItemNote = useCallback((id: string, note: string) => {
     setCart((prev) =>
       prev.map((x) =>
         x.id === id
-          ? { ...x, note: note ?? "" }
+          ? {
+              ...x,
+              note: note ?? "",
+            }
           : x
       )
     );
@@ -115,19 +115,9 @@ export function useCart() {
     setCart([]);
   }, []);
 
-  const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
-
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + getEffectivePrice(item) * item.qty,
-    0
-  );
-
-  const totalOriginal = cart.reduce(
-    (acc, item) => acc + item.price_1 * item.qty,
-    0
-  );
-
-  const savings = Math.max(0, totalOriginal - totalPrice);
+  const totalItems = getTotalItems(cart);
+  const totalPrice = getTotalPrice(cart);
+  const savings = getTotalSavings(cart);
 
   return {
     cart,
