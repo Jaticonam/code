@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SearchX } from "lucide-react";
 import { useCartStore } from "@/store/cart";
-import { fetchProducts } from "@/lib/products";
 import { searchProducts } from "@/lib/search";
 import { sortByCommercialPriority } from "@/lib/sort";
 import { Product, CATEGORIES } from "@/types/product";
@@ -16,6 +15,7 @@ import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
 import { CategorySkeleton } from "@/components/skeletons/CategorySkeleton";
 import { SearchInput } from "@/components/products/SearchInput";
+import { useProducts } from "@/hooks/products/useProducts";
 
 const CategoryPage = () => {
   const { id: paramCategoryId } = useParams<{ id: string }>();
@@ -23,8 +23,6 @@ const CategoryPage = () => {
   const categoryId = searchParams.get("cat") || paramCategoryId;
   const navigate = useNavigate();
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
   const [categorySearch, setCategorySearch] = useState("");
@@ -43,12 +41,10 @@ const CategoryPage = () => {
     savings,
   } = useCartStore();
 
-  useEffect(() => {
-    fetchProducts().then((p) => {
-      setProducts(p);
-      setLoading(false);
-    });
-  }, []);
+  const {
+    data: products = [],
+    isLoading: loading,
+  } = useProducts();
 
   useEffect(() => {
     if (categoryId === "todas") {
