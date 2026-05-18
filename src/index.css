@@ -1,15 +1,38 @@
 /* ===== INDEX.CSS ===== */
-/* Punto único de carga de estilos (no agregar clases aquí) */
+/* Punto único de carga global */
 
 /* Fuentes */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
-/* Módulos */
-@import "./styles/base.css";        /* variables + base */
-@import "./styles/components.css";  /* UI: botones, cards */
-@import "./styles/utilities.css";   /* layout + helpers */
-@import "./styles/animations.css";  /* animaciones */
-@import "./styles/hero.css";        /* hero */
+/* Core */
+@import "./styles/base.css";
+@import "./styles/utilities.css";
+@import "./styles/animations.css";
+
+/* Componentes globales */
+@import "./styles/components/buttons.css";
+@import "./styles/components/cards.css";
+@import "./styles/components/glass.css";
+@import "./styles/components/forms.css";
+@import "./styles/components/modals.css";
+@import "./styles/components/floating-buttons.css";
+
+/* Catálogo */
+@import "./styles/catalog/product-card.css";
+@import "./styles/catalog/category-filter.css";
+@import "./styles/catalog/search.css";
+
+/* Carrito */
+@import "./styles/cart/cart-sidebar.css";
+@import "./styles/cart/cart-item.css";
+@import "./styles/cart/cart-footer.css";
+
+/* Home */
+@import "./styles/hero.css";
+@import "./styles/home/shipping.css";
+
+/* TEMPORAL: archivo viejo mientras migramos */
+@import "./styles/components.css";
 
 /* Tailwind */
 @tailwind base;
