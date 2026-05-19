@@ -16,13 +16,16 @@
 @import "./styles/components/forms.css";
 @import "./styles/components/modals.css";
 @import "./styles/components/floating-buttons.css";
+@import "./styles/components/badges.css";
 
 /* Catálogo */
 @import "./styles/catalog/product-card.css";
 @import "./styles/catalog/category-filter.css";
 @import "./styles/catalog/search.css";
+@import "./styles/catalog/notifications.css";
 
 /* Carrito */
+@import "./styles/cart/cart-panel.css";
 @import "./styles/cart/cart-sidebar.css";
 @import "./styles/cart/cart-item.css";
 @import "./styles/cart/cart-footer.css";
@@ -30,9 +33,15 @@
 /* Home */
 @import "./styles/hero.css";
 @import "./styles/home/shipping.css";
+@import "./styles/home/categories.css";
+@import "./styles/home/stats.css";
+@import "./styles/home/vip.css";
 
-/* TEMPORAL: archivo viejo mientras migramos */
-@import "./styles/components.css";
+/* Skeletons */
+@import "./styles/skeletons/catalog-skeleton.css";
+@import "./styles/skeletons/category-skeleton.css";
+@import "./styles/skeletons/product-skeleton.css";
+
 
 /* Tailwind */
 @tailwind base;

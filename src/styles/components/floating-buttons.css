@@ -2,65 +2,118 @@
 
   /* ===== FLOATING BUTTONS ===== */
 
-  .floating-buttons {
-    position: fixed;
-    right: 1rem;
-    bottom: 1rem;
-    z-index: 60;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
+  .floating-btn {
+    position: relative;
 
-  .floating-cart-btn,
-  .floating-whatsapp-btn {
-    display: flex;
+    height: 54px;
+
+    padding:
+      0 1rem;
+
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 62px;
-    height: 62px;
-    border-radius: 9999px;
+    gap: 0.55rem;
+
+    border-radius: 18px;
+
     color: #ffffff;
-    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.18);
-    transition: all 0.25s ease;
+
+    font-size: 0.88rem;
+    font-weight: 800;
+
+    box-shadow:
+      0 12px 28px rgba(15,23,42,0.14);
+
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      opacity 0.18s ease;
   }
 
-  .floating-cart-btn {
-    background: linear-gradient(
-      135deg,
-      var(--w-primary),
-      var(--w-primary-dark)
-    );
+  .floating-btn:hover {
+    transform:
+      translateY(-2px);
+
+    box-shadow:
+      0 18px 36px rgba(15,23,42,0.18);
   }
 
-  .floating-whatsapp-btn {
-    background: linear-gradient(
-      135deg,
-      var(--w-whatsapp),
-      var(--w-whatsapp-dark)
-    );
+  /* ===== CART ===== */
+
+  .floating-btn-cart {
+    background:
+      linear-gradient(
+        135deg,
+        var(--w-primary),
+        var(--w-primary-dark)
+      );
   }
 
-  .floating-cart-btn:hover,
-  .floating-whatsapp-btn:hover {
-    transform: translateY(-2px) scale(1.03);
+  /* ===== CATALOG ===== */
+
+  .floating-btn-catalog {
+    background:
+      linear-gradient(
+        135deg,
+        #f286be,
+        #e85ca7
+      );
   }
 
-  .floating-badge {
-    position: absolute;
-    top: -4px;
-    right: -4px;
+  /* ===== WHATSAPP ===== */
+
+  .floating-btn-whatsapp {
+    background:
+      linear-gradient(
+        135deg,
+        #25d366,
+        #1ead54
+      );
+  }
+
+  /* ===== ICON ===== */
+
+  .floating-btn svg {
+    width: 18px;
+    height: 18px;
+
+    flex-shrink: 0;
+  }
+
+  /* ===== COUNTER ===== */
+
+  .floating-btn-count {
     min-width: 22px;
     height: 22px;
+
     padding-inline: 0.35rem;
-    border-radius: 9999px;
-    background: #ef4444;
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 900;
-    display: flex;
+
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    border-radius: 9999px;
+
+    background: rgba(255,255,255,0.18);
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    backdrop-filter: blur(8px);
+  }
+
+  /* ===== MOBILE ===== */
+
+  @media (max-width: 640px) {
+
+    .floating-btn {
+      width: 54px;
+      padding: 0;
+    }
+
   }
 
 }

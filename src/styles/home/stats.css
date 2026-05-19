@@ -1,0 +1,128 @@
+@layer components {
+
+  .home-stats-section {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-stats-section {
+      padding-top: 3.5rem;
+      padding-bottom: 4rem;
+    }
+  }
+
+  .home-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+
+  .home-stat-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    border: 1px solid rgba(226, 232, 240, 0.7);
+    background: #ffffff;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
+    transition: all 0.45s ease;
+  }
+
+  .home-stat-card:hover {
+    transform: translateY(-0.45rem);
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.12);
+  }
+
+  @media (min-width: 768px) {
+    .home-stat-card {
+      padding: 2rem;
+    }
+  }
+
+  .home-stat-icon {
+    position: relative;
+    z-index: 10;
+    margin-inline: auto;
+    margin-bottom: 1rem;
+    display: flex;
+    height: 3.5rem;
+    width: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .home-stat-card:hover .home-stat-icon {
+    transform: scale(1.1);
+  }
+
+  .home-stat-value {
+    position: relative;
+    z-index: 10;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 640px) {
+    .home-stat-value {
+      font-size: 1.875rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .home-stat-value {
+      font-size: 2.25rem;
+    }
+  }
+
+  .home-stat-label {
+    position: relative;
+    z-index: 10;
+
+    color: #475569;
+
+    font-size: 0.92rem;
+    font-weight: 700;
+
+    line-height: 1.35;
+
+    transition:
+      color 0.25s ease,
+      transform 0.25s ease;
+  }
+  .home-stat-card:hover .home-stat-label {
+    transform: translateY(-1px);
+  }
+
+  .home-stat-ghost {
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+    z-index: 0;
+    height: 6rem;
+    width: 6rem;
+    transition: color 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .home-stat-ghost {
+      height: 7rem;
+      width: 7rem;
+    }
+  }
+
+}

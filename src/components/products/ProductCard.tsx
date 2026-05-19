@@ -214,7 +214,7 @@ export function ProductCard({
               return (
                 <div
                   key={t.key}
-                  className={`${t.className} price-badge-bounce`}
+                  className={`price-tier ${t.className} price-badge-bounce`}
                   style={{ animationDelay: `${i * 120}ms` }}
                 >
                   {t.label} S/{price.toFixed(1)}

@@ -7,6 +7,7 @@ import {
   MapPin,
   Truck,
 } from "lucide-react";
+
 import HomeSectionHeader from "./HomeSectionHeader";
 
 const features = [
@@ -18,6 +19,7 @@ const features = [
     icon: Map,
     color: "primary",
   },
+
   {
     number: "2",
     label: "seguro",
@@ -26,6 +28,7 @@ const features = [
     icon: ShieldCheck,
     color: "secondary",
   },
+
   {
     number: "3",
     label: "embalaje",
@@ -34,6 +37,7 @@ const features = [
     icon: Package,
     color: "accent",
   },
+
   {
     number: "4",
     label: "beneficio",
@@ -42,11 +46,12 @@ const features = [
     icon: Zap,
     color: "primary",
   },
+
   {
     number: "5",
     label: "legal",
     title: "Respaldo legal SUNAT",
-    desc: "emitimos boleta o factura válida ante sunat, ruc 10 o 20.",
+    desc: "Emitimos boleta o factura válida ante SUNAT, RUC 10 o 20.",
     icon: FileCheck,
     color: "secondary",
   },
@@ -59,12 +64,14 @@ const colorStyles = {
     label: "bg-[#1d8299]/10 text-[#1d8299]",
     title: "group-hover:text-[#1d8299]",
   },
+
   secondary: {
     number: "group-hover:text-[#f286be]/10",
     iconHover: "group-hover:bg-[#f286be]",
     label: "bg-[#f286be]/10 text-[#f286be]",
     title: "group-hover:text-[#f286be]",
   },
+
   accent: {
     number: "group-hover:text-[#f5b025]/10",
     iconHover: "group-hover:bg-[#f5b025]",
@@ -77,104 +84,125 @@ export default function ShippingSection() {
   return (
     <section
       id="shipping"
-      className="home-container scroll-mt-24 pt-10 pb-16 md:pt-14 md:pb-20"
+      className="home-container home-shipping-section"
     >
       <HomeSectionHeader
         icon={Truck}
         kicker="Logística garantizada"
-        title="Envíos a todo el perú"
+        title="Envíos a todo el Perú"
         description="Tu pedido viaja protegido, embalado y con seguimiento para que compres con tranquilidad."
         align="center"
       />
 
-      <div className="grid items-stretch gap-8 lg:grid-cols-2">
-        {/* tarjetas */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
+      <div className="home-shipping-layout">
+        
+        {/* FEATURES */}
+        <div className="home-shipping-features">
           {features.map((item) => {
             const Icon = item.icon;
+
             const styles =
               colorStyles[item.color as keyof typeof colorStyles];
 
             return (
-              <div
+              <article
                 key={item.title}
-                className="group relative overflow-hidden rounded-[26px] border border-slate-200/70 bg-white p-5 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl md:p-6"
+                className="shipping-feature-card group"
               >
+                {/* NUMBER */}
                 <div
-                  className={`pointer-events-none absolute right-5 top-5 z-0 select-none text-[88px] font-black leading-none text-slate-200/70 transition-colors duration-500 md:text-[96px] ${styles.number}`}
+                  className={`shipping-feature-number ${styles.number}`}
                 >
                   {item.number}
                 </div>
 
-                <div className="relative z-10 flex items-start gap-4">
+                <div className="shipping-feature-row">
+                  
+                  {/* ICON */}
                   <div
-                    className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#f7b1d6]/20 text-[#f286be] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
+                    className={`shipping-feature-icon bg-[#f7b1d6]/20 text-[#f286be] shadow-sm group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
                   >
                     <Icon className="h-6 w-6" />
                   </div>
 
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-2 flex items-start justify-between gap-3">
+                  {/* CONTENT */}
+                  <div className="shipping-feature-content">
+                    
+                    <div className="shipping-feature-header">
+                      
                       <h3
-                        className={`min-w-0 pr-2 text-base font-bold text-slate-950 transition-colors duration-300 md:text-lg ${styles.title}`}
+                        className={`shipping-feature-title ${styles.title}`}
                       >
                         {item.title}
                       </h3>
 
                       <span
-                        className={`inline-block shrink-0 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-sm ${styles.label}`}
+                        className={`shipping-feature-label ${styles.label}`}
                       >
                         {item.label}
                       </span>
+
                     </div>
 
-                    <p className="text-sm leading-relaxed text-slate-600">
+                    <p className="shipping-feature-description">
                       {item.desc}
                     </p>
+
                   </div>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
 
-        {/* imagen */}
-        <div className="relative min-h-[390px] md:min-h-[460px] lg:min-h-full">
-          <div className="group relative h-full min-h-[390px] overflow-hidden rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.16)] md:min-h-[460px]">
+        {/* IMAGE */}
+        <div className="shipping-image-wrapper">
+
+          <div className="shipping-image-card group">
+
             <img
               src="https://scontent.faqp5-1.fna.fbcdn.net/v/t1.6435-9/118468095_3836541133040959_3203898273981614328_n.jpg"
               alt="logística y despacho wooly"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="shipping-image"
               loading="lazy"
             />
 
-            <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="shipping-image-overlay" />
 
-            <div className="absolute right-5 top-5 flex items-center gap-3 rounded-2xl bg-white/85 px-4 py-2.5 shadow-lg backdrop-blur-md">
+            {/* BADGE TOP */}
+            <div className="shipping-image-badge-top">
+
               <MapPin className="h-5 w-5 text-[#1d8299]" />
 
               <div>
-                <strong className="block text-sm font-black text-slate-950">
+                <strong>
                   desde tacna
                 </strong>
-                <small className="text-[10px] font-bold uppercase text-slate-500">
+
+                <small>
                   a todo el país
                 </small>
               </div>
+
             </div>
 
-            <div className="absolute bottom-5 left-5 right-5 flex items-center gap-4 rounded-2xl bg-white/85 px-4 py-3 shadow-lg backdrop-blur-md">
+            {/* BADGE BOTTOM */}
+            <div className="shipping-image-badge-bottom">
+
               <ShieldCheck className="h-6 w-6 shrink-0 text-green-600" />
 
               <div>
-                <strong className="block text-sm font-black text-slate-950">
+                <strong>
                   compra protegida
                 </strong>
-                <p className="text-xs text-slate-600">
+
+                <p>
                   seguimiento garantizado por shalom pro
                 </p>
               </div>
+
             </div>
+
           </div>
         </div>
       </div>
