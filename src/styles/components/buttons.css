@@ -1,0 +1,35 @@
+@layer components {
+
+  /* ===== BOTONES PRINCIPALES (SHOP) ===== */
+
+  .btn-shop-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0;
+    background-color: var(--w-primary);
+  }
+
+  .btn-shop-primary:hover {
+    background-color: var(--w-primary-dark);
+  }
+
+  .btn-shop-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0;
+    color: var(--w-primary-dark);
+    border-color: var(--w-primary);
+    background-color: var(--w-primary-soft);
+  }
+
+  .btn-shop-secondary:hover {
+    color: white;
+    background-color: var(--w-primary);
+  }
+
+  .btn-shop-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg;
+    background-color: #25d366;
+  }
+
+  .btn-shop-whatsapp:hover {
+    background-color: #1ead54;
+  }
+
+}

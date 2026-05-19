@@ -1,0 +1,24 @@
+@layer components {
+
+  /* ===== CARDS ===== */
+
+  .card-home {
+    @apply rounded-[28px] bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)];
+    border: 1px solid var(--w-border);
+  }
+
+  .card-product {
+    @apply rounded-[24px] bg-white shadow-[0_4px_10px_rgba(0,0,0,0.15)] transition-all duration-200 hover:-translate-y-1 hover:shadow-xl;
+    border: 1px solid #dbe5ee;
+  }
+
+  .card-shop {
+    @apply rounded-[26px] bg-white shadow-[0_14px_40px_rgba(15,23,42,0.08)];
+    border: 1px solid #dbe5ee;
+  }
+
+  .card-w {
+    @apply card-home;
+  }
+
+}

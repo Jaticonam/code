@@ -1,0 +1,115 @@
+@layer components {
+
+  /* ===== CART ITEM CARD ===== */
+
+  .cart-item-card {
+    border-radius: 28px;
+    background: #ffffff;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid #dbe5ee;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  }
+
+  .cart-item-card:hover {
+    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.1);
+  }
+
+  .cart-product-img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+  }
+
+  .cart-product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cart-unit-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 900;
+    background: #f286be;
+    color: #ffffff;
+  }
+
+  .cart-tier-btn {
+    height: 38px;
+    flex: 1 1 0%;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    font-weight: 800;
+    transition: all 0.3s ease;
+  }
+
+  .cart-tier-btn-muted {
+    background: #f8fafc;
+    color: #475569;
+    border-color: #e2e8f0;
+  }
+
+  .cart-tier-btn-muted:hover {
+    background: #e6f2f5;
+    color: #1d8299;
+    border-color: #bfe5ed;
+  }
+
+  .cart-qty-box {
+    display: flex;
+    align-items: center;
+    min-width: 116px;
+    border-radius: 1rem;
+    padding: 0.25rem;
+    background: #f8fafc;
+    border: 1px solid #dbe5ee;
+    box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.5);
+  }
+
+  .cart-qty-btn {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.75rem;
+    background: #ffffff;
+    color: #1d8299;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+  }
+
+  .cart-qty-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .cart-qty-btn:active {
+    transform: scale(0.9);
+  }
+
+  .cart-note {
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    outline: none;
+    border: 1px solid #dbe5ee;
+    background: #f8fafc;
+    color: #334155;
+  }
+
+  .cart-note::placeholder {
+    color: #94a3b8;
+  }
+
+}

@@ -86,28 +86,6 @@
     border-color: #e2e8f0;
     background-color: #ffffff;
   }
-  /* ===== FLOATING BUTTONS ===== */
-
-  .floating-btn {
-    @apply flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-bold text-white shadow-xl transition-all duration-200 hover:-translate-y-1;
-  }
-
-  .floating-btn-cart {
-    background: var(--w-primary);
-  }
-
-  .floating-btn-catalog {
-    background: var(--w-secondary-strong);
-  }
-
-  .floating-btn-whatsapp {
-    background: #25d366;
-  }
-
-  .floating-btn-count {
-    @apply flex h-6 min-w-[24px] items-center justify-center rounded-full bg-white px-1 text-xs font-black;
-    color: var(--w-primary);
-  }
   /* ===== PRICE TIERS ===== */
 
   .price-tier {

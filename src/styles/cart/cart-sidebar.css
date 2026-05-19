@@ -1,0 +1,135 @@
+@layer components {
+
+  /* ===== CART SIDEBAR ===== */
+
+  .cart-footer {
+    position: sticky;
+    bottom: 0;
+    padding: 1rem;
+    background: linear-gradient(
+      to top,
+      #ffffff 75%,
+      rgba(255,255,255,0.92)
+    );
+
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -18px 35px rgba(15, 23, 42, 0.06);
+  }
+
+  /* ===== CART SAVING MESSAGE ===== */
+
+  .cart-saving-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1.25rem;
+
+    background: linear-gradient(
+      135deg,
+      rgba(247, 177, 214, 0.18),
+      rgba(242, 134, 190, 0.08)
+    );
+
+    border: 1px solid rgba(242, 134, 190, 0.16);
+
+    color: var(--w-secondary-strong);
+
+    box-shadow:
+      0 10px 24px rgba(242, 134, 190, 0.08);
+  }
+
+  .cart-saving-box strong {
+    color: var(--w-secondary-strong);
+    font-size: 1rem;
+    font-weight: 900;
+  }
+
+  /* ===== CART TOTAL ===== */
+
+  .cart-total-box {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .cart-total-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .cart-total-price {
+    color: var(--w-primary);
+    font-size: 2.3rem;
+    font-weight: 950;
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .cart-total-units {
+    color: #0f172a;
+    font-size: 1.45rem;
+    font-weight: 950;
+    line-height: 1;
+  }
+
+  .cart-total-units-label {
+    margin-top: 0.25rem;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  /* ===== CART CHECKOUT BUTTON ===== */
+
+  .cart-checkout-btn {
+    width: 100%;
+    min-height: 58px;
+    border: none;
+    border-radius: 1.1rem;
+    background: #25d366;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+
+    box-shadow:
+      0 14px 28px rgba(37, 211, 102, 0.22);
+
+    transition: all 0.2s ease;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+  }
+
+  .cart-checkout-btn:hover {
+    background: #1ead54;
+    transform: translateY(-1px);
+
+    box-shadow:
+      0 18px 34px rgba(37, 211, 102, 0.3);
+  }
+
+  .cart-checkout-btn:active {
+    transform: scale(0.985);
+  }
+
+  .cart-checkout-btn svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+}
