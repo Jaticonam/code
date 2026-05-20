@@ -1,25 +1,43 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, SearchX } from "lucide-react";
+import { ArrowRight, Flame, RefreshCw, SearchX } from "lucide-react";
 
 import { useCartStore } from "@/store/cart";
 import { fetchProducts } from "../../lib/products";
-import { sortByCommercialPriority } from "../../lib/sort";
 import { Product } from "../../types/product";
 
 import { ProductCard } from "@/components/products/ProductCard";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
-import { Flame } from "lucide-react";
 import HomeSectionHeader from "./HomeSectionHeader";
 
 const HOME_MIN_PRIORITY = 80;
 const HOME_LIMIT = 8;
 
+function getRandomWeightedFeatured(products: Product[]) {
+  const candidates = products.filter(
+    (product) => (product.priority || 0) >= HOME_MIN_PRIORITY
+  );
+
+  return candidates
+    .map((product) => {
+      const priority = product.priority || 0;
+
+      return {
+        product,
+        score: priority * 10 + Math.random() * 100,
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, HOME_LIMIT)
+    .map((item) => item.product);
+}
+
 export default function FeaturedProductsSection() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [shuffleKey, setShuffleKey] = useState(0);
 
   const [cartOpen, setCartOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
@@ -51,10 +69,12 @@ export default function FeaturedProductsSection() {
   }, []);
 
   const featuredProducts = useMemo(() => {
-    return sortByCommercialPriority(
-      products.filter((p) => (p.priority || 0) >= HOME_MIN_PRIORITY)
-    ).slice(0, HOME_LIMIT);
-  }, [products]);
+    return getRandomWeightedFeatured(products);
+  }, [products, shuffleKey]);
+
+  const handleShuffle = () => {
+    setShuffleKey((current) => current + 1);
+  };
 
   const handleAddToCart = useCallback(
     (product: Product) => {
@@ -78,34 +98,52 @@ export default function FeaturedProductsSection() {
   );
 
   return (
-    <section className="home-container pt-4 pb-10 md:pt-6 md:pb-4">
-      <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <section className="home-container featured-products-section">
+      <div className="featured-products-header">
         <HomeSectionHeader
           icon={Flame}
           kicker="alta rotación"
           title="Productos que se venden solos"
-          description="Elige lo que ya está funcionando y empieza a vender desde hoy."
+          description="Elige una selección dinámica de productos con alto potencial comercial. Priorizamos los más fuertes, pero rotamos opciones para descubrir nuevas oportunidades."
         />
+
+        <div className="featured-products-actions">
+          <button
+            type="button"
+            onClick={handleShuffle}
+            className="featured-products-shuffle"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Cambiar selección
+          </button>
+
+          <Link to="/catalogo" className="featured-products-link">
+            Ver catálogo
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-[330px] animate-pulse rounded-2xl bg-slate-200 md:h-[420px]"
-            />
+        <div className="featured-products-grid">
+          {Array.from({ length: HOME_LIMIT }).map((_, index) => (
+            <div key={index} className="featured-product-skeleton" />
           ))}
         </div>
       ) : featuredProducts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-[28px] border border-dashed border-slate-300 bg-slate-50 py-16 text-slate-500">
+        <div className="featured-products-empty">
           <SearchX className="mb-3 h-8 w-8 opacity-40" />
-          <p className="text-sm font-bold">
-            aún no hay productos con priority 80 o 100
+
+          <p>
+            Aún no hay productos con prioridad alta para mostrar.
           </p>
+
+          <small>
+            Usa priority 80, 90 o 100 para activar esta sección.
+          </small>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+        <div className="featured-products-grid">
           {featuredProducts.map((product) => (
             <ProductCard
               key={product.id}

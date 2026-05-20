@@ -30,12 +30,21 @@
 @import "./styles/cart/cart-item.css";
 @import "./styles/cart/cart-footer.css";
 
-/* Home */
-@import "./styles/hero.css";
-@import "./styles/home/shipping.css";
+/* HOME */
+@import "./styles/home/hero.css";
 @import "./styles/home/categories.css";
+@import "./styles/home/shipping.css";
 @import "./styles/home/stats.css";
 @import "./styles/home/vip.css";
+
+@import "./styles/home/featured-products.css";
+@import "./styles/home/how-to-buy.css";
+@import "./styles/home/benefits.css";
+@import "./styles/home/testimonials.css";
+@import "./styles/home/brand-story.css";
+@import "./styles/home/social.css";
+@import "./styles/home/tiktok.css";
+@import "./styles/home/final-cta.css";
 
 /* Skeletons */
 @import "./styles/skeletons/catalog-skeleton.css";

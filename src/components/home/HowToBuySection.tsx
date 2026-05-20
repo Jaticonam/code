@@ -78,13 +78,10 @@ const colorStyles = {
 
 export default function HowToBuySection() {
   return (
-    <section
-      id="howtobySection"
-      className="relative w-full overflow-hidden border-t border-slate-200/60 bg-gradient-to-b from-white via-slate-50 to-slate-50 py-12 md:py-16"
-    >
-      <div className="pointer-events-none absolute top-0 left-1/2 -z-0 h-full w-full max-w-4xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(29,130,153,0.06),transparent_70%)]" />
+    <section id="howtobySection" className="how-to-buy-section">
+      <div className="how-to-buy-bg" />
 
-      <div className="home-container relative z-10">
+      <div className="home-container how-to-buy-container">
         <HomeSectionHeader
           icon={ShoppingCart}
           kicker="empieza ahora"
@@ -92,43 +89,32 @@ export default function HowToBuySection() {
           description="Sigue estos 5 pasos y asegura stock listo para generar ingresos."
         />
 
-        <div className="relative z-10 flex flex-wrap justify-center gap-6 md:gap-8">
+        <div className="how-to-buy-grid">
           {steps.map((step) => {
             const Icon = step.icon;
             const styles = colorStyles[step.color as keyof typeof colorStyles];
 
             return (
-              <div
-                key={step.number}
-                className="group relative w-full max-w-sm overflow-hidden rounded-[30px] border border-slate-200/70 bg-white p-7 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-22px)]"
-              >
-                <div
-                  className={`pointer-events-none absolute -right-0 -top-4 z-0 select-none text-[130px] font-black leading-none text-slate-200/70 transition-colors duration-500 ${styles.number}`}
-                >
+              <div key={step.number} className="how-to-buy-card group">
+                <div className={`how-to-buy-number ${styles.number}`}>
                   {step.number}
                 </div>
 
-                <div className="relative z-10 mb-6 flex items-center justify-between">
-                  <div
-                    className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f7b1d6]/20 text-[#f286be] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
-                  >
+                <div className="how-to-buy-card-header">
+                  <div className={`how-to-buy-icon ${styles.iconHover}`}>
                     <Icon className="h-7 w-7" />
                   </div>
 
-                  <span
-                    className={`inline-block rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-sm ${styles.label}`}
-                  >
+                  <span className={`how-to-buy-label ${styles.label}`}>
                     {step.label}
                   </span>
                 </div>
 
-                <h3
-                  className={`relative z-10 mb-3 text-xl font-bold text-slate-950 transition-colors duration-300 ${styles.title}`}
-                >
+                <h3 className={`how-to-buy-title ${styles.title}`}>
                   {step.title}
                 </h3>
 
-                <p className="relative z-10 text-sm leading-relaxed text-slate-600">
+                <p className="how-to-buy-description">
                   {step.description}
                 </p>
               </div>

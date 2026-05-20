@@ -89,8 +89,7 @@ const colorStyles = {
 
 export default function BenefitsSection() {
   return (
-    <section className="home-container pt-10 pb-12 md:pt-14 md:pb-16">
-
+    <section className="home-container benefits-section">
       <HomeSectionHeader
         icon={Sparkles}
         kicker="ventajas reales"
@@ -98,45 +97,33 @@ export default function BenefitsSection() {
         description="Todo lo que necesitas para vender rápido, sin perder tiempo ni dinero."
         align="center"
       />
-      <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+
+      <div className="benefits-grid">
         {pillars.map((item) => {
           const Icon = item.icon;
           const styles = colorStyles[item.color as keyof typeof colorStyles];
 
           return (
-            <div
-              key={item.title}
-              className="group relative w-full max-w-sm overflow-hidden rounded-[30px] border border-slate-200/70 bg-white p-7 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-22px)]"
-            >
-              {/* número gigante */}
-              <div
-                className={`absolute -right-4 -top-8 text-[120px] font-black text-slate-200/70 transition-colors duration-500 ${styles.number}`}
-              >
+            <div key={item.title} className="benefit-card group">
+              <div className={`benefit-number ${styles.number}`}>
                 {item.number}
               </div>
 
-              <div className="relative z-10 mb-6 flex items-center justify-between">
-                
-                <div
-                  className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f7b1d6]/20 text-[#f286be] transition-all duration-500 group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
-                >
+              <div className="benefit-card-header">
+                <div className={`benefit-icon ${styles.iconHover}`}>
                   <Icon className="h-7 w-7" />
                 </div>
 
-                <span
-                  className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${styles.label}`}
-                >
+                <span className={`benefit-label ${styles.label}`}>
                   {item.label}
                 </span>
               </div>
 
-              <h3
-                className={`mb-3 text-xl font-bold text-slate-950 transition-colors duration-300 ${styles.title}`}
-              >
+              <h3 className={`benefit-title ${styles.title}`}>
                 {item.title}
               </h3>
 
-              <p className="text-sm leading-relaxed text-slate-600">
+              <p className="benefit-description">
                 {item.description}
               </p>
             </div>

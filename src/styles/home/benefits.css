@@ -1,0 +1,118 @@
+@layer components {
+
+  .benefits-section {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .benefits-section {
+      padding-top: 3.5rem;
+      padding-bottom: 4rem;
+    }
+  }
+
+  .benefits-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .benefits-grid {
+      gap: 2rem;
+    }
+  }
+
+  .benefit-card {
+    position: relative;
+    width: 100%;
+    max-width: 24rem;
+    overflow: hidden;
+    border-radius: 30px;
+    border: 1px solid rgba(226, 232, 240, 0.7);
+    background: #ffffff;
+    padding: 1.75rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    transition: all 0.5s ease;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: 0 25px 50px rgba(15, 23, 42, 0.18);
+  }
+
+  @media (min-width: 640px) {
+    .benefit-card {
+      width: calc(50% - 12px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .benefit-card {
+      width: calc(33.333% - 22px);
+    }
+  }
+
+  .benefit-number {
+    position: absolute;
+    right: -1rem;
+    top: -2rem;
+    color: rgba(226, 232, 240, 0.7);
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 1;
+    transition: color 0.5s ease;
+  }
+
+  .benefit-card-header {
+    position: relative;
+    z-index: 10;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .benefit-icon {
+    display: flex;
+    height: 3.5rem;
+    width: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: rgba(247, 177, 214, 0.2);
+    color: #f286be;
+    transition: all 0.5s ease;
+  }
+
+  .benefit-card:hover .benefit-icon {
+    transform: scale(1.1);
+    color: #ffffff;
+  }
+
+  .benefit-label {
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .benefit-title {
+    margin-bottom: 0.75rem;
+    color: #020617;
+    font-size: 1.25rem;
+    font-weight: 700;
+    transition: color 0.3s ease;
+  }
+
+  .benefit-description {
+    color: #475569;
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+}
