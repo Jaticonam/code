@@ -45,6 +45,7 @@
 @import "./styles/home/social.css";
 @import "./styles/home/tiktok.css";
 @import "./styles/home/final-cta.css";
+@import "./styles/home/footer.css";
 
 /* Skeletons */
 @import "./styles/skeletons/catalog-skeleton.css";

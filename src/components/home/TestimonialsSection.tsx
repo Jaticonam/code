@@ -59,29 +59,30 @@ const testimonials = [
 ];
 
 const colorStyles = {
-  primary: {
-    number: "group-hover:text-[#1d8299]/10",
-    iconHover: "group-hover:bg-[#1d8299]",
-    label: "bg-[#1d8299]/10 text-[#1d8299]",
-    title: "group-hover:text-[#1d8299]",
+  primary:{
+    number:"group-hover:text-[#1d8299]/10",
+    iconHover:"group-hover:bg-[#1d8299]",
+    label:"bg-[#1d8299]/10 text-[#1d8299]",
+    title:"group-hover:text-[#1d8299]",
   },
-  secondary: {
-    number: "group-hover:text-[#f286be]/10",
-    iconHover: "group-hover:bg-[#f286be]",
-    label: "bg-[#f286be]/10 text-[#f286be]",
-    title: "group-hover:text-[#f286be]",
+  secondary:{
+    number:"group-hover:text-[#f286be]/10",
+    iconHover:"group-hover:bg-[#f286be]",
+    label:"bg-[#f286be]/10 text-[#f286be]",
+    title:"group-hover:text-[#f286be]",
   },
-  accent: {
-    number: "group-hover:text-[#f5b025]/10",
-    iconHover: "group-hover:bg-[#f5b025]",
-    label: "bg-[#f5b025]/10 text-[#f5b025]",
-    title: "group-hover:text-[#f5b025]",
+  accent:{
+    number:"group-hover:text-[#f5b025]/10",
+    iconHover:"group-hover:bg-[#f5b025]",
+    label:"bg-[#f5b025]/10 text-[#f5b025]",
+    title:"group-hover:text-[#f5b025]",
   },
 } as const;
 
 export default function TestimonialsSection() {
   return (
-    <section className="home-container pt-10 pb-16 md:pt-14 md:pb-20">
+    <section className="home-container testimonials-section">
+
       <HomeSectionHeader
         icon={Quote}
         kicker="emprendedores que ya compran con wooly"
@@ -90,67 +91,88 @@ export default function TestimonialsSection() {
         align="center"
       />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-7 lg:grid-cols-3">
+      <div className="testimonials-grid">
+
         {testimonials.map((item) => {
-          const styles = colorStyles[item.color as keyof typeof colorStyles];
+
+          const styles =
+            colorStyles[item.color as keyof typeof colorStyles];
 
           return (
+
             <article
               key={`${item.business}-${item.city}`}
-              className="group relative overflow-hidden rounded-[30px] border border-slate-200/70 bg-white p-6 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+              className="testimonial-card group"
             >
+
               <div
-                className={`pointer-events-none absolute right-7 top-6 z-0 select-none text-[90px] font-black leading-none text-slate-200/60 transition-colors duration-500 ${styles.number}`}
+                className={`testimonial-number ${styles.number}`}
               >
                 {item.number}
               </div>
 
-              <div className="relative z-10 mb-4 flex items-start justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
+              <div className="testimonial-header">
+
+                <div className="testimonial-business">
+
                   <div
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f7b1d6]/20 text-[#f286be] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
+                    className={`testimonial-icon ${styles.iconHover}`}
                   >
                     <Quote className="h-5 w-5" />
                   </div>
 
-                  <div className="min-w-0 leading-tight">
+                  <div className="testimonial-meta">
+
                     <strong
-                      className={`block truncate text-[15px] font-semibold text-slate-950 transition-colors duration-300 ${styles.title}`}
+                      className={`testimonial-name ${styles.title}`}
                     >
                       {item.business}
                     </strong>
 
-                    <span className="mt-1 flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-slate-500">
+                    <span className="testimonial-city">
                       <MapPin className="h-3 w-3 shrink-0" />
                       {item.city}
                     </span>
+
                   </div>
+
                 </div>
 
                 <span
-                  className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-sm ${styles.label}`}
+                  className={`testimonial-label ${styles.label}`}
                 >
                   {item.label}
                 </span>
+
               </div>
 
-              <div className="relative z-10 mb-3 flex gap-1 text-[#f5b025]">
+              <div className="testimonial-stars">
+
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <Star key={index} className="h-4 w-4 fill-current" />
+                  <Star
+                    key={index}
+                    className="h-4 w-4 fill-current"
+                  />
                 ))}
+
               </div>
 
-              <p className="relative z-10 mb-4 text-sm font-medium leading-relaxed text-slate-700">
+              <p className="testimonial-text">
                 “{item.text}”
               </p>
 
-              <span className="relative z-10 inline-flex rounded-full bg-slate-100 px-3 py-1 text-[11px] font-bold text-slate-600">
+              <span className="testimonial-product">
                 compró: {item.product}
               </span>
+
             </article>
+
           );
+
         })}
+
       </div>
+
     </section>
   );
 }

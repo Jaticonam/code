@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import "@/styles/hero.css";
 
 export default function HeroSlider() {
   const [timeLeft, setTimeLeft] = useState({
@@ -349,3 +348,4 @@ export default function HeroSlider() {
     </main>
   );
 }
+

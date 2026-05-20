@@ -1,0 +1,151 @@
+@layer components {
+
+  .brand-story-section {
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-section {
+      padding-top: 3.5rem;
+      padding-bottom: 5rem;
+    }
+  }
+
+  .brand-story-grid {
+    display: grid;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3.5rem;
+    }
+  }
+
+  .brand-story-image-col {
+    position: relative;
+    order: 1;
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-image-col {
+      order: 0;
+    }
+  }
+
+  .brand-story-image-bg {
+    position: absolute;
+    inset: -0.75rem;
+    z-index: 0;
+    border-radius: 26px;
+    background: rgba(247, 177, 214, 0.2);
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-image-bg {
+      transform: rotate(2deg);
+    }
+  }
+
+  .brand-story-image {
+    position: relative;
+    z-index: 10;
+    height: 360px;
+    width: 100%;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-image {
+      height: 480px;
+    }
+  }
+
+  .brand-story-content {
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-content {
+      text-align: left;
+    }
+  }
+
+  .brand-story-text {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: #475569;
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-text {
+      font-size: 1rem;
+      line-height: 1.625;
+    }
+  }
+
+  .brand-story-text strong {
+    color: #020617;
+  }
+
+  .brand-story-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: #334155;
+    font-size: 0.875rem;
+  }
+
+  .brand-story-strong {
+    color: #020617;
+    font-weight: 600;
+  }
+
+  .brand-story-cta {
+    margin-top: 2rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+
+    border-radius: 9999px;
+
+    background: #25d366;
+
+    padding: 1rem 2rem;
+
+    color: #ffffff;
+
+    font-size: 0.875rem;
+    font-weight: 900;
+
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.35);
+
+    transition:
+      transform 0.3s ease,
+      background 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .brand-story-cta:hover {
+    transform: translateY(-0.25rem);
+    background: #1ebe5d;
+    box-shadow: 0 15px 35px rgba(37, 211, 102, 0.5);
+  }
+
+  .brand-story-cta:active {
+    transform: scale(0.95);
+  }
+
+}
