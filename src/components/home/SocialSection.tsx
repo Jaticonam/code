@@ -86,7 +86,7 @@ const socials = [
 
 export default function SocialSection() {
   return (
-    <section className="home-container pt-8 pb-12 md:pt-10 md:pb-14">
+    <section className="home-container social-section">
       <HomeSectionHeader
         icon={Sparkles}
         kicker="Conecta con wooly"
@@ -95,7 +95,7 @@ export default function SocialSection() {
         align="center"
       />
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+      <div className="social-grid">
         {socials.map((item) => {
           const Icon = item.icon;
 
@@ -106,25 +106,23 @@ export default function SocialSection() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={item.title}
-              className="group flex min-h-[150px] flex-col items-center justify-center rounded-[26px] border border-slate-200/80 bg-white p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-xl"
+              className="social-card group"
             >
               <div
-                className={`mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border shadow-sm transition-all duration-300 group-hover:scale-110 ${item.normalIcon} ${item.hover}`}
+                className={`social-icon ${item.normalIcon} ${item.hover}`}
               >
                 <Icon className="h-6 w-6" />
               </div>
 
-              <h3
-                className={`text-base font-extrabold text-slate-950 transition-colors duration-300 ${item.text}`}
-              >
+              <h3 className={`social-title ${item.text}`}>
                 {item.title}
               </h3>
 
-              <p className="mt-1 text-xs font-medium leading-snug text-slate-500">
+              <p className="social-description">
                 {item.description}
               </p>
 
-              <span className="mt-3 rounded-full bg-slate-100 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-slate-500 transition-all duration-300 group-hover:bg-slate-900 group-hover:text-white">
+              <span className="social-label">
                 {item.label}
               </span>
             </a>

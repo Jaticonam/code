@@ -1,15 +1,57 @@
 /* ===== INDEX.CSS ===== */
-/* Punto único de carga de estilos (no agregar clases aquí) */
+/* Punto único de carga global */
 
 /* Fuentes */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
-/* Módulos */
-@import "./styles/base.css";        /* variables + base */
-@import "./styles/components.css";  /* UI: botones, cards */
-@import "./styles/utilities.css";   /* layout + helpers */
-@import "./styles/animations.css";  /* animaciones */
-@import "./styles/hero.css";        /* hero */
+/* Core */
+@import "./styles/base.css";
+@import "./styles/utilities.css";
+@import "./styles/animations.css";
+
+/* Componentes globales */
+@import "./styles/components/buttons.css";
+@import "./styles/components/cards.css";
+@import "./styles/components/glass.css";
+@import "./styles/components/forms.css";
+@import "./styles/components/modals.css";
+@import "./styles/components/floating-buttons.css";
+@import "./styles/components/badges.css";
+
+/* Catálogo */
+@import "./styles/catalog/product-card.css";
+@import "./styles/catalog/category-filter.css";
+@import "./styles/catalog/search.css";
+@import "./styles/catalog/notifications.css";
+
+/* Carrito */
+@import "./styles/cart/cart-panel.css";
+@import "./styles/cart/cart-sidebar.css";
+@import "./styles/cart/cart-item.css";
+@import "./styles/cart/cart-footer.css";
+
+/* HOME */
+@import "./styles/home/hero.css";
+@import "./styles/home/categories.css";
+@import "./styles/home/shipping.css";
+@import "./styles/home/stats.css";
+@import "./styles/home/vip.css";
+
+@import "./styles/home/featured-products.css";
+@import "./styles/home/how-to-buy.css";
+@import "./styles/home/benefits.css";
+@import "./styles/home/testimonials.css";
+@import "./styles/home/brand-story.css";
+@import "./styles/home/social.css";
+@import "./styles/home/tiktok.css";
+@import "./styles/home/final-cta.css";
+@import "./styles/home/footer.css";
+
+/* Skeletons */
+@import "./styles/skeletons/catalog-skeleton.css";
+@import "./styles/skeletons/category-skeleton.css";
+@import "./styles/skeletons/product-skeleton.css";
+
 
 /* Tailwind */
 @tailwind base;
