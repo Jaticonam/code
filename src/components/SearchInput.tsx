@@ -1,197 +1,350 @@
-import { useMemo, useRef, useState } from "react";
-import { Search, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useMemo,useRef,useState } from "react";
 
-import type { Product } from "@/types/product";
-import { detectCategory } from "@/lib/search/detectCategory";
-import { getResultsCount } from "@/lib/search/getResultsCount";
-import { getSuggestions } from "@/lib/search/getSuggestions";
-import { useSearchShortcut } from "@/hooks/useSearchShortcut";
-import { useSearchUrlSync } from "@/hooks/useSearchUrlSync";
-import { SearchTopSearches } from "@/components/SearchTopSearches";
-import { SearchSuggestions } from "@/components/SearchSuggestions";
+import type{
+Product
+}
+from "@/types/product";
 
-interface SearchInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  products?: Product[];
-  placeholder?: string;
+import{
+detectCategory
+}
+from "@/lib/search/detectCategory";
+
+import{
+getResultsCount
+}
+from "@/lib/search/getResultsCount";
+
+import{
+getSuggestions
+}
+from "@/lib/search/getSuggestions";
+
+import{
+useSearchShortcut
+}
+from "@/hooks/useSearchShortcut";
+
+import{
+useSearchUrlSync
+}
+from "@/hooks/useSearchUrlSync";
+
+import{
+useSearchNavigation
+}
+from "@/hooks/search/useSearchNavigation";
+
+import{
+useSearchKeyboard
+}
+from "@/hooks/search/useSearchKeyboard";
+
+import{
+SearchTopSearches
+}
+from "@/components/SearchTopSearches";
+
+import{
+SearchSuggestions
+}
+from "@/components/SearchSuggestions";
+
+import{
+SearchBox
+}
+from "@/components/search/SearchBox";
+
+interface Props{
+
+value:string;
+
+onChange:(v:string)=>void;
+
+products?:Product[];
+
+placeholder?:string;
+
 }
 
 export function SearchInput({
-  value,
-  onChange,
-  products = [],
-  placeholder = "Busca productos, categorías o códigos...",
-}: SearchInputProps) {
-  const navigate = useNavigate();
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const [isFocused, setIsFocused] = useState(false);
+value,
+onChange,
 
-  useSearchShortcut(inputRef);
-  useSearchUrlSync(onChange, setIsFocused, setActiveIndex);
+products=[],
 
-  const hasValue = value.trim().length > 0;
+placeholder="Busca productos..."
 
-  const suggestions = useMemo(
-    () => getSuggestions(products, value),
-    [products, value]
-  );
+}:Props){
 
-  const detectedCategory = useMemo(
-    () => detectCategory(value),
-    [value]
-  );
+const inputRef=
+useRef<HTMLInputElement>(null);
 
-  const resultsCount = useMemo(
-    () => getResultsCount(products, value),
-    [products, value]
-  );
+const[
+activeIndex,
+setActiveIndex
 
-  const goToProduct = (product: Product) => {
-    const currentSearch = value.trim();
+]=useState(-1);
 
-    onChange("");
-    setActiveIndex(-1);
-    setIsFocused(false);
+const[
+isFocused,
+setFocused
 
-    navigate(`/catalogo/producto.html?id=${product.id}&cat=${product.category}`, {
-      state: {
-        fromSearch: true,
-        searchQuery: currentSearch,
-      },
-    });
-  };
+]=useState(false);
 
-  const handleShowResults = () => {
-    setActiveIndex(-1);
-    setIsFocused(false);
-    inputRef.current?.blur();
-  };
+useSearchShortcut(
+inputRef
+);
 
-  const handleSelectTopSearch = (term: string) => {
-    onChange(term);
-    setIsFocused(false);
-    setActiveIndex(-1);
-  };
+useSearchUrlSync(
 
-  const handleCategoryClick = () => {
-    if (!detectedCategory) return;
+onChange,
+setFocused,
+setActiveIndex
 
-    onChange("");
-    setActiveIndex(-1);
-    setIsFocused(false);
+);
 
-    navigate(`/catalogo/categoria.html?cat=${detectedCategory}`);
-  };
+const hasValue=
+value.trim().length>0;
 
-  const handleClear = () => {
-    onChange("");
-    setActiveIndex(-1);
-  };
+const suggestions=
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const canShowResultsOption = hasValue;
-    const totalOptions =
-      suggestions.length + (canShowResultsOption ? 1 : 0);
+useMemo(
 
-    if (totalOptions === 0) return;
+()=>getSuggestions(
+products,
+value
+),
 
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
+[
+products,
+value
+]
 
-      setActiveIndex((current) =>
-        current < totalOptions - 1 ? current + 1 : 0
-      );
+);
 
-      return;
-    }
+const detected=
 
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
+useMemo(
 
-      setActiveIndex((current) =>
-        current > 0 ? current - 1 : totalOptions - 1
-      );
+()=>detectCategory(
+value
+),
 
-      return;
-    }
+[value]
 
-    if (event.key === "Enter") {
-      event.preventDefault();
+);
 
-      if (activeIndex >= 0 && activeIndex < suggestions.length) {
-        goToProduct(suggestions[activeIndex]);
-        return;
-      }
+const count=
 
-      handleShowResults();
-      return;
-    }
+useMemo(
 
-    if (event.key === "Escape") {
-      event.preventDefault();
+()=>getResultsCount(
+products,
+value
+),
 
-      setActiveIndex(-1);
-      setIsFocused(false);
-      onChange("");
-    }
-  };
+[
+products,
+value
+]
 
-  return (
-    <div className="relative">
-      <div className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-all focus-within:border-[#1d8299] focus-within:ring-4 focus-within:ring-[#1d8299]/10">
-        <Search className="h-5 w-5 shrink-0 text-slate-400 transition-colors group-focus-within:text-[#1d8299]" />
+);
 
-        <input
-          ref={inputRef}
-          type="text"
-          value={value}
-          onChange={(event) => {
-            onChange(event.target.value);
-            setActiveIndex(-1);
-            setIsFocused(true);
-          }}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setTimeout(() => setIsFocused(false), 150)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className="w-full bg-transparent text-sm font-semibold text-slate-700 outline-none placeholder:text-slate-400"
-        />
+const{
 
-        {hasValue && (
-          <button
-            type="button"
-            onClick={handleClear}
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-400 transition hover:bg-slate-200 hover:text-slate-700"
-            aria-label="Limpiar búsqueda"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-      </div>
+goToProduct,
+goToCategory
 
-      {isFocused && !value.trim() && (
-        <SearchTopSearches onSelect={handleSelectTopSearch} />
-      )}
+}=
 
-      {isFocused && (detectedCategory || suggestions.length > 0) && (
-        <SearchSuggestions
-          value={value}
-          hasValue={hasValue}
-          detectedCategory={detectedCategory}
-          suggestions={suggestions}
-          resultsCount={resultsCount}
-          activeIndex={activeIndex}
-          onCategoryClick={handleCategoryClick}
-          onProductHover={setActiveIndex}
-          onProductClick={goToProduct}
-          onResultsHover={() => setActiveIndex(suggestions.length)}
-          onResultsClick={handleShowResults}
-        />
-      )}
-    </div>
-  );
+useSearchNavigation(
+
+value,
+onChange,
+
+setActiveIndex,
+setFocused
+
+);
+
+const total=
+
+suggestions.length+
+(hasValue?1:0);
+
+const keyboard=
+
+useSearchKeyboard(
+
+activeIndex,
+
+setActiveIndex,
+
+total,
+
+suggestions.length,
+
+()=>{
+
+goToProduct(
+suggestions[
+activeIndex
+]
+);
+
+},
+
+()=>{
+
+setFocused(false);
+
+},
+
+()=>{
+
+setFocused(false);
+
+setActiveIndex(-1);
+
+onChange("");
+
+}
+
+);
+
+return(
+
+<div className="relative">
+
+<SearchBox
+
+inputRef={inputRef}
+
+value={value}
+
+placeholder={placeholder}
+
+hasValue={hasValue}
+
+onChange={(e:any)=>{
+
+onChange(
+e.target.value
+);
+
+setFocused(true);
+
+setActiveIndex(-1);
+
+}}
+
+onFocus={()=>{
+
+setFocused(true);
+
+}}
+
+onBlur={()=>{
+
+setTimeout(
+
+()=>{
+
+setFocused(false);
+
+},
+
+150
+
+);
+
+}}
+
+onKeyDown={keyboard}
+
+onClear={()=>{
+
+onChange("");
+
+}}
+
+/>
+
+{isFocused
+&&!hasValue&&(
+
+<SearchTopSearches
+
+onSelect={(term)=>{
+
+onChange(term);
+
+setFocused(false);
+
+setActiveIndex(-1);
+
+}}
+
+/>
+
+)}
+
+{isFocused&&(
+
+<SearchSuggestions
+
+value={value}
+
+hasValue={hasValue}
+
+detectedCategory={detected}
+
+suggestions={suggestions}
+
+resultsCount={count}
+
+activeIndex={activeIndex}
+
+onCategoryClick={()=>{
+
+if(
+detected
+){
+
+goToCategory(
+detected
+);
+
+}
+
+}}
+
+onProductHover={setActiveIndex}
+
+onProductClick={goToProduct}
+
+onResultsHover={()=>{
+
+setActiveIndex(
+suggestions.length
+);
+
+}}
+
+onResultsClick={()=>{
+
+setFocused(false);
+
+}}
+
+/>
+
+)}
+
+</div>
+
+);
+
 }
