@@ -142,3 +142,56 @@ const ARTICLES_DB = [
   }
 ];
 /* ... existing code ... */
+
+/* ... existing code ... */
+  {
+    id: "tutorial-empaque-premium", 
+    categoryId: "tutoriales", 
+    title: "Tutorial: Cómo crear empaques premium que venden",
+    excerpt: "Domina la técnica del estilo 'Buchón' y aprende a envolver ramos que tus clientes no podrán dejar de fotografiar.", 
+    readTime: "8 min", 
+    date: "20 Mayo 2026",
+    image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80", 
+    relatedProducts: ["PAP-KOR-01", "CIN-SAT-02"],
+    content: `
+      <h2>El arte de la estructura: Tutorial paso a paso</h2>
+      <p>Un empaque premium no es simplemente envolver flores. Es una coreografía de tensión, volumen y contraste. En este tutorial, te enseñaré cómo usar el papel coreano bicolor para crear un ramo de alto valor percibido.</p>
+
+      <div class="bg-w-primary-soft border border-w-primary/20 rounded-2xl p-6 my-8">
+        <h4 class="font-bold text-gray-900 text-lg mb-2">✅ Materiales necesarios:</h4>
+        <ul class="list-disc pl-5 text-gray-700">
+          <li>Papel Coreano Bicolor (4-6 hojas).</li>
+          <li>Cinta Satinada de 2.5cm.</li>
+          <li>Engrapadora de brazo largo o cinta adhesiva transparente.</li>
+          <li>Flores de temporada.</li>
+        </ul>
+      </div>
+
+      <h2>Paso 1: La Base Estructural</h2>
+      <p>El error número uno es arrugar el papel desde el inicio. <strong>El secreto es el pliegue</strong>. Dobla el papel en forma de "V" abierta para crear una estructura rígida que sostenga el peso de las flores sin colapsar.</p>
+
+      <h2>Paso 2: La Técnica del "Tuck-in" (Volumen)</h2>
+      <p>Para lograr ese look buchón voluminoso, no uses el papel plano. Crea "bolsas" de aire en cada hoja de papel, sujetándolas firmemente por la base. Esto crea la ilusión de un ramo mucho más grande de lo que realmente es.</p>
+
+      <div class="bg-w-accent-soft border border-w-accent/30 rounded-2xl p-6 my-8">
+        <h4 class="font-bold text-gray-900 text-lg mb-2">🔥 Consejo Profesional:</h4>
+        <p class="text-gray-700 m-0">La tensión es clave. Si el papel queda flojo en la base, el ramo perderá su forma en menos de una hora. Asegura la base con una liga gruesa antes de colocar la cinta satinada final.</p>
+      </div>
+
+      <h2>Paso 3: El Toque Final con Cinta Satinada</h2>
+      <p>La cinta no es un accesorio, es el sello de tu marca. Usa siempre una cinta de al menos 2.5cm de ancho. Si usas cintas delgadas, el ramo se ve "barato". Un moño doble, bien peinado y con los bordes cortados en diagonal, aumenta instantáneamente el valor percibido del regalo.</p>
+
+      <h3>Error Frecuente: El exceso de celofán</h3>
+      <p>Nunca, bajo ninguna circunstancia, uses celofán sobre papel coreano. El papel coreano es el protagonista. El celofán solo se usa para proteger el ramo durante el transporte, ¡retíralo antes de entregar el pedido al cliente!</p>
+
+      <div class="mt-10 p-6 bg-slate-900 rounded-2xl text-white text-center">
+        <h3 class="text-xl font-bold mb-2">¿Listo para practicar?</h3>
+        <p class="text-slate-300 mb-6">Consigue los insumos profesionales que utilizamos en este tutorial y empieza a crear tus propios diseños rentables hoy.</p>
+        <button class="bg-w-whatsapp text-white px-8 py-3 rounded-full font-bold hover:bg-w-whatsapp-dark transition-colors">
+          Pedir Kit de Insumos por WhatsApp
+        </button>
+      </div>
+    `
+  }
+];
+/* ... existing code ... */
