@@ -1,42 +1,60 @@
 import type { Product } from "@/types/product";
 import { getAvailablePriceTiers } from "@/config/priceTiers";
 
-interface ProductCardTierBadgesProps {
-  product: Product;
-  available: boolean;
-  isPreventa: boolean;
+console.log("DEBUG STOCK", { stock, price, status });
+
+const COLORS={
+ price_1:"bg-[#1d8299]",
+ price_3:"bg-[#f5b025]",
+ price_12:"bg-[#f286be]",
+ price_50:"bg-[#7c3aed]",
+ price_100:"bg-slate-700",
+};
+
+interface Props{
+ product:Product;
+ available:boolean;
+ isPreventa:boolean;
 }
 
 export function ProductCardTierBadges({
-  product,
-  available,
-  isPreventa,
-}: ProductCardTierBadgesProps) {
-  if (!available || isPreventa) return null;
+ product,
+ available,
+ isPreventa,
+}:Props){
 
-  return (
-    <div className="absolute bottom-2 right-2 flex flex-col gap-1.5 items-end">
-      {getAvailablePriceTiers(product).map((tier, index) => {
-        const price = product[tier.key];
+ if(!available||isPreventa)return null;
 
-        if (
-          typeof price !== "number" ||
-          !Number.isFinite(price) ||
-          price <= 0
-        ) {
-          return null;
-        }
+ return(
+  <div className="absolute bottom-2 left-2 right-2 z-20 flex justify-center gap-1">
 
-        return (
-          <div
-            key={tier.key}
-            className={`${tier.className} price-badge-bounce`}
-            style={{ animationDelay: `${index * 120}ms` }}
+      {getAvailablePriceTiers(product).map((t,i)=>{
+
+        const price=Number(product[t.key]);
+
+        if(!price||price<=0)return null;
+
+        return(
+
+          <span
+          key={t.key}
+          style={{animationDelay:`${i*120}ms`}}
+          className={`${COLORS[t.key]||"bg-slate-500"} animate-badge-float rounded-full px-2.5 py-[5px] text-[10px] font-black text-white shadow-lg transition hover:scale-110`}
           >
-            {tier.label} S/{price.toFixed(1)}
-          </div>
+
+          {t.label}
+
+          {" "}
+
+          S/{price.toFixed(1)}
+
+          </span>
+
         );
-      })}
-    </div>
+
+    })}
+
+  </div>
   );
+
 }
