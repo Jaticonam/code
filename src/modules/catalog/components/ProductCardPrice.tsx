@@ -1,5 +1,5 @@
 import type { Product } from "@/shared/types/product";
-import { getBestProductTier } from "@/modules/product-detail/utils/getBestProductTier";
+import { getBestProductTier } from "@/shared/lib/product";
 
 interface ProductCardPriceProps {
   product: Product;

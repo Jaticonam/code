@@ -8,7 +8,8 @@ import { useProducts } from "@/modules/catalog/hooks/useProducts";
 import { searchProducts } from "@/shared/lib/search";
 import { sortByCommercialPriority } from "@/shared/lib/sort";
 
-import { Product, CATEGORIES } from "@/shared/types/product";
+import { Product } from "@/shared/types/product";
+import { CATEGORY_CONFIG } from "@/shared/config/categories";
 
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
 import { HeaderBar } from "@/shared/components/layout/HeaderBar";
@@ -16,11 +17,13 @@ import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
 import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
 
+
 import { CategoryFilter } from "@/modules/catalog/components/CategoryFilter";
 import { ProductCard } from "@/modules/catalog/components/ProductCard";
 
 import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
+
 
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 
@@ -63,11 +66,17 @@ const CatalogPage = () => {
 
   const handleCategorySelect = useCallback(
     (id: string) => {
-      navigate(id === "todas" ? "/catalogo" : `/catalogo/categoria.html?cat=${id}`);
+      setActiveCategory(id);
+
+      navigate(
+        id === "todas"
+          ? "/catalogo"
+          : `/catalogo/categoria.html?cat=${id}`
+      );
     },
     [navigate]
   );
-
+  
   const handleAddToCart = useCallback(
     (product: Product) => {
       addToCart(product, 1);
@@ -160,7 +169,7 @@ const CatalogPage = () => {
   );
 
   const renderGrid = (items: Product[]) => (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-6 px-2 md:px-0">
+    <div className="grid grid-cols-2 gap-[3px] md:grid-cols-3 md:gap-2 xl:grid-cols-5 xl:gap-2">
       {items.map((p) => (
         <ProductCard
           key={p.id}
@@ -187,11 +196,11 @@ const CatalogPage = () => {
 
         <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
           <CategoryFilter
-            categories={CATEGORIES}
+            categories={CATEGORY_CONFIG}
             active={activeCategory}
             onSelect={handleCategorySelect}
           />
-
+          
           {loading ? (
             <CatalogSkeleton />
           ) : filteredProducts.length === 0 ? (

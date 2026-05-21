@@ -91,4 +91,42 @@
     box-shadow: 0 12px 28px rgba(29, 130, 153, 0.24);
   }
 
+  .filter-chip,
+  .filter-chip-active{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    height:40px;
+    padding:0 18px;
+    border-radius:9999px;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+    flex-shrink:0;
+    transition:.18s ease;
+    border:1px solid #e2e8f0;
+  }
+
+  .filter-chip{
+    background:#fff;
+    color:#334155;
+  }
+
+  .filter-chip:hover{
+    transform:translateY(-1px);
+    box-shadow:0 6px 14px rgba(0,0,0,.06);
+  }
+
+  .filter-chip-active{
+    background:linear-gradient(135deg,#1d8299,#156f84);
+    color:#fff;
+    border-color:#1d8299;
+    box-shadow:0 8px 20px rgba(29,130,153,.18);
+  }
+
+  .filter-chip span,
+  .filter-chip-active span{
+    display:flex;
+    align-items:center;
+  }
 }

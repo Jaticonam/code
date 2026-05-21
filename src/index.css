@@ -16,6 +16,7 @@
 @import "./shared/styles/components/forms.css";
 @import "./shared/styles/components/modals.css";
 @import "./shared/styles/components/floating-buttons.css";
+@import "./shared/styles/components/recent-activity.css";
 @import "./shared/styles/components/badges.css";
 
 /* Catálogo */
@@ -36,7 +37,6 @@
 @import "./shared/styles/home/shipping.css";
 @import "./shared/styles/home/stats.css";
 @import "./shared/styles/home/vip.css";
-
 @import "./shared/styles/home/featured-products.css";
 @import "./shared/styles/home/how-to-buy.css";
 @import "./shared/styles/home/benefits.css";
@@ -47,7 +47,6 @@
 @import "./shared/styles/home/final-cta.css";
 @import "./shared/styles/home/footer.css";
 
-@import "./shared/styles/home/footer.css";
 
 /* Skeletons */
 @import "./shared/styles/skeletons/catalog-skeleton.css";

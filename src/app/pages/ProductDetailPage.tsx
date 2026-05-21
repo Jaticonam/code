@@ -12,9 +12,8 @@ import { useProducts } from "@/modules/catalog/hooks/useProducts";
 
 import { Product } from "@/shared/types/product";
 
-import { getUnitPrice } from "@/modules/product-detail/utils/getUnitPrice";
-import { getNextTier } from "@/modules/product-detail/utils/getNextTier";
-import { getStockPresentation } from "@/modules/product-detail/utils/getStockPresentation";
+import { getUnitPrice, getStockPresentation, getBestProductTier } from "@/shared/lib/product";
+import { getNextTier } from "@/shared/lib/product";
 
 import { useProductViewers } from "@/modules/product-detail/hooks/useProductViewers";
 import { useRelatedProducts } from "@/modules/product-detail/hooks/useRelatedProducts";

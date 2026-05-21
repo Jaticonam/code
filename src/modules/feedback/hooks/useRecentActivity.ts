@@ -8,11 +8,7 @@ import {
   RECENT_ACTIVITY_TIMING,
 } from "@/modules/feedback/config/recentActivity";
 
-import {
-  randomDelay,
-  randomItem,
-  randomMinutes,
-} from "@/shared/lib/random";
+import { randomDelay, randomItem, randomMinutes } from "@/shared/lib/random";
 
 export interface RecentActivityData {
   name: string;
@@ -22,23 +18,24 @@ export interface RecentActivityData {
   time: number;
 }
 
+const EMPTY_ACTIVITY: RecentActivityData = {
+  name: "",
+  place: "",
+  action: "",
+  product: "",
+  time: 0,
+};
+
 export function useRecentActivity(products: Product[]) {
   const [visible, setVisible] = useState(false);
   const [leaving, setLeaving] = useState(false);
-
-  const [data, setData] = useState<RecentActivityData>({
-    name: "",
-    place: "",
-    action: "",
-    product: "",
-    time: 0,
-  });
+  const [data, setData] = useState<RecentActivityData>(EMPTY_ACTIVITY);
 
   const lastProductRef = useRef<string | null>(null);
   const timersRef = useRef<number[]>([]);
 
-  const clearAllTimers = useCallback(() => {
-    timersRef.current.forEach(clearTimeout);
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach(window.clearTimeout);
     timersRef.current = [];
   }, []);
 
@@ -47,16 +44,22 @@ export function useRecentActivity(products: Product[]) {
     timersRef.current.push(id);
   }, []);
 
-  const show = useCallback(() => {
-    if (products.length === 0) return;
+  const pickProduct = useCallback(() => {
+    const available =
+      products.length > 1
+        ? products.filter((p) => p.title !== lastProductRef.current)
+        : products;
 
-    let selected = randomItem(products);
-
-    if (products.length > 1 && selected.title === lastProductRef.current) {
-      selected = randomItem(products);
-    }
-
+    const selected = randomItem(available);
     lastProductRef.current = selected.title;
+
+    return selected;
+  }, [products]);
+
+  const show = useCallback(() => {
+    if (!products.length) return;
+
+    const selected = pickProduct();
 
     setData({
       name: randomItem(RECENT_ACTIVITY_NAMES),
@@ -84,21 +87,17 @@ export function useRecentActivity(products: Product[]) {
         );
       }, RECENT_ACTIVITY_TIMING.exitDuration);
     }, RECENT_ACTIVITY_TIMING.visibleDuration);
-  }, [products, schedule]);
+  }, [products.length, pickProduct, schedule]);
 
   useEffect(() => {
-    clearAllTimers();
+    clearTimers();
 
-    if (products.length === 0) return;
+    if (products.length) {
+      schedule(show, RECENT_ACTIVITY_TIMING.firstDelay);
+    }
 
-    schedule(show, RECENT_ACTIVITY_TIMING.firstDelay);
+    return clearTimers;
+  }, [products.length, show, schedule, clearTimers]);
 
-    return clearAllTimers;
-  }, [products, show, schedule, clearAllTimers]);
-
-  return {
-    visible,
-    leaving,
-    data,
-  };
+  return { visible, leaving, data };
 }

@@ -1,0 +1,55 @@
+import type { SheetCategory } from "@/modules/catalog/services/productsConfig";
+
+export interface CategoryConfig {
+  id: SheetCategory | "todas";
+  name: string;
+  icon: string;
+}
+
+export const CATEGORY_CONFIG: CategoryConfig[] = [
+  {
+    id: "todas",
+    name: "Todas",
+    icon: "🛍️",
+  },
+  {
+    id: "flores",
+    name: "Flores",
+    icon: "🌸",
+  },
+  {
+    id: "peluches",
+    name: "Peluches",
+    icon: "🧸",
+  },
+  {
+    id: "papeles",
+    name: "Papeles",
+    icon: "🎁",
+  },
+  {
+    id: "cajas",
+    name: "Cajas",
+    icon: "📦",
+  },
+  {
+    id: "cintas",
+    name: "Cintas",
+    icon: "🎀",
+  },
+  {
+    id: "globos",
+    name: "Globos",
+    icon: "🎈",
+  },
+  {
+    id: "accesorios",
+    name: "Accesorios",
+    icon: "✨",
+  },
+  {
+    id: "hotwheels",
+    name: "Hot Wheels",
+    icon: "🏎️",
+  },
+];
