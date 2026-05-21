@@ -1,12 +1,22 @@
-type ToastProps = {
+type Toast = {
+  id: string;
   title?: string;
   description?: string;
 };
 
-export function toast({ title, description }: ToastProps) {
-  console.log("Toast:", title, description);
+const toasts: Toast[] = [];
+
+export function toast(data: Omit<Toast, "id">) {
+  toasts.push({
+    id: crypto.randomUUID(),
+    ...data,
+  });
 }
 
 export function useToast() {
-  return { toast };
+  return {
+    toasts,
+    toast,
+    dismiss: () => {},
+  };
 }
