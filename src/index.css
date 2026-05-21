@@ -47,6 +47,8 @@
 @import "./styles/home/final-cta.css";
 @import "./styles/home/footer.css";
 
+@import "./styles/home/footer.css";
+
 /* Skeletons */
 @import "./styles/skeletons/catalog-skeleton.css";
 @import "./styles/skeletons/category-skeleton.css";

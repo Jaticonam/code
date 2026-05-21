@@ -1,0 +1,60 @@
+export const RECENT_ACTIVITY_NAMES = [
+  "María",
+  "Carmen",
+  "Rosa",
+  "Ana",
+  "Lucía",
+  "Patricia",
+  "Milagros",
+  "Diana",
+  "Katherine",
+  "Fiorella",
+  "Valeria",
+  "Andrea",
+  "Fernanda",
+  "Daniela",
+  "Paola",
+  "Alejandra",
+  "Claudia",
+  "Roxana",
+  "Jessica",
+  "Carla",
+  "Tatiana",
+  "Brenda",
+  "Mayra",
+  "Noelia",
+  "Leslie",
+  "Nicole",
+  "Camila",
+  "Renata",
+  "Sofía",
+];
+
+export const RECENT_ACTIVITY_PLACES = [
+  "Lima",
+  "Arequipa",
+  "Trujillo",
+  "Cusco",
+  "Piura",
+  "Chiclayo",
+  "Huancayo",
+  "Tacna",
+  "Iquitos",
+  "Tarapoto",
+];
+
+export const RECENT_ACTIVITY_ACTIONS = [
+  "compró",
+  "acaba de comprar",
+  "agregó a su pedido",
+  "aprovechó la oferta de",
+  "está comprando",
+];
+
+export const RECENT_ACTIVITY_TIMING = {
+  firstDelay: 4000,
+  visibleDuration: 5500,
+  exitDuration: 400,
+  nextMinDelay: 10000,
+  nextMaxExtraDelay: 12000,
+};
