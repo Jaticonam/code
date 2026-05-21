@@ -1,0 +1,149 @@
+@layer components {
+
+  .home-footer {
+    position: relative;
+    overflow: hidden;
+
+    border-top: 6px solid #1d8299;
+
+    background: #0d5c6d;
+
+    padding-top: 3.5rem;
+    padding-bottom: 2rem;
+
+    color: #ffffff;
+  }
+
+  .home-footer-glow {
+    pointer-events: none;
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    height: 6rem;
+    width: 75%;
+
+    transform: translateX(-50%);
+
+    background: rgba(29, 130, 153, 0.3);
+
+    filter: blur(80px);
+  }
+
+  .home-footer-inner {
+    position: relative;
+    z-index: 10;
+
+    margin-inline: auto;
+
+    max-width: 56rem;
+
+    padding-inline: 1.5rem;
+
+    text-align: center;
+  }
+
+  .home-footer-logo-link {
+    margin-bottom: 1.5rem;
+
+    display: inline-block;
+
+    transition: transform 0.3s ease;
+  }
+
+  .home-footer-logo-link:hover {
+    transform: scale(1.05);
+  }
+
+  .home-footer-logo {
+    margin-inline: auto;
+
+    height: 3rem;
+
+    object-fit: contain;
+
+    filter: brightness(0) invert(1);
+  }
+
+  .home-footer-description {
+    margin-inline: auto;
+    margin-bottom: 2.5rem;
+
+    max-width: 28rem;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  .home-footer-nav {
+    margin-bottom: 2.5rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 2rem;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .home-footer-link {
+    transition:
+      transform 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .home-footer-link:hover {
+    transform: scale(1.05);
+    color: #ffffff;
+  }
+
+  .home-footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    padding-top: 1.5rem;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-size: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-footer-bottom {
+      flex-direction: row;
+    }
+  }
+
+  .home-footer-legal {
+    margin-top: 0.75rem;
+
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .home-footer-legal {
+      margin-top: 0;
+    }
+  }
+
+  .home-footer-legal a {
+    transition: color 0.2s ease;
+  }
+
+  .home-footer-legal a:hover {
+    color: #ffffff;
+  }
+
+}

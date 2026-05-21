@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+
 import { ArrowLeft, SearchX } from "lucide-react";
 import { useCartStore } from "@/store/cart";
 import { searchProducts } from "@/lib/search";
@@ -10,18 +11,41 @@ import { CategoryFilter } from "@/components/products/CategoryFilter";
 import { ProductCard } from "@/components/products/ProductCard";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 import { FloatingButtons } from "@/components/layout/FloatingButtons";
+
+
+import { useCart } from "@/hooks/use-cart";
+import { useCategoryProducts } from "@/hooks/category/useCategoryProducts";
+import { filterCategoryProducts } from "@/lib/category/filterCategoryProducts";
+import type { Product } from "@/types/product";
+import { CATEGORIES } from "@/types/product";
+
+import { CategoryFilter } from "@/components/CategoryFilter";
+import { CartSidebar } from "@/components/CartSidebar";
+import { FloatingButtons } from "@/components/FloatingButtons";
+
 import { RecentActivity } from "@/components/RecentActivity";
 import { ImageZoomModal } from "@/components/ImageZoomModal";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
 import { CategorySkeleton } from "@/components/skeletons/CategorySkeleton";
+
 import { SearchInput } from "@/components/products/SearchInput";
 import { useProducts } from "@/hooks/products/useProducts";
+
+
+import { CategoryHeader } from "@/components/category/CategoryHeader";
+import { CategoryEmpty } from "@/components/category/CategoryEmpty";
+import { CategoryGrid } from "@/components/category/CategoryGrid";
 
 const CategoryPage = () => {
   const { id: paramCategoryId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
-  const categoryId = searchParams.get("cat") || paramCategoryId;
   const navigate = useNavigate();
+
+
+  const categoryId = searchParams.get("cat") || paramCategoryId;
+  const activeCategory = categoryId || "todas";
+
+  const { products, loading } = useCategoryProducts();
 
   const [cartOpen, setCartOpen] = useState(false);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
@@ -56,46 +80,40 @@ const CategoryPage = () => {
     setCategorySearch("");
   }, [categoryId]);
 
-  const activeCategory = categoryId || "todas";
-  const categoryInfo = CATEGORIES.find((c) => c.id === activeCategory);
+  const categoryInfo = CATEGORIES.find(
+    (category) => category.id === activeCategory
+  );
 
-  const categoryProducts = useMemo(() => {
-    if (activeCategory === "todas") return products;
-    return products.filter((p) => p.category === activeCategory);
-  }, [products, activeCategory]);
+  const {
+    categoryProducts,
+    filteredProducts,
+  } = useMemo(
+    () => filterCategoryProducts(products, activeCategory, categorySearch),
+    [products, activeCategory, categorySearch]
+  );
 
-  const filteredProducts = useMemo(() => {
-    const term = categorySearch.trim();
+  const hasSearch = categorySearch.trim().length > 0;
 
-    if (!term) return sortByCommercialPriority(categoryProducts);
+  const handleCategorySelect = useCallback(
+    (id: string) => {
+      if (id === "todas") {
+        navigate("/catalogo");
+        return;
+      }
 
-    const inside = searchProducts(categoryProducts, term);
-
-    if (inside.length > 0) return sortByCommercialPriority(inside);
-
-    return sortByCommercialPriority(searchProducts(products, term));
-  }, [categoryProducts, products, categorySearch]);
-
-  const handleCategorySelect = useCallback((id: string) => {
-    if (id === "todas") {
-      navigate("/catalogo");
-    } else {
       navigate(`/catalogo/categoria.html?cat=${id}`);
-    }
-  }, [navigate]);
+    },
+    [navigate]
+  );
 
   const handleAddToCart = useCallback(
-    (p: Product) => {
-      addToCart(p, 1);
-      setSelectedProduct(p);
+    (product: Product) => {
+      addToCart(product, 1);
+      setSelectedProduct(product);
       setAddModalOpen(true);
     },
     [addToCart]
   );
-
-  const handleCloseAddModal = useCallback(() => {
-    setAddModalOpen(false);
-  }, []);
 
   const handleAddExtra = useCallback(
     (qty: number) => {
@@ -109,51 +127,16 @@ const CategoryPage = () => {
     ? cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0
     : 0;
 
-  const hasSearch = categorySearch.trim().length > 0;
-
   return (
     <div className="min-h-screen bg-background pb-40">
-      <header className="sticky top-0 z-[100] w-full flex flex-col shadow-sm">
-        <CountdownTimer />
-
-        <div className="bg-card/95 backdrop-blur-xl border-b border-border px-4 py-3 md:py-4">
-          <div className="max-w-7xl mx-auto flex flex-col gap-3">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
-              {/* Bloque izquierda */}
-              <div className="flex items-center gap-3 min-w-0 md:shrink-0">
-                <button
-                  onClick={() => navigate("/catalogo")}
-                  className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                </button>
-
-                <div className="min-w-0">
-                  <h1 className="text-lg md:text-xl font-black text-foreground truncate leading-tight">
-                    {categoryInfo ? `${categoryInfo.icon} ${categoryInfo.name}` : "Categoría"}
-                  </h1>
-
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    {hasSearch
-                      ? `${filteredProducts.length} resultado${filteredProducts.length === 1 ? "" : "s"}`
-                      : `${categoryProducts.length} productos`}
-                  </p>
-                </div>
-              </div>
-
-              {/* Buscador */}
-              <div className="flex-1 min-w-0">
-                <SearchInput
-                  value={categorySearch}
-                  onChange={setCategorySearch}
-                  products={categoryProducts}
-                  placeholder={`¿Qué buscas en ${categoryInfo?.name?.toLowerCase() || "esta categoría"}?`}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CategoryHeader
+        categoryInfo={categoryInfo}
+        categoryProducts={categoryProducts}
+        filteredCount={filteredProducts.length}
+        searchValue={categorySearch}
+        onSearchChange={setCategorySearch}
+        onBack={() => navigate("/catalogo")}
+      />
 
       <main className="max-w-7xl mx-auto px-2 md:px-4 mt-6 md:mt-8">
         <CategoryFilter
@@ -165,43 +148,24 @@ const CategoryPage = () => {
         {loading ? (
           <CategorySkeleton />
         ) : filteredProducts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
-            <div className="bg-muted p-6 rounded-full mb-4">
-              <SearchX className="w-10 h-10 opacity-30" />
-            </div>
-
-            <p className="font-black text-sm tracking-widest text-center">
-              {hasSearch
-                ? "No encontramos resultados en esta categoría"
-                : "Sin productos en esta categoría"}
-            </p>
-
-            {hasSearch && (
-              <button
-                type="button"
-                onClick={() => setCategorySearch("")}
-                className="mt-4 px-4 py-2 rounded-xl bg-muted text-foreground text-sm font-bold hover:bg-muted/80 transition-colors"
-              >
-                Limpiar búsqueda
-              </button>
-            )}
-          </div>
+          <CategoryEmpty
+            hasSearch={hasSearch}
+            onClearSearch={() => setCategorySearch("")}
+          />
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-6 px-2 md:px-0">
-            {filteredProducts.map((p) => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                cart={cart}
-                onAddToCart={handleAddToCart}
-                onImageClick={(src, title) => setZoomImage({ src, title })}
-              />
-            ))}
-          </div>
+          <CategoryGrid
+            products={filteredProducts}
+            cart={cart}
+            onAddToCart={handleAddToCart}
+            onImageClick={(src, title) => setZoomImage({ src, title })}
+          />
         )}
       </main>
 
-      <FloatingButtons cartCount={totalItems} onCartClick={() => setCartOpen(true)} />
+      <FloatingButtons
+        cartCount={totalItems}
+        onCartClick={() => setCartOpen(true)}
+      />
 
       <RecentActivity products={products} />
 
@@ -227,7 +191,7 @@ const CategoryPage = () => {
         open={addModalOpen}
         product={selectedProduct}
         currentQty={currentQtyInCart}
-        onClose={handleCloseAddModal}
+        onClose={() => setAddModalOpen(false)}
         onAddExtra={handleAddExtra}
         onOpenCart={() => {
           setAddModalOpen(false);
