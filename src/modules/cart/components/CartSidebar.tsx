@@ -43,7 +43,7 @@ export function CartSidebar({
         className="cart-panel animate-in slide-in-from-right duration-300"
         onClick={(event) => event.stopPropagation()}
       >
-        <CartHeader itemsCount={cart.length} onClose={onClose} />
+        <CartHeader itemsCount={totalItems} onClose={onClose} />
 
         <div className="cart-body">
           {cart.length === 0 ? (

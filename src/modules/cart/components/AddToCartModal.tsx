@@ -87,43 +87,44 @@ export function AddToCartModal({
         </div>
 
         {/* BLOQUE INFO */}
-        <div
-          className={[
-            "mt-4 rounded-xl border border-[#dbe5ee] bg-[#f8fafc] p-3 transition-all duration-200",
-            pulse ? "scale-[1.02]" : "",
-          ].join(" ")}
-        >
-          <div className="flex items-center gap-3">
-            <img
-              src={product.img || "/placeholder.svg"}
-              alt={product.title}
-              className="h-14 w-14 shrink-0 rounded-lg object-cover"
-            />
-
-            <div className="min-w-0">
-              <p className="text-[12px] font-medium text-[#64748b]">
-                Vas con {currentQty} unidad{currentQty !== 1 ? "es" : ""}
+        <div className={["mt-4 rounded-2xl border border-[#dbe5ee] bg-[#f8fafc] p-3 transition-all",pulse?"scale-[1.02]":""].join(" ")}>
+          <img
+            src={product.img||"/placeholder.svg"}
+            alt={product.title}
+            className="mb-3 h-[180px] md:h-[210px] w-full rounded-2xl border border-slate-200 bg-white object-contain"
+          />
+          <p className="line-clamp-1 text-center text-[14px] font-black text-[#334155]">
+            {product.title}
+          </p>
+          <p className="mt-1 text-center text-[11px] font-semibold text-[#64748b]">
+            Ya tienes {currentQty} unidad{currentQty!==1?"es":""}
+          </p>
+          {nextTier&&(
+            <>
+              <div className="mt-3 flex justify-between text-[11px] font-black">
+                <span>{currentQty}</span>
+                <span>{nextTier.targetQty}</span>
+              </div>
+              <div className="mt-1 h-3 overflow-hidden rounded-full bg-slate-200">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-orange-500 via-amber-400 to-green-600 transition-all duration-500"
+                  style={{width:`${Math.min((((currentQty-(currentQty<3?0:currentQty<12?3:currentQty<50?12:currentQty<100?50:100))/Math.max(nextTier.targetQty-(currentQty<3?0:currentQty<12?3:currentQty<50?12:currentQty<100?50:100),1))*100),100)}%`}}
+                />
+              </div>
+              <p className="mt-3 text-center text-[12px] font-black leading-snug text-[#334155]">
+                🚀 Agrega
+                <span className="mx-1 text-[#1d8299]">
+                  {missingQty}
+                </span>
+                más y paga
+                <span className="ml-1 text-[#1d8299]">
+                  S/{nextTier.unitPrice.toFixed(1)}
+                </span>
+                c/u
               </p>
+            </>
+          )}
 
-              {nextTier ? (
-                <p className="mt-1 text-[13px] leading-snug text-[#334155]">
-                  Con{" "}
-                  <span className="font-extrabold text-[#1d8299]">
-                    {nextTier.targetQty} unidades
-                  </span>{" "}
-                  bajas a{" "}
-                  <span className="font-extrabold text-[#1d8299]">
-                    S/{nextTier.unitPrice.toFixed(1)}
-                  </span>{" "}
-                  c/u
-                </p>
-              ) : (
-                <p className="mt-1 text-[13px] font-semibold text-[#16a34a]">
-                  Ya tienes el mejor precio 🔥
-                </p>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* BLOQUE UPSELL */}
