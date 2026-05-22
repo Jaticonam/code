@@ -44,15 +44,26 @@ export function normalizeProduct(
     id: cleanText(row.id),
     title: cleanText(row.title),
     description: cleanText(row.description),
+
     category: categoryFromConfig,
+
     price_1: parseRequiredNumber(row.price_1),
     price_3: parseNumber(row.price_3),
     price_12: parseNumber(row.price_12),
     price_50: parseNumber(row.price_50),
     price_100: parseNumber(row.price_100),
+
+    price_offer:
+      parseNumber(
+        row.price_offer
+      ),
+
     stock: parseNumber(row.stock),
+
     img: cleanText(row.img),
+
     badges: parseBadges(row.badge),
+
     priority: parseRequiredNumber(row.priority),
     status: cleanText(row.status),
     updated_at: cleanText(row.updated_at),

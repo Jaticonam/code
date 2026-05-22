@@ -3,55 +3,56 @@ import { getBestProductTier } from "@/shared/lib/product";
 
 interface ProductCardPriceProps {
   product: Product;
-  isPreventa: boolean;
+  isPreventa?: boolean;
 }
 
-export function ProductCardPrice({
-  product,
-  isPreventa,
-}: ProductCardPriceProps) {
+export function ProductCardPrice({ product, isPreventa = false }: ProductCardPriceProps) {
   const bestTier = getBestProductTier(product);
 
+  const hasOffer =
+    !!product.price_offer &&
+    product.price_offer > 0 &&
+    product.price_offer < product.price_1;
+
+  const finalPrice = hasOffer ? product.price_offer! : product.price_1;
+
   const showBestTierMessage =
-    bestTier &&
-    bestTier.qty > 1 &&
-    product.price_1 > bestTier.price;
+    !hasOffer && bestTier && bestTier.qty > 1 && product.price_1 > bestTier.price;
 
   if (isPreventa) {
     return (
-      <div className="mt-3 pt-3 border-t border-[#eef2f6] flex flex-col items-center gap-1.5">
-        <span className="text-[13px] text-muted-foreground font-semibold">
-          Próximamente
-        </span>
-
-        <div className="flex items-baseline gap-1">
-          <span className="text-[13px] text-muted-foreground">💬</span>
-          <span className="text-[20px] md:text-[22px] font-black text-green-600 tracking-tight">
-            Consultar
-          </span>
-        </div>
-
-        <span className="text-[11px] text-muted-foreground font-medium">
-          Te brindamos más información por WhatsApp
-        </span>
+      <div className="mt-3 flex flex-col items-center gap-1.5 border-t border-[#eef2f6] pt-3">
+        <span className="text-[13px] font-semibold text-muted-foreground">Próximamente</span>
+        <span className="text-[20px] font-black tracking-tight text-green-600 md:text-[22px]">💬 Consultar</span>
+        <span className="text-[11px] font-medium text-muted-foreground">Te brindamos más información por WhatsApp</span>
       </div>
     );
   }
 
   return (
-    <div className="mt-3 pt-3 border-t border-[#eef2f6] flex flex-col items-center gap-1.5">
-      <div className="flex items-baseline justify-center gap-1">
-        <span className="text-[13px] text-muted-foreground font-semibold">
-          S/
-        </span>
+    <div className="mt-3 flex flex-col items-center gap-1.5 border-t border-[#eef2f6] pt-3">
+      {hasOffer && (
+        <>
+          <span className="rounded-full bg-red-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-red-600">
+            🔥 Oferta
+          </span>
 
-        <span className="text-[26px] md:text-[30px] font-black text-[#1d8299] tracking-tight leading-none">
-          {product.price_1.toFixed(1)}
+          <span className="text-[12px] font-bold text-slate-400 line-through">
+            S/ {product.price_1.toFixed(1)}
+          </span>
+        </>
+      )}
+
+      <div className="flex items-baseline justify-center gap-1">
+        <span className="text-[13px] font-semibold text-muted-foreground">S/</span>
+
+        <span className={`text-[26px] font-black leading-none tracking-tight md:text-[30px] ${hasOffer ? "text-red-600" : "text-[#1d8299]"}`}>
+          {finalPrice.toFixed(1)}
         </span>
       </div>
 
-      <span className="text-[11px] text-muted-foreground font-medium">
-        Precio por unidad
+      <span className="text-[11px] font-medium text-muted-foreground">
+        {hasOffer ? "Precio oferta por unidad" : "Precio por unidad"}
       </span>
 
       {showBestTierMessage && (

@@ -33,7 +33,7 @@ export function ProductCardTierBadges({
           <span
             key={tier.key}
             style={{ animationDelay: `${index * 120}ms` }}
-            className={`${COLORS[tier.key] || "bg-slate-500"} animate-badge-float rounded-full px-2.5 py-[5px] text-[10px] font-black text-white shadow-lg transition hover:scale-110`}
+            className={`${COLORS[tier.key] || "bg-slate-500"} animate-badge-float rounded-full px-2 py-[4px] text-[10px] font-black text-white shadow-lg transition hover:scale-110`}
           >
             {tier.label} S/{price.toFixed(1)}
           </span>

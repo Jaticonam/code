@@ -36,8 +36,8 @@ export function ProductCard({ product: p, cart = [], onAddToCart, onImageClick }
 
   return (
     <div className="card-product flex flex-col p-[10px] text-center md:p-3">
-      <div className="card-product-image relative mb-3 h-[340px] md:h-[300px]">
-        <ProductCardBadges productId={p.id} badges={p.badges} />
+      <div className="card-product-image relative mb-2 h-[140px] sm:h-[160px] md:h-[200px] xl:h-[240px] overflow-hidden rounded-[18px]">
+        <ProductCardBadges product={p}/>
 
         {isInCart && (
           <div className="absolute right-2 top-2 z-20 rounded-full bg-green-600 px-2.5 py-1 text-[10px] font-black leading-none text-white shadow-md">
@@ -49,7 +49,7 @@ export function ProductCard({ product: p, cart = [], onAddToCart, onImageClick }
           src={p.img || "/placeholder.svg"}
           alt={p.title}
           onClick={() => onImageClick?.(p.img, p.title)}
-          className="h-full w-full cursor-pointer object-cover"
+          className="h-full w-full cursor-pointer object-cover transition-transform duration-500 hover:scale-[1.03]"
           loading="lazy"
         />
 
@@ -85,14 +85,34 @@ export function ProductCard({ product: p, cart = [], onAddToCart, onImageClick }
           onClick={showWhatsAppButton ? handleWhatsApp : handleAdd}
           disabled={!available && !showWhatsAppButton}
           className={[
-            "card-product-button mt-4 w-full px-4 py-3.5 text-white shadow-lg",
-            showWhatsAppButton ? "bg-green-600 hover:bg-green-700" : "bg-[#1d8299] hover:bg-[#156f84]",
-            !available && !showWhatsAppButton ? "cursor-not-allowed opacity-50" : "hover:shadow-xl",
+            "card-product-button mt-3 w-full",
+            "min-h-[38px] px-2.5 py-2",
+            "rounded-2xl text-[13px] font-black",
+            "text-white shadow-md transition-all",
+            "active:scale-[0.98]",
+            "md:min-h-[36px] md:text-sm",
+            showWhatsAppButton
+              ? "bg-green-600 hover:bg-green-700"
+              : isInCart
+              ? "bg-gradient-to-r from-[#156f84] to-[#1d8299] hover:shadow-lg"
+              : "bg-gradient-to-r from-[#1d8299] to-[#156f84] hover:shadow-lg hover:scale-[1.01]",
+            !available && !showWhatsAppButton
+              ? "cursor-not-allowed opacity-50 shadow-none"
+              : "",
           ].join(" ")}
         >
-          <span className="flex items-center justify-center gap-2">
-            {showWhatsAppButton ? <MessageCircle className="h-4 w-4" /> : <PlusCircle className="h-4 w-4" />}
-            {showWhatsAppButton ? "Consultar" : isInCart ? `Agregar más (${qtyInCart})` : "Agregar pedido"}
+          <span className="flex items-center justify-center gap-1.5">
+            {showWhatsAppButton ? (
+              <MessageCircle className="h-4 w-4" />
+            ) : (
+              <PlusCircle className="h-4 w-4" />
+            )}
+
+            {showWhatsAppButton
+              ? "Consultar"
+              : isInCart
+              ? `Sumar más (${qtyInCart})`
+              : "Agregar pedido"}
           </span>
         </button>
       </div>

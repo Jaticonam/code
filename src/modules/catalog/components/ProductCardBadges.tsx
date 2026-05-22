@@ -1,36 +1,96 @@
-import { getBadgePresentation, sortBadges } from "@/shared/config/badgeRules";
+import type { Product } from "@/shared/types/product";
+import {
+  getBadgePresentation,
+  sortBadges,
+} from "@/shared/config/badgeRules";
 
-interface ProductCardBadgesProps {
-  productId: string;
-  badges?: string[];
+interface ProductCardBadgesProps{
+  product:Product;
 }
 
 export function ProductCardBadges({
-  productId,
-  badges,
-}: ProductCardBadgesProps) {
-  if (!badges || badges.length === 0) return null;
+  product,
+}:ProductCardBadgesProps){
 
-  return (
-    <div className="absolute top-2 left-2 flex flex-col gap-1.5 items-start max-w-[75%] z-10">
-      {sortBadges(badges)
-        .slice(0, 2)
-        .map((badge, index) => {
-          const presentation = getBadgePresentation(badge);
+  const badges=[
+    ...(product.price_offer &&
+      product.price_offer>0 &&
+      product.price_offer<product.price_1
+        ? ["Promo Flash  ⚡"]
+        : []),
 
-          return (
+    ...(product.badges||[]),
+  ];
+
+  const unique=[
+    ...new Set(badges),
+  ];
+
+  if(!unique.length)
+    return null;
+
+  return(
+
+    <div className="
+      absolute
+      top-2
+      left-2
+      z-10
+
+      flex
+      flex-col
+      gap-1.5
+
+      max-w-[75%]
+      items-start
+    ">
+
+      {
+        sortBadges(unique)
+
+        .slice(0,2)
+
+        .map((badge,i)=>{
+
+          const p=
+            getBadgePresentation(
+              badge
+            );
+
+          return(
+
             <div
-              key={`${productId}-badge-${index}`}
+
+              key={`${product.id}-${i}`}
+
               className={[
-                "text-[10px] md:text-[11px] font-bold px-3 py-1 rounded-full leading-tight tracking-normal backdrop-blur-sm border border-white/10 shadow-md",
-                presentation.className,
-                presentation.animation,
+                "px-5 py-0.5",
+                "rounded-full",
+                "text-[10px] md:text-[11px]",
+                "font-bold",
+                "border border-white/10",
+                "backdrop-blur-sm",
+                "shadow-md",
+
+                p.className,
+                p.animation,
+
               ].join(" ")}
+
             >
+
               {badge}
+
             </div>
+
           );
-        })}
+
+        })
+
+      }
+
     </div>
+
   );
+
 }

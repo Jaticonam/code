@@ -1,33 +1,32 @@
 export function CatalogSkeleton() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-6 px-2 md:px-0">
-      {Array.from({ length: 8 }).map((_, i) => (
+    <div className="grid grid-cols-2 gap-1 px-2 md:grid-cols-3 md:gap-2 md:px-0 xl:grid-cols-5 xl:gap-3">
+      {Array.from({ length: 10 }).map((_, i) => (
         <div
           key={i}
-          className="bg-white rounded-[24px] border border-[#e2e8f0] p-3 md:p-4 shadow-[0_10px_25px_rgba(0,0,0,0.06)]"
+          className="rounded-[22px] border border-[#e2e8f0] bg-white p-2.5 shadow-[0_8px_22px_rgba(15,23,42,0.06)] md:p-3"
         >
-          {/* Imagen */}
           <div className="relative mb-3">
             <div className="catalog-skeleton aspect-square rounded-[18px]" />
-
-            {/* Badge simulado */}
-            <div className="absolute top-2 left-2 catalog-skeleton h-5 w-16 rounded-full" />
+            <div className="catalog-skeleton absolute left-2 top-2 h-4 w-20 rounded-full" />
+            <div className="catalog-skeleton absolute bottom-2 right-2 h-4 w-14 rounded-full" />
           </div>
 
-          {/* Título */}
-          <div className="catalog-skeleton h-4 w-[85%] rounded mb-2" />
-
-          {/* Código / subtítulo */}
-          <div className="catalog-skeleton h-3 w-[60%] rounded mb-3" />
-
-          {/* Precio */}
-          <div className="catalog-skeleton h-5 w-20 rounded mb-3" />
-
-          {/* Botones */}
-          <div className="flex gap-2">
-            <div className="catalog-skeleton h-9 w-full rounded-xl" />
-            <div className="catalog-skeleton h-9 w-full rounded-xl" />
+          <div className="mx-auto mb-2 flex justify-center gap-1.5">
+            <div className="catalog-skeleton h-3 w-12 rounded-full" />
+            <div className="catalog-skeleton h-3 w-14 rounded-full" />
           </div>
+
+          <div className="catalog-skeleton mx-auto mb-1.5 h-3.5 w-[88%] rounded" />
+          <div className="catalog-skeleton mx-auto mb-3 h-3 w-[65%] rounded" />
+
+          <div className="mb-2 flex flex-col items-center gap-1">
+            <div className="catalog-skeleton h-3 w-12 rounded" />
+            <div className="catalog-skeleton h-6 w-20 rounded" />
+          </div>
+
+          <div className="catalog-skeleton mb-2 h-3 w-[70%] rounded mx-auto" />
+          <div className="catalog-skeleton h-10 w-full rounded-xl" />
         </div>
       ))}
     </div>

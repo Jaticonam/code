@@ -48,6 +48,7 @@ export const BADGE_RULES: BadgeRule[] = [
   },
   {
     priority: 4,
+
     keywords: [
       "oferta",
       "promo",
@@ -58,25 +59,32 @@ export const BADGE_RULES: BadgeRule[] = [
       "liquidacion",
       "liquidación",
     ],
-    className: "bg-red-600 text-white",
-    animation: "",
+
+    className:
+      "bg-gradient-to-r from-[#dc2626] via-[#f97316] to-[#dc2626] text-white shadow-[0_0_14px_rgba(239,68,68,.28)]",
+
+    animation:"animate-pulse",
   },
   {
     priority: 5,
-    keywords: [
+
+    keywords:[
       "mas vendido",
       "más vendido",
       "top ventas",
       "best seller",
       "bestseller",
     ],
+
     className:
-      "bg-gradient-to-r from-[#f5b025] to-[#d49615] text-slate-950 shadow-[0_0_10px_rgba(245,176,37,0.28)]",
-    animation: "",
+      "bg-gradient-to-r from-[#f5b025] to-[#d49615] text-slate-950 shadow-[0_0_12px_rgba(245,176,37,.30)]",
+
+    animation:"",
   },
   {
-    priority: 6,
-    keywords: [
+    priority:6,
+
+    keywords:[
       "premium",
       "exclusivo",
       "vip",
@@ -84,48 +92,11 @@ export const BADGE_RULES: BadgeRule[] = [
       "edicion limitada",
       "edición limitada",
     ],
-    className: "bg-slate-900 text-white",
-    animation: "",
-  },
-  {
-    priority: 7,
-    keywords: [
-      "mayorista",
-      "por mayor",
-      "caja",
-      "cajón",
-      "cajon",
-      "docena",
-      "pack",
-      "lote",
-      "bulk",
-    ],
-    className: "bg-[#1d8299] text-white",
-    animation: "",
-  },
-  {
-    priority: 8,
-    keywords: [
-      "top",
-      "alta rotacion",
-      "alta rotación",
-      "tendencia",
-      "destacado",
-      "recomendado",
-    ],
-    className: "bg-orange-600 text-white",
-    animation: "",
-  },
-  {
-    priority: 9,
-    keywords: [
-      "stock limitado",
-      "ultimas unidades",
-      "últimas unidades",
-      "agotando",
-    ],
-    className: "bg-red-700 text-white",
-    animation: "animate-pulse",
+
+    className:
+      "bg-gradient-to-r from-slate-900 to-slate-700 text-white shadow-[0_0_10px_rgba(15,23,42,.22)]",
+
+    animation:"",
   },
 ];
 
