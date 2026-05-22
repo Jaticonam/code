@@ -18,6 +18,7 @@
 @import "./shared/styles/components/floating-buttons.css";
 @import "./shared/styles/components/recent-activity.css";
 @import "./shared/styles/components/badges.css";
+@import "./shared/styles/components/countdown-timer.css";
 
 /* Catálogo */
 @import "./shared/styles/catalog/product-card.css";

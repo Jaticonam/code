@@ -62,27 +62,35 @@
     font-weight:700;
   }
 
-  @media(max-width:640px){
+ @media(max-width:640px){
     .recent-activity{
-      left:.75rem;
-      right:.75rem;
-      bottom:calc(env(safe-area-inset-bottom) + 10.2rem);
+        left:.75rem;
+        right:auto;
+        bottom:calc(env(safe-area-inset-bottom) + 7rem);
+        max-width:220px;
+        z-index:1001;
     }
 
     .recent-activity-card{
-      width:100%;
-      padding:.7rem .75rem;
-      border-radius:18px;
+        width:220px;
+        padding:.58rem .65rem;
+        gap:.55rem;
+        border-radius:16px;
     }
 
     .recent-activity-avatar{
-      width:34px;
-      height:34px;
-      font-size:.76rem;
+        width:28px;
+        height:28px;
+        font-size:.68rem;
     }
 
     .recent-activity-text{
-      font-size:.72rem;
+        font-size:.66rem;
+        line-height:1.25;
     }
-  }
+
+    .recent-activity-time{
+        font-size:.58rem;
+    }
+ }
 }

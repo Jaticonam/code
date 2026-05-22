@@ -48,6 +48,11 @@ export const CATEGORY_CONFIG: CategoryConfig[] = [
     icon: "✨",
   },
   {
+    id:"llaveros",
+    name:"Llaveros",
+    icon:"🔑",
+   },
+  {
     id: "hotwheels",
     name: "Hot Wheels",
     icon: "🏎️",

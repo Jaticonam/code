@@ -15,7 +15,7 @@ export function CategoryGrid({
   onImageClick,
 }: CategoryGridProps) {
   return (
-    <div className="grid grid-cols-2 gap-[10px] md:gap-4 lg:gap-5">
+    <div className="grid grid-cols-2 gap-[3px] md:grid-cols-3 md:gap-2 xl:grid-cols-5 xl:gap-2">
       {products.map((product) => (
         <ProductCard
           key={product.id}

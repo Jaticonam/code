@@ -1,19 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { useCartStore } from "@/modules/cart/store";
 import { useProducts } from "@/modules/catalog/hooks/useProducts";
-
-import { Product } from "@/shared/types/product";
-
-import { getUnitPrice, getStockPresentation, getBestProductTier } from "@/shared/lib/product";
-import { getNextTier } from "@/shared/lib/product";
+import type { Product } from "@/shared/types/product";
+import { getUnitPrice, getStockPresentation, getNextTier } from "@/shared/lib/product";
 
 import { useProductViewers } from "@/modules/product-detail/hooks/useProductViewers";
 import { useRelatedProducts } from "@/modules/product-detail/hooks/useRelatedProducts";
@@ -41,7 +33,6 @@ import { ProductQuantitySelector } from "@/modules/product-detail/components/Pro
 import { ProductPurchaseActions } from "@/modules/product-detail/components/ProductPurchaseActions";
 import { RelatedProducts } from "@/modules/product-detail/components/RelatedProducts";
 
-
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
@@ -62,7 +53,6 @@ const ProductDetailPage = () => {
   const [qty, setQty] = useState(1);
   const [qtyInput, setQtyInput] = useState("1");
   const [modalQty, setModalQty] = useState(0);
-
   const [lastTier, setLastTier] = useState(1);
   const [showUnlock, setShowUnlock] = useState(false);
   const [pricePulse, setPricePulse] = useState(false);
@@ -81,8 +71,13 @@ const ProductDetailPage = () => {
     savings,
   } = useCartStore();
 
+  const product = useMemo(
+    () => products.find((item) => item.id === id),
+    [products, id]
+  );
+
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }, 0);
 
@@ -94,13 +89,8 @@ const ProductDetailPage = () => {
     setPricePulse(false);
     setAddModalOpen(false);
 
-    return () => clearTimeout(timer);
+    return () => window.clearTimeout(timer);
   }, [id]);
-
-  const product = useMemo(
-    () => products.find((item) => item.id === id),
-    [products, id]
-  );
 
   const status = (product?.status || "").trim().toLowerCase();
   const available = !!product && ["publicado", "preventa"].includes(status);
@@ -133,9 +123,180 @@ const ProductDetailPage = () => {
   const related = useRelatedProducts(products, product);
   const stockPresentation = product ? getStockPresentation(product, isPreventa) : null;
 
-  if (loading) {
-    return <ProductSkeleton />;
-  }
+  const handleBack = useCallback(() => {
+    if (fromSearch) {
+      navigate("/catalogo", {
+        state: {
+          restoreSearch: searchQuery,
+        },
+      });
+      return;
+    }
+
+    navigate(
+      currentCategory
+        ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
+        : "/catalogo"
+    );
+  }, [navigate, currentCategory, fromSearch, searchQuery]);
+
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product?.title,
+          text: product?.description,
+          url,
+        });
+        return;
+      }
+
+      await navigator.clipboard.writeText(url);
+
+      showNotification({
+        type: "success",
+        title: "Enlace copiado",
+        description: "Listo para compartir.",
+      });
+    } catch {
+      showNotification({
+        type: "error",
+        title: "No se pudo compartir",
+        description: "Intenta nuevamente.",
+      });
+    }
+  }, [product]);
+
+  const updateQty = useCallback(
+    (nextQty: number) => {
+      const cleanQty = Math.max(1, nextQty);
+
+      setQty(cleanQty);
+      setQtyInput(String(cleanQty));
+
+      const nextUnitPrice = product ? getUnitPrice(cleanQty, product) : 0;
+      const nextTierQty =
+        cleanQty >= 100 ? 100 : cleanQty >= 50 ? 50 : cleanQty >= 12 ? 12 : cleanQty >= 3 ? 3 : 1;
+
+      if (nextTierQty > lastTier) {
+        setShowUnlock(true);
+        window.setTimeout(() => setShowUnlock(false), 1400);
+      }
+
+      if (nextUnitPrice !== unitPrice) {
+        setPricePulse(true);
+        window.setTimeout(() => setPricePulse(false), 220);
+      }
+
+      setLastTier(nextTierQty);
+    },
+    [product, lastTier, unitPrice]
+  );
+
+  const handleQtyInputChange = useCallback((value: string) => {
+    if (value === "" || /^\d+$/.test(value)) {
+      setQtyInput(value);
+    }
+  }, []);
+
+  const handleQtyInputBlur = useCallback(() => {
+    if (!isQtyInputValid) {
+      setQtyInput(String(qty));
+      return;
+    }
+
+    updateQty(effectiveQty);
+  }, [effectiveQty, isQtyInputValid, qty, updateQty]);
+
+  const handleQtyInputKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter") {
+        event.currentTarget.blur();
+      }
+    },
+    []
+  );
+
+  const handleAddToCart = useCallback(() => {
+    if (!product || !available || !isQtyInputValid) return;
+
+    addToCart(product, effectiveQty);
+    setModalQty(currentCartQty + effectiveQty);
+    setAddModalOpen(true);
+
+    showNotification({
+      type: "success",
+      title: "Producto agregado",
+      description: `${effectiveQty} unidad(es) en tu caja.`,
+    });
+  }, [product, available, isQtyInputValid, addToCart, effectiveQty, currentCartQty]);
+
+  const handleRelatedAddToCart = useCallback(
+    (relatedProduct: Product) => {
+      addToCart(relatedProduct, 1);
+      showNotification({
+        type: "success",
+        title: "Producto agregado",
+        description: "Sumado a tu caja.",
+      });
+    },
+    [addToCart]
+  );
+
+  const handleWhatsApp = useCallback(() => {
+    if (!product) return;
+
+    const message = [
+      "Hola Wooly, quiero consultar por este producto:",
+      "",
+      `Producto: ${product.title}`,
+      `Código: ${product.id}`,
+      `Cantidad: ${effectiveQty}`,
+      currentCategory ? `Categoría: ${currentCategory}` : "",
+      "",
+      `Link: ${window.location.href}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    window.open(
+      `https://wa.me/51936188636?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+  }, [product, effectiveQty, currentCategory]);
+
+  const handleCloseAddModal = useCallback(() => {
+    setAddModalOpen(false);
+  }, []);
+
+  const handleAddExtraFromModal = useCallback(
+    (extraQty: number) => {
+      if (!product || extraQty <= 0) return;
+
+      addToCart(product, extraQty);
+      setModalQty((prev) => prev + extraQty);
+    },
+    [product, addToCart]
+  );
+
+  const handleOpenCartFromModal = useCallback(() => {
+    setAddModalOpen(false);
+    setCartOpen(true);
+  }, []);
+
+  const handleContinueAccumulating = useCallback(() => {
+    setAddModalOpen(false);
+
+    navigate(
+      currentCategory
+        ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
+        : "/catalogo"
+    );
+  }, [navigate, currentCategory]);
+
+  if (loading) return <ProductSkeleton />;
 
   if (!product) {
     return (
@@ -161,7 +322,7 @@ const ProductDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-40">
+    <div className="min-h-screen bg-background pb-28 md:pb-40">
       <NotificationStack />
 
       <ProductDetailHeader
@@ -170,15 +331,15 @@ const ProductDetailPage = () => {
         onShare={handleShare}
       />
 
-      <main className="max-w-5xl mx-auto px-4 md:px-6 mt-6 md:mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
+      <main className="max-w-5xl mx-auto px-4 md:px-6 mt-4 md:mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-10 items-start">
           <ProductGallery
             product={product}
             available={available}
             onZoom={(src, title) => setZoomImage({ src, title })}
           />
 
-          <div className="flex flex-col gap-6 card-shop p-6 md:p-7 bg-white">
+          <div className="flex flex-col gap-4 md:gap-6 card-shop p-4 md:p-7 bg-white">
             <div className="text-center md:text-left">
               <h2 className="text-2xl md:text-[28px] tracking-tight font-black text-foreground leading-tight mb-3">
                 {product.title}

@@ -16,13 +16,19 @@ export function HeaderBar({
   products = [],
 }: HeaderBarProps) {
   return (
-    <div className="border-b border-slate-200 bg-white/95 px-4 py-3 shadow-sm backdrop-blur-xl md:py-4">
-      <div className="mx-auto flex max-w-7xl items-center gap-4">
+    <div className="border-b border-slate-200 bg-white/95 px-3 py-3 shadow-sm backdrop-blur-xl md:px-4 md:py-4">
+
+      <div className="mx-auto flex max-w-7xl items-center gap-3">
+
         <div
-          className="shrink-0 cursor-pointer"
           onClick={() => window.location.reload()}
+          className="hidden shrink-0 cursor-pointer md:block"
         >
-          <img src={LOGO_URL} alt="Wooly" className="h-8 w-auto md:h-9" />
+          <img
+            src={LOGO_URL}
+            alt="Wooly"
+            className="h-9 w-auto"
+          />
         </div>
 
         <div className="flex-1">
@@ -33,7 +39,9 @@ export function HeaderBar({
             placeholder="Busca flores, cajas, peluches o código..."
           />
         </div>
+
       </div>
+
     </div>
   );
 }

@@ -42,6 +42,13 @@ export const SHEETS_CONFIG = [
     gid: "1381335916",
   },
 
+  // LLAVEROS
+  {
+    category: "llaveros",
+    docId: "1CI5Waxa4AnyEPFK5okCVKJhqEZhsonqAUynl54mf_xg",
+    gid: "849795903",
+  },
+
   // HOTWHEELS
   {
     category: "hotwheels",
