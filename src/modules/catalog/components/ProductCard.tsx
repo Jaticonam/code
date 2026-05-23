@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { MessageCircle, PlusCircle } from "lucide-react";
 
-import { CartItem, Product } from "@/shared/types/product";
+import { CartItem,Product } from "@/shared/types/product";
 import { getCategoryColor } from "@/shared/config/categoryColors";
 import { ProductCardBadges } from "@/modules/catalog/components/ProductCardBadges";
 import { ProductCardPrice } from "@/modules/catalog/components/ProductCardPrice";
@@ -10,109 +10,88 @@ import { ProductCardTierBadges } from "@/modules/catalog/components/ProductCardT
 import { useProductCard } from "@/modules/product-detail/hooks/useProductCard";
 import { useProductViewers } from "@/modules/catalog/hooks/useProductViewers";
 
-interface Props {
-  product: Product;
-  cart?: CartItem[];
-  onAddToCart: (product: Product) => void;
-  onImageClick?: (src: string, title: string) => void;
+interface Props{
+  product:Product;
+  cart?:CartItem[];
+  onAddToCart:(product:Product)=>void;
+  onImageClick?:(src:string,title:string)=>void;
 }
 
-export function ProductCard({ product: p, cart = [], onAddToCart, onImageClick }: Props) {
-  const navigate = useNavigate();
-  const viewers = useProductViewers();
+export function ProductCard({product:p,cart=[],onAddToCart,onImageClick}:Props){
+  const navigate=useNavigate();
+  const viewers=useProductViewers();
 
-  const {
-    available,
-    isPreventa,
-    showWhatsAppButton,
-    isInCart,
-    qtyInCart,
-    handleAdd,
-    handleWhatsApp,
-  } = useProductCard(p, cart, onAddToCart);
+  const {available,isPreventa,showWhatsAppButton,isInCart,qtyInCart,handleAdd,handleWhatsApp}=useProductCard(p,cart,onAddToCart);
+  const goToDetail=()=>navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
 
-  const goToDetail = () =>
-    navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
-
-  return (
-    <div className="card-product flex flex-col p-[10px] text-center md:p-3">
-      <div className="card-product-image relative mb-2 h-[140px] sm:h-[160px] md:h-[200px] xl:h-[240px] overflow-hidden rounded-[18px]">
+  return(
+    <div 
+      onClick={goToDetail}
+      className="card-product group flex flex-col p-2 text-center md:p-2.5">
+      <div className="card-product-image relative mb-2 h-[150px] overflow-hidden rounded-[18px] sm:h-[175px] md:h-[320px] xl:h-[255px]">
         <ProductCardBadges product={p}/>
 
-        {isInCart && (
-          <div className="absolute right-2 top-2 z-20 rounded-full bg-green-600 px-2.5 py-1 text-[10px] font-black leading-none text-white shadow-md">
-            {qtyInCart} en caja
+        {isInCart&&(
+          <div className="absolute right-2 top-2 z-20 rounded-full bg-[#1d8299] px-2.5 py-1 text-[10px] font-black leading-none text-white shadow-[0_6px_16px_rgba(29,130,153,.25)]">
+            +{qtyInCart}
           </div>
         )}
 
         <img
-          src={p.img || "/placeholder.svg"}
+          src={p.img||"/placeholder.svg"}
           alt={p.title}
-          onClick={() => onImageClick?.(p.img, p.title)}
-          className="h-full w-full cursor-pointer object-cover transition-transform duration-500 hover:scale-[1.03]"
+          onClick={(e)=>{
+            e.stopPropagation();
+            onImageClick?.(p.img,p.title);
+          }}
+          className="h-full w-full cursor-pointer object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]"
           loading="lazy"
         />
 
-        <ProductCardTierBadges product={p} available={available} isPreventa={isPreventa} />
+        <ProductCardTierBadges product={p} available={available} isPreventa={isPreventa}/>
       </div>
 
-      <div className="flex flex-grow flex-col justify-between px-1 md:px-2">
+      <div className="flex flex-1 flex-col justify-between px-1">
         <div>
-          <div className="mb-2 flex flex-wrap items-center justify-center gap-2">
-            <span className="text-[10px] font-semibold text-slate-500">{p.id}</span>
-            <span className={`rounded-full px-2.5 py-[4px] text-[10px] font-black uppercase ${getCategoryColor(p.category)}`}>
-              {p.category}
+          <div className="mb-1.5 flex flex-wrap items-center justify-center gap-0.5">
+            <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[9px] font-black uppercase text-slate-500">{p.id}</span>
+            <span className={`rounded-full px-2 py-[3px] text-[9px] font-black uppercase ${getCategoryColor(p.category)}`}>{p.category}</span>
+            <span className="rounded-full border bg-slate-100 from-amber-50 to-red-50 px-2 py-[3px] text-[9px] font-black text-red-700 shadow-[0_2px_8px_rgba(251,191,36,.15)]">
+            👀 {viewers}
             </span>
           </div>
 
-          <h3 onClick={goToDetail} className="card-product-title cursor-pointer line-clamp-2">
+          <h3 className="mb-0.3 card-product-title cursor-pointer line-clamp-2">
             {p.title}
           </h3>
-
-          <p className="mt-1.5 line-clamp-2 text-[12px] leading-relaxed text-slate-500">
-            {p.description || "Producto seleccionado para tu negocio."}
-          </p>
         </div>
 
-        <ProductCardPrice product={p} />
-        <ProductCardStock stock={p.stock} price={p.price_1} status={p.status} />
-
-        <p className="card-product-viewers mt-1 inline-flex items-center justify-center gap-1">
-          👀 <span>{viewers} viendo ahora</span>
-        </p>
-
+        <ProductCardPrice product={p}/>
+        <ProductCardStock stock={p.stock} price={p.price_1} status={p.status}/>
+       
         <button
-          onClick={showWhatsAppButton ? handleWhatsApp : handleAdd}
-          disabled={!available && !showWhatsAppButton}
+          onClick={(e)=>{
+            e.stopPropagation();
+            if(showWhatsAppButton){
+              handleWhatsApp();
+              return;
+            }
+            handleAdd();
+          }}
+          disabled={!available&&!showWhatsAppButton}
           className={[
-            "card-product-button mt-3 w-full",
-            "min-h-[38px] px-2.5 py-2",
-            "rounded-2xl text-[13px] font-black",
-            "text-white shadow-md transition-all",
-            "active:scale-[0.98]",
-            "md:min-h-[36px] md:text-sm",
+            "card-product-button mt-2.5 w-full min-h-[36px] rounded-2xl px-2.5 py-2 text-[12px] font-black text-white shadow-md transition-all active:scale-[.98] md:min-h-[38px] md:text-[13px]",
             showWhatsAppButton
-              ? "bg-green-600 hover:bg-green-700"
-              : isInCart
-              ? "bg-gradient-to-r from-[#156f84] to-[#1d8299] hover:shadow-lg"
-              : "bg-gradient-to-r from-[#1d8299] to-[#156f84] hover:shadow-lg hover:scale-[1.01]",
-            !available && !showWhatsAppButton
-              ? "cursor-not-allowed opacity-50 shadow-none"
-              : "",
+              ?"bg-green-600 hover:bg-green-700"
+              :isInCart
+              ?"bg-gradient-to-r from-[#156f84] to-[#1d8299] hover:shadow-lg"
+              :"bg-gradient-to-r from-[#1d8299] to-[#156f84] hover:scale-[1.01] hover:shadow-lg",
+            !available&&!showWhatsAppButton?"cursor-not-allowed opacity-50 shadow-none":"",
           ].join(" ")}
         >
           <span className="flex items-center justify-center gap-1.5">
-            {showWhatsAppButton ? (
-              <MessageCircle className="h-4 w-4" />
-            ) : (
-              <PlusCircle className="h-4 w-4" />
-            )}
-
-            {showWhatsAppButton
-              ? "Consultar"
-              : isInCart
-              ? `Sumar más (${qtyInCart})`
-              : "Agregar pedido"}
+            {showWhatsAppButton?<MessageCircle className="h-4 w-4"/>:<PlusCircle className="h-4 w-4"/>}
+            {showWhatsAppButton?"Consultar":isInCart?`Sumar (${qtyInCart})`:"Agregar"}
           </span>
         </button>
       </div>

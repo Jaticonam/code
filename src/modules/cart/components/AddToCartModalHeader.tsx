@@ -1,17 +1,19 @@
-import { CheckCircle2, X } from "lucide-react";
+import { PackagePlus,X } from "lucide-react";
+import type { Product } from "@/shared/types/product";
 
-interface Props{onClose:()=>void;}
+interface Props{product:Product;onClose:()=>void;}
 
-export function AddToCartModalHeader({onClose}:Props){
+export function AddToCartModalHeader({product,onClose}:Props){
   return(
     <div className="flex items-start justify-between gap-3">
       <div className="flex min-w-0 items-center gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#1d8299] via-[#228da5] to-[#156f84] text-white shadow-[0_12px_28px_rgba(29,130,153,.28)] ring-1 ring-black/5 backdrop-blur-sm">
-         <CheckCircle2 className="h-[18px] w-[18px] stroke-[3.2] drop-shadow-[0_1px_2px_rgba(0,0,0,.18)]"/>
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#dbe5ee] bg-white text-[#1d8299] shadow-[0_8px_20px_rgba(15,23,42,.08)]">
+          <PackagePlus className="h-[19px] w-[19px] stroke-[2.4]" />
         </div>
+
         <div className="min-w-0">
-          <h3 className="text-[17px] font-black leading-tight text-[#0f172a]">Tu caja está creciendo 🚀</h3>
-          <p className="mt-0.5 text-[12px] font-bold text-[#1d8299]">Sigue sumando y mejora tu precio</p>
+          <p className="text-[13px] font-bold text-[#1d8299]">Tu caja está creciendo 🚀</p>
+          <h3 className="line-clamp-1 text-[17px] font-black leading-tight text-[#0f172a] md:text-[16px]">{product.title}</h3>
         </div>
       </div>
 

@@ -28,18 +28,15 @@ export function ProductPriceBlock({
 
   return (
     <div className="text-center md:text-left">
-      {hasOffer && (
-        <div className="mb-2 flex justify-center md:justify-start">
-          <span className="rounded-full bg-red-50 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-red-600">
-            🔥 Oferta activa
+      {hasOffer&&(
+        <div className="mb-2 flex flex-wrap items-center justify-center gap-2 md:justify-start">
+          <span className="text-[14px] font-semibold text-slate-400 line-through decoration-2">
+          S/ {basePrice.toFixed(2)}
+          </span>
+          <span className="rounded-full border border-red-200 bg-gradient-to-r from-red-50 via-orange-50 to-amber-50 px-2.5 py-1 text-[10px] font-black tracking-wide text-red-600 shadow-[0_2px_10px_rgba(239,68,68,.12)]">
+          ⚡ AHORRAS
           </span>
         </div>
-      )}
-
-      {hasOffer && (
-        <p className="mb-1 text-sm font-bold text-slate-400 line-through">
-          Antes S/ {basePrice.toFixed(2)}
-        </p>
       )}
 
       <div className="flex items-end justify-center gap-2 md:justify-start">

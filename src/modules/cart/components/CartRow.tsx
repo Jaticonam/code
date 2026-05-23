@@ -28,8 +28,7 @@ export function CartRow({
   const activePrice = getEffectivePrice(item);
   const subtotal = activePrice * item.qty;
   const activeTierQty = getActiveTierQty(item);
-  const tierMessage = getTierUnlockMessage(item);
-
+  
   const prevQtyRef = useRef(item.qty);
   const prevPriceRef = useRef(activePrice);
   const prevTierRef = useRef(activeTierQty);
@@ -105,44 +104,18 @@ export function CartRow({
             </button>
           </div>
 
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <div className="flex items-baseline gap-1">
-              <span className="text-[10px] font-black text-[#94a3b8]">
-                S/
-              </span>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <div className={`text-[12px] font-black tracking-tight ${pricePulse?"text-[#1d8299]":"text-[#64748b]"}`}>
+              {item.qty}u  × S/ {activePrice.toFixed(2)} c/u
+            </div>
 
-              <span
-                className={`text-2xl font-black tracking-tighter transition-all duration-300 ${
-                  pricePulse
-                    ? "scale-105 text-[#1d8299]"
-                    : "text-[#0f172a]"
-                }`}
-              >
+            <div className="flex items-baseline gap-1">
+              <span className="text-[10px] font-black text-[#94a3b8]">S/</span>
+              <span className={`text-2xl font-black tracking-tighter transition-all duration-300 ${pricePulse?"scale-105 text-[#1d8299]":"text-[#0f172a]"}`}>
                 {subtotal.toFixed(2)}
               </span>
             </div>
-
-            <div
-              className={`cart-unit-badge ${
-                pricePulse ? "scale-105 shadow-md" : ""
-              }`}
-            >
-              U: S/ {activePrice.toFixed(2)}
-            </div>
           </div>
-
-          {tierMessage && (
-            <div
-              className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${
-                tierFlash
-                  ? "bg-[#fff0f7] text-[#f286be] scale-[1.03]"
-                  : "bg-[#e6f2f5] text-[#1d8299]"
-              }`}
-            >
-              <Zap className={`w-3.5 h-3.5 ${tierFlash ? "animate-pulse" : ""}`} />
-              {tierMessage}
-            </div>
-          )}
         </div>
       </div>
 

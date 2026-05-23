@@ -42,18 +42,18 @@ export function ProductTierSelector({
           <button
             key={tier.key}
             type="button"
-            onClick={() => onSelectQty(tier.qty)}
-            className={`px-3 py-2 rounded-2xl border transition-all duration-200 text-center min-w-[82px] shadow-sm cursor-pointer ${tierStyle} ${
-              active ? "scale-[1.04]" : "hover:scale-[1.03]"
-            }`}
+            onClick={()=>onSelectQty(tier.qty)}
+            className={`px-3 py-1.5 rounded-2xl border transition-all duration-200 min-w-[96px] shadow-sm cursor-pointer ${tierStyle} ${active?"scale-[1.04]":"hover:scale-[1.03]"}`}
           >
-            <p className="text-[11px] font-black tracking-wide leading-none">
-              {tier.label}
-            </p>
+            <div className="flex items-center justify-center gap-1.5 whitespace-nowrap">
+              <span className="text-[13px] font-black tracking-wide">
+                {tier.label}
+              </span>
 
-            <p className="text-[13px] md:text-sm font-black mt-1 leading-none">
-              S/ {value.toFixed(2)}
-            </p>
+              <span className="text-[13px] md:text-sm font-black">
+                S/{value.toFixed(2)}
+              </span>
+            </div>
           </button>
         );
       })}

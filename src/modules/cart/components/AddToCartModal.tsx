@@ -37,9 +37,9 @@ export function AddToCartModal({open,product,currentQty,onClose,onAddExtra,onOpe
 
   return(
     <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/45 px-4 backdrop-blur-[2px]">
-      <div className="w-full max-w-[360px] animate-in fade-in zoom-in-95 duration-200 rounded-2xl border border-[#dbe5ee] bg-white p-4 shadow-2xl">
+      <div className="w-full max-w-[360px] md:max-w-[500px] animate-in fade-in zoom-in-95 duration-200 rounded-2xl border border-[#dbe5ee] bg-white p-4 md:p-6 shadow-2xl">
 
-        <AddToCartModalHeader onClose={onClose}/>
+        <AddToCartModalHeader product={product} onClose={onClose}/>
         <AddToCartModalInfo product={product} currentQty={currentQty} pulse={pulse} nextTier={nextTier}/>
         
         <div className="mt-4 space-y-2">

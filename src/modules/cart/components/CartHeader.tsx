@@ -18,11 +18,11 @@ export function CartHeader({
 
         <div>
           <h2 className="text-lg font-black leading-none text-[#0f172a]">
-            Mi Pedido
+            Mi Caja
           </h2>
 
-          <span className="mt-1 block text-[10px] font-bold uppercase tracking-wide text-[#1d8299]">
-            {itemsCount} items seleccionados
+          <span className="mt-1 block text-[10px] font-bold Capitalize tracking-wide text-[#1d8299]">
+            {itemsCount} Unidades Acumuladas
           </span>
         </div>
       </div>

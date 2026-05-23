@@ -51,6 +51,7 @@ const ProductDetailPage = () => {
   const [lastTier, setLastTier] = useState(1);
   const [showUnlock, setShowUnlock] = useState(false);
   const [pricePulse, setPricePulse] = useState(false);
+  const [pageReady,setPageReady]=useState(false);
 
   const viewers = useProductViewers();
 
@@ -73,10 +74,14 @@ const ProductDetailPage = () => {
 
   const selectedRelatedQty=selectedRelated?cart.find(i=>i.id===selectedRelated.id)?.qty??0:0;
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    }, 0);
+  useEffect(()=>{
+    setPageReady(false);
+
+    const timer=window.setTimeout(()=>{
+      window.scrollTo({top:0,left:0,behavior:"smooth"});
+    },0);
+
+    const readyTimer=window.setTimeout(()=>setPageReady(true),220);
 
     setQty(1);
     setQtyInput("1");
@@ -84,8 +89,11 @@ const ProductDetailPage = () => {
     setShowUnlock(false);
     setPricePulse(false);
 
-    return () => window.clearTimeout(timer);
-  }, [id]);
+    return()=>{
+      window.clearTimeout(timer);
+      window.clearTimeout(readyTimer);
+    };
+  },[id]);
 
   const status = (product?.status || "").trim().toLowerCase();
   const available = !!product && ["publicado", "preventa"].includes(status);
@@ -234,7 +242,7 @@ const ProductDetailPage = () => {
     );
   }, [product, effectiveQty, currentCategory]);
 
-  if (loading) return <ProductSkeleton />;
+  if(loading||!pageReady)return <ProductSkeleton/>;
 
   if (!product) {
     return (
@@ -276,7 +284,7 @@ const ProductDetailPage = () => {
           />
 
           <div className="flex flex-col gap-4 md:gap-6 card-shop p-4 md:p-7 bg-white">
-            <div className="mb-3 flex flex-wrap justify-center gap-2 md:justify-start">
+            <div className="mb-2 flex flex-wrap justify-center gap-2 md:justify-start">
               <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black text-slate-600">
                 Código: {product.id}
               </span>

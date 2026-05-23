@@ -16,6 +16,13 @@ export function AddToCartModalInfo({product,currentQty,pulse,nextTier}:Props){
   {qty:100,price:product.price_100},
   ].filter(t=>typeof t.price==="number"&&Number.isFinite(t.price)&&t.price>0)
 
+  const currentTierClass=
+  currentQty>=100?"active-100":
+  currentQty>=50?"active-50":
+  currentQty>=12?"active-12":
+  currentQty>=3?"active-3":
+  "active-1";
+
   const bestTarget=tiers.at(-1)?.qty??1;
   const targetQty=nextTier?.targetQty??nextTier?.qty??bestTarget;
   const unitPrice=nextTier?.unitPrice??nextTier?.price??product.price_1;
@@ -34,15 +41,20 @@ export function AddToCartModalInfo({product,currentQty,pulse,nextTier}:Props){
 
   return(
     <div className={["mt-3 rounded-2xl border border-slate-200 bg-[#f8fafc] p-2.5 transition-transform",pulse?"scale-[1.02]":""].join(" ")}>
-      <img src={product.img||"/placeholder.svg"} alt={product.title} className="mb-2 h-[300px] md:h-[240px] w-full rounded-2xl border border-slate-200 bg-white object-cover"/>
+      <div className="relative mb-2">
+        <img src={product.img||"/placeholder.svg"} alt={product.title} className="h-[320px] md:h-[420px] w-full rounded-2xl border border-slate-200 bg-white object-cover"/>
 
+        <div className={`absolute left-1/2 bottom-3 grid h-12 min-w-[50px] -translate-x-1/2 place-items-center rounded-full px-3 text-[13px] font-black text-white shadow-lg animate-pulse ${currentTierClass}`}>
+          +{currentQty}
+        </div>
+    </div>
       <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5">
         <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[10px] font-black uppercase text-slate-500">Código: {product.id}</span>
         <span className="rounded-full bg-[#e6f6f8] px-2 py-[3px] text-[10px] font-black capitalize text-[#1d8299]">{product.category}</span>
       </div>
 
       <div className="mt-3 rounded-xl bg-white p-3 shadow-sm">
-        <div className="mb-2 flex items-center justify-between text-[12px] font-black">
+        <div className="mb-2 flex items-center justify-between text-[12px] md:text-[14px] font-black">
           <span className="text-slate-600">Ya tienes {currentQty} productos</span>
           <span className={unlocked?"text-emerald-600":"text-orange-500"}>{currentQty}/{bestTarget}</span>
         </div>
@@ -55,30 +67,26 @@ export function AddToCartModalInfo({product,currentQty,pulse,nextTier}:Props){
           <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
             {tiers.map(t=>{
               const active=currentQty>=t.qty;
-              const next=nextTier&&(nextTier.targetQty??nextTier.qty)===t.qty;
+              const cls=`active-${t.qty}`;
 
               return(
                 <button
                   key={t.qty}
-                  type="button"
                   disabled
                   className={[
-                    "rounded-full border px-2.5 py-1.5 text-[10px] font-black leading-none",
-                    active
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                      : next
-                      ? "border-[#1d8299]/30 bg-[#e6f6f8] text-[#1d8299]"
-                      : "border-slate-200 bg-slate-50 text-slate-500",
+                    "rounded-full px-2.5 py-1 text-[12px] md:text-[13px] font-black transition-all flex items-center justify-center gap-2",
+                    active?cls:"cart-tier-btn-muted"
                   ].join(" ")}
                 >
-                  {t.qty}u +<span className="ml-1 font-bold">S/{t.price!.toFixed(1)}</span>
+                  <span>{t.qty}+</span>
+                  <span>S/{t.price!.toFixed(1)}</span>
                 </button>
               );
             })}
           </div>
         )}
 
-        <p className="mt-2 text-center text-[12px] font-bold leading-snug text-slate-700">
+        <p className="mt-2 text-center text-[13px] md:text-[16px] font-bold leading-snug text-slate-700">
           {unlocked?(<>🎉 Mejor precio desbloqueado</>):nextTier?(<>🚀 Agrega <span className="text-[#1d8299]">{missingQty}</span> más y paga <span className="text-[#1d8299]">S/{unitPrice.toFixed(1)}</span> c/u</>):(<>✅ Ya tienes el mejor precio disponible</>)}
         </p>
       </div>
