@@ -1,176 +1,75 @@
-import { useEffect, useState } from "react";
-import { CheckCircle2, X, Package } from "lucide-react";
+import { useEffect,useState } from "react";
+import { Package } from "lucide-react";
 import { Product } from "@/shared/types/product";
+import { AddToCartModalHeader } from "@/modules/cart/components/AddToCartModalHeader";
+import { AddToCartModalInfo } from "@/modules/cart/components/AddToCartModalInfo";
 
-interface AddToCartModalProps {
-  open: boolean;
-  product: Product | null;
-  currentQty: number;
-  onClose: () => void;
-  onAddExtra: (qty: number) => void;
-  onOpenCart: () => void;
-  secondaryActionLabel?: string;
-  onSecondaryAction?: () => void;
+interface AddToCartModalProps{
+  open:boolean; product:Product|null; currentQty:number;
+  onClose:()=>void; onAddExtra:(qty:number)=>void; onOpenCart:()=>void;
+  secondaryActionLabel?:string; onSecondaryAction?:()=>void;
 }
 
-function getNextTier(product: Product, qty: number) {
-  const tiers = [
-    { targetQty: 3, unitPrice: product.price_3 },
-    { targetQty: 12, unitPrice: product.price_12 },
-    { targetQty: 50, unitPrice: product.price_50 },
-    { targetQty: 100, unitPrice: product.price_100 },
-  ];
-
-  const validTiers = tiers.filter(
-    (tier) =>
-      typeof tier.unitPrice === "number" &&
-      Number.isFinite(tier.unitPrice) &&
-      tier.unitPrice > 0
-  );
-
-  return validTiers.find((tier) => qty < tier.targetQty) ?? null;
+function getNextTier(product:Product,qty:number){
+  return [
+    {targetQty:3,unitPrice:product.price_3},
+    {targetQty:12,unitPrice:product.price_12},
+    {targetQty:50,unitPrice:product.price_50},
+    {targetQty:100,unitPrice:product.price_100},
+  ].filter(t=>typeof t.unitPrice==="number"&&Number.isFinite(t.unitPrice)&&t.unitPrice>0)
+   .find(t=>qty<t.targetQty)??null;
 }
 
-export function AddToCartModal({
-  open,
-  product,
-  currentQty,
-  onClose,
-  onAddExtra,
-  onOpenCart,
-  secondaryActionLabel,
-  onSecondaryAction,
-}: AddToCartModalProps) {
-  const [pulse, setPulse] = useState(false);
+export function AddToCartModal({open,product,currentQty,onClose,onAddExtra,onOpenCart,secondaryActionLabel,onSecondaryAction}:AddToCartModalProps){
+  const [pulse,setPulse]=useState(false);
+  const nextTier=product?getNextTier(product,currentQty):null;
+  const missingQty=nextTier?Math.max(nextTier.targetQty-currentQty,0):0;
+  const hasUpsell=!!nextTier&&missingQty>0;
 
-  const nextTier = product ? getNextTier(product, currentQty) : null;
-  const missingQty = nextTier ? Math.max(nextTier.targetQty - currentQty, 0) : 0;
-  const hasUpsell = !!nextTier && missingQty > 0;
-
-  useEffect(() => {
-    if (!open || !nextTier) return;
-
+  useEffect(()=>{
+    if(!open||!nextTier)return;
     setPulse(true);
-    const t = setTimeout(() => setPulse(false), 180);
-    return () => clearTimeout(t);
-  }, [currentQty, open, nextTier]);
+    const t=setTimeout(()=>setPulse(false),180);
+    return()=>clearTimeout(t);
+  },[currentQty,open,nextTier]);
 
-  if (!open || !product) return null;
+  if(!open||!product)return null;
 
-  return (
+  return(
     <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/45 px-4 backdrop-blur-[2px]">
       <div className="w-full max-w-[360px] animate-in fade-in zoom-in-95 duration-200 rounded-2xl border border-[#dbe5ee] bg-white p-4 shadow-2xl">
-        {/* HEADER */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-start gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#dcfce7] text-[#16a34a]">
-              <CheckCircle2 className="h-5 w-5" />
-            </div>
 
-            <div className="min-w-0">
-              <h3 className="text-[16px] font-extrabold leading-tight text-[#334155]">
-                Agregado a tu caja
-              </h3>
-              <p className="line-clamp-1 text-[12px] font-medium text-[#64748b]">
-                {product.title}
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="rounded-full p-1 text-[#94a3b8] transition-colors hover:bg-[#f1f5f9] hover:text-[#334155]"
-            aria-label="Cerrar modal"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* BLOQUE INFO */}
-        <div className={["mt-4 rounded-2xl border border-[#dbe5ee] bg-[#f8fafc] p-3 transition-all",pulse?"scale-[1.02]":""].join(" ")}>
-          <img
-            src={product.img||"/placeholder.svg"}
-            alt={product.title}
-            className="mb-3 h-[180px] md:h-[210px] w-full rounded-2xl border border-slate-200 bg-white object-contain"
-          />
-          <p className="line-clamp-1 text-center text-[14px] font-black text-[#334155]">
-            {product.title}
-          </p>
-          <p className="mt-1 text-center text-[11px] font-semibold text-[#64748b]">
-            Ya tienes {currentQty} unidad{currentQty!==1?"es":""}
-          </p>
-          {nextTier&&(
-            <>
-              <div className="mt-3 flex justify-between text-[11px] font-black">
-                <span>{currentQty}</span>
-                <span>{nextTier.targetQty}</span>
-              </div>
-              <div className="mt-1 h-3 overflow-hidden rounded-full bg-slate-200">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-orange-500 via-amber-400 to-green-600 transition-all duration-500"
-                  style={{width:`${Math.min((((currentQty-(currentQty<3?0:currentQty<12?3:currentQty<50?12:currentQty<100?50:100))/Math.max(nextTier.targetQty-(currentQty<3?0:currentQty<12?3:currentQty<50?12:currentQty<100?50:100),1))*100),100)}%`}}
-                />
-              </div>
-              <p className="mt-3 text-center text-[12px] font-black leading-snug text-[#334155]">
-                🚀 Agrega
-                <span className="mx-1 text-[#1d8299]">
-                  {missingQty}
-                </span>
-                más y paga
-                <span className="ml-1 text-[#1d8299]">
-                  S/{nextTier.unitPrice.toFixed(1)}
-                </span>
-                c/u
-              </p>
-            </>
-          )}
-
-        </div>
-
-        {/* BLOQUE UPSELL */}
-        {hasUpsell && (
-          <div className="mt-3 rounded-xl border border-[#bfe5ed] bg-[#e6f6f8] p-3">
-            <p className="text-[12px] font-bold leading-snug text-[#334155]">
-              Estás a {missingQty} más para bajar el precio... ¡Aprovecha! 😏
-            </p>
-          </div>
-        )}
-
-        {/* BOTONES */}
+        <AddToCartModalHeader onClose={onClose}/>
+        <AddToCartModalInfo product={product} currentQty={currentQty} pulse={pulse} nextTier={nextTier}/>
+        
         <div className="mt-4 space-y-2">
           <div className="grid grid-cols-2 gap-2">
-            {hasUpsell ? (
-              <button
-                onClick={() => onAddExtra(missingQty)}
-                className="w-full rounded-xl bg-[#1d8299] py-3 text-[13px] font-extrabold text-white transition-all duration-200 hover:bg-[#16697a] active:scale-[0.97]"
-              >
-                Bajar precio (+{missingQty})
+            {hasUpsell?(
+              <button onClick={()=>onAddExtra(Math.max((nextTier.targetQty??nextTier.qty)-currentQty,0))} className="w-full rounded-xl bg-[#1d8299] py-3 text-[13px] font-extrabold text-white transition-all hover:bg-[#16697a] active:scale-[.97]">
+                (+{missingQty}) Mejorar precio
               </button>
-            ) : (
-              <button
-                disabled
-                className="w-full rounded-xl bg-[#dcfce7] py-3 text-[13px] font-bold text-[#16a34a]"
-              >
-                ✓ Agregado
+            ):(
+              <button disabled className="w-full rounded-xl bg-[#dcfce7] py-3 text-[13px] font-bold text-[#16a34a]">
+                ✓ Mejor precio
               </button>
             )}
 
-            <button
-              onClick={onSecondaryAction ?? onClose}
-              className="w-full rounded-xl border-2 border-[#f6bfdc] bg-white px-3 py-3 text-[13px] font-extrabold text-[#f286be] transition-all duration-200 hover:bg-[#fff0f7] active:scale-[0.98]"
-            >
-              {secondaryActionLabel ?? "Otro producto"}
+            <button onClick={onSecondaryAction??onClose} className="w-full rounded-xl border-2 border-[#f6bfdc] bg-white px-3 py-3 text-[13px] font-extrabold text-[#f286be] transition-all hover:bg-[#fff0f7] active:scale-[.98]">
+              {secondaryActionLabel??"Otro producto"}
             </button>
           </div>
 
-          <button
-            onClick={onOpenCart}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1d8299] py-3 text-[13px] font-extrabold text-white transition-all duration-200 hover:bg-[#16697a] active:scale-[0.98]"
-          >
-            <Package className="h-4 w-4" />
+          <>
+          <button onClick={onOpenCart} className="hidden md:flex w-full items-center justify-center gap-2 rounded-xl border border-[#1d8299]/30 bg-white py-3 text-[12px] font-bold text-[#1d8299] transition-all hover:bg-[#f0fafc] hover:border-[#1d8299] active:scale-[.98]">
+            <Package className="h-4 w-4"/>
             Ver mi caja
+            <span className="rounded-full bg-[#1d8299] px-1.5 py-[2px] text-[10px] font-black text-white">
+              +{currentQty}
+            </span>
           </button>
+          </>
         </div>
+
       </div>
     </div>
   );

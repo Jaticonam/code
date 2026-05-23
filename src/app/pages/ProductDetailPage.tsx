@@ -16,12 +16,6 @@ import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
 
 import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
-
-import {
-  NotificationStack,
-  showNotification,
-} from "@/modules/feedback/components/NotificationStack";
-
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 
 import { ProductDetailHeader } from "@/modules/product-detail/components/ProductDetailHeader";
@@ -32,6 +26,7 @@ import { ProductPriceBlock } from "@/modules/product-detail/components/ProductPr
 import { ProductQuantitySelector } from "@/modules/product-detail/components/ProductQuantitySelector";
 import { ProductPurchaseActions } from "@/modules/product-detail/components/ProductPurchaseActions";
 import { RelatedProducts } from "@/modules/product-detail/components/RelatedProducts";
+import { ProductTierProgress } from "@/modules/product-detail/components/ProductTierProgress";
 
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
@@ -47,12 +42,12 @@ const ProductDetailPage = () => {
   const { data: products = [], isLoading: loading } = useProducts();
 
   const [cartOpen, setCartOpen] = useState(false);
-  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addModalOpen,setAddModalOpen]=useState(false);
+  const [selectedRelated,setSelectedRelated]=useState<Product|null>(null);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
 
   const [qty, setQty] = useState(1);
   const [qtyInput, setQtyInput] = useState("1");
-  const [modalQty, setModalQty] = useState(0);
   const [lastTier, setLastTier] = useState(1);
   const [showUnlock, setShowUnlock] = useState(false);
   const [pricePulse, setPricePulse] = useState(false);
@@ -76,6 +71,8 @@ const ProductDetailPage = () => {
     [products, id]
   );
 
+  const selectedRelatedQty=selectedRelated?cart.find(i=>i.id===selectedRelated.id)?.qty??0:0;
+
   useEffect(() => {
     const timer = window.setTimeout(() => {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -83,11 +80,9 @@ const ProductDetailPage = () => {
 
     setQty(1);
     setQtyInput("1");
-    setModalQty(0);
     setLastTier(1);
     setShowUnlock(false);
     setPricePulse(false);
-    setAddModalOpen(false);
 
     return () => window.clearTimeout(timer);
   }, [id]);
@@ -98,10 +93,6 @@ const ProductDetailPage = () => {
   const isOutOfStock = !!product && !isPreventa && !!product.price_1 && product.stock === 0;
   const showWhatsAppButton = isPreventa || isOutOfStock;
 
-  const currentCartQty = useMemo(
-    () => (product ? cart.find((item) => item.id === product.id)?.qty ?? 0 : 0),
-    [cart, product]
-  );
 
   const parsedQtyInput =
     qtyInput.trim() !== "" && /^\d+$/.test(qtyInput)
@@ -123,51 +114,29 @@ const ProductDetailPage = () => {
   const related = useRelatedProducts(products, product);
   const stockPresentation = product ? getStockPresentation(product, isPreventa) : null;
 
-  const handleBack = useCallback(() => {
-    if (fromSearch) {
-      navigate("/catalogo", {
-        state: {
-          restoreSearch: searchQuery,
-        },
-      });
+  const handleBack=useCallback(()=>{
+    if(fromSearch){
+      navigate("/catalogo",{state:{restoreSearch:searchQuery}});
       return;
     }
 
-    navigate(
-      currentCategory
-        ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
-        : "/catalogo"
-    );
-  }, [navigate, currentCategory, fromSearch, searchQuery]);
+    navigate(currentCategory?`/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`:"/catalogo");
+  },[navigate,currentCategory,fromSearch,searchQuery]);
 
-  const handleShare = useCallback(async () => {
-    const url = window.location.href;
+  const handleShare=useCallback(async()=>{
+    const url=window.location.href;
 
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: product?.title,
-          text: product?.description,
-          url,
-        });
+    try{
+      if(navigator.share){
+        await navigator.share({title:product?.title,text:product?.description,url});
         return;
       }
 
       await navigator.clipboard.writeText(url);
-
-      showNotification({
-        type: "success",
-        title: "Enlace copiado",
-        description: "Listo para compartir.",
-      });
-    } catch {
-      showNotification({
-        type: "error",
-        title: "No se pudo compartir",
-        description: "Intenta nuevamente.",
-      });
+    }catch{
+      console.warn("No se pudo compartir el producto");
     }
-  }, [product]);
+  },[product]);
 
   const updateQty = useCallback(
     (nextQty: number) => {
@@ -222,28 +191,26 @@ const ProductDetailPage = () => {
   const handleAddToCart = useCallback(() => {
     if (!product || !available || !isQtyInputValid) return;
 
-    addToCart(product, effectiveQty);
-    setModalQty(currentCartQty + effectiveQty);
+    addToCart(product,effectiveQty);
+    setCartOpen(true);
+
+  }, [product, available, isQtyInputValid, addToCart, effectiveQty]);
+
+  const handleRelatedAddToCart=useCallback((relatedProduct:Product)=>{
+    addToCart(relatedProduct,1);
+    setSelectedRelated(relatedProduct);
     setAddModalOpen(true);
+  },[addToCart]);
 
-    showNotification({
-      type: "success",
-      title: "Producto agregado",
-      description: `${effectiveQty} unidad(es) en tu caja.`,
-    });
-  }, [product, available, isQtyInputValid, addToCart, effectiveQty, currentCartQty]);
+  const handleRelatedExtra=useCallback((qty:number)=>{
+    if(!selectedRelated||qty<=0)return;
+    addToCart(selectedRelated,qty);
+  },[selectedRelated,addToCart]);
 
-  const handleRelatedAddToCart = useCallback(
-    (relatedProduct: Product) => {
-      addToCart(relatedProduct, 1);
-      showNotification({
-        type: "success",
-        title: "Producto agregado",
-        description: "Sumado a tu caja.",
-      });
-    },
-    [addToCart]
-  );
+  const handleRelatedOpenCart=useCallback(()=>{
+    setAddModalOpen(false);
+    setCartOpen(true);
+  },[]);
 
   const handleWhatsApp = useCallback(() => {
     if (!product) return;
@@ -266,35 +233,6 @@ const ProductDetailPage = () => {
       "_blank"
     );
   }, [product, effectiveQty, currentCategory]);
-
-  const handleCloseAddModal = useCallback(() => {
-    setAddModalOpen(false);
-  }, []);
-
-  const handleAddExtraFromModal = useCallback(
-    (extraQty: number) => {
-      if (!product || extraQty <= 0) return;
-
-      addToCart(product, extraQty);
-      setModalQty((prev) => prev + extraQty);
-    },
-    [product, addToCart]
-  );
-
-  const handleOpenCartFromModal = useCallback(() => {
-    setAddModalOpen(false);
-    setCartOpen(true);
-  }, []);
-
-  const handleContinueAccumulating = useCallback(() => {
-    setAddModalOpen(false);
-
-    navigate(
-      currentCategory
-        ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
-        : "/catalogo"
-    );
-  }, [navigate, currentCategory]);
 
   if (loading) return <ProductSkeleton />;
 
@@ -323,8 +261,6 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28 md:pb-40">
-      <NotificationStack />
-
       <ProductDetailHeader
         product={product}
         onBack={handleBack}
@@ -340,6 +276,16 @@ const ProductDetailPage = () => {
           />
 
           <div className="flex flex-col gap-4 md:gap-6 card-shop p-4 md:p-7 bg-white">
+            <div className="mb-3 flex flex-wrap justify-center gap-2 md:justify-start">
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black text-slate-600">
+                Código: {product.id}
+              </span>
+
+              <span className="rounded-full bg-[#e6f6f8] px-3 py-1 text-[11px] font-black capitalize text-[#1d8299]">
+                {product.category}
+              </span>
+            </div>
+
             <div className="text-center md:text-left">
               <h2 className="text-2xl md:text-[28px] tracking-tight font-black text-foreground leading-tight mb-3">
                 {product.title}
@@ -363,6 +309,7 @@ const ProductDetailPage = () => {
               onSelectQty={updateQty}
             />
 
+
             <ProductPriceBlock
               unitPrice={unitPrice}
               total={total}
@@ -374,6 +321,8 @@ const ProductDetailPage = () => {
               nextTier={nextTier}
               isQtyInputValid={isQtyInputValid}
             />
+            
+            <ProductTierProgress product={product} effectiveQty={effectiveQty} nextTier={nextTier}/>
 
             {available && (
               <ProductQuantitySelector
@@ -425,22 +374,22 @@ const ProductDetailPage = () => {
         onSetQty={setExactQty}
         onChangeNote={setItemNote}
       />
-
-      <AddToCartModal
-        open={addModalOpen}
-        product={product}
-        currentQty={modalQty}
-        onClose={handleCloseAddModal}
-        onAddExtra={handleAddExtraFromModal}
-        onOpenCart={handleOpenCartFromModal}
-        secondaryActionLabel="Más productos"
-        onSecondaryAction={handleContinueAccumulating}
-      />
-
+      
       <ImageZoomModal
         src={zoomImage?.src ?? null}
         title={zoomImage?.title ?? ""}
         onClose={() => setZoomImage(null)}
+      />
+      
+      <AddToCartModal
+        open={addModalOpen}
+        product={selectedRelated}
+        currentQty={selectedRelatedQty}
+        onClose={()=>setAddModalOpen(false)}
+        onAddExtra={handleRelatedExtra}
+        onOpenCart={handleRelatedOpenCart}
+        secondaryActionLabel="Seguir viendo"
+        onSecondaryAction={()=>setAddModalOpen(false)}
       />
     </div>
   );

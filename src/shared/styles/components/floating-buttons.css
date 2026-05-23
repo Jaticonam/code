@@ -101,4 +101,26 @@
       font-size:9px;
     }
   }
+
+  @media(max-width:640px){
+
+  .floating-buttons{
+    left:50%;
+    bottom:calc(env(safe-area-inset-bottom) + 12px);
+    transform:translateX(-50%);
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    gap:.55rem;
+    width:max-content;
+    max-width:calc(100vw - 24px);
+    padding:.45rem;
+    border-radius:999px;
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(226,232,240,.9);
+    box-shadow:0 12px 30px rgba(15,23,42,.12);
+    }
+
+  }
+
 }
