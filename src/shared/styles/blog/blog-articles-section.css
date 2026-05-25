@@ -1,0 +1,6 @@
+.blog-articles-section{margin-top:0;}
+.blog-articles-head{margin-bottom:24px;}
+.blog-articles-head span{display:inline-flex;align-items:center;gap:8px;color:#1d8299;font-size:12px;font-weight:950;letter-spacing:.16em;}
+.blog-articles-head h2{margin:12px 0 8px;color:#020617;font-size:34px;line-height:1.08;font-weight:950;letter-spacing:-.05em;}
+.blog-articles-head p{margin:0;color:#64748b;line-height:1.7;font-size:15px;max-width:720px;}
+@media(max-width:900px){.blog-articles-head h2{font-size:28px;}}

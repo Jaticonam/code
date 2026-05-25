@@ -1,19 +1,24 @@
 import "@/shared/styles/blog/blog-article.css";
+import "@/shared/styles/blog/blog-article-sidebar.css";
 
 import { useBlogArticles } from "@/modules/blog/hooks/useBlogArticles";
 
+import BlogBreadcrumbs from "@/modules/blog/components/BlogBreadcrumbs";
+import BlogArticleMeta from "@/modules/blog/components/BlogArticleMeta";
+import BlogIdeaBox from "@/modules/blog/components/BlogIdeaBox";
 import BlogRelatedArticles from "@/modules/blog/components/BlogRelatedArticles";
 import BlogRelatedProducts from "@/modules/blog/components/BlogRelatedProducts";
 import BlogArticleCTA from "@/modules/blog/components/BlogArticleCTA";
 import BlogBlockRenderer from "@/modules/blog/components/BlogBlockRenderer";
 import BlogFAQ from "@/modules/blog/components/BlogFAQ";
 import BlogTOC from "@/modules/blog/components/BlogTOC";
+import BlogArticleSidebar from "@/modules/blog/components/BlogArticleSidebar";
 
 import { useBlogSeo } from "@/modules/blog/hooks/useBlogSeo";
 import { useFaqSchema } from "@/modules/blog/hooks/useFaqSchema";
 import { useBreadcrumbSchema } from "@/modules/blog/hooks/useBreadcrumbSchema";
 
-import { ArrowLeft, Clock, MessageCircle, BookOpen } from "lucide-react";
+import { ArrowLeft, BookOpen, MessageCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 export default function BlogArticlePage(){
@@ -25,7 +30,9 @@ export default function BlogArticlePage(){
     <main className="min-h-screen grid place-items-center px-4 text-center">
       <div>
         <h1 className="text-3xl font-black">Artículo no encontrado</h1>
-        <Link to="/blog" className="mt-4 inline-flex text-primary font-bold">Volver al Hub</Link>
+        <Link to="/blog" className="mt-4 inline-flex text-primary font-bold">
+          Volver al Centro Wooly
+        </Link>
       </div>
     </main>
   );
@@ -34,56 +41,55 @@ export default function BlogArticlePage(){
   useFaqSchema(article.faq);
   useBreadcrumbSchema(article.title,article.slug);
 
-  return (
+  return(
     <main className="blog-article-page">
-      <article className="blog-article">
-        <Link to="/blog" className="blog-back"><ArrowLeft size={16}/> Volver al Hub</Link>
+      <div className="blog-article-layout">
+        <article className="blog-article">
+          <Link to="/blog" className="blog-back">
+            <ArrowLeft size={16}/> Volver al Centro Wooly
+          </Link>
 
-        <nav className="blog-breadcrumb">
-          <Link to="/">Inicio</Link>
-          <span>/</span>
-          <Link to="/blog">Blog</Link>
-          <span>/</span>
-          <b>{article.title}</b>
-        </nav>
+          <BlogBreadcrumbs article={article}/>
 
-        <header className="blog-article-header">
-          <span className="blog-pill"><BookOpen size={14}/>{article.category}</span>
-          <h1>{article.title}</h1>
-          <p>{article.excerpt}</p>
+          <header className="blog-article-header">
+            <span className="blog-pill">
+              <BookOpen size={14}/>{article.category}
+            </span>
 
-          <div className="blog-article-meta">
-            <span><Clock size={14}/>{article.readTime} min lectura</span>
-            <span>{article.published}</span>
+            <h1>{article.title}</h1>
+            <p>{article.excerpt}</p>
+
+            <BlogArticleMeta article={article}/>
+          </header>
+
+          <img className="blog-article-cover" src={article.image} alt={article.title}/>
+
+          <BlogTOC sections={article.content}/>
+
+          <section className="blog-article-content">
+            <BlogIdeaBox article={article}/>
+            <BlogBlockRenderer sections={article.content}/>
+            <BlogArticleCTA article={article}/>
+          </section>
+
+          <BlogRelatedProducts article={article}/>
+          <BlogFAQ article={article}/>
+          <BlogRelatedArticles article={article}/>
+
+          <div className="blog-article-cta">
+            <div>
+              <h3>¿Listo para abastecerte?</h3>
+              <p>Cotiza insumos mayoristas para tu negocio.</p>
+            </div>
+
+            <a href="https://wa.me/51956762686" target="_blank" rel="noreferrer">
+              <MessageCircle size={18}/> Cotizar por WhatsApp
+            </a>
           </div>
-        </header>
+        </article>
 
-        <img className="blog-article-cover" src={article.image} alt={article.title}/>
-
-        <BlogTOC sections={article.content}/>
-
-        <section className="blog-article-content">
-          <BlogBlockRenderer sections={article.content}/>
-          <BlogArticleCTA article={article}/>
-        </section>
-
-        <BlogRelatedProducts article={article}/>
-
-        <BlogFAQ article={article}/>
-
-        <BlogRelatedArticles article={article}/>
-
-        <div className="blog-article-cta">
-          <div>
-            <h3>¿Listo para abastecerte?</h3>
-            <p>Cotiza insumos mayoristas para tu negocio.</p>
-          </div>
-
-          <a href="https://wa.me/51956762686" target="_blank" rel="noreferrer">
-            <MessageCircle size={18}/> Cotizar por WhatsApp
-          </a>
-        </div>
-      </article>
+        <BlogArticleSidebar article={article}/>
+      </div>
     </main>
   );
 }

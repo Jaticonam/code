@@ -12,6 +12,8 @@ import CategoryPage from "@/app/pages/CategoryPage";
 import BlogPage from "@/app/pages/BlogPage";
 import BlogArticlePage from "@/app/pages/BlogArticlePage";
 import NotFound from "@/app/pages/NotFound";
+import BlogSectionPage from "./pages/BlogSectionPage";
+
 
 const queryClient = new QueryClient();
 
@@ -28,9 +30,49 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
 
             {/* BLOG */}
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:slug" element={<BlogArticlePage />} />
 
+            <Route path="/blog" element={<BlogPage />} />
+
+            <Route
+              path="/blog/laboratorio"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/tendencias"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/oportunidades"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/herramientas"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/herramientas/:tool"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/campanas"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/campanas/:campaign"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/catalogo"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/guias"
+              element={<BlogSectionPage />}
+            />
+            <Route
+              path="/blog/:slug"
+              element={<BlogArticlePage />}
+            />
             {/* CATALOGO */}
             <Route path="/catalogo" element={<CatalogPage />} />
             <Route path="/catalogo/producto.html" element={<ProductDetailPage />} />

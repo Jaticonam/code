@@ -1,0 +1,103 @@
+.blog-center-hero{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #e2e8f0;
+  border-radius:34px;
+  padding:54px 28px;
+  margin-bottom:34px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(29,130,153,.16),transparent 28%),
+    radial-gradient(circle at 85% 10%,rgba(247,177,214,.18),transparent 26%),
+    linear-gradient(180deg,#fff,#f8fafc);
+  box-shadow:0 20px 54px rgba(15,23,42,.07);
+}
+
+.blog-center-kicker{
+  display:inline-flex;
+  border-radius:999px;
+  background:#e8f6f9;
+  color:#1d8299;
+  padding:8px 14px;
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.18em;
+}
+
+.blog-center-hero h1{
+  margin:18px auto 14px;
+  max-width:780px;
+  color:#020617;
+  font-size:58px;
+  line-height:.96;
+  font-weight:950;
+  letter-spacing:-.06em;
+}
+
+.blog-center-hero p{
+  max-width:760px;
+  margin:0 auto 26px;
+  color:#475569;
+  font-size:17px;
+  line-height:1.75;
+}
+
+.blog-center-search{
+  max-width:620px;
+  height:52px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 16px;
+  border:1px solid #dbe4ee;
+  border-radius:18px;
+  background:white;
+  color:#64748b;
+  box-shadow:0 12px 28px rgba(15,23,42,.06);
+}
+
+.blog-center-search input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  font-size:15px;
+}
+
+.blog-center-links{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:22px;
+}
+
+.blog-center-links button{
+  min-height:40px;
+  border:1px solid #e2e8f0;
+  border-radius:999px;
+  padding:0 14px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:white;
+  color:#334155;
+  font-size:13px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.22s;
+}
+
+.blog-center-links button:hover{
+  transform:translateY(-2px);
+  border-color:rgba(29,130,153,.35);
+  color:#1d8299;
+  box-shadow:0 10px 24px rgba(15,23,42,.06);
+}
+
+@media(max-width:720px){
+  .blog-center-hero{padding:38px 18px;border-radius:26px;}
+  .blog-center-hero h1{font-size:40px;}
+  .blog-center-hero p{font-size:15px;}
+}

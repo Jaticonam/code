@@ -260,3 +260,209 @@ color:#1d8299;
 @media(max-width:720px){
 .blog-related-products-grid{grid-template-columns:1fr;}
 }
+
+.blog-breadcrumb{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+  color:#64748b;
+  font-size:13px;
+  font-weight:800;
+}
+
+.blog-breadcrumb a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#1d8299;
+  text-decoration:none;
+}
+
+.blog-breadcrumb span{
+  color:#64748b;
+}
+
+.blog-breadcrumb b{
+  color:#0f172a;
+  max-width:100%;
+}
+
+.blog-idea-box{
+  display:flex;
+  gap:16px;
+  padding:22px;
+  margin-bottom:28px;
+  border:1px solid rgba(245,176,37,.35);
+  border-radius:24px;
+  background:linear-gradient(135deg,#fff8e6,#ffffff);
+}
+
+.blog-idea-box>div:first-child{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+  border-radius:16px;
+  color:#b7791f;
+  background:#fff1c2;
+}
+
+.blog-idea-box span{
+  color:#b7791f;
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.blog-idea-box h3{
+  margin:6px 0 8px;
+  color:#0f172a;
+  font-size:22px;
+  line-height:1.15;
+  letter-spacing:-.03em;
+}
+
+.blog-idea-box p{
+  margin:0;
+  color:#475569;
+  line-height:1.7;
+}
+
+.blog-idea-box small{
+  display:inline-flex;
+  margin-top:12px;
+  color:#1d8299;
+  font-weight:900;
+}
+
+@media(max-width:640px){
+  .blog-idea-box{
+    flex-direction:column;
+  }
+}
+
+.blog-reading-progress{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+right:0;
+
+height:4px;
+
+z-index:9999;
+
+background:rgba(255,255,255,.12);
+
+backdrop-filter:blur(10px);
+
+}
+
+.blog-reading-bar{
+
+height:100%;
+
+background:
+linear-gradient(
+90deg,
+#1d8299,
+#25d366,
+#f5b025
+);
+
+transition:.08s;
+
+}
+
+
+.blog-toc{
+
+position:sticky;
+
+top:100px;
+
+align-self:start;
+
+padding:22px;
+
+border:1px solid #e2e8f0;
+
+border-radius:22px;
+
+background:white;
+
+box-shadow:0 12px 28px rgba(15,23,42,.05);
+
+height:max-content;
+
+}
+
+.blog-toc h3{
+
+margin:0 0 16px;
+
+font-size:15px;
+
+font-weight:950;
+
+}
+
+.blog-toc ul{
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+padding:0;
+
+margin:0;
+
+list-style:none;
+
+}
+
+.blog-toc a{
+
+font-size:13px;
+
+font-weight:800;
+
+color:#64748b;
+
+text-decoration:none;
+
+}
+
+.blog-toc a:hover{
+
+color:#1d8299;
+
+}
+
+@media(max-width:1200px){
+
+.blog-article-layout{
+
+grid-template-columns:1fr;
+
+}
+
+.blog-toc{
+
+position:static;
+
+margin-bottom:24px;
+
+}
+
+}
+
