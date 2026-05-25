@@ -3,6 +3,7 @@ import HomeHeader from "@/modules/home/components/HomeHeader";
 import HeroSlider from "@/modules/home/components/HeroSlider";
 import TikTokSection from "@/modules/home/components/TikTokSection";
 import FeaturedProductsSection from "@/modules/home/components/FeaturedProductsSection";
+import GrowthCenterSection from "@/modules/home/components/GrowthCenterSection";
 import CategoriesSection from "@/modules/home/components/CategoriesSection";
 import HowToBuySection from "@/modules/home/components/HowToBuySection";
 import BenefitsSection from "@/modules/home/components/BenefitsSection";
@@ -28,6 +29,7 @@ export default function HomePage(){
       <HeroSlider/>
       <TikTokSection/>
       <FeaturedProductsSection/>
+      <GrowthCenterSection/>
       <CategoriesSection/>
       <HowToBuySection/>
       <BenefitsSection/>
@@ -39,7 +41,6 @@ export default function HomePage(){
       <FinalCTASection/>
       <SocialSection/>
       <HomeFooter/>
-
       <FloatingButtons
         cartCount={totalItems}
         onCartClick={()=>{window.location.href="/catalogo";}}

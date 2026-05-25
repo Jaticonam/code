@@ -6,8 +6,7 @@ function normalizeStatus(status: string): string {
 
 export function validateProducts(products: SheetProduct[]): SheetProduct[] {
   const seen = new Set<string>();
-  const allowedStatuses = new Set(["publicado", "preventa"]);
-
+  const allowedStatuses = new Set(["publicado", "preventa", "borrador"]);
   return products.filter((p) => {
     const status = normalizeStatus(p.status);
 

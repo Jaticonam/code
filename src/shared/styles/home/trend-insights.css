@@ -1,0 +1,47 @@
+.trend-insights{padding:72px 16px;}
+.trend-header{text-align:center;max-width:760px;margin:auto;}
+.trend-header span{font-size:12px;font-weight:900;color:#1d8299;}
+.trend-header h2{font-size:38px;font-weight:900;margin:10px 0;}
+.trend-header p{color:#64748b;}
+
+.trend-grid{
+margin-top:32px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+max-width:1100px;
+margin-inline:auto;
+}
+
+.trend-grid article{
+padding:26px;
+background:white;
+border-radius:28px;
+box-shadow:0 12px 34px rgba(0,0,0,.06);
+}
+
+.trend-grid article div{
+display:flex;
+justify-content:space-between;
+margin-top:12px;
+}
+
+.trend-product{
+align-items:center;
+gap:12px;
+}
+
+.trend-product img{
+width:70px;
+height:70px;
+border-radius:18px;
+object-fit:cover;
+}
+
+@media(max-width:768px){
+
+.trend-grid{
+grid-template-columns:1fr;
+}
+
+}
