@@ -5,6 +5,7 @@ type CsvRow = Record<string, string>;
 
 export interface SheetProduct extends Product {
   badges: string[];
+  campaigns: string[];
   priority: number;
   status: string;
   updated_at: string;
@@ -15,10 +16,7 @@ function cleanText(value: unknown): string {
 }
 
 function parseNumber(value: unknown): number | null {
-  const cleaned = cleanText(value)
-    .replace(/\s/g, "")
-    .replace(",", ".");
-
+  const cleaned = cleanText(value).replace(/\s/g, "").replace(",", ".");
   if (!cleaned) return null;
 
   const num = Number(cleaned);
@@ -29,11 +27,24 @@ function parseRequiredNumber(value: unknown): number {
   return parseNumber(value) ?? 0;
 }
 
-function parseBadges(value: unknown): string[] {
+function parsePipeArray(value: unknown): string[] {
   return cleanText(value)
     .split("|")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function normalizeSlug(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
+function parseCampaigns(value: unknown): string[] {
+  return parsePipeArray(value).map(normalizeSlug);
 }
 
 export function normalizeProduct(
@@ -53,16 +64,13 @@ export function normalizeProduct(
     price_50: parseNumber(row.price_50),
     price_100: parseNumber(row.price_100),
 
-    price_offer:
-      parseNumber(
-        row.price_offer
-      ),
+    price_offer: parseNumber(row.price_offer),
 
     stock: parseNumber(row.stock),
-
     img: cleanText(row.img),
 
-    badges: parseBadges(row.badge),
+    badges: parsePipeArray(row.badge),
+    campaigns: parseCampaigns(row.campaigns),
 
     priority: parseRequiredNumber(row.priority),
     status: cleanText(row.status),

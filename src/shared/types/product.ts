@@ -19,6 +19,7 @@ export interface Product {
 
   status?: string;
   badges?: string[];
+  campaigns?: string[];
 
   priority?: number;
 }

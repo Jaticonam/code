@@ -1,38 +1,106 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SearchX } from "lucide-react";
-
 import { useCartStore } from "@/modules/cart/store";
 import { useProducts } from "@/modules/catalog/hooks/useProducts";
-
 import { searchProducts } from "@/shared/lib/search";
-import { sortByCommercialPriority } from "@/shared/lib/sort";
-
 import { Product } from "@/shared/types/product";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
-
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
 import { HeaderBar } from "@/shared/components/layout/HeaderBar";
 import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
 import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
-
-
 import { CategoryFilter } from "@/modules/catalog/components/CategoryFilter";
 import { ProductCard } from "@/modules/catalog/components/ProductCard";
-
 import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
-
-
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
+import { CampaignFilter } from "@/modules/catalog/components/CampaignFilter";
 
 const TOP_PRIORITY = 100;
 const STRONG_PRIORITY = 80;
 const HIGHLIGHT_PRIORITY = 50;
 
+const getRotationSeed = () => {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2,"0");
+  const day = String(now.getDate()).padStart(2,"0");
+
+  const block = now.getHours() < 12 ? "AM" : "PM";
+
+  return `${year}-${month}-${day}-${block}`;
+};
+
+const seededShuffle = <T extends { id:string }>(
+  items:T[],
+  seed:string
+) => {
+
+  return [...items].sort((a,b)=>{
+
+    const hash=(text:string)=>{
+
+      let h=0;
+
+      for(let i=0;i<text.length;i++){
+        h=((h<<5)-h)+text.charCodeAt(i);
+        h|=0;
+      }
+
+      return h;
+    };
+
+    return hash(seed+a.id)-hash(seed+b.id);
+
+  });
+
+};
+
+const sortByPriorityAndShuffleSameLevel = (items:Product[]) => {
+
+  const seed=getRotationSeed();
+
+  const groups=items.reduce<Record<number,Product[]>>(
+    (acc,product)=>{
+
+      const priority=product.priority||0;
+
+      (acc[priority] ||= []).push(product);
+
+      return acc;
+
+    },{}
+  );
+
+  return Object.keys(groups)
+    .map(Number)
+    .sort((a,b)=>b-a)
+    .flatMap(priority=>
+      seededShuffle(groups[priority],seed)
+    );
+
+};
+
 const CatalogPage = () => {
-  const [activeCategory, setActiveCategory] = useState("todas");
+  const getCategoryFromUrl = () => new URLSearchParams(window.location.search).get("cat") || "todas";
+  const getCampaignFromUrl = () =>
+    new URLSearchParams(window.location.search).get("campaign") || "";
+
+  const isValidCategory = (id: string) =>
+    id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
+
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const initialCat = getCategoryFromUrl();
+    return isValidCategory(initialCat) ? initialCat : "todas";
+  });
+
+  const [activeCampaign, setActiveCampaign] = useState(
+    getCampaignFromUrl()
+  );
+
   const [searchQuery, setSearchQuery] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -41,6 +109,22 @@ const CatalogPage = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(
+      location.search
+    );
+    const cat =
+      params.get("cat") || "todas";
+    const campaign =
+      params.get("campaign") || "";
+    setActiveCategory(
+      isValidCategory(cat)
+        ? cat
+        : "todas"
+    );
+    setActiveCampaign(campaign);
+  }, [location.search]);
 
   const {
     cart,
@@ -59,24 +143,45 @@ const CatalogPage = () => {
 
   useEffect(() => {
     if (!location.state?.restoreSearch) return;
-
     setSearchQuery(location.state.restoreSearch);
     window.history.replaceState({}, document.title);
   }, [location.state]);
 
-  const handleCategorySelect = useCallback(
-    (id: string) => {
-      setActiveCategory(id);
+  const handleCampaignSelect = useCallback(
+    (campaign: string) => {
+
+      setActiveCampaign(campaign);
+
+      const params = new URLSearchParams();
+
+      if (activeCategory !== "todas") {
+        params.set(
+          "cat",
+          activeCategory
+        );
+      }
+
+      if (campaign) {
+        params.set(
+          "campaign",
+          campaign
+        );
+      }
 
       navigate(
-        id === "todas"
-          ? "/catalogo"
-          : `/catalogo/categoria.html?cat=${id}`
+        `/catalogo${
+          params.toString()
+            ? `?${params}`
+            : ""
+        }`
       );
+
     },
-    [navigate]
+    [
+      navigate,
+      activeCategory
+    ]
   );
-  
   const handleAddToCart = useCallback(
     (product: Product) => {
       addToCart(product, 1);
@@ -86,9 +191,7 @@ const CatalogPage = () => {
     [addToCart]
   );
 
-  const handleCloseAddModal = useCallback(() => {
-    setAddModalOpen(false);
-  }, []);
+  const handleCloseAddModal = useCallback(() => setAddModalOpen(false), []);
 
   const handleAddExtra = useCallback(
     (qty: number) => {
@@ -102,30 +205,53 @@ const CatalogPage = () => {
     : 0;
 
   const filteredProducts = useMemo(() => {
+
     const term = searchQuery.trim();
 
-    if (activeCategory === "todas") {
-      return term ? searchProducts(products, term) : products;
+    let filtered = products;
+
+    if (activeCategory !== "todas") {
+
+      filtered = filtered.filter(
+        (product) =>
+          product.category === activeCategory
+      );
+
     }
 
-    const categoryProducts = products.filter(
-      (product) => product.category === activeCategory
+    if (activeCampaign) {
+
+      filtered = filtered.filter(
+        (product) =>
+          product.campaigns?.includes(activeCampaign)
+      );
+
+    }
+
+    if (!term) return filtered;
+
+    const insideFilters = searchProducts(
+      filtered,
+      term
     );
 
-    if (!term) return categoryProducts;
+    return insideFilters.length
+      ? insideFilters
+      : searchProducts(products, term);
 
-    const insideCategory = searchProducts(categoryProducts, term);
-    return insideCategory.length ? insideCategory : searchProducts(products, term);
-  }, [products, activeCategory, searchQuery]);
+  }, [
+    products,
+    activeCategory,
+    activeCampaign,
+    searchQuery
+  ]);
 
   const showPriorityBlocks = activeCategory === "todas" && !searchQuery.trim();
 
   const topProducts = useMemo(
     () =>
       showPriorityBlocks
-        ? sortByCommercialPriority(
-            products.filter((product) => (product.priority || 0) >= TOP_PRIORITY)
-          )
+        ? sortByPriorityAndShuffleSameLevel(products.filter((p) => (p.priority || 0) >= TOP_PRIORITY))
         : [],
     [products, showPriorityBlocks]
   );
@@ -133,12 +259,10 @@ const CatalogPage = () => {
   const strongProducts = useMemo(
     () =>
       showPriorityBlocks
-        ? sortByCommercialPriority(
-            products.filter((product) => {
-              const priority = product.priority || 0;
-              return priority >= STRONG_PRIORITY && priority < TOP_PRIORITY;
-            })
-          )
+        ? sortByPriorityAndShuffleSameLevel(products.filter((p) => {
+            const priority = p.priority || 0;
+            return priority >= STRONG_PRIORITY && priority < TOP_PRIORITY;
+          }))
         : [],
     [products, showPriorityBlocks]
   );
@@ -146,24 +270,18 @@ const CatalogPage = () => {
   const highlightProducts = useMemo(
     () =>
       showPriorityBlocks
-        ? sortByCommercialPriority(
-            products.filter((product) => {
-              const priority = product.priority || 0;
-              return priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY;
-            })
-          )
+        ? sortByPriorityAndShuffleSameLevel(products.filter((p) => {
+            const priority = p.priority || 0;
+            return priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY;
+          }))
         : [],
     [products, showPriorityBlocks]
   );
 
   const regularProducts = useMemo(
     () =>
-      sortByCommercialPriority(
-        showPriorityBlocks
-          ? filteredProducts.filter(
-              (product) => (product.priority || 0) < HIGHLIGHT_PRIORITY
-            )
-          : filteredProducts
+      sortByPriorityAndShuffleSameLevel(
+        showPriorityBlocks ? filteredProducts.filter((p) => (p.priority || 0) < HIGHLIGHT_PRIORITY) : filteredProducts
       ),
     [filteredProducts, showPriorityBlocks]
   );
@@ -200,8 +318,11 @@ const CatalogPage = () => {
             active={activeCategory}
             onSelect={handleCategorySelect}
           />
-          
-          {loading ? (
+            <CampaignFilter
+            active={activeCampaign}
+            onSelect={handleCampaignSelect}
+          />
+                    {loading ? (
             <CatalogSkeleton />
           ) : filteredProducts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">

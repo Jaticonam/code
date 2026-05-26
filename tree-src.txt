@@ -1,0 +1,402 @@
+Listado de rutas de carpetas para el volumen Nuevo vol
+El número de serie del volumen es 2613-BA26
+D:\JUNG\CODE\WOOLY\WOOLY-WEB\SRC
+¦   index.css
+¦   vite-env.d.ts
+¦   
++---app
+¦   ¦   App.tsx
+¦   ¦   main.tsx
+¦   ¦   
+¦   +---pages
+¦           BlogArticlePage.tsx
+¦           BlogPage.tsx
+¦           BlogSectionPage.tsx
+¦           CatalogPage.tsx
+¦           CategoryPage.tsx
+¦           HomePage.tsx
+¦           NotFound.tsx
+¦           ProductDetailPage.tsx
+¦           
++---data
+¦       blogArticles.ts
+¦       
++---hooks
+¦       useBlogSeo.ts
+¦       
++---modules
+¦   +---blog
+¦   ¦   +---components
+¦   ¦   ¦       BlogArticleContent.tsx
+¦   ¦   ¦       BlogArticleCTA.tsx
+¦   ¦   ¦       BlogArticleMeta.tsx
+¦   ¦   ¦       BlogArticleSidebar.tsx
+¦   ¦   ¦       BlogArticlesSection.tsx
+¦   ¦   ¦       BlogBlockRenderer.tsx
+¦   ¦   ¦       BlogBreadcrumbs.tsx
+¦   ¦   ¦       BlogCard.tsx
+¦   ¦   ¦       BlogCatalogSection.tsx
+¦   ¦   ¦       BlogFAQ.tsx
+¦   ¦   ¦       BlogFeatured.tsx
+¦   ¦   ¦       BlogGrid.tsx
+¦   ¦   ¦       BlogHero.tsx
+¦   ¦   ¦       BlogHub.tsx
+¦   ¦   ¦       BlogIdeaBox.tsx
+¦   ¦   ¦       BlogReadingProgress.tsx
+¦   ¦   ¦       BlogRelatedArticles.tsx
+¦   ¦   ¦       BlogRelatedProducts.tsx
+¦   ¦   ¦       BlogSidebar.tsx
+¦   ¦   ¦       BlogSidebarMenu.tsx
+¦   ¦   ¦       BlogTOC.tsx
+¦   ¦   ¦       BusinessToolsSection.tsx
+¦   ¦   ¦       CampaignCenterSection.tsx
+¦   ¦   ¦       IdeaLabSection.tsx
+¦   ¦   ¦       OpportunityCenterSection.tsx
+¦   ¦   ¦       TrendInsightsSection.tsx
+¦   ¦   ¦       
+¦   ¦   +---config
+¦   ¦   ¦       blogCategories.ts
+¦   ¦   ¦       
+¦   ¦   +---data
+¦   ¦   ¦       blogArticles.ts
+¦   ¦   ¦       blogTemplates.ts
+¦   ¦   ¦       fallbackBlogArticles.ts
+¦   ¦   ¦       fallbackBusinessTools.ts
+¦   ¦   ¦       fallbackCampaigns.ts
+¦   ¦   ¦       fallbackIdeas.ts
+¦   ¦   ¦       fallbackOpportunities.ts
+¦   ¦   ¦       fallbackTrends.ts
+¦   ¦   ¦       
+¦   ¦   +---hooks
+¦   ¦   ¦       useBlogArticles.ts
+¦   ¦   ¦       useBlogSearch.ts
+¦   ¦   ¦       useBlogSeo.ts
+¦   ¦   ¦       useBreadcrumbSchema.ts
+¦   ¦   ¦       useFaqSchema.ts
+¦   ¦   ¦       useReadingProgress.ts
+¦   ¦   ¦       
+¦   ¦   +---services
+¦   ¦   ¦       relatedArticles.ts
+¦   ¦   ¦       
+¦   ¦   +---types
+¦   ¦   ¦       blog.ts
+¦   ¦   ¦       
+¦   ¦   +---utils
+¦   ¦           estimateReadingTime.ts
+¦   ¦           
+¦   +---cart
+¦   ¦   +---components
+¦   ¦   ¦       AddToCartModal.tsx
+¦   ¦   ¦       AddToCartModalHeader.tsx
+¦   ¦   ¦       AddToCartModalInfo.tsx
+¦   ¦   ¦       CartEmpty.tsx
+¦   ¦   ¦       CartFooter.tsx
+¦   ¦   ¦       CartHeader.tsx
+¦   ¦   ¦       CartNoteTextarea.tsx
+¦   ¦   ¦       CartQtyControls.tsx
+¦   ¦   ¦       CartQtyInput.tsx
+¦   ¦   ¦       CartRow.tsx
+¦   ¦   ¦       CartSidebar.tsx
+¦   ¦   ¦       CartTierSelector.tsx
+¦   ¦   ¦       
+¦   ¦   +---store
+¦   ¦   ¦       cart.actions.ts
+¦   ¦   ¦       cart.context.tsx
+¦   ¦   ¦       cart.persistence.ts
+¦   ¦   ¦       cart.selectors.ts
+¦   ¦   ¦       cart.store.ts
+¦   ¦   ¦       index.ts
+¦   ¦   ¦       
+¦   ¦   +---utils
+¦   ¦           checkout.ts
+¦   ¦           getActiveTierQty.ts
+¦   ¦           getNextTier.ts
+¦   ¦           getTierUnlockMessage.ts
+¦   ¦           
+¦   +---catalog
+¦   ¦   +---components
+¦   ¦   ¦       CategoryFilter.tsx
+¦   ¦   ¦       CategoryFilterDesktop.tsx
+¦   ¦   ¦       CategoryFilterMobile.tsx
+¦   ¦   ¦       ProductCard.tsx
+¦   ¦   ¦       ProductCardActions.tsx
+¦   ¦   ¦       ProductCardBadges.tsx
+¦   ¦   ¦       ProductCardCartBadge.tsx
+¦   ¦   ¦       ProductCardPrice.tsx
+¦   ¦   ¦       ProductCardStock.tsx
+¦   ¦   ¦       ProductCardTierBadges.tsx
+¦   ¦   ¦       
+¦   ¦   +---data
+¦   ¦   ¦       fallback-products.ts
+¦   ¦   ¦       products.ts
+¦   ¦   ¦       
+¦   ¦   +---hooks
+¦   ¦   ¦       useCategoryScroll.ts
+¦   ¦   ¦       useFilteredProducts.ts
+¦   ¦   ¦       useProducts.ts
+¦   ¦   ¦       useProductViewers.ts
+¦   ¦   ¦       
+¦   ¦   +---services
+¦   ¦   ¦       fetchProducts.ts
+¦   ¦   ¦       normalizeProduct.ts
+¦   ¦   ¦       productsConfig.ts
+¦   ¦   ¦       validateProducts.ts
+¦   ¦   ¦       
+¦   ¦   +---utils
+¦   ¦           products.ts
+¦   ¦           
+¦   +---category
+¦   ¦   +---components
+¦   ¦   ¦       CategoryEmpty.tsx
+¦   ¦   ¦       CategoryGrid.tsx
+¦   ¦   ¦       CategoryHeader.tsx
+¦   ¦   ¦       
+¦   ¦   +---hooks
+¦   ¦   ¦       useCategoryProducts.ts
+¦   ¦   ¦       
+¦   ¦   +---utils
+¦   ¦           filterCategoryProducts.ts
+¦   ¦           
+¦   +---feedback
+¦   ¦   +---components
+¦   ¦   ¦       NotificationStack.tsx
+¦   ¦   ¦       RecentActivity.tsx
+¦   ¦   ¦       RecentActivityCard.tsx
+¦   ¦   ¦       
+¦   ¦   +---config
+¦   ¦   ¦       recentActivity.ts
+¦   ¦   ¦       
+¦   ¦   +---hooks
+¦   ¦           useRecentActivity.ts
+¦   ¦           
+¦   +---home
+¦   ¦   +---components
+¦   ¦   ¦       BenefitsSection.tsx
+¦   ¦   ¦       BrandStorySection.tsx
+¦   ¦   ¦       CategoriesSection.tsx
+¦   ¦   ¦       FeaturedProductsSection.tsx
+¦   ¦   ¦       FinalCTASection.tsx
+¦   ¦   ¦       GrowthCenterSection.tsx
+¦   ¦   ¦       HeroSlider.tsx
+¦   ¦   ¦       HomeFooter.tsx
+¦   ¦   ¦       HomeHeader.tsx
+¦   ¦   ¦       HomeSectionHeader.tsx
+¦   ¦   ¦       HowToBuySection.tsx
+¦   ¦   ¦       ShippingSection.tsx
+¦   ¦   ¦       SocialSection.tsx
+¦   ¦   ¦       StatsSection.tsx
+¦   ¦   ¦       TestimonialsSection.tsx
+¦   ¦   ¦       TikTokSection.tsx
+¦   ¦   ¦       TopBar.tsx
+¦   ¦   ¦       TrendInsightsSection.tsx
+¦   ¦   ¦       VipSection.tsx
+¦   ¦   ¦       
+¦   ¦   +---data
+¦   ¦           blogdata.ts
+¦   ¦           
+¦   +---product-detail
+¦   ¦   +---components
+¦   ¦   ¦       ProductDetailHeader.tsx
+¦   ¦   ¦       ProductGallery.tsx
+¦   ¦   ¦       ProductPriceBlock.tsx
+¦   ¦   ¦       ProductPurchaseActions.tsx
+¦   ¦   ¦       ProductQuantitySelector.tsx
+¦   ¦   ¦       ProductStockInfo.tsx
+¦   ¦   ¦       ProductTierProgress.tsx
+¦   ¦   ¦       ProductTierSelector.tsx
+¦   ¦   ¦       RelatedProducts.tsx
+¦   ¦   ¦       
+¦   ¦   +---hooks
+¦   ¦   ¦       useProductCard.ts
+¦   ¦   ¦       useProductViewers.ts
+¦   ¦   ¦       useRelatedProducts.ts
+¦   ¦   ¦       
+¦   ¦   +---utils
+¦   ¦           buildWhatsappMessage.ts
+¦   ¦           
+¦   +---search
+¦       +---components
+¦       ¦       SearchBox.tsx
+¦       ¦       SearchInput.tsx
+¦       ¦       SearchSuggestions.tsx
+¦       ¦       SearchTopSearches.tsx
+¦       ¦       
+¦       +---hooks
+¦       ¦       useSearchKeyboard.ts
+¦       ¦       useSearchNavigation.ts
+¦       ¦       useSearchShortcut.ts
+¦       ¦       useSearchUrlSync.ts
+¦       ¦       
+¦       +---utils
+¦               detectCategory.ts
+¦               getResultsCount.ts
+¦               getSuggestions.ts
+¦               
++---shared
+¦   +---components
+¦   ¦   +---commerce
+¦   ¦   ¦       CountdownTimer.tsx
+¦   ¦   ¦       
+¦   ¦   +---layout
+¦   ¦   ¦       FloatingButtons.tsx
+¦   ¦   ¦       HeaderBar.tsx
+¦   ¦   ¦       NavLink.tsx
+¦   ¦   ¦       
+¦   ¦   +---media
+¦   ¦   ¦       ImageZoomModal.tsx
+¦   ¦   ¦       
+¦   ¦   +---skeletons
+¦   ¦   ¦       CatalogSkeleton.tsx
+¦   ¦   ¦       CategorySkeleton.tsx
+¦   ¦   ¦       ProductSkeleton.tsx
+¦   ¦   ¦       
+¦   ¦   +---ui
+¦   ¦           accordion.tsx
+¦   ¦           alert-dialog.tsx
+¦   ¦           alert.tsx
+¦   ¦           aspect-ratio.tsx
+¦   ¦           avatar.tsx
+¦   ¦           badge.tsx
+¦   ¦           breadcrumb.tsx
+¦   ¦           button.tsx
+¦   ¦           calendar.tsx
+¦   ¦           card.tsx
+¦   ¦           carousel.tsx
+¦   ¦           chart.tsx
+¦   ¦           checkbox.tsx
+¦   ¦           collapsible.tsx
+¦   ¦           command.tsx
+¦   ¦           context-menu.tsx
+¦   ¦           dialog.tsx
+¦   ¦           drawer.tsx
+¦   ¦           dropdown-menu.tsx
+¦   ¦           form.tsx
+¦   ¦           hover-card.tsx
+¦   ¦           input-otp.tsx
+¦   ¦           input.tsx
+¦   ¦           label.tsx
+¦   ¦           menubar.tsx
+¦   ¦           navigation-menu.tsx
+¦   ¦           pagination.tsx
+¦   ¦           popover.tsx
+¦   ¦           progress.tsx
+¦   ¦           radio-group.tsx
+¦   ¦           resizable.tsx
+¦   ¦           scroll-area.tsx
+¦   ¦           select.tsx
+¦   ¦           separator.tsx
+¦   ¦           sheet.tsx
+¦   ¦           sidebar.tsx
+¦   ¦           skeleton.tsx
+¦   ¦           slider.tsx
+¦   ¦           SocialIcons.tsx
+¦   ¦           sonner.tsx
+¦   ¦           switch.tsx
+¦   ¦           table.tsx
+¦   ¦           tabs.tsx
+¦   ¦           textarea.tsx
+¦   ¦           toast.tsx
+¦   ¦           toaster.tsx
+¦   ¦           toggle-group.tsx
+¦   ¦           toggle.tsx
+¦   ¦           tooltip.tsx
+¦   ¦           
+¦   +---config
+¦   ¦       badgeRules.ts
+¦   ¦       cartTiers.ts
+¦   ¦       categories.ts
+¦   ¦       categoryColors.ts
+¦   ¦       priceTiers.ts
+¦   ¦       searchConfig.ts
+¦   ¦       
+¦   +---hooks
+¦   ¦       use-toast.ts
+¦   ¦       
+¦   +---lib
+¦   ¦   ¦   random.ts
+¦   ¦   ¦   search.ts
+¦   ¦   ¦   sort.ts
+¦   ¦   ¦   utils.ts
+¦   ¦   ¦   
+¦   ¦   +---product
+¦   ¦           getBestProductTier.ts
+¦   ¦           getNextTier.ts
+¦   ¦           getStockPresentation.ts
+¦   ¦           getUnitPrice.ts
+¦   ¦           index.ts
+¦   ¦           
+¦   +---styles
+¦   ¦   ¦   animations.css
+¦   ¦   ¦   base.css
+¦   ¦   ¦   components.css
+¦   ¦   ¦   utilities.css
+¦   ¦   ¦   
+¦   ¦   +---blog
+¦   ¦   ¦       blog-article-sidebar.css
+¦   ¦   ¦       blog-article.css
+¦   ¦   ¦       blog-articles-section.css
+¦   ¦   ¦       blog-card.css
+¦   ¦   ¦       blog-catalog.css
+¦   ¦   ¦       blog-hero.css
+¦   ¦   ¦       blog-sidebar-menu.css
+¦   ¦   ¦       blog-sidebar.css
+¦   ¦   ¦       business-tools.css
+¦   ¦   ¦       campaign-center.css
+¦   ¦   ¦       hub.css
+¦   ¦   ¦       idea-lab.css
+¦   ¦   ¦       opportunity-center.css
+¦   ¦   ¦       trend-insights.css
+¦   ¦   ¦       
+¦   ¦   +---cart
+¦   ¦   ¦       cart-footer.css
+¦   ¦   ¦       cart-item.css
+¦   ¦   ¦       cart-panel.css
+¦   ¦   ¦       cart-sidebar.css
+¦   ¦   ¦       
+¦   ¦   +---catalog
+¦   ¦   ¦       category-filter.css
+¦   ¦   ¦       notifications.css
+¦   ¦   ¦       product-card.css
+¦   ¦   ¦       search.css
+¦   ¦   ¦       
+¦   ¦   +---components
+¦   ¦   ¦       badges.css
+¦   ¦   ¦       buttons.css
+¦   ¦   ¦       cards.css
+¦   ¦   ¦       countdown-timer.css
+¦   ¦   ¦       floating-buttons.css
+¦   ¦   ¦       forms.css
+¦   ¦   ¦       glass.css
+¦   ¦   ¦       modals.css
+¦   ¦   ¦       recent-activity.css
+¦   ¦   ¦       
+¦   ¦   +---home
+¦   ¦   ¦       benefits.css
+¦   ¦   ¦       brand-story.css
+¦   ¦   ¦       categories.css
+¦   ¦   ¦       featured-products.css
+¦   ¦   ¦       final-cta.css
+¦   ¦   ¦       footer.css
+¦   ¦   ¦       growth-center.css
+¦   ¦   ¦       hero.css
+¦   ¦   ¦       how-to-buy.css
+¦   ¦   ¦       shipping.css
+¦   ¦   ¦       social.css
+¦   ¦   ¦       stats.css
+¦   ¦   ¦       testimonials.css
+¦   ¦   ¦       tiktok.css
+¦   ¦   ¦       trend-insights.css
+¦   ¦   ¦       vip.css
+¦   ¦   ¦       
+¦   ¦   +---skeletons
+¦   ¦           catalog-skeleton.css
+¦   ¦           category-skeleton.css
+¦   ¦           product-skeleton.css
+¦   ¦           
+¦   +---types
+¦           product.ts
+¦           
++---test
+        example.test.ts
+        setup.ts
+        
