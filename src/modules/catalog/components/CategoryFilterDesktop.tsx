@@ -1,7 +1,10 @@
 import type { Category } from "@/shared/types/product";
+import "@/modules/catalog/styles/category-filter.css";
+
 interface CategoryFilterDesktopProps {
   categories: Category[];
   active: string;
+  counts?: Record<string, number>;
   onSelect: (id: string) => void;
   getButtonClass: (id: string) => string;
 }
@@ -9,29 +12,30 @@ interface CategoryFilterDesktopProps {
 export function CategoryFilterDesktop({
   categories,
   active,
+  counts = {},
   onSelect,
-  getButtonClass,
 }: CategoryFilterDesktopProps) {
   return (
-    <div className="hidden md:flex gap-3 overflow-x-auto pb-6 no-scrollbar px-2">
-      {categories.map((category, index) => (
-        <button
-          key={`${category.id}-${index}`}
-          type="button"
-          onClick={() => onSelect(category.id)}
-          title={category.name}
-          className={getButtonClass(category.id)}
-          aria-pressed={active === category.id}
-        >
-          <span className="shrink-0">
-            {category.icon}
-          </span>
+    <div className="hidden gap-3 pb-6 md:grid md:grid-cols-5 xl:grid-cols-6">
+      {categories.map((category, index) => {
+        const count = counts[category.id] ?? 0;
+        const isActive = active === category.id;
 
-          <span className="max-w-[120px] truncate tracking-tight">
-            {category.name}
-          </span>
-        </button>
-      ))}
+        return (
+          <button
+            key={`${category.id}-${index}`}
+            type="button"
+            onClick={() => onSelect(category.id)}
+            title={category.name}
+            aria-pressed={isActive}
+            className={`category-card ${isActive ? "category-card-active" : ""}`}
+          >
+            <span className="category-icon">{category.icon}</span>
+            <span className="category-name">{category.name}</span>
+            <span className="category-count">({count})</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

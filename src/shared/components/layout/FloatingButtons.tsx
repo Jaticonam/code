@@ -1,17 +1,32 @@
-import { LayoutGrid, Package, MessageCircle } from "lucide-react";
+import { Grid3X3, Package, MessageCircle, LayoutGrid } from "lucide-react";
 
 interface FloatingButtonsProps {
   cartCount: number;
   onCartClick: () => void;
+  onExploreClick?: () => void;
   variant?: "shop" | "home";
 }
 
 export function FloatingButtons({
   cartCount,
   onCartClick,
+  onExploreClick,
   variant = "shop",
 }: FloatingButtonsProps) {
   const showCatalog = variant === "home";
+
+  const handleExploreClick = () => {
+    if (window.innerWidth >= 768) {
+      document.getElementById("filter-category")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      return;
+    }
+
+    onExploreClick?.();
+  };
 
   return (
     <div className="floating-buttons">
@@ -19,7 +34,7 @@ export function FloatingButtons({
         type="button"
         onClick={onCartClick}
         className="floating-btn floating-btn-cart"
-        aria-label={`Abrir mi caja, ${cartCount} productos`}
+        aria-label={`Abrir mi caja con ${cartCount} producto${cartCount === 1 ? "" : "s"}`}
       >
         <Package className="floating-btn-icon" />
         <span className="floating-btn-label">Mi Caja</span>
@@ -28,6 +43,18 @@ export function FloatingButtons({
           <strong className="floating-btn-count">{cartCount}</strong>
         )}
       </button>
+
+      {onExploreClick && (
+        <button
+          type="button"
+          onClick={handleExploreClick}
+          className="floating-btn floating-btn-explore"
+          aria-label="Explorar campañas y categorías"
+        >
+          <Grid3X3 className="floating-btn-icon" />
+          <span className="floating-btn-label">Explorar</span>
+        </button>
+      )}
 
       {showCatalog && (
         <a href="/catalogo" className="floating-btn floating-btn-catalog">
@@ -41,7 +68,7 @@ export function FloatingButtons({
         target="_blank"
         rel="noopener noreferrer"
         className="floating-btn floating-btn-whatsapp"
-        aria-label="Escribir a una asesora por WhatsApp"
+        aria-label="Escribir a una asesora"
       >
         <MessageCircle className="floating-btn-icon" />
         <span className="floating-btn-label">Asesora</span>

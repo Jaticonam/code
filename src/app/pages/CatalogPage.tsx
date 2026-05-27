@@ -24,68 +24,46 @@ const HIGHLIGHT_PRIORITY = 50;
 
 const getRotationSeed = () => {
   const now = new Date();
-
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2,"0");
-  const day = String(now.getDate()).padStart(2,"0");
-
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
   const block = now.getHours() < 12 ? "AM" : "PM";
 
   return `${year}-${month}-${day}-${block}`;
 };
 
-const seededShuffle = <T extends { id:string }>(
-  items:T[],
-  seed:string
-) => {
+const seededShuffle = <T extends { id: string }>(items: T[], seed: string) => {
+  const hash = (text: string) => {
+    let h = 0;
+    for (let i = 0; i < text.length; i++) {
+      h = (h << 5) - h + text.charCodeAt(i);
+      h |= 0;
+    }
+    return h;
+  };
 
-  return [...items].sort((a,b)=>{
-
-    const hash=(text:string)=>{
-
-      let h=0;
-
-      for(let i=0;i<text.length;i++){
-        h=((h<<5)-h)+text.charCodeAt(i);
-        h|=0;
-      }
-
-      return h;
-    };
-
-    return hash(seed+a.id)-hash(seed+b.id);
-
-  });
-
+  return [...items].sort((a, b) => hash(seed + a.id) - hash(seed + b.id));
 };
 
-const sortByPriorityAndShuffleSameLevel = (items:Product[]) => {
+const sortByPriorityAndShuffleSameLevel = (items: Product[]) => {
+  const seed = getRotationSeed();
 
-  const seed=getRotationSeed();
-
-  const groups=items.reduce<Record<number,Product[]>>(
-    (acc,product)=>{
-
-      const priority=product.priority||0;
-
-      (acc[priority] ||= []).push(product);
-
-      return acc;
-
-    },{}
-  );
+  const groups = items.reduce<Record<number, Product[]>>((acc, product) => {
+    const priority = product.priority || 0;
+    (acc[priority] ||= []).push(product);
+    return acc;
+  }, {});
 
   return Object.keys(groups)
     .map(Number)
-    .sort((a,b)=>b-a)
-    .flatMap(priority=>
-      seededShuffle(groups[priority],seed)
-    );
-
+    .sort((a, b) => b - a)
+    .flatMap((priority) => seededShuffle(groups[priority], seed));
 };
 
 const CatalogPage = () => {
-  const getCategoryFromUrl = () => new URLSearchParams(window.location.search).get("cat") || "todas";
+  const getCategoryFromUrl = () =>
+    new URLSearchParams(window.location.search).get("cat") || "todas";
+
   const getCampaignFromUrl = () =>
     new URLSearchParams(window.location.search).get("campaign") || "";
 
@@ -97,7 +75,7 @@ const CatalogPage = () => {
     return isValidCategory(initialCat) ? initialCat : "todas";
   });
 
-  const [activeCampaign, setActiveCampaign] = useState(
+  const [activeCampaign, setActiveCampaign] = useState(() =>
     getCampaignFromUrl()
   );
 
@@ -106,23 +84,18 @@ const CatalogPage = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
+  const [exploreOpen,setExploreOpen]=
+  useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(
-      location.search
-    );
-    const cat =
-      params.get("cat") || "todas";
-    const campaign =
-      params.get("campaign") || "";
-    setActiveCategory(
-      isValidCategory(cat)
-        ? cat
-        : "todas"
-    );
+    const params = new URLSearchParams(location.search);
+    const cat = params.get("cat") || "todas";
+    const campaign = params.get("campaign") || "";
+
+    setActiveCategory(isValidCategory(cat) ? cat : "todas");
     setActiveCampaign(campaign);
   }, [location.search]);
 
@@ -147,41 +120,34 @@ const CatalogPage = () => {
     window.history.replaceState({}, document.title);
   }, [location.state]);
 
+  const handleCategorySelect = useCallback(
+    (id: string) => {
+      setActiveCategory(id);
+
+      const params = new URLSearchParams();
+
+      if (id !== "todas") params.set("cat", id);
+      if (activeCampaign) params.set("campaign", activeCampaign);
+
+      navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
+    },
+    [navigate, activeCampaign]
+  );
+
   const handleCampaignSelect = useCallback(
     (campaign: string) => {
-
       setActiveCampaign(campaign);
 
       const params = new URLSearchParams();
 
-      if (activeCategory !== "todas") {
-        params.set(
-          "cat",
-          activeCategory
-        );
-      }
+      if (activeCategory !== "todas") params.set("cat", activeCategory);
+      if (campaign) params.set("campaign", campaign);
 
-      if (campaign) {
-        params.set(
-          "campaign",
-          campaign
-        );
-      }
-
-      navigate(
-        `/catalogo${
-          params.toString()
-            ? `?${params}`
-            : ""
-        }`
-      );
-
+      navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
     },
-    [
-      navigate,
-      activeCategory
-    ]
+    [navigate, activeCategory]
   );
+
   const handleAddToCart = useCallback(
     (product: Product) => {
       addToCart(product, 1);
@@ -205,53 +171,36 @@ const CatalogPage = () => {
     : 0;
 
   const filteredProducts = useMemo(() => {
-
     const term = searchQuery.trim();
-
     let filtered = products;
 
     if (activeCategory !== "todas") {
-
-      filtered = filtered.filter(
-        (product) =>
-          product.category === activeCategory
-      );
-
+      filtered = filtered.filter((product) => product.category === activeCategory);
     }
 
     if (activeCampaign) {
-
-      filtered = filtered.filter(
-        (product) =>
-          product.campaigns?.includes(activeCampaign)
+      filtered = filtered.filter((product) =>
+        product.campaigns?.includes(activeCampaign)
       );
-
     }
 
     if (!term) return filtered;
 
-    const insideFilters = searchProducts(
-      filtered,
-      term
-    );
+    const insideFilters = searchProducts(filtered, term);
+    return insideFilters.length ? insideFilters : searchProducts(products, term);
+  }, [products, activeCategory, activeCampaign, searchQuery]);
 
-    return insideFilters.length
-      ? insideFilters
-      : searchProducts(products, term);
-
-  }, [
-    products,
-    activeCategory,
-    activeCampaign,
-    searchQuery
-  ]);
-
-  const showPriorityBlocks = activeCategory === "todas" && !searchQuery.trim();
+  const showPriorityBlocks =
+    activeCategory === "todas" &&
+    !activeCampaign &&
+    !searchQuery.trim();
 
   const topProducts = useMemo(
     () =>
       showPriorityBlocks
-        ? sortByPriorityAndShuffleSameLevel(products.filter((p) => (p.priority || 0) >= TOP_PRIORITY))
+        ? sortByPriorityAndShuffleSameLevel(
+            products.filter((p) => (p.priority || 0) >= TOP_PRIORITY)
+          )
         : [],
     [products, showPriorityBlocks]
   );
@@ -259,10 +208,12 @@ const CatalogPage = () => {
   const strongProducts = useMemo(
     () =>
       showPriorityBlocks
-        ? sortByPriorityAndShuffleSameLevel(products.filter((p) => {
-            const priority = p.priority || 0;
-            return priority >= STRONG_PRIORITY && priority < TOP_PRIORITY;
-          }))
+        ? sortByPriorityAndShuffleSameLevel(
+            products.filter((p) => {
+              const priority = p.priority || 0;
+              return priority >= STRONG_PRIORITY && priority < TOP_PRIORITY;
+            })
+          )
         : [],
     [products, showPriorityBlocks]
   );
@@ -270,10 +221,12 @@ const CatalogPage = () => {
   const highlightProducts = useMemo(
     () =>
       showPriorityBlocks
-        ? sortByPriorityAndShuffleSameLevel(products.filter((p) => {
-            const priority = p.priority || 0;
-            return priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY;
-          }))
+        ? sortByPriorityAndShuffleSameLevel(
+            products.filter((p) => {
+              const priority = p.priority || 0;
+              return priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY;
+            })
+          )
         : [],
     [products, showPriorityBlocks]
   );
@@ -281,7 +234,9 @@ const CatalogPage = () => {
   const regularProducts = useMemo(
     () =>
       sortByPriorityAndShuffleSameLevel(
-        showPriorityBlocks ? filteredProducts.filter((p) => (p.priority || 0) < HIGHLIGHT_PRIORITY) : filteredProducts
+        showPriorityBlocks
+          ? filteredProducts.filter((p) => (p.priority || 0) < HIGHLIGHT_PRIORITY)
+          : filteredProducts
       ),
     [filteredProducts, showPriorityBlocks]
   );
@@ -299,6 +254,32 @@ const CatalogPage = () => {
       ))}
     </div>
   );
+  const campaignCounts = useMemo(() => {
+    return products.reduce<Record<string, number>>((acc, product) => {
+      product.campaigns?.forEach((campaign) => {
+        acc[campaign] = (acc[campaign] || 0) + 1;
+      });
+
+      return acc;
+    }, {});
+  }, [products]);
+  
+  const categoryCounts = useMemo(() => {
+
+    const counts = products.reduce<Record<string,number>>(
+      (acc,product)=>{
+        acc[product.category] =
+          (acc[product.category]||0)+1;
+        return acc;
+      },
+      {}
+    );
+    counts.todas = products.length;
+    return counts;
+  },[products]);
+
+  const activeCat = CATEGORY_CONFIG.find((c) => c.id === activeCategory);
+  const hasActiveFilters = Boolean(activeCampaign || activeCat);
 
     return (
       <div className="min-h-screen bg-background pb-40">
@@ -313,16 +294,26 @@ const CatalogPage = () => {
         </header>
 
         <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
-          <CategoryFilter
-            categories={CATEGORY_CONFIG}
-            active={activeCategory}
-            onSelect={handleCategorySelect}
-          />
+          <div
+            id="filter-category"
+            className="space-y-8"
+            >
+
             <CampaignFilter
             active={activeCampaign}
+            counts={campaignCounts}
             onSelect={handleCampaignSelect}
-          />
-                    {loading ? (
+            />
+
+            <CategoryFilter
+            categories={CATEGORY_CONFIG}
+            active={activeCategory}
+            counts={categoryCounts}
+            onSelect={handleCategorySelect}
+            />
+
+          </div>
+                              {loading ? (
             <CatalogSkeleton />
           ) : filteredProducts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
@@ -401,10 +392,17 @@ const CatalogPage = () => {
           )}
         </main>
 
-        <FloatingButtons
-          cartCount={totalItems}
-          onCartClick={() => setCartOpen(true)}
-        />
+        {!exploreOpen && (
+          <FloatingButtons
+            cartCount={totalItems}
+            onCartClick={() =>
+              setCartOpen(true)
+            }
+            onExploreClick={() =>
+              setExploreOpen(true)
+            }
+          />
+        )}
 
         <RecentActivity products={products} />
 
@@ -439,9 +437,101 @@ const CatalogPage = () => {
             setCartOpen(true);
           }}
         />
-      </div>
-    );
-  };
+        {exploreOpen && (
+        <div
+          className="fixed inset-0 z-[120] flex items-end bg-black/45 backdrop-blur-[2px] md:hidden"
+          onClick={() => setExploreOpen(false)}
+        >
+          <div
+            className="max-h-[82vh] w-full overflow-auto rounded-t-[28px] bg-background px-4 pb-8 pt-4 animate-in slide-in-from-bottom duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="rounded-[28px] border border-border/60 bg-white/70 p-4 shadow-[0_12px_35px_rgba(15,23,42,.08)] backdrop-blur-md">
+              <div className="mx-auto mb-5 h-1.5 w-14 rounded-full bg-muted" />
 
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <h3 className="text-[22px] font-black capitalize">
+                    Explorar
+                  </h3>
+                  {hasActiveFilters&&(
+                    <span className="text-[10px] font-black uppercase tracking-[.14em] text-primary">
+                      Filtros activos
+                    </span>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={()=>
+                    setExploreOpen(false)
+                  }
+                  className="text-sm font-black text-primary"
+                >
+                  Cerrar
+                </button>
+              </div>
+
+              {hasActiveFilters&&(
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {activeCampaign&&(
+                    <button
+                      onClick={()=>
+                        handleCampaignSelect("")
+                      }
+                      className="rounded-full bg-primary px-3 py-1 text-[11px] font-black text-white"
+                    >
+                      🔥 {activeCampaign} ✕
+                    </button>
+                  )}
+
+                  {activeCat&&(
+                    <button
+                      onClick={()=>
+                        handleCategorySelect("todas")
+                      }
+                      className="rounded-full bg-secondary px-3 py-1 text-[11px] font-black text-white"
+                    >
+                      {activeCat.icon} {activeCat.name} ✕
+                    </button>
+                  )}
+                </div>
+              )}
+              
+
+              <div className="space-y-7">
+                <section>
+                  <CampaignFilter
+                    active={activeCampaign}
+                    counts={campaignCounts}
+                    onSelect={(id) => {
+                      handleCampaignSelect(id);
+                      setExploreOpen(false);
+                    }}
+                  />
+                </section>
+
+                <section>
+                  <p className="mb-3 text-[11px] font-black capitalize tracking-[.18em] text-muted-foreground">
+                    Categorías
+                  </p>
+
+                  <CategoryFilter
+                    categories={CATEGORY_CONFIG}
+                    active={activeCategory}
+                    counts={categoryCounts}
+                    onSelect={(id) => {
+                      handleCategorySelect(id);
+                      setExploreOpen(false);
+                    }}
+                  />
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
+   </div>
+  );
+}
   export default CatalogPage;
-

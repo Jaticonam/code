@@ -40,6 +40,23 @@
     background:linear-gradient(135deg,#f286be,#e85ca7);
   }
 
+  .floating-btn-explore{
+
+    background:
+    linear-gradient(
+    135deg,
+    var(--w-secondary),
+    var(--w-secondary-strong)
+    );
+
+    color:#fff;
+
+    box-shadow:
+    0 10px 24px
+    rgba(242,134,190,.25);
+
+  }
+
   .floating-btn-whatsapp{
     background:linear-gradient(135deg,#25d366,#1ead54);
   }
