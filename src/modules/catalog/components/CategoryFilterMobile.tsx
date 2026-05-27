@@ -1,5 +1,5 @@
 import type { Category } from "@/shared/types/product";
-import "@/modules/catalog/styles/category-filter-mobile.css";
+import "@/shared/styles/catalog/category-filter-mobile.css";
 
 interface Props{
   allCategory?:Category;

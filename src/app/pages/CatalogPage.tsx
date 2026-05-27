@@ -17,6 +17,7 @@ import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 import { CampaignFilter } from "@/modules/catalog/components/CampaignFilter";
+import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
 
 const TOP_PRIORITY = 100;
 const STRONG_PRIORITY = 80;
@@ -76,16 +77,18 @@ const CatalogPage = () => {
   });
 
   const [activeCampaign, setActiveCampaign] = useState(() =>
-    getCampaignFromUrl()
+    getCampaignFromUrl(),
   );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
-  const [exploreOpen,setExploreOpen]=
-  useState(false);
+  const [zoomImage, setZoomImage] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
+  const [exploreOpen, setExploreOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -131,7 +134,7 @@ const CatalogPage = () => {
 
       navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
     },
-    [navigate, activeCampaign]
+    [navigate, activeCampaign],
   );
 
   const handleCampaignSelect = useCallback(
@@ -145,7 +148,7 @@ const CatalogPage = () => {
 
       navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
     },
-    [navigate, activeCategory]
+    [navigate, activeCategory],
   );
 
   const handleAddToCart = useCallback(
@@ -154,7 +157,7 @@ const CatalogPage = () => {
       setSelectedProduct(product);
       setAddModalOpen(true);
     },
-    [addToCart]
+    [addToCart],
   );
 
   const handleCloseAddModal = useCallback(() => setAddModalOpen(false), []);
@@ -163,11 +166,11 @@ const CatalogPage = () => {
     (qty: number) => {
       if (selectedProduct && qty > 0) addToCart(selectedProduct, qty);
     },
-    [addToCart, selectedProduct]
+    [addToCart, selectedProduct],
   );
 
   const currentQtyInCart = selectedProduct
-    ? cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0
+    ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
     : 0;
 
   const filteredProducts = useMemo(() => {
@@ -175,34 +178,36 @@ const CatalogPage = () => {
     let filtered = products;
 
     if (activeCategory !== "todas") {
-      filtered = filtered.filter((product) => product.category === activeCategory);
+      filtered = filtered.filter(
+        (product) => product.category === activeCategory,
+      );
     }
 
     if (activeCampaign) {
       filtered = filtered.filter((product) =>
-        product.campaigns?.includes(activeCampaign)
+        product.campaigns?.includes(activeCampaign),
       );
     }
 
     if (!term) return filtered;
 
     const insideFilters = searchProducts(filtered, term);
-    return insideFilters.length ? insideFilters : searchProducts(products, term);
+    return insideFilters.length
+      ? insideFilters
+      : searchProducts(products, term);
   }, [products, activeCategory, activeCampaign, searchQuery]);
 
   const showPriorityBlocks =
-    activeCategory === "todas" &&
-    !activeCampaign &&
-    !searchQuery.trim();
+    activeCategory === "todas" && !activeCampaign && !searchQuery.trim();
 
   const topProducts = useMemo(
     () =>
       showPriorityBlocks
         ? sortByPriorityAndShuffleSameLevel(
-            products.filter((p) => (p.priority || 0) >= TOP_PRIORITY)
+            products.filter((p) => (p.priority || 0) >= TOP_PRIORITY),
           )
         : [],
-    [products, showPriorityBlocks]
+    [products, showPriorityBlocks],
   );
 
   const strongProducts = useMemo(
@@ -212,10 +217,10 @@ const CatalogPage = () => {
             products.filter((p) => {
               const priority = p.priority || 0;
               return priority >= STRONG_PRIORITY && priority < TOP_PRIORITY;
-            })
+            }),
           )
         : [],
-    [products, showPriorityBlocks]
+    [products, showPriorityBlocks],
   );
 
   const highlightProducts = useMemo(
@@ -224,21 +229,25 @@ const CatalogPage = () => {
         ? sortByPriorityAndShuffleSameLevel(
             products.filter((p) => {
               const priority = p.priority || 0;
-              return priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY;
-            })
+              return (
+                priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY
+              );
+            }),
           )
         : [],
-    [products, showPriorityBlocks]
+    [products, showPriorityBlocks],
   );
 
   const regularProducts = useMemo(
     () =>
       sortByPriorityAndShuffleSameLevel(
         showPriorityBlocks
-          ? filteredProducts.filter((p) => (p.priority || 0) < HIGHLIGHT_PRIORITY)
-          : filteredProducts
+          ? filteredProducts.filter(
+              (p) => (p.priority || 0) < HIGHLIGHT_PRIORITY,
+            )
+          : filteredProducts,
       ),
-    [filteredProducts, showPriorityBlocks]
+    [filteredProducts, showPriorityBlocks],
   );
 
   const renderGrid = (items: Product[]) => (
@@ -263,199 +272,187 @@ const CatalogPage = () => {
       return acc;
     }, {});
   }, [products]);
-  
-  const categoryCounts = useMemo(() => {
 
-    const counts = products.reduce<Record<string,number>>(
-      (acc,product)=>{
-        acc[product.category] =
-          (acc[product.category]||0)+1;
-        return acc;
-      },
-      {}
-    );
+  const categoryCounts = useMemo(() => {
+    const counts = products.reduce<Record<string, number>>((acc, product) => {
+      acc[product.category] = (acc[product.category] || 0) + 1;
+      return acc;
+    }, {});
     counts.todas = products.length;
     return counts;
-  },[products]);
+  }, [products]);
 
-  const activeCat = CATEGORY_CONFIG.find((c) => c.id === activeCategory);
-  const hasActiveFilters = Boolean(activeCampaign || activeCat);
+  const activeCat =
+    activeCategory !== "todas"
+      ? CATEGORY_CONFIG.find((c) => c.id === activeCategory)
+      : null;
 
-    return (
-      <div className="min-h-screen bg-background pb-40">
-        <header className="sticky top-0 z-[100] flex w-full flex-col shadow-sm">
-          <CountdownTimer />
+  const activeCampaignData = activeCampaign
+    ? CAMPAIGN_CONFIG.find((c) => c.id === activeCampaign)
+    : null;
 
-          <HeaderBar
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            products={products}
-          />
-        </header>
+  const hasActiveFilters = Boolean(activeCampaignData || activeCat);
 
-        <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
-          <div
-            id="filter-category"
-            className="space-y-8"
-            >
+  return (
+    <div className="min-h-screen bg-background pb-40">
+      <header className="sticky top-0 z-[100] flex w-full flex-col shadow-sm">
+        <CountdownTimer />
 
-            <CampaignFilter
+        <HeaderBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          products={products}
+        />
+      </header>
+
+      <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
+        <div id="filter-category" className="space-y-8">
+          <CampaignFilter
             active={activeCampaign}
             counts={campaignCounts}
             onSelect={handleCampaignSelect}
-            />
+          />
 
-            <CategoryFilter
+          <CategoryFilter
             categories={CATEGORY_CONFIG}
             active={activeCategory}
             counts={categoryCounts}
             onSelect={handleCategorySelect}
-            />
-
-          </div>
-                              {loading ? (
-            <CatalogSkeleton />
-          ) : filteredProducts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
-              <div className="mb-4 rounded-full bg-muted p-6">
-                <SearchX className="h-10 w-10 opacity-30" />
-              </div>
-
-              <p className="text-center text-sm font-black tracking-widest">
-                Sin resultados
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-8">
-              {showPriorityBlocks && topProducts.length > 0 && (
-                <section className="space-y-3">
-                  <div className="px-2 md:px-0">
-                    <h2 className="text-lg font-black text-foreground md:text-xl">
-                      🔥 Lo más vendido hoy
-                    </h2>
-                    <p className="text-[12px] font-medium text-muted-foreground">
-                      Productos con mayor rotación ahora mismo.
-                    </p>
-                  </div>
-
-                  {renderGrid(topProducts)}
-                </section>
-              )}
-
-              {showPriorityBlocks && strongProducts.length > 0 && (
-                <section className="space-y-3">
-                  <div className="px-2 md:px-0">
-                    <h2 className="text-lg font-black text-foreground md:text-xl">
-                      ⭐ Recomendados para vender rápido
-                    </h2>
-                    <p className="text-[12px] font-medium text-muted-foreground">
-                      Seleccionados para vender fácil y mover stock.
-                    </p>
-                  </div>
-
-                  {renderGrid(strongProducts)}
-                </section>
-              )}
-
-              {showPriorityBlocks && highlightProducts.length > 0 && (
-                <section className="space-y-3">
-                  <div className="px-2 md:px-0">
-                    <h2 className="text-lg font-black text-foreground md:text-xl">
-                      🟡 Oportunidades del catálogo
-                    </h2>
-                    <p className="text-[12px] font-medium text-muted-foreground">
-                      Opciones para ampliar tu oferta y comprar con estrategia.
-                    </p>
-                  </div>
-
-                  {renderGrid(highlightProducts)}
-                </section>
-              )}
-
-              {regularProducts.length > 0 && (
-                <section className="space-y-3">
-                  <div className="px-2 md:px-0">
-                    <h2 className="text-lg font-black text-foreground md:text-xl">
-                      {showPriorityBlocks ? "🛍️ Todo el catálogo" : "🛍️ Resultados"}
-                    </h2>
-                    <p className="text-[12px] font-medium text-muted-foreground">
-                      {showPriorityBlocks
-                        ? "Explora todos los productos disponibles para tu negocio."
-                        : "Productos encontrados según tu búsqueda o categoría."}
-                    </p>
-                  </div>
-
-                  {renderGrid(regularProducts)}
-                </section>
-              )}
-            </div>
-          )}
-        </main>
-
-        {!exploreOpen && (
-          <FloatingButtons
-            cartCount={totalItems}
-            onCartClick={() =>
-              setCartOpen(true)
-            }
-            onExploreClick={() =>
-              setExploreOpen(true)
-            }
           />
+        </div>
+        {loading ? (
+          <CatalogSkeleton />
+        ) : filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+            <div className="mb-4 rounded-full bg-muted p-6">
+              <SearchX className="h-10 w-10 opacity-30" />
+            </div>
+
+            <p className="text-center text-sm font-black tracking-widest">
+              Sin resultados
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {showPriorityBlocks && topProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    🔥 Lo más vendido hoy
+                  </h2>
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    Productos con mayor rotación ahora mismo.
+                  </p>
+                </div>
+
+                {renderGrid(topProducts)}
+              </section>
+            )}
+
+            {showPriorityBlocks && strongProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    ⭐ Recomendados para vender rápido
+                  </h2>
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    Seleccionados para vender fácil y mover stock.
+                  </p>
+                </div>
+
+                {renderGrid(strongProducts)}
+              </section>
+            )}
+
+            {showPriorityBlocks && highlightProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    🟡 Oportunidades del catálogo
+                  </h2>
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    Opciones para ampliar tu oferta y comprar con estrategia.
+                  </p>
+                </div>
+
+                {renderGrid(highlightProducts)}
+              </section>
+            )}
+
+            {regularProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    {showPriorityBlocks
+                      ? "🛍️ Todo el catálogo"
+                      : "🛍️ Resultados"}
+                  </h2>
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    {showPriorityBlocks
+                      ? "Explora todos los productos disponibles para tu negocio."
+                      : "Productos encontrados según tu búsqueda o categoría."}
+                  </p>
+                </div>
+
+                {renderGrid(regularProducts)}
+              </section>
+            )}
+          </div>
         )}
+      </main>
 
-        <RecentActivity products={products} />
-
-        <CartSidebar
-          isOpen={cartOpen}
-          onClose={() => setCartOpen(false)}
-          cart={cart}
-          totalItems={totalItems}
-          totalPrice={totalPrice}
-          savings={savings}
-          onRemove={removeFromCart}
-          onChangeQty={changeQty}
-          onSetQty={setExactQty}
-          onChangeNote={setItemNote}
-          onClearCart={clearCart}
+      {!exploreOpen && (
+        <FloatingButtons
+          cartCount={totalItems}
+          onCartClick={() => setCartOpen(true)}
+          onExploreClick={() => setExploreOpen(true)}
         />
+      )}
 
-        <ImageZoomModal
-          src={zoomImage?.src ?? null}
-          title={zoomImage?.title ?? ""}
-          onClose={() => setZoomImage(null)}
-        />
+      <RecentActivity products={products} />
 
-        <AddToCartModal
-          open={addModalOpen}
-          product={selectedProduct}
-          currentQty={currentQtyInCart}
-          onClose={handleCloseAddModal}
-          onAddExtra={handleAddExtra}
-          onOpenCart={() => {
-            setAddModalOpen(false);
-            setCartOpen(true);
-          }}
-        />
-        {exploreOpen && (
-        <div
-          className="fixed inset-0 z-[120] flex items-end bg-black/45 backdrop-blur-[2px] md:hidden"
-          onClick={() => setExploreOpen(false)}
-        >
-          <div
-            className="max-h-[82vh] w-full overflow-auto rounded-t-[28px] bg-background px-4 pb-8 pt-4 animate-in slide-in-from-bottom duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="rounded-[28px] border border-border/60 bg-white/70 p-4 shadow-[0_12px_35px_rgba(15,23,42,.08)] backdrop-blur-md">
-              <div className="mx-auto mb-5 h-1.5 w-14 rounded-full bg-muted" />
+      <CartSidebar
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        cart={cart}
+        totalItems={totalItems}
+        totalPrice={totalPrice}
+        savings={savings}
+        onRemove={removeFromCart}
+        onChangeQty={changeQty}
+        onSetQty={setExactQty}
+        onChangeNote={setItemNote}
+        onClearCart={clearCart}
+      />
 
-              <div className="mb-5 flex items-center justify-between">
+      <ImageZoomModal
+        src={zoomImage?.src ?? null}
+        title={zoomImage?.title ?? ""}
+        onClose={() => setZoomImage(null)}
+      />
+
+      <AddToCartModal
+        open={addModalOpen}
+        product={selectedProduct}
+        currentQty={currentQtyInCart}
+        onClose={handleCloseAddModal}
+        onAddExtra={handleAddExtra}
+        onOpenCart={() => {
+          setAddModalOpen(false);
+          setCartOpen(true);
+        }}
+      />
+      {exploreOpen && (
+        <div className="explore-overlay" onClick={() => setExploreOpen(false)}>
+          <div className="explore-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="explore-panel">
+              <div className="explore-handle" />
+
+              <div className="explore-head">
                 <div>
-                  <h3 className="text-[22px] font-black capitalize">
-                    Explorar
-                  </h3>
-                  {hasActiveFilters&&(
-                    <span className="text-[10px] font-black uppercase tracking-[.14em] text-primary">
+                  <h3 className="explore-title">Explorar</h3>
+                  {hasActiveFilters && (
+                    <span className="explore-active-label">
                       Filtros activos
                     </span>
                   )}
@@ -463,43 +460,36 @@ const CatalogPage = () => {
 
                 <button
                   type="button"
-                  onClick={()=>
-                    setExploreOpen(false)
-                  }
-                  className="text-sm font-black text-primary"
+                  onClick={() => setExploreOpen(false)}
+                  className="explore-close"
                 >
                   Cerrar
                 </button>
               </div>
 
-              {hasActiveFilters&&(
-                <div className="mb-5 flex flex-wrap gap-2">
-                  {activeCampaign&&(
+              {hasActiveFilters && (
+                <div className="explore-active-list">
+                  {activeCampaign && (
                     <button
-                      onClick={()=>
-                        handleCampaignSelect("")
-                      }
-                      className="rounded-full bg-primary px-3 py-1 text-[11px] font-black text-white"
+                      onClick={() => handleCampaignSelect("")}
+                      className="explore-chip explore-chip-primary"
                     >
-                      🔥 {activeCampaign} ✕
+                      {activeCampaignData?.icon} {activeCampaignData?.name} ✕
                     </button>
                   )}
 
-                  {activeCat&&(
+                  {activeCat && (
                     <button
-                      onClick={()=>
-                        handleCategorySelect("todas")
-                      }
-                      className="rounded-full bg-secondary px-3 py-1 text-[11px] font-black text-white"
+                      onClick={() => handleCategorySelect("todas")}
+                      className="explore-chip explore-chip-secondary"
                     >
                       {activeCat.icon} {activeCat.name} ✕
                     </button>
                   )}
                 </div>
               )}
-              
 
-              <div className="space-y-7">
+              <div className="explore-body">
                 <section>
                   <CampaignFilter
                     active={activeCampaign}
@@ -512,10 +502,7 @@ const CatalogPage = () => {
                 </section>
 
                 <section>
-                  <p className="mb-3 text-[11px] font-black capitalize tracking-[.18em] text-muted-foreground">
-                    Categorías
-                  </p>
-
+                  
                   <CategoryFilter
                     categories={CATEGORY_CONFIG}
                     active={activeCategory}
@@ -530,8 +517,8 @@ const CatalogPage = () => {
             </div>
           </div>
         </div>
-        )}
-   </div>
+      )}
+    </div>
   );
-}
-  export default CatalogPage;
+};
+export default CatalogPage;

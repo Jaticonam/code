@@ -1,5 +1,5 @@
 import type { Category } from "@/shared/types/product";
-import "@/modules/catalog/styles/category-filter.css";
+import "@/shared/styles/catalog/category-filter.css";
 
 interface CategoryFilterDesktopProps {
   categories: Category[];
@@ -32,7 +32,9 @@ export function CategoryFilterDesktop({
           >
             <span className="category-icon">{category.icon}</span>
             <span className="category-name">{category.name}</span>
-            <span className="category-count">({count})</span>
+            <span className="category-count">
+              {count} {count === 1 ? "producto" : "productos"}
+            </span>
           </button>
         );
       })}

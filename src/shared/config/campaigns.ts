@@ -1,4 +1,5 @@
 export const CAMPAIGN_CONFIG = [
+  { id: "todo-el-ano", name: "Todo el año", icon: "✨" },
   { id: "san-valentin", name: "San Valentín", icon: "❤️" },
   { id: "escolar", name: "Vuelta a Clases", icon: "🎒" },
   { id: "dia-mujer", name: "Día de la Mujer", icon: "🌷" },
