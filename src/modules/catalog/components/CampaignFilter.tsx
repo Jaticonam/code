@@ -8,7 +8,7 @@ interface Props {
 }
 
 const CAMPAIGN_STYLE: Record<string, string> = {
-  "todo-el-ano": "from-[var(--w-primary)] to-[var(--w-primary-dark)]",
+  "todo-el-ano": "from-[#44ADA0] to-[#2f8f84]",
   "san-valentin": "from-[#f286be] to-[#ffb7d5]",
   "dia-padre": "from-[#1e3a8a] to-[#3b82f6]",
   "dia-madre": "from-[#d946ef] to-[#f9a8d4]",
