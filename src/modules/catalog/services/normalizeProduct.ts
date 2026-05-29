@@ -16,8 +16,17 @@ function cleanText(value: unknown): string {
 }
 
 function parseNumber(value: unknown): number | null {
-  const cleaned = cleanText(value).replace(/\s/g, "").replace(",", ".");
+  let cleaned = cleanText(value)
+    .replace(/S\/\.?/gi, "")
+    .replace(/\s/g, "");
+
   if (!cleaned) return null;
+
+  if (cleaned.includes(",") && cleaned.includes(".")) {
+    cleaned = cleaned.replace(/,/g, "");
+  } else {
+    cleaned = cleaned.replace(",", ".");
+  }
 
   const num = Number(cleaned);
   return Number.isFinite(num) ? num : null;
@@ -49,7 +58,7 @@ function parseCampaigns(value: unknown): string[] {
 
 export function normalizeProduct(
   row: CsvRow,
-  categoryFromConfig: SheetCategory
+  categoryFromConfig: SheetCategory,
 ): SheetProduct {
   return {
     id: cleanText(row.id),
