@@ -1,11 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 import { useCartStore } from "@/modules/cart/store";
 import { useProducts } from "@/modules/catalog/hooks/useProducts";
 import type { Product } from "@/shared/types/product";
-import { getUnitPrice, getStockPresentation, getNextTier } from "@/shared/lib/product";
+import {
+  getUnitPrice,
+  getStockPresentation,
+  getNextTier,
+} from "@/shared/lib/product";
 
 import { useProductViewers } from "@/modules/product-detail/hooks/useProductViewers";
 import { useRelatedProducts } from "@/modules/product-detail/hooks/useRelatedProducts";
@@ -42,16 +51,19 @@ const ProductDetailPage = () => {
   const { data: products = [], isLoading: loading } = useProducts();
 
   const [cartOpen, setCartOpen] = useState(false);
-  const [addModalOpen,setAddModalOpen]=useState(false);
-  const [selectedRelated,setSelectedRelated]=useState<Product|null>(null);
-  const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [selectedRelated, setSelectedRelated] = useState<Product | null>(null);
+  const [zoomImage, setZoomImage] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
 
   const [qty, setQty] = useState(1);
   const [qtyInput, setQtyInput] = useState("1");
   const [lastTier, setLastTier] = useState(1);
   const [showUnlock, setShowUnlock] = useState(false);
   const [pricePulse, setPricePulse] = useState(false);
-  const [pageReady,setPageReady]=useState(false);
+  const [pageReady, setPageReady] = useState(false);
 
   const viewers = useProductViewers();
 
@@ -69,19 +81,21 @@ const ProductDetailPage = () => {
 
   const product = useMemo(
     () => products.find((item) => item.id === id),
-    [products, id]
+    [products, id],
   );
 
-  const selectedRelatedQty=selectedRelated?cart.find(i=>i.id===selectedRelated.id)?.qty??0:0;
+  const selectedRelatedQty = selectedRelated
+    ? (cart.find((i) => i.id === selectedRelated.id)?.qty ?? 0)
+    : 0;
 
-  useEffect(()=>{
+  useEffect(() => {
     setPageReady(false);
 
-    const timer=window.setTimeout(()=>{
-      window.scrollTo({top:0,left:0,behavior:"smooth"});
-    },0);
+    const timer = window.setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, 0);
 
-    const readyTimer=window.setTimeout(()=>setPageReady(true),220);
+    const readyTimer = window.setTimeout(() => setPageReady(true), 220);
 
     setQty(1);
     setQtyInput("1");
@@ -89,18 +103,18 @@ const ProductDetailPage = () => {
     setShowUnlock(false);
     setPricePulse(false);
 
-    return()=>{
+    return () => {
       window.clearTimeout(timer);
       window.clearTimeout(readyTimer);
     };
-  },[id]);
+  }, [id]);
 
   const status = (product?.status || "").trim().toLowerCase();
   const available = !!product && ["publicado", "preventa"].includes(status);
   const isPreventa = status === "preventa";
-  const isOutOfStock = !!product && !isPreventa && !!product.price_1 && product.stock === 0;
+  const isOutOfStock =
+    !!product && !isPreventa && !!product.price_1 && product.stock === 0;
   const showWhatsAppButton = isPreventa || isOutOfStock;
-
 
   const parsedQtyInput =
     qtyInput.trim() !== "" && /^\d+$/.test(qtyInput)
@@ -120,31 +134,60 @@ const ProductDetailPage = () => {
       : 0;
 
   const related = useRelatedProducts(products, product);
-  const stockPresentation = product ? getStockPresentation(product, isPreventa) : null;
+  const stockPresentation = product
+    ? getStockPresentation(product, isPreventa)
+    : null;
 
-  const handleBack=useCallback(()=>{
-    if(fromSearch){
-      navigate("/catalogo",{state:{restoreSearch:searchQuery}});
+  const handleBack = useCallback(() => {
+    if (fromSearch) {
+      navigate("/catalogo", { state: { restoreSearch: searchQuery } });
       return;
     }
 
-    navigate(currentCategory?`/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`:"/catalogo");
-  },[navigate,currentCategory,fromSearch,searchQuery]);
+    navigate(
+      currentCategory
+        ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
+        : "/catalogo",
+    );
+  }, [navigate, currentCategory, fromSearch, searchQuery]);
 
-  const handleShare=useCallback(async()=>{
-    const url=window.location.href;
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      const isTyping =
+        ["INPUT", "TEXTAREA"].includes(target.tagName) ||
+        target.isContentEditable;
 
-    try{
-      if(navigator.share){
-        await navigator.share({title:product?.title,text:product?.description,url});
+      if (isTyping) return;
+
+      if (event.key === "Backspace") {
+        event.preventDefault();
+        handleBack();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleBack]);
+
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product?.title,
+          text: product?.description,
+          url,
+        });
         return;
       }
 
       await navigator.clipboard.writeText(url);
-    }catch{
+    } catch {
       console.warn("No se pudo compartir el producto");
     }
-  },[product]);
+  }, [product]);
 
   const updateQty = useCallback(
     (nextQty: number) => {
@@ -155,7 +198,15 @@ const ProductDetailPage = () => {
 
       const nextUnitPrice = product ? getUnitPrice(cleanQty, product) : 0;
       const nextTierQty =
-        cleanQty >= 100 ? 100 : cleanQty >= 50 ? 50 : cleanQty >= 12 ? 12 : cleanQty >= 3 ? 3 : 1;
+        cleanQty >= 100
+          ? 100
+          : cleanQty >= 50
+            ? 50
+            : cleanQty >= 12
+              ? 12
+              : cleanQty >= 3
+                ? 3
+                : 1;
 
       if (nextTierQty > lastTier) {
         setShowUnlock(true);
@@ -169,7 +220,7 @@ const ProductDetailPage = () => {
 
       setLastTier(nextTierQty);
     },
-    [product, lastTier, unitPrice]
+    [product, lastTier, unitPrice],
   );
 
   const handleQtyInputChange = useCallback((value: string) => {
@@ -193,32 +244,37 @@ const ProductDetailPage = () => {
         event.currentTarget.blur();
       }
     },
-    []
+    [],
   );
 
   const handleAddToCart = useCallback(() => {
     if (!product || !available || !isQtyInputValid) return;
 
-    addToCart(product,effectiveQty);
+    addToCart(product, effectiveQty);
     setCartOpen(true);
-
   }, [product, available, isQtyInputValid, addToCart, effectiveQty]);
 
-  const handleRelatedAddToCart=useCallback((relatedProduct:Product)=>{
-    addToCart(relatedProduct,1);
-    setSelectedRelated(relatedProduct);
-    setAddModalOpen(true);
-  },[addToCart]);
+  const handleRelatedAddToCart = useCallback(
+    (relatedProduct: Product) => {
+      addToCart(relatedProduct, 1);
+      setSelectedRelated(relatedProduct);
+      setAddModalOpen(true);
+    },
+    [addToCart],
+  );
 
-  const handleRelatedExtra=useCallback((qty:number)=>{
-    if(!selectedRelated||qty<=0)return;
-    addToCart(selectedRelated,qty);
-  },[selectedRelated,addToCart]);
+  const handleRelatedExtra = useCallback(
+    (qty: number) => {
+      if (!selectedRelated || qty <= 0) return;
+      addToCart(selectedRelated, qty);
+    },
+    [selectedRelated, addToCart],
+  );
 
-  const handleRelatedOpenCart=useCallback(()=>{
+  const handleRelatedOpenCart = useCallback(() => {
     setAddModalOpen(false);
     setCartOpen(true);
-  },[]);
+  }, []);
 
   const handleWhatsApp = useCallback(() => {
     if (!product) return;
@@ -238,11 +294,11 @@ const ProductDetailPage = () => {
 
     window.open(
       `https://wa.me/51936188636?text=${encodeURIComponent(message)}`,
-      "_blank"
+      "_blank",
     );
   }, [product, effectiveQty, currentCategory]);
 
-  if(loading||!pageReady)return <ProductSkeleton/>;
+  if (loading || !pageReady) return <ProductSkeleton />;
 
   if (!product) {
     return (
@@ -256,7 +312,7 @@ const ProductDetailPage = () => {
             navigate(
               currentCategory
                 ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
-                : "/catalogo"
+                : "/catalogo",
             )
           }
           className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
@@ -317,7 +373,6 @@ const ProductDetailPage = () => {
               onSelectQty={updateQty}
             />
 
-
             <ProductPriceBlock
               unitPrice={unitPrice}
               total={total}
@@ -329,8 +384,12 @@ const ProductDetailPage = () => {
               nextTier={nextTier}
               isQtyInputValid={isQtyInputValid}
             />
-            
-            <ProductTierProgress product={product} effectiveQty={effectiveQty} nextTier={nextTier}/>
+
+            <ProductTierProgress
+              product={product}
+              effectiveQty={effectiveQty}
+              nextTier={nextTier}
+            />
 
             {available && (
               <ProductQuantitySelector
@@ -382,22 +441,22 @@ const ProductDetailPage = () => {
         onSetQty={setExactQty}
         onChangeNote={setItemNote}
       />
-      
+
       <ImageZoomModal
         src={zoomImage?.src ?? null}
         title={zoomImage?.title ?? ""}
         onClose={() => setZoomImage(null)}
       />
-      
+
       <AddToCartModal
         open={addModalOpen}
         product={selectedRelated}
         currentQty={selectedRelatedQty}
-        onClose={()=>setAddModalOpen(false)}
+        onClose={() => setAddModalOpen(false)}
         onAddExtra={handleRelatedExtra}
         onOpenCart={handleRelatedOpenCart}
         secondaryActionLabel="Seguir viendo"
-        onSecondaryAction={()=>setAddModalOpen(false)}
+        onSecondaryAction={() => setAddModalOpen(false)}
       />
     </div>
   );

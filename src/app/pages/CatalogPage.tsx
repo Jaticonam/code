@@ -118,13 +118,20 @@ const CatalogPage = () => {
   const { data: products = [], isLoading: loading } = useProducts();
 
   useEffect(() => {
-    if (!location.state?.restoreSearch) return;
-    setSearchQuery(location.state.restoreSearch);
+    const restored =
+      location.state?.restoreSearch ||
+      sessionStorage.getItem("wooly_restore_search");
+
+    if (!restored) return;
+
+    setSearchQuery(restored);
+    sessionStorage.removeItem("wooly_restore_search");
     window.history.replaceState({}, document.title);
   }, [location.state]);
 
   const handleCategorySelect = useCallback(
     (id: string) => {
+      setSearchQuery("");
       setActiveCategory(id);
 
       const params = new URLSearchParams();
@@ -139,6 +146,7 @@ const CatalogPage = () => {
 
   const handleCampaignSelect = useCallback(
     (campaign: string) => {
+      setSearchQuery("");
       setActiveCampaign(campaign);
 
       const params = new URLSearchParams();
@@ -502,7 +510,6 @@ const CatalogPage = () => {
                 </section>
 
                 <section>
-                  
                   <CategoryFilter
                     categories={CATEGORY_CONFIG}
                     active={activeCategory}
