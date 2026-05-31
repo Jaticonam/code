@@ -1,12 +1,11 @@
 import type { Product } from "@/shared/types/product";
 import { getAvailablePriceTiers } from "@/shared/config/priceTiers";
 
-const COLORS: Record<string, string> = {
-  price_1: "bg-[#1d8299]",
-  price_3: "bg-[#f5b025]",
-  price_12: "bg-[#f286be]",
-  price_50: "bg-[#7c3aed]",
-  price_100: "bg-slate-700",
+const CHIP_COLORS: Record<string, string> = {
+  price_3: "wholesale-chip-price-3",
+  price_12: "wholesale-chip-price-12",
+  price_50: "wholesale-chip-price-50",
+  price_100: "wholesale-chip-price-100",
 };
 
 interface Props {
@@ -22,23 +21,45 @@ export function ProductCardTierBadges({
 }: Props) {
   if (!available || isPreventa) return null;
 
+  const tiers = getAvailablePriceTiers(product).filter((tier) => {
+    const price = Number(product[tier.key]);
+    return tier.key !== "price_1" && price > 0;
+  });
+
+  if (!tiers.length) return null;
+
   return (
-    <div className="absolute bottom-2 left-2 right-2 z-20 flex justify-center gap-1">
-      {getAvailablePriceTiers(product).map((tier, index) => {
-        const price = Number(product[tier.key]);
+    <div className="wholesale-list">
+      <div className="wholesale-title">
+        <span>📦</span>
+        <span>Precio Mayorista</span>
+      </div>
 
-        if (!price || price <= 0) return null;
+      <div className="flex flex-col gap-1.5">
+        {tiers.map((tier) => {
+          const price = Number(product[tier.key]);
+          if (price >= product.price_1) return null;
 
-        return (
-          <span
-            key={tier.key}
-            style={{ animationDelay: `${index * 120}ms` }}
-            className={`${COLORS[tier.key] || "bg-slate-500"} animate-badge-float rounded-full px-2 py-[4px] text-[10px] font-black text-white shadow-lg transition hover:scale-110`}
-          >
-            {tier.label} S/{price.toFixed(1)}
-          </span>
-        );
-      })}
+          const ICONS: Record<string, string> = {
+            price_3: "🔥",
+            price_12: "🚀",
+            price_50: "⭐",
+            price_100: "💎",
+          };
+
+          return (
+            <div
+              key={tier.key}
+              className={`wholesale-chip ${CHIP_COLORS[tier.key] || "border-slate-200 bg-slate-50 text-slate-600"}`}
+            >
+              <span>
+                {ICONS[tier.key] || "📦"} Lleva {tier.label} y paga S/
+                {price.toFixed(1)} c/u
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

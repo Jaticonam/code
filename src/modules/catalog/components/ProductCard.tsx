@@ -8,7 +8,6 @@ import { ProductCardPrice } from "@/modules/catalog/components/ProductCardPrice"
 import { ProductCardStock } from "@/modules/catalog/components/ProductCardStock";
 import { ProductCardTierBadges } from "@/modules/catalog/components/ProductCardTierBadges";
 import { useProductCard } from "@/modules/product-detail/hooks/useProductCard";
-import { useProductViewers } from "@/modules/catalog/hooks/useProductViewers";
 
 interface Props{
   product:Product;
@@ -19,8 +18,7 @@ interface Props{
 
 export function ProductCard({product:p,cart=[],onAddToCart,onImageClick}:Props){
   const navigate=useNavigate();
-  const viewers=useProductViewers();
-
+  
   const {available,isPreventa,showWhatsAppButton,isInCart,qtyInCart,handleAdd,handleWhatsApp}=useProductCard(p,cart,onAddToCart);
   const goToDetail=()=>navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
 
@@ -28,7 +26,7 @@ export function ProductCard({product:p,cart=[],onAddToCart,onImageClick}:Props){
     <div 
       onClick={goToDetail}
       className="card-product group flex flex-col p-2 text-center md:p-2.5">
-      <div className="card-product-image relative mb-2 h-[150px] overflow-hidden rounded-[18px] sm:h-[175px] md:h-[320px] xl:h-[255px]">
+      <div className="card-product-image relative mb-2 h-[140px] overflow-hidden rounded-[18px] sm:h-[160px] md:h-[250px] xl:h-[220px]">
         <ProductCardBadges product={p}/>
 
         {isInCart&&(
@@ -48,7 +46,6 @@ export function ProductCard({product:p,cart=[],onAddToCart,onImageClick}:Props){
           loading="lazy"
         />
 
-        <ProductCardTierBadges product={p} available={available} isPreventa={isPreventa}/>
       </div>
 
       <div className="flex flex-1 flex-col justify-between px-1">
@@ -56,9 +53,6 @@ export function ProductCard({product:p,cart=[],onAddToCart,onImageClick}:Props){
           <div className="mb-1.5 flex flex-wrap items-center justify-center gap-0.5">
             <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[9px] font-black uppercase text-slate-500">{p.id}</span>
             <span className={`rounded-full px-2 py-[3px] text-[9px] font-black uppercase ${getCategoryColor(p.category)}`}>{p.category}</span>
-            <span className="rounded-full border bg-slate-100 from-amber-50 to-red-50 px-2 py-[3px] text-[9px] font-black text-red-700 shadow-[0_2px_8px_rgba(251,191,36,.15)]">
-            👀 {viewers}
-            </span>
           </div>
 
           <h3 className="mb-0.3 card-product-title cursor-pointer line-clamp-2">
@@ -68,7 +62,8 @@ export function ProductCard({product:p,cart=[],onAddToCart,onImageClick}:Props){
 
         <ProductCardPrice product={p}/>
         <ProductCardStock stock={p.stock} price={p.price_1} status={p.status}/>
-       
+        <ProductCardTierBadges product={p} available={available} isPreventa={isPreventa}/>
+                
         <button
           onClick={(e)=>{
             e.stopPropagation();
