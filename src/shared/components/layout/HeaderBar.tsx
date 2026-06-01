@@ -1,10 +1,13 @@
 import { SearchInput } from "@/modules/search/components/SearchInput";
 import type { Product } from "@/shared/types/product";
+import type { ReactNode } from "react";
 
 interface HeaderBarProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
   products?: Product[];
+  topContent?: ReactNode;
+  bottomContent?: ReactNode;
 }
 
 const LOGO_URL =
@@ -14,24 +17,22 @@ export function HeaderBar({
   searchQuery,
   onSearchChange,
   products = [],
+  topContent,
+  bottomContent,
 }: HeaderBarProps) {
   return (
-    <div className="border-b border-slate-200 bg-white/95 px-3 py-3 shadow-sm backdrop-blur-xl md:px-4 md:py-4">
-
-      <div className="mx-auto flex max-w-7xl items-center gap-3">
-
+    <div className="catalog-control-header">
+      <div className="catalog-control-inner">
         <div
           onClick={() => window.location.reload()}
-          className="hidden shrink-0 cursor-pointer md:block"
+          className="catalog-header-logo"
         >
-          <img
-            src={LOGO_URL}
-            alt="Wooly"
-            className="h-9 w-auto"
-          />
+          <img src={LOGO_URL} alt="Wooly" />
         </div>
 
-        <div className="flex-1">
+        <div className="catalog-header-campaigns">{topContent}</div>
+
+        <div className="catalog-header-search">
           <SearchInput
             value={searchQuery}
             onChange={onSearchChange}
@@ -40,8 +41,8 @@ export function HeaderBar({
           />
         </div>
 
+        <div className="catalog-header-categories">{bottomContent}</div>
       </div>
-
     </div>
   );
 }

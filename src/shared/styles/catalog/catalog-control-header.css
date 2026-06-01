@@ -1,0 +1,63 @@
+.catalog-control-header {
+  border-bottom: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+  backdrop-filter: blur(18px);
+}
+
+.catalog-control-inner {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 10px 20px 12px;
+  display: grid;
+  grid-template-columns: 150px auto minmax(360px, 1fr);
+  grid-template-areas:
+    "logo campaigns search"
+    "logo categories categories";
+  gap: 10px 16px;
+  align-items: center;
+}
+
+.catalog-header-logo {
+  grid-area: logo;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.catalog-header-logo img {
+  width: 128px;
+  height: auto;
+  display: block;
+}
+
+.catalog-header-campaigns {
+  grid-area: campaigns;
+  min-width: 0;
+  max-width: max-content;
+}
+
+.catalog-header-search {
+  grid-area: search;
+  min-width: 360px;
+}
+
+.catalog-header-categories {
+  grid-area: categories;
+  min-width: 0;
+}
+
+@media (max-width: 1200px) {
+  .catalog-control-inner {
+    grid-template-columns: 130px minmax(240px, auto) minmax(300px, 1fr);
+    gap: 8px 12px;
+  }
+
+  .catalog-header-logo img {
+    width: 112px;
+  }
+
+  .catalog-header-search {
+    min-width: 300px;
+  }
+}

@@ -1,31 +1,38 @@
 import type { Category } from "@/shared/types/product";
 import "@/shared/styles/catalog/category-filter-mobile.css";
 
-interface Props{
-  allCategory?:Category;
-  scrollableCategories:Category[];
-  counts?:Record<string,number>;
-  active:string;
-  onSelect:(id:string)=>void;
-  getButtonClass:(id:string)=>string;
+interface Props {
+  allCategory?: Category;
+  scrollableCategories: Category[];
+  counts?: Record<string, number>;
+  active: string;
+  onSelect: (id: string) => void;
 }
 
-export function CategoryFilterMobile({allCategory,scrollableCategories,counts={},active,onSelect}:Props){
-  const items=allCategory?[allCategory,...scrollableCategories]:scrollableCategories;
+export function CategoryFilterMobile({
+  allCategory,
+  scrollableCategories,
+  counts = {},
+  active,
+  onSelect,
+}: Props) {
+  const items = allCategory
+    ? [allCategory, ...scrollableCategories]
+    : scrollableCategories;
 
-  return(
+  return (
     <div className="md:hidden pb-1">
       <div className="category-mobile-grid">
-        {items.map(c=>{
-          const count=counts[c.id]??0;
-          const isActive=active===c.id;
+        {items.map((c) => {
+          const count = counts[c.id] ?? 0;
+          const isActive = active === c.id;
 
-          return(
+          return (
             <button
               key={c.id}
               type="button"
-              onClick={()=>onSelect(c.id)}
-              className={`category-mobile-card ${isActive?"category-mobile-card-active":""}`}
+              onClick={() => onSelect(c.id)}
+              className={`category-mobile-card ${isActive ? "category-mobile-card-active" : ""}`}
             >
               <span className="category-mobile-icon">{c.icon}</span>
               <span className="category-mobile-name">{c.name}</span>

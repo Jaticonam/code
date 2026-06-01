@@ -1,0 +1,42 @@
+import type { Category } from "@/shared/types/product";
+import "@/shared/styles/catalog/header-category-filter.css";
+
+interface Props {
+  categories: Category[];
+  active: string;
+  counts?: Record<string, number>;
+  onSelect: (id: string) => void;
+}
+
+export function HeaderCategoryFilter({
+  categories,
+  active,
+  counts = {},
+  onSelect,
+}: Props) {
+  const visible = categories.filter(
+    (c) => c.id === "todas" || (counts[c.id] ?? 0) > 0,
+  );
+
+  return (
+    <div className="header-category-filter">
+      {visible.map((c) => {
+        const count = counts[c.id] ?? 0;
+        const isActive = active === c.id;
+
+        return (
+          <button
+            key={c.id}
+            type="button"
+            onClick={() => onSelect(c.id)}
+            className={`header-category-chip ${isActive ? "active" : ""}`}
+          >
+            <span className="header-category-icon">{c.icon}</span>
+            <span className="header-category-name">{c.name}</span>
+            <span className="header-category-count">({count})</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}

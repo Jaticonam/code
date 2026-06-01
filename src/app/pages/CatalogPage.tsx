@@ -6,18 +6,18 @@ import { useProducts } from "@/modules/catalog/hooks/useProducts";
 import { searchProducts } from "@/shared/lib/search";
 import { Product } from "@/shared/types/product";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
 import { HeaderBar } from "@/shared/components/layout/HeaderBar";
 import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
 import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
-import { CategoryFilter } from "@/modules/catalog/components/CategoryFilter";
 import { ProductCard } from "@/modules/catalog/components/ProductCard";
 import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
-import { CampaignFilter } from "@/modules/catalog/components/CampaignFilter";
-import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+import { HeaderCategoryFilter } from "@/modules/catalog/components/HeaderCategoryFilter";
+import { HeaderCampaignFilter } from "@/modules/catalog/components/HeaderCampaignFilter";
 
 const TOP_PRIORITY = 100;
 const STRONG_PRIORITY = 80;
@@ -29,7 +29,6 @@ const getRotationSeed = () => {
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const block = now.getHours() < 12 ? "AM" : "PM";
-
   return `${year}-${month}-${day}-${block}`;
 };
 
@@ -42,13 +41,11 @@ const seededShuffle = <T extends { id: string }>(items: T[], seed: string) => {
     }
     return h;
   };
-
   return [...items].sort((a, b) => hash(seed + a.id) - hash(seed + b.id));
 };
 
 const sortByPriorityAndShuffleSameLevel = (items: Product[]) => {
   const seed = getRotationSeed();
-
   const groups = items.reduce<Record<number, Product[]>>((acc, product) => {
     const priority = product.priority || 0;
     (acc[priority] ||= []).push(product);
@@ -62,12 +59,13 @@ const sortByPriorityAndShuffleSameLevel = (items: Product[]) => {
 };
 
 const CatalogPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const getCategoryFromUrl = () =>
     new URLSearchParams(window.location.search).get("cat") || "todas";
-
   const getCampaignFromUrl = () =>
-    new URLSearchParams(window.location.search).get("campaign") || "";
-
+    new URLSearchParams(window.location.search).get("cpg") || "";
   const isValidCategory = (id: string) =>
     id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
 
@@ -79,7 +77,6 @@ const CatalogPage = () => {
   const [activeCampaign, setActiveCampaign] = useState(() =>
     getCampaignFromUrl(),
   );
-
   const [searchQuery, setSearchQuery] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -89,18 +86,6 @@ const CatalogPage = () => {
     title: string;
   } | null>(null);
   const [exploreOpen, setExploreOpen] = useState(false);
-
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const cat = params.get("cat") || "todas";
-    const campaign = params.get("campaign") || "";
-
-    setActiveCategory(isValidCategory(cat) ? cat : "todas");
-    setActiveCampaign(campaign);
-  }, [location.search]);
 
   const {
     cart,
@@ -114,16 +99,21 @@ const CatalogPage = () => {
     setItemNote,
     clearCart,
   } = useCartStore();
-
   const { data: products = [], isLoading: loading } = useProducts();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get("cat") || "todas";
+    const campaign = params.get("cpg") || "";
+    setActiveCategory(isValidCategory(cat) ? cat : "todas");
+    setActiveCampaign(campaign);
+  }, [location.search]);
 
   useEffect(() => {
     const restored =
       location.state?.restoreSearch ||
       sessionStorage.getItem("wooly_restore_search");
-
     if (!restored) return;
-
     setSearchQuery(restored);
     sessionStorage.removeItem("wooly_restore_search");
     window.history.replaceState({}, document.title);
@@ -135,9 +125,8 @@ const CatalogPage = () => {
       setActiveCategory(id);
 
       const params = new URLSearchParams();
-
       if (id !== "todas") params.set("cat", id);
-      if (activeCampaign) params.set("campaign", activeCampaign);
+      if (activeCampaign) params.set("cpg", activeCampaign);
 
       navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
     },
@@ -150,36 +139,13 @@ const CatalogPage = () => {
       setActiveCampaign(campaign);
 
       const params = new URLSearchParams();
-
       if (activeCategory !== "todas") params.set("cat", activeCategory);
-      if (campaign) params.set("campaign", campaign);
+      if (campaign) params.set("cpg", campaign);
 
       navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
     },
     [navigate, activeCategory],
   );
-
-  const handleAddToCart = useCallback(
-    (product: Product) => {
-      addToCart(product, 1);
-      setSelectedProduct(product);
-      setAddModalOpen(true);
-    },
-    [addToCart],
-  );
-
-  const handleCloseAddModal = useCallback(() => setAddModalOpen(false), []);
-
-  const handleAddExtra = useCallback(
-    (qty: number) => {
-      if (selectedProduct && qty > 0) addToCart(selectedProduct, qty);
-    },
-    [addToCart, selectedProduct],
-  );
-
-  const currentQtyInCart = selectedProduct
-    ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
-    : 0;
 
   const filteredProducts = useMemo(() => {
     const term = searchQuery.trim();
@@ -204,6 +170,63 @@ const CatalogPage = () => {
       ? insideFilters
       : searchProducts(products, term);
   }, [products, activeCategory, activeCampaign, searchQuery]);
+
+  const hasCategory = activeCategory !== "todas";
+  const hasCampaign = Boolean(activeCampaign);
+
+  const categoryBase = useMemo(
+    () =>
+      hasCampaign
+        ? products.filter((p) => p.campaigns?.includes(activeCampaign))
+        : products,
+    [products, hasCampaign, activeCampaign],
+  );
+
+  const campaignBase = useMemo(
+    () =>
+      hasCategory
+        ? products.filter((p) => p.category === activeCategory)
+        : products,
+    [products, hasCategory, activeCategory],
+  );
+
+  const categoryCounts = useMemo(() => {
+    const counts = categoryBase.reduce<Record<string, number>>(
+      (acc, product) => {
+        acc[product.category] = (acc[product.category] || 0) + 1;
+        return acc;
+      },
+      {},
+    );
+    counts.todas = categoryBase.length;
+    return counts;
+  }, [categoryBase]);
+
+  const campaignCounts = useMemo(() => {
+    return campaignBase.reduce<Record<string, number>>((acc, product) => {
+      product.campaigns?.forEach((campaign) => {
+        acc[campaign] = (acc[campaign] || 0) + 1;
+      });
+      return acc;
+    }, {});
+  }, [campaignBase]);
+
+  const visibleCategories = useMemo(
+    () =>
+      CATEGORY_CONFIG.filter(
+        (c) => c.id === "todas" || (categoryCounts[c.id] || 0) > 0,
+      ),
+    [categoryCounts],
+  );
+
+  const activeCat =
+    activeCategory !== "todas"
+      ? CATEGORY_CONFIG.find((c) => c.id === activeCategory)
+      : null;
+  const activeCampaignData = activeCampaign
+    ? CAMPAIGN_CONFIG.find((c) => c.id === activeCampaign)
+    : null;
+  const hasActiveFilters = Boolean(activeCampaignData || activeCat);
 
   const showPriorityBlocks =
     activeCategory === "todas" && !activeCampaign && !searchQuery.trim();
@@ -258,6 +281,28 @@ const CatalogPage = () => {
     [filteredProducts, showPriorityBlocks],
   );
 
+  const handleAddToCart = useCallback(
+    (product: Product) => {
+      addToCart(product, 1);
+      setSelectedProduct(product);
+      setAddModalOpen(true);
+    },
+    [addToCart],
+  );
+
+  const handleCloseAddModal = useCallback(() => setAddModalOpen(false), []);
+
+  const handleAddExtra = useCallback(
+    (qty: number) => {
+      if (selectedProduct && qty > 0) addToCart(selectedProduct, qty);
+    },
+    [addToCart, selectedProduct],
+  );
+
+  const currentQtyInCart = selectedProduct
+    ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
+    : 0;
+
   const renderGrid = (items: Product[]) => (
     <div className="grid grid-cols-2 gap-[3px] md:grid-cols-3 md:gap-2 xl:grid-cols-5 xl:gap-2">
       {items.map((p) => (
@@ -271,35 +316,6 @@ const CatalogPage = () => {
       ))}
     </div>
   );
-  const campaignCounts = useMemo(() => {
-    return products.reduce<Record<string, number>>((acc, product) => {
-      product.campaigns?.forEach((campaign) => {
-        acc[campaign] = (acc[campaign] || 0) + 1;
-      });
-
-      return acc;
-    }, {});
-  }, [products]);
-
-  const categoryCounts = useMemo(() => {
-    const counts = products.reduce<Record<string, number>>((acc, product) => {
-      acc[product.category] = (acc[product.category] || 0) + 1;
-      return acc;
-    }, {});
-    counts.todas = products.length;
-    return counts;
-  }, [products]);
-
-  const activeCat =
-    activeCategory !== "todas"
-      ? CATEGORY_CONFIG.find((c) => c.id === activeCategory)
-      : null;
-
-  const activeCampaignData = activeCampaign
-    ? CAMPAIGN_CONFIG.find((c) => c.id === activeCampaign)
-    : null;
-
-  const hasActiveFilters = Boolean(activeCampaignData || activeCat);
 
   return (
     <div className="min-h-screen bg-background pb-40">
@@ -310,24 +326,25 @@ const CatalogPage = () => {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           products={products}
+          topContent={
+            <HeaderCampaignFilter
+              active={activeCampaign}
+              counts={campaignCounts}
+              onSelect={handleCampaignSelect}
+            />
+          }
+          bottomContent={
+            <HeaderCategoryFilter
+              categories={visibleCategories}
+              active={activeCategory}
+              counts={categoryCounts}
+              onSelect={handleCategorySelect}
+            />
+          }
         />
       </header>
 
       <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
-        <div id="filter-category" className="space-y-8">
-          <CampaignFilter
-            active={activeCampaign}
-            counts={campaignCounts}
-            onSelect={handleCampaignSelect}
-          />
-
-          <CategoryFilter
-            categories={CATEGORY_CONFIG}
-            active={activeCategory}
-            counts={categoryCounts}
-            onSelect={handleCategorySelect}
-          />
-        </div>
         {loading ? (
           <CatalogSkeleton />
         ) : filteredProducts.length === 0 ? (
@@ -352,7 +369,6 @@ const CatalogPage = () => {
                     Productos con mayor rotación ahora mismo.
                   </p>
                 </div>
-
                 {renderGrid(topProducts)}
               </section>
             )}
@@ -367,7 +383,6 @@ const CatalogPage = () => {
                     Seleccionados para vender fácil y mover stock.
                   </p>
                 </div>
-
                 {renderGrid(strongProducts)}
               </section>
             )}
@@ -382,7 +397,6 @@ const CatalogPage = () => {
                     Opciones para ampliar tu oferta y comprar con estrategia.
                   </p>
                 </div>
-
                 {renderGrid(highlightProducts)}
               </section>
             )}
@@ -395,10 +409,11 @@ const CatalogPage = () => {
                       ? "🛍️ Todo el catálogo"
                       : "🛍️ Resultados"}
                   </h2>
+
                   <p className="text-[12px] font-medium text-muted-foreground">
                     {showPriorityBlocks
                       ? "Explora todos los productos disponibles para tu negocio."
-                      : "Productos encontrados según tu búsqueda o categoría."}
+                      : "Productos encontrados según tu búsqueda, campaña o categoría."}
                   </p>
                 </div>
 
@@ -450,6 +465,7 @@ const CatalogPage = () => {
           setCartOpen(true);
         }}
       />
+
       {exploreOpen && (
         <div className="explore-overlay" onClick={() => setExploreOpen(false)}>
           <div className="explore-sheet" onClick={(e) => e.stopPropagation()}>
@@ -496,31 +512,6 @@ const CatalogPage = () => {
                   )}
                 </div>
               )}
-
-              <div className="explore-body">
-                <section>
-                  <CampaignFilter
-                    active={activeCampaign}
-                    counts={campaignCounts}
-                    onSelect={(id) => {
-                      handleCampaignSelect(id);
-                      setExploreOpen(false);
-                    }}
-                  />
-                </section>
-
-                <section>
-                  <CategoryFilter
-                    categories={CATEGORY_CONFIG}
-                    active={activeCategory}
-                    counts={categoryCounts}
-                    onSelect={(id) => {
-                      handleCategorySelect(id);
-                      setExploreOpen(false);
-                    }}
-                  />
-                </section>
-              </div>
             </div>
           </div>
         </div>
@@ -528,4 +519,5 @@ const CatalogPage = () => {
     </div>
   );
 };
+
 export default CatalogPage;

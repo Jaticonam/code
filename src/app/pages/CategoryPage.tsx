@@ -32,7 +32,10 @@ const CategoryPage = () => {
   const [categorySearch, setCategorySearch] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
+  const [zoomImage, setZoomImage] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
 
   const {
     cart,
@@ -55,14 +58,11 @@ const CategoryPage = () => {
     setCategorySearch("");
   }, [categoryId]);
 
-  const categoryInfo =
-  CATEGORY_CONFIG.find(
-    c=>c.id===activeCategory
-  );
+  const categoryInfo = CATEGORY_CONFIG.find((c) => c.id === activeCategory);
 
   const { categoryProducts, filteredProducts } = useMemo(
     () => filterCategoryProducts(allProducts, activeCategory, categorySearch),
-    [allProducts, activeCategory, categorySearch]
+    [allProducts, activeCategory, categorySearch],
   );
 
   const hasSearch = categorySearch.trim().length > 0;
@@ -72,12 +72,10 @@ const CategoryPage = () => {
       if (id === activeCategory) return;
 
       navigate(
-        id === "todas"
-          ? "/catalogo"
-          : `/catalogo/categoria.html?cat=${id}`
+        id === "todas" ? "/catalogo" : `/catalogo/categoria.html?cat=${id}`,
       );
     },
-    [navigate, activeCategory]
+    [navigate, activeCategory],
   );
 
   const handleAddToCart = useCallback(
@@ -86,7 +84,7 @@ const CategoryPage = () => {
       setSelectedProduct(product);
       setAddModalOpen(true);
     },
-    [addToCart]
+    [addToCart],
   );
 
   const handleAddExtra = useCallback(
@@ -95,11 +93,11 @@ const CategoryPage = () => {
         addToCart(selectedProduct, qty);
       }
     },
-    [addToCart, selectedProduct]
+    [addToCart, selectedProduct],
   );
 
   const currentQtyInCart = selectedProduct
-    ? cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0
+    ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
     : 0;
 
   return (
@@ -111,17 +109,10 @@ const CategoryPage = () => {
         searchValue={categorySearch}
         onSearchChange={setCategorySearch}
         onBack={() => navigate("/catalogo")}
+        onOpenCategories={() => navigate("/catalogo")}
       />
 
       <main className="mx-auto mt-3 max-w-7xl px-2 md:mt-5 md:px-4">
-        <div className="sticky top-[72px] z-20 mb-3 bg-background/90 pb-2 backdrop-blur-xl md:top-[84px]">
-          <CategoryFilter
-            categories={CATEGORY_CONFIG}
-            active={activeCategory}
-            onSelect={handleCategorySelect}
-          />
-        </div>
-
         {loading ? (
           <CategorySkeleton />
         ) : filteredProducts.length === 0 ? (

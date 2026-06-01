@@ -6,7 +6,6 @@ interface CategoryFilterDesktopProps {
   active: string;
   counts?: Record<string, number>;
   onSelect: (id: string) => void;
-  getButtonClass: (id: string) => string;
 }
 
 export function CategoryFilterDesktop({
@@ -32,9 +31,7 @@ export function CategoryFilterDesktop({
           >
             <span className="category-icon">{category.icon}</span>
             <span className="category-name">{category.name}</span>
-            <span className="category-count">
-              {count} {count === 1 ? "producto" : "productos"}
-            </span>
+            <span className="category-count">{count} productos</span>
           </button>
         );
       })}

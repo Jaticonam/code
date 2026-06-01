@@ -2,7 +2,7 @@
 /* Punto único de carga global */
 
 /* Fuentes */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
 
 /* Core */
 @import "./shared/styles/base.css";
@@ -23,10 +23,13 @@
 @import "./shared/styles/components/explore-mobile.css";
 
 /* Catálogo */
+/* Catálogo */
 @import "./shared/styles/catalog/product-card.css";
 @import "./shared/styles/catalog/category-filter.css";
 @import "./shared/styles/catalog/category-filter-mobile.css";
-@import "./shared/styles/catalog/campaign-filter.css";
+@import "./shared/styles/catalog/header-campaign-filter.css";
+@import "./shared/styles/catalog/header-category-filter.css";
+@import "./shared/styles/catalog/catalog-control-header.css";
 @import "./shared/styles/catalog/search.css";
 @import "./shared/styles/catalog/notifications.css";
 

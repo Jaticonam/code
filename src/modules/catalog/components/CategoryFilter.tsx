@@ -1,5 +1,4 @@
 import type { Category } from "@/shared/types/product";
-import { useCategoryScroll } from "@/modules/catalog/hooks/useCategoryScroll";
 import { CategoryFilterDesktop } from "@/modules/catalog/components/CategoryFilterDesktop";
 import { CategoryFilterMobile } from "@/modules/catalog/components/CategoryFilterMobile";
 
@@ -20,11 +19,6 @@ export function CategoryFilter({
   const scrollableCategories = categories.filter(
     (c) => c.id !== allCategory?.id,
   );
-  const { scrollRef, canScrollLeft, canScrollRight, scrollByAmount } =
-    useCategoryScroll(categories);
-
-  const getButtonClass = (id: string) =>
-    active === id ? "filter-chip-active scale-[1.04]" : "filter-chip";
 
   return (
     <div className="w-full">
@@ -37,20 +31,14 @@ export function CategoryFilter({
         active={active}
         counts={counts}
         onSelect={onSelect}
-        getButtonClass={getButtonClass}
       />
-      
+
       <CategoryFilterMobile
         allCategory={allCategory}
         scrollableCategories={scrollableCategories}
         active={active}
         counts={counts}
         onSelect={onSelect}
-        getButtonClass={getButtonClass}
-        scrollRef={scrollRef}
-        canScrollLeft={canScrollLeft}
-        canScrollRight={canScrollRight}
-        onScrollRight={() => scrollByAmount("right")}
       />
     </div>
   );
