@@ -16,15 +16,6 @@ export function FloatingButtons({
   const showCatalog = variant === "home";
 
   const handleExploreClick = () => {
-    if (window.innerWidth >= 768) {
-      document.getElementById("filter-category")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-
-      return;
-    }
-
     onExploreClick?.();
   };
 

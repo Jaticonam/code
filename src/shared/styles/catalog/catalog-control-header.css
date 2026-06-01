@@ -60,4 +60,37 @@
   .catalog-header-search {
     min-width: 300px;
   }
+
+  @media (max-width: 768px) {
+    .catalog-control-inner {
+      padding: 8px 10px 10px;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "campaigns"
+        "categories"
+        "search";
+      gap: 7px;
+    }
+
+    .catalog-header-logo {
+      display: none;
+    }
+
+    .catalog-header-campaigns {
+      grid-area: campaigns;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .catalog-header-categories {
+      grid-area: categories;
+      min-width: 0;
+    }
+
+    .catalog-header-search {
+      grid-area: search;
+      min-width: 0;
+    }
+  }
 }

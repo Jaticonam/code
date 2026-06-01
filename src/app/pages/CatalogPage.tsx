@@ -1,9 +1,8 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SearchX } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store";
 import { useProducts } from "@/modules/catalog/hooks/useProducts";
-import { searchProducts } from "@/shared/lib/search";
 import { Product } from "@/shared/types/product";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
 import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
@@ -18,45 +17,9 @@ import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 import { HeaderCategoryFilter } from "@/modules/catalog/components/HeaderCategoryFilter";
 import { HeaderCampaignFilter } from "@/modules/catalog/components/HeaderCampaignFilter";
-
-const TOP_PRIORITY = 100;
-const STRONG_PRIORITY = 80;
-const HIGHLIGHT_PRIORITY = 50;
-
-const getRotationSeed = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  const block = now.getHours() < 12 ? "AM" : "PM";
-  return `${year}-${month}-${day}-${block}`;
-};
-
-const seededShuffle = <T extends { id: string }>(items: T[], seed: string) => {
-  const hash = (text: string) => {
-    let h = 0;
-    for (let i = 0; i < text.length; i++) {
-      h = (h << 5) - h + text.charCodeAt(i);
-      h |= 0;
-    }
-    return h;
-  };
-  return [...items].sort((a, b) => hash(seed + a.id) - hash(seed + b.id));
-};
-
-const sortByPriorityAndShuffleSameLevel = (items: Product[]) => {
-  const seed = getRotationSeed();
-  const groups = items.reduce<Record<number, Product[]>>((acc, product) => {
-    const priority = product.priority || 0;
-    (acc[priority] ||= []).push(product);
-    return acc;
-  }, {});
-
-  return Object.keys(groups)
-    .map(Number)
-    .sort((a, b) => b - a)
-    .flatMap((priority) => seededShuffle(groups[priority], seed));
-};
+import { useCatalogFilters } from "@/modules/catalog/hooks/useCatalogFilters";
+import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPrioritySections";
+import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
 
 const CatalogPage = () => {
   const location = useLocation();
@@ -147,77 +110,19 @@ const CatalogPage = () => {
     [navigate, activeCategory],
   );
 
-  const filteredProducts = useMemo(() => {
-    const term = searchQuery.trim();
-    let filtered = products;
-
-    if (activeCategory !== "todas") {
-      filtered = filtered.filter(
-        (product) => product.category === activeCategory,
-      );
-    }
-
-    if (activeCampaign) {
-      filtered = filtered.filter((product) =>
-        product.campaigns?.includes(activeCampaign),
-      );
-    }
-
-    if (!term) return filtered;
-
-    const insideFilters = searchProducts(filtered, term);
-    return insideFilters.length
-      ? insideFilters
-      : searchProducts(products, term);
-  }, [products, activeCategory, activeCampaign, searchQuery]);
-
-  const hasCategory = activeCategory !== "todas";
-  const hasCampaign = Boolean(activeCampaign);
-
-  const categoryBase = useMemo(
-    () =>
-      hasCampaign
-        ? products.filter((p) => p.campaigns?.includes(activeCampaign))
-        : products,
-    [products, hasCampaign, activeCampaign],
-  );
-
-  const campaignBase = useMemo(
-    () =>
-      hasCategory
-        ? products.filter((p) => p.category === activeCategory)
-        : products,
-    [products, hasCategory, activeCategory],
-  );
-
-  const categoryCounts = useMemo(() => {
-    const counts = categoryBase.reduce<Record<string, number>>(
-      (acc, product) => {
-        acc[product.category] = (acc[product.category] || 0) + 1;
-        return acc;
-      },
-      {},
-    );
-    counts.todas = categoryBase.length;
-    return counts;
-  }, [categoryBase]);
-
-  const campaignCounts = useMemo(() => {
-    return campaignBase.reduce<Record<string, number>>((acc, product) => {
-      product.campaigns?.forEach((campaign) => {
-        acc[campaign] = (acc[campaign] || 0) + 1;
-      });
-      return acc;
-    }, {});
-  }, [campaignBase]);
-
-  const visibleCategories = useMemo(
-    () =>
-      CATEGORY_CONFIG.filter(
-        (c) => c.id === "todas" || (categoryCounts[c.id] || 0) > 0,
-      ),
-    [categoryCounts],
-  );
+  const {
+    filteredProducts,
+    categoryCounts,
+    campaignCounts,
+    visibleCategories,
+    hasCategory,
+    hasCampaign,
+  } = useCatalogFilters({
+    products,
+    activeCategory,
+    activeCampaign,
+    searchQuery,
+  });
 
   const activeCat =
     activeCategory !== "todas"
@@ -227,59 +132,6 @@ const CatalogPage = () => {
     ? CAMPAIGN_CONFIG.find((c) => c.id === activeCampaign)
     : null;
   const hasActiveFilters = Boolean(activeCampaignData || activeCat);
-
-  const showPriorityBlocks =
-    activeCategory === "todas" && !activeCampaign && !searchQuery.trim();
-
-  const topProducts = useMemo(
-    () =>
-      showPriorityBlocks
-        ? sortByPriorityAndShuffleSameLevel(
-            products.filter((p) => (p.priority || 0) >= TOP_PRIORITY),
-          )
-        : [],
-    [products, showPriorityBlocks],
-  );
-
-  const strongProducts = useMemo(
-    () =>
-      showPriorityBlocks
-        ? sortByPriorityAndShuffleSameLevel(
-            products.filter((p) => {
-              const priority = p.priority || 0;
-              return priority >= STRONG_PRIORITY && priority < TOP_PRIORITY;
-            }),
-          )
-        : [],
-    [products, showPriorityBlocks],
-  );
-
-  const highlightProducts = useMemo(
-    () =>
-      showPriorityBlocks
-        ? sortByPriorityAndShuffleSameLevel(
-            products.filter((p) => {
-              const priority = p.priority || 0;
-              return (
-                priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY
-              );
-            }),
-          )
-        : [],
-    [products, showPriorityBlocks],
-  );
-
-  const regularProducts = useMemo(
-    () =>
-      sortByPriorityAndShuffleSameLevel(
-        showPriorityBlocks
-          ? filteredProducts.filter(
-              (p) => (p.priority || 0) < HIGHLIGHT_PRIORITY,
-            )
-          : filteredProducts,
-      ),
-    [filteredProducts, showPriorityBlocks],
-  );
 
   const handleAddToCart = useCallback(
     (product: Product) => {
@@ -316,6 +168,20 @@ const CatalogPage = () => {
       ))}
     </div>
   );
+
+  const {
+    showPriorityBlocks,
+    topProducts,
+    strongProducts,
+    highlightProducts,
+    regularProducts,
+  } = useCatalogPrioritySections({
+    products,
+    filteredProducts,
+    activeCategory,
+    activeCampaign,
+    searchQuery,
+  });
 
   return (
     <div className="min-h-screen bg-background pb-40">
@@ -424,15 +290,28 @@ const CatalogPage = () => {
         )}
       </main>
 
-      {!exploreOpen && (
-        <FloatingButtons
-          cartCount={totalItems}
-          onCartClick={() => setCartOpen(true)}
-          onExploreClick={() => setExploreOpen(true)}
-        />
-      )}
+      <CatalogExploreCenter
+        open={exploreOpen}
+        activeCampaign={activeCampaign}
+        activeCategory={activeCategory}
+        activeCampaignName={activeCampaignData?.name}
+        activeCategoryName={activeCat?.name}
+        campaignCounts={campaignCounts}
+        categoryCounts={categoryCounts}
+        categories={visibleCategories}
+        cartCount={totalItems}
+        onClose={() => setExploreOpen(false)}
+        onCampaignSelect={handleCampaignSelect}
+        onCategorySelect={handleCategorySelect}
+        onOpenCart={() => setCartOpen(true)}
+      />
 
       <RecentActivity products={products} />
+      <FloatingButtons
+        cartCount={totalItems}
+        onCartClick={() => setCartOpen(true)}
+        onExploreClick={() => setExploreOpen(true)}
+      />
 
       <CartSidebar
         isOpen={cartOpen}

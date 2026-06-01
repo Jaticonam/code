@@ -69,3 +69,27 @@
 .header-category-chip.active .header-category-count {
   opacity: 0.92;
 }
+@media (max-width: 768px) {
+  .header-category-filter {
+    gap: 6px;
+  }
+
+  .header-category-chip {
+    min-width: auto;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 999px;
+  }
+
+  .header-category-icon {
+    font-size: 12px;
+  }
+
+  .header-category-name {
+    font-size: 10px;
+  }
+
+  .header-category-count {
+    font-size: 10px;
+  }
+}

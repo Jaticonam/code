@@ -32,6 +32,7 @@
 @import "./shared/styles/catalog/catalog-control-header.css";
 @import "./shared/styles/catalog/search.css";
 @import "./shared/styles/catalog/notifications.css";
+@import "./shared/styles/catalog/catalog-explore-center.css";
 
 /* Carrito */
 @import "./shared/styles/cart/cart-panel.css";

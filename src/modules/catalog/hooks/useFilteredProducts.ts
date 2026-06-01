@@ -1,49 +1,43 @@
 import { useMemo } from "react";
-
+import { searchProducts } from "@/shared/lib/search";
 import type { Product } from "@/shared/types/product";
 
 interface UseFilteredProductsParams {
   products: Product[];
   activeCategory?: string;
+  activeCampaign?: string;
   searchQuery?: string;
-}
-
-function normalize(value: unknown) {
-  return String(value ?? "")
-    .trim()
-    .toLowerCase();
 }
 
 export function useFilteredProducts({
   products,
   activeCategory = "todas",
+  activeCampaign = "",
   searchQuery = "",
 }: UseFilteredProductsParams) {
   return useMemo(() => {
-    const category = normalize(activeCategory);
-    const query = normalize(searchQuery);
+    const term = searchQuery.trim();
 
-    return products.filter((product) => {
-      const productCategory = normalize(product.category);
+    let filtered = products;
 
-      const matchesCategory =
-        category === "todas" ||
-        category === "todos" ||
-        productCategory === category;
+    if (activeCategory !== "todas") {
+      filtered = filtered.filter(
+        (product) => product.category === activeCategory,
+      );
+    }
 
-      const searchableText = [
-        product.title,
-        product.description,
-        product.category,
-        product.id,
-      ]
-        .map(normalize)
-        .join(" ");
+    if (activeCampaign) {
+      filtered = filtered.filter((product) =>
+        product.campaigns?.includes(activeCampaign),
+      );
+    }
 
-      const matchesSearch =
-        !query || searchableText.includes(query);
+    if (!term) return filtered;
 
-      return matchesCategory && matchesSearch;
-    });
-  }, [products, activeCategory, searchQuery]);
+    const insideFilters = searchProducts(filtered, term);
+
+    return insideFilters.length
+      ? insideFilters
+      : searchProducts(products, term);
+  }, [products, activeCategory, activeCampaign, searchQuery]);
 }
