@@ -1,15 +1,26 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import type { Product } from "@/shared/types/product";
+import { loadCatalogProgressive, type CatalogCategory } from "@/modules/catalog/services/fetchProducts";
 
-import { fetchProducts } from "@/modules/catalog/utils/products";
+export function useProducts(activeCategory:CatalogCategory="todas"){
+  const [data,setData]=useState<Product[]>([]);
+  const [isLoading,setIsLoading]=useState(true);
+  const [isFullCatalogLoaded,setIsFullCatalogLoaded]=useState(false);
 
-export function useProducts() {
-  return useQuery({
-    queryKey: ["products"],
+  useEffect(()=>{
+    let cancelled=false;
+    setIsLoading(true);
+    setIsFullCatalogLoaded(false);
 
-    queryFn: fetchProducts,
+    loadCatalogProgressive(activeCategory,(products,fullLoaded)=>{
+      if(cancelled) return;
+      setData(products);
+      setIsLoading(products.length===0&&!fullLoaded);
+      setIsFullCatalogLoaded(fullLoaded);
+    });
 
-    staleTime: 1000 * 60 * 5,
+    return()=>{cancelled=true;};
+  },[activeCategory]);
 
-    gcTime: 1000 * 60 * 30,
-  });
+  return {data,isLoading,isFullCatalogLoaded};
 }

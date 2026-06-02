@@ -14,9 +14,11 @@ export function HeaderCategoryFilter({
   counts = {},
   onSelect,
 }: Props) {
-  const visible = categories.filter(
-    (c) => c.id === "todas" || (counts[c.id] ?? 0) > 0,
-  );
+  const hasCounts = Object.keys(counts).length > 0;
+
+  const visible = hasCounts
+    ? categories.filter((c) => c.id === "todas" || (counts[c.id] ?? 0) > 0)
+    : categories;
 
   return (
     <div className="header-category-filter">
@@ -33,7 +35,9 @@ export function HeaderCategoryFilter({
           >
             <span className="header-category-icon">{c.icon}</span>
             <span className="header-category-name">{c.name}</span>
-            <span className="header-category-count">({count})</span>
+            {hasCounts && (
+              <span className="header-category-count">({count})</span>
+            )}
           </button>
         );
       })}

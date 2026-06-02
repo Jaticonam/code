@@ -62,7 +62,12 @@ const CatalogPage = () => {
     setItemNote,
     clearCart,
   } = useCartStore();
-  const { data: products = [], isLoading: loading } = useProducts();
+
+  const {
+    data: products = [],
+    isLoading: loading,
+    isFullCatalogLoaded,
+  } = useProducts(activeCategory as any);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -122,6 +127,7 @@ const CatalogPage = () => {
     activeCategory,
     activeCampaign,
     searchQuery,
+    showCounts: isFullCatalogLoaded,
   });
 
   const activeCat =
@@ -196,6 +202,7 @@ const CatalogPage = () => {
             <HeaderCampaignFilter
               active={activeCampaign}
               counts={campaignCounts}
+              show={isFullCatalogLoaded}
               onSelect={handleCampaignSelect}
             />
           }

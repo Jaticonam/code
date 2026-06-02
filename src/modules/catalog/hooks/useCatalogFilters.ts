@@ -8,6 +8,7 @@ interface Params {
   activeCategory: string;
   activeCampaign: string;
   searchQuery: string;
+  showCounts?: boolean;
 }
 
 export function useCatalogFilters({
@@ -15,6 +16,7 @@ export function useCatalogFilters({
   activeCategory,
   activeCampaign,
   searchQuery,
+  showCounts = false,
 }: Params) {
   const filteredProducts = useFilteredProducts({
     products,
@@ -22,7 +24,6 @@ export function useCatalogFilters({
     activeCampaign,
     searchQuery,
   });
-
   const hasCategory = activeCategory !== "todas";
   const hasCampaign = Boolean(activeCampaign);
 
@@ -33,7 +34,6 @@ export function useCatalogFilters({
         : products,
     [products, hasCampaign, activeCampaign],
   );
-
   const campaignBase = useMemo(
     () =>
       hasCategory
@@ -43,6 +43,7 @@ export function useCatalogFilters({
   );
 
   const categoryCounts = useMemo(() => {
+    if (!showCounts) return {};
     const counts = categoryBase.reduce<Record<string, number>>(
       (acc, product) => {
         acc[product.category] = (acc[product.category] || 0) + 1;
@@ -50,27 +51,28 @@ export function useCatalogFilters({
       },
       {},
     );
-
     counts.todas = categoryBase.length;
     return counts;
-  }, [categoryBase]);
+  }, [categoryBase, showCounts]);
 
   const campaignCounts = useMemo(() => {
+    if (!showCounts) return {};
     return campaignBase.reduce<Record<string, number>>((acc, product) => {
       product.campaigns?.forEach((campaign) => {
         acc[campaign] = (acc[campaign] || 0) + 1;
       });
-
       return acc;
     }, {});
-  }, [campaignBase]);
+  }, [campaignBase, showCounts]);
 
   const visibleCategories = useMemo<Category[]>(
     () =>
-      CATEGORY_CONFIG.filter(
-        (c) => c.id === "todas" || (categoryCounts[c.id] || 0) > 0,
-      ),
-    [categoryCounts],
+      showCounts
+        ? CATEGORY_CONFIG.filter(
+            (c) => c.id === "todas" || (categoryCounts[c.id] || 0) > 0,
+          )
+        : CATEGORY_CONFIG,
+    [categoryCounts, showCounts],
   );
 
   return {
