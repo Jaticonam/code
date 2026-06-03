@@ -36,6 +36,8 @@ import { ProductQuantitySelector } from "@/modules/product-detail/components/Pro
 import { ProductPurchaseActions } from "@/modules/product-detail/components/ProductPurchaseActions";
 import { RelatedProducts } from "@/modules/product-detail/components/RelatedProducts";
 import { ProductTierProgress } from "@/modules/product-detail/components/ProductTierProgress";
+import { ProductSeo } from "@/shared/seo/productSeoComponent";
+import { getProductSeo } from "@/shared/seo/productSeo";
 
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
@@ -48,7 +50,11 @@ const ProductDetailPage = () => {
   const currentCategory = searchParams.get("cat") || "";
   const id = searchParams.get("id") || paramId;
 
-  const { data: products = [], isLoading: loading } = useProducts();
+  const productCategory = currentCategory || "todas";
+
+  const { data: products = [], isLoading: loading } = useProducts(
+    productCategory as any,
+  );
 
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -83,6 +89,8 @@ const ProductDetailPage = () => {
     () => products.find((item) => item.id === id),
     [products, id],
   );
+
+  const productSeo = getProductSeo(product, id);
 
   const selectedRelatedQty = selectedRelated
     ? (cart.find((i) => i.id === selectedRelated.id)?.qty ?? 0)
@@ -325,6 +333,8 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28 md:pb-40">
+      <ProductSeo seo={productSeo} product={product} />
+
       <ProductDetailHeader
         product={product}
         onBack={handleBack}
