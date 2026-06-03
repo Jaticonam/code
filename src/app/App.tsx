@@ -13,80 +13,64 @@ import BlogPage from "@/app/pages/BlogPage";
 import BlogArticlePage from "@/app/pages/BlogArticlePage";
 import NotFound from "@/app/pages/NotFound";
 import BlogSectionPage from "./pages/BlogSectionPage";
-
+import { HelmetProvider } from "react-helmet-async";
 
 const queryClient = new QueryClient();
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
+      <HelmetProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
 
-        <BrowserRouter future={{ v7_relativeSplatPath: true }}>
-          <Routes>
-            {/* HOME */}
-            <Route path="/" element={<HomePage />} />
+          <BrowserRouter future={{ v7_relativeSplatPath: true }}>
+            <Routes>
+              {/* HOME */}
+              <Route path="/" element={<HomePage />} />
 
-            {/* BLOG */}
+              {/* BLOG */}
 
-            <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog" element={<BlogPage />} />
 
-            <Route
-              path="/blog/laboratorio"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/tendencias"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/oportunidades"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/herramientas"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/herramientas/:tool"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/campanas"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/campanas/:campaign"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/catalogo"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/guias"
-              element={<BlogSectionPage />}
-            />
-            <Route
-              path="/blog/:slug"
-              element={<BlogArticlePage />}
-            />
-            {/* CATALOGO */}
-            <Route path="/catalogo" element={<CatalogPage />} />
-            <Route path="/catalogo/producto.html" element={<ProductDetailPage />} />
-            <Route path="/catalogo/categoria.html" element={<CategoryPage />} />
+              <Route path="/blog/laboratorio" element={<BlogSectionPage />} />
+              <Route path="/blog/tendencias" element={<BlogSectionPage />} />
+              <Route path="/blog/oportunidades" element={<BlogSectionPage />} />
+              <Route path="/blog/herramientas" element={<BlogSectionPage />} />
+              <Route
+                path="/blog/herramientas/:tool"
+                element={<BlogSectionPage />}
+              />
+              <Route path="/blog/campanas" element={<BlogSectionPage />} />
+              <Route
+                path="/blog/campanas/:campaign"
+                element={<BlogSectionPage />}
+              />
+              <Route path="/blog/catalogo" element={<BlogSectionPage />} />
+              <Route path="/blog/guias" element={<BlogSectionPage />} />
+              <Route path="/blog/:slug" element={<BlogArticlePage />} />
+              {/* CATALOGO */}
+              <Route path="/catalogo" element={<CatalogPage />} />
+              <Route
+                path="/catalogo/producto.html"
+                element={<ProductDetailPage />}
+              />
+              <Route
+                path="/catalogo/categoria.html"
+                element={<CategoryPage />}
+              />
 
-            {/* LEGACY */}
-            <Route path="/producto/:id" element={<ProductDetailPage />} />
-            <Route path="/categoria/:id" element={<CategoryPage />} />
+              {/* LEGACY */}
+              <Route path="/producto/:id" element={<ProductDetailPage />} />
+              <Route path="/categoria/:id" element={<CategoryPage />} />
 
-            {/* 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+              {/* 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

@@ -20,6 +20,8 @@ import { HeaderCampaignFilter } from "@/modules/catalog/components/HeaderCampaig
 import { useCatalogFilters } from "@/modules/catalog/hooks/useCatalogFilters";
 import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPrioritySections";
 import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
+import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
+import { getCatalogSeo } from "@/shared/seo/catalogSeo";
 
 const CatalogPage = () => {
   const location = useLocation();
@@ -189,8 +191,11 @@ const CatalogPage = () => {
     searchQuery,
   });
 
+  const seo = getCatalogSeo(activeCategory);
+
   return (
     <div className="min-h-screen bg-background pb-40">
+      <CatalogSeo seo={seo} />
       <header className="sticky top-0 z-[100] flex w-full flex-col shadow-sm">
         <CountdownTimer />
 
