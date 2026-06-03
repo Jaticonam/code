@@ -23,10 +23,7 @@ export default function HeroSlider() {
       countdownDate = new Date();
       countdownDate.setDate(countdownDate.getDate() + 10);
 
-      localStorage.setItem(
-        COUNTDOWN_KEY,
-        countdownDate.toISOString()
-      );
+      localStorage.setItem(COUNTDOWN_KEY, countdownDate.toISOString());
     }
 
     const updateTimer = () => {
@@ -34,56 +31,41 @@ export default function HeroSlider() {
       const distance = countdownDate.getTime() - now;
 
       if (distance <= 0) {
-        clearInterval(interval);
-
         setTimeLeft({
-          days:"00",
-          hours:"00",
-          minutes:"00",
-          seconds:"00",
+          days: "00",
+          hours: "00",
+          minutes: "00",
+          seconds: "00",
         });
 
         return;
       }
 
       setTimeLeft({
-        days:Math.floor(distance/(1000*60*60*24))
+        days: Math.floor(distance / (1000 * 60 * 60 * 24))
           .toString()
-          .padStart(2,"0"),
+          .padStart(2, "0"),
 
-        hours:Math.floor(
-          (distance%(1000*60*60*24))
-          /(1000*60*60)
-        )
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
           .toString()
-          .padStart(2,"0"),
+          .padStart(2, "0"),
 
-        minutes:Math.floor(
-          (distance%(1000*60*60))
-          /(1000*60)
-        )
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
           .toString()
-          .padStart(2,"0"),
+          .padStart(2, "0"),
 
-        seconds:Math.floor(
-          (distance%(1000*60))
-          /1000
-        )
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
           .toString()
-          .padStart(2,"0"),
+          .padStart(2, "0"),
       });
     };
 
+    const interval = setInterval(updateTimer, 1000);
+
     updateTimer();
 
-    const interval = setInterval(
-      updateTimer,
-      1000
-    );
-
     return () => clearInterval(interval);
-
-  },[]);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -236,8 +218,16 @@ export default function HeroSlider() {
               <div className="flex gap-4">
                 {[
                   { label: "Días", value: timeLeft.days, color: "text-white" },
-                  { label: "Horas", value: timeLeft.hours, color: "text-white" },
-                  { label: "Min", value: timeLeft.minutes, color: "text-white" },
+                  {
+                    label: "Horas",
+                    value: timeLeft.hours,
+                    color: "text-white",
+                  },
+                  {
+                    label: "Min",
+                    value: timeLeft.minutes,
+                    color: "text-white",
+                  },
                   {
                     label: "Seg",
                     value: timeLeft.seconds,
@@ -268,9 +258,10 @@ export default function HeroSlider() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button 
-              onClick={()=>window.location.href="/catalogo"}
-              className="btn-premium bg-gradient-to-r from-[#f5b025] to-[#d49615] text-[#070b14] px-8 py-4 rounded-xl font-bold text-lg shadow-[0_0_20px_rgba(245,176,37,0.3)] hover:shadow-[0_0_30px_rgba(245,176,37,0.5)] flex items-center justify-center gap-2">
+              <button
+                onClick={() => (window.location.href = "/catalogo")}
+                className="btn-premium bg-gradient-to-r from-[#f5b025] to-[#d49615] text-[#070b14] px-8 py-4 rounded-xl font-bold text-lg shadow-[0_0_20px_rgba(245,176,37,0.3)] hover:shadow-[0_0_30px_rgba(245,176,37,0.5)] flex items-center justify-center gap-2"
+              >
                 Ver productos de campaña
                 <svg
                   className="w-5 h-5"
@@ -287,8 +278,13 @@ export default function HeroSlider() {
                 </svg>
               </button>
 
-              <button 
-                onClick={()=>window.open("https://wa.me/51936188636?text=Hola%20Wooly%2C%20quiero%20informaci%C3%B3n%20para%20comprar%20por%20mayor","_blank")}
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://wa.me/51936188636?text=Hola%20Wooly%2C%20quiero%20informaci%C3%B3n%20para%20comprar%20por%20mayor",
+                    "_blank",
+                  )
+                }
                 className="bg-[#25D366] text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-[0_10px_30px_rgba(37,211,102,0.35)] hover:bg-[#1EAD54] hover:shadow-[0_12px_35px_rgba(37,211,102,0.45)] transition-all duration-300 flex items-center justify-center gap-2"
               >
                 Asesora WhatsApp
