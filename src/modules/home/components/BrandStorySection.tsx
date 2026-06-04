@@ -6,7 +6,7 @@ export default function BrandStorySection() {
   return (
     <section className="home-container brand-story-section">
       <div className="brand-story-grid">
-        <div className="brand-story-image-col">
+        <div className="brand-story-image-col" data-aos="fade-right">
           <div className="brand-story-image-bg" />
 
           <img
@@ -17,7 +17,11 @@ export default function BrandStorySection() {
           />
         </div>
 
-        <div className="brand-story-content">
+        <div
+          className="brand-story-content"
+          data-aos="fade-left"
+          data-aos-delay="120"
+        >
           <HomeSectionHeader
             icon={Store}
             kicker="tu proveedor confiable"
@@ -27,9 +31,8 @@ export default function BrandStorySection() {
 
           <div className="brand-story-text">
             <p>
-              En <strong>Wooly import Perú</strong>{" "}
-              abastecemos a mayoristas y emprendedores con insumos para regalos
-              que realmente se venden.
+              En <strong>Wooly import Perú</strong> abastecemos a mayoristas y
+              emprendedores con insumos para regalos que realmente se venden.
             </p>
 
             <p>
@@ -51,7 +54,8 @@ export default function BrandStorySection() {
             </div>
 
             <p className="brand-story-strong">
-              Si buscas crecer con productos que sí rotan, wooly es tu mejor aliado.
+              Si buscas crecer con productos que sí rotan, wooly es tu mejor
+              aliado.
             </p>
           </div>
 
@@ -60,6 +64,8 @@ export default function BrandStorySection() {
             target="_blank"
             rel="noopener noreferrer"
             className="brand-story-cta"
+            data-aos="fade-up"
+            data-aos-delay="220"
           >
             <WhatsAppIcon className="h-5 w-5" />
             Escríbenos ahora

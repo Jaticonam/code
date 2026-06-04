@@ -82,20 +82,27 @@ export default function HowToBuySection() {
       <div className="how-to-buy-bg" />
 
       <div className="home-container how-to-buy-container">
-        <HomeSectionHeader
-          icon={ShoppingCart}
-          kicker="empieza ahora"
-          title="Compra en minutos, vende hoy"
-          description="Sigue estos 5 pasos y asegura stock listo para generar ingresos."
-        />
+        <div data-aos="fade-up">
+          <HomeSectionHeader
+            icon={ShoppingCart}
+            kicker="empieza ahora"
+            title="Compra en minutos, vende hoy"
+            description="Sigue estos 5 pasos y asegura stock listo para generar ingresos."
+          />
+        </div>
 
         <div className="how-to-buy-grid">
-          {steps.map((step) => {
+          {steps.map((step, index) => {
             const Icon = step.icon;
             const styles = colorStyles[step.color as keyof typeof colorStyles];
 
             return (
-              <div key={step.number} className="how-to-buy-card group">
+              <div
+                key={step.number}
+                className="how-to-buy-card group"
+                data-aos="fade-up"
+                data-aos-delay={(index % 5) * 70}
+              >
                 <div className={`how-to-buy-number ${styles.number}`}>
                   {step.number}
                 </div>
@@ -113,10 +120,7 @@ export default function HowToBuySection() {
                 <h3 className={`how-to-buy-title ${styles.title}`}>
                   {step.title}
                 </h3>
-
-                <p className="how-to-buy-description">
-                  {step.description}
-                </p>
+                <p className="how-to-buy-description">{step.description}</p>
               </div>
             );
           })}

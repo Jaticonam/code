@@ -210,7 +210,11 @@ export default function HeroSlider() {
               </p>
             </div>
 
-            <div className="space-y-3 pt-2">
+            <div
+              className="space-y-3 pt-2"
+              data-aos="zoom-in"
+              data-aos-delay="250"
+            >
               <p className="text-sm font-medium text-gray-400 uppercase tracking-widest">
                 ⏰ La campaña no espera
               </p>
@@ -257,7 +261,11 @@ export default function HeroSlider() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div
+              className="flex flex-col sm:flex-row gap-4 pt-4"
+              data-aos="fade-up"
+              data-aos-delay="350"
+            >
               <button
                 onClick={() => (window.location.href = "/catalogo")}
                 className="btn-premium bg-gradient-to-r from-[#f5b025] to-[#d49615] text-[#070b14] px-8 py-4 rounded-xl font-bold text-lg shadow-[0_0_20px_rgba(245,176,37,0.3)] hover:shadow-[0_0_30px_rgba(245,176,37,0.5)] flex items-center justify-center gap-2"
@@ -328,7 +336,11 @@ export default function HeroSlider() {
             </div>
           </div>
 
-          <div className="relative w-full h-[500px] lg:h-[700px] flex items-center justify-center animate-zoom-cinematic mt-10 lg:mt-0">
+          <div
+            className="relative w-full h-[500px] lg:h-[700px] flex items-center justify-center mt-10 lg:mt-0"
+            data-aos="zoom-in"
+            data-aos-delay="200"
+          >
             <div className="relative w-full h-full max-w-lg flex items-center justify-center">
               <div className="absolute w-3/4 h-3/4 bg-[#f5b025]/20 rounded-full blur-[80px] animate-pulse-glow z-0"></div>
 

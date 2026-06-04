@@ -13,7 +13,6 @@ const vipBenefits = [
     icon: Zap,
     color: "secondary",
   },
-
   {
     number: "2",
     label: "Directo",
@@ -23,7 +22,6 @@ const vipBenefits = [
     icon: Video,
     color: "primary",
   },
-
   {
     number: "3",
     label: "Exclusivo",
@@ -42,14 +40,12 @@ const colorStyles = {
     label: "bg-[#1d8299]/10 text-[#1d8299]",
     title: "group-hover:text-[#1d8299]",
   },
-
   secondary: {
     number: "group-hover:text-[#f286be]/10",
     iconHover: "group-hover:bg-[#f286be]",
     label: "bg-[#f286be]/10 text-[#f286be]",
     title: "group-hover:text-[#f286be]",
   },
-
   accent: {
     number: "group-hover:text-[#f5b025]/10",
     iconHover: "group-hover:bg-[#f5b025]",
@@ -61,69 +57,57 @@ const colorStyles = {
 export default function VipSection() {
   return (
     <section className="home-container home-vip-section">
-      <HomeSectionHeader
-        icon={Crown}
-        kicker="Acceso preferencial"
-        title="Mayoristas VIP"
-        description="Beneficios exclusivos para quienes quieren comprar mejor, acceder antes y vender con más estrategia."
-        align="center"
-      />
+      <div data-aos="fade-up">
+        <HomeSectionHeader
+          icon={Crown}
+          kicker="Acceso preferencial"
+          title="Mayoristas VIP"
+          description="Beneficios exclusivos para quienes quieren comprar mejor, acceder antes y vender con más estrategia."
+          align="center"
+        />
+      </div>
 
       <div className="home-vip-grid">
-        {vipBenefits.map((item) => {
+        {vipBenefits.map((item, index) => {
           const Icon = item.icon;
-
-          const styles =
-            colorStyles[item.color as keyof typeof colorStyles];
+          const styles = colorStyles[item.color as keyof typeof colorStyles];
 
           return (
             <article
               key={item.title}
               className="vip-card group"
+              data-aos="fade-up"
+              data-aos-delay={index * 80}
             >
-              <div
-                className={`vip-card-number ${styles.number}`}
-              >
+              <div className={`vip-card-number ${styles.number}`}>
                 {item.number}
               </div>
 
               <div className="vip-card-header">
-
                 <div className="vip-card-title-row">
-
                   <div
                     className={`vip-card-icon bg-[#f7b1d6]/20 text-[#f286be] shadow-sm group-hover:scale-110 group-hover:text-white ${styles.iconHover}`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
 
-                  <h3
-                    className={`vip-card-title ${styles.title}`}
-                  >
+                  <h3 className={`vip-card-title ${styles.title}`}>
                     {item.title}
                   </h3>
-
                 </div>
 
-                <span
-                  className={`vip-card-label ${styles.label}`}
-                >
+                <span className={`vip-card-label ${styles.label}`}>
                   {item.label}
                 </span>
-
               </div>
 
-              <p className="vip-card-description">
-                {item.description}
-              </p>
-
+              <p className="vip-card-description">{item.description}</p>
             </article>
           );
         })}
       </div>
 
-      <div className="vip-cta-wrapper">
-
+      <div className="vip-cta-wrapper" data-aos="zoom-in" data-aos-delay="160">
         <a
           href="https://wa.me/51936188636"
           target="_blank"
@@ -137,7 +121,6 @@ export default function VipSection() {
         <p className="vip-cta-note">
           Acceso inmediato por WhatsApp con atención rápida y directa.
         </p>
-
       </div>
     </section>
   );

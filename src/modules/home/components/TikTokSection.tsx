@@ -39,20 +39,16 @@ export default function TikTokSection() {
   return (
     <section className="tiktok-section">
       <div className="tiktok-inner">
-        <div className="tiktok-header">
+        <div className="tiktok-header" data-aos="fade-up">
           <div className="tiktok-kicker-row">
             <span className="tiktok-kicker-icon">
               <Flame className="h-5 w-5" />
             </span>
 
-            <span className="tiktok-kicker">
-              Tendencias que venden
-            </span>
+            <span className="tiktok-kicker">Tendencias que venden</span>
           </div>
 
-          <h2 className="tiktok-title">
-            Productos que generan ventas
-          </h2>
+          <h2 className="tiktok-title">Productos que generan ventas</h2>
 
           <div className="tiktok-divider" />
 
@@ -63,8 +59,13 @@ export default function TikTokSection() {
         </div>
 
         <div className="tiktok-video-track">
-          {videos.map((video) => (
-            <article key={video.id} className="tiktok-card">
+          {videos.map((video, index) => (
+            <article
+              key={video.id}
+              className="tiktok-card"
+              data-aos="fade-up"
+              data-aos-delay={(index % 4) * 60}
+            >
               <div className="tiktok-iframe-wrapper">
                 <iframe
                   src={video.embed}
@@ -77,9 +78,7 @@ export default function TikTokSection() {
               </div>
 
               <div className="tiktok-card-content">
-                <h3 className="tiktok-card-title">
-                  {video.title}
-                </h3>
+                <h3 className="tiktok-card-title">{video.title}</h3>
 
                 <button
                   type="button"

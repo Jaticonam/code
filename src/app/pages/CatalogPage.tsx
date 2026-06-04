@@ -22,6 +22,7 @@ import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPr
 import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
 import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
 import { getCatalogSeo } from "@/shared/seo/catalogSeo";
+import AOS from "aos";
 
 const CatalogPage = () => {
   const location = useLocation();
@@ -165,14 +166,15 @@ const CatalogPage = () => {
 
   const renderGrid = (items: Product[]) => (
     <div className="grid grid-cols-2 gap-[3px] md:grid-cols-3 md:gap-2 xl:grid-cols-5 xl:gap-2">
-      {items.map((p) => (
-        <ProductCard
-          key={p.id}
-          product={p}
-          cart={cart}
-          onAddToCart={handleAddToCart}
-          onImageClick={(src, title) => setZoomImage({ src, title })}
-        />
+      {items.map((p, index) => (
+        <div key={p.id} data-aos="fade-up" data-aos-delay={(index % 5) * 40}>
+          <ProductCard
+            product={p}
+            cart={cart}
+            onAddToCart={handleAddToCart}
+            onImageClick={(src, title) => setZoomImage({ src, title })}
+          />
+        </div>
       ))}
     </div>
   );
@@ -192,6 +194,13 @@ const CatalogPage = () => {
   });
 
   const seo = getCatalogSeo(activeCategory);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      AOS.refreshHard();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [filteredProducts, activeCategory, activeCampaign, searchQuery]);
 
   return (
     <div className="min-h-screen bg-background pb-40">

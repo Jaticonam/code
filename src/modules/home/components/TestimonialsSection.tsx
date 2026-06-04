@@ -59,73 +59,62 @@ const testimonials = [
 ];
 
 const colorStyles = {
-  primary:{
-    number:"group-hover:text-[#1d8299]/10",
-    iconHover:"group-hover:bg-[#1d8299]",
-    label:"bg-[#1d8299]/10 text-[#1d8299]",
-    title:"group-hover:text-[#1d8299]",
+  primary: {
+    number: "group-hover:text-[#1d8299]/10",
+    iconHover: "group-hover:bg-[#1d8299]",
+    label: "bg-[#1d8299]/10 text-[#1d8299]",
+    title: "group-hover:text-[#1d8299]",
   },
-  secondary:{
-    number:"group-hover:text-[#f286be]/10",
-    iconHover:"group-hover:bg-[#f286be]",
-    label:"bg-[#f286be]/10 text-[#f286be]",
-    title:"group-hover:text-[#f286be]",
+  secondary: {
+    number: "group-hover:text-[#f286be]/10",
+    iconHover: "group-hover:bg-[#f286be]",
+    label: "bg-[#f286be]/10 text-[#f286be]",
+    title: "group-hover:text-[#f286be]",
   },
-  accent:{
-    number:"group-hover:text-[#f5b025]/10",
-    iconHover:"group-hover:bg-[#f5b025]",
-    label:"bg-[#f5b025]/10 text-[#f5b025]",
-    title:"group-hover:text-[#f5b025]",
+  accent: {
+    number: "group-hover:text-[#f5b025]/10",
+    iconHover: "group-hover:bg-[#f5b025]",
+    label: "bg-[#f5b025]/10 text-[#f5b025]",
+    title: "group-hover:text-[#f5b025]",
   },
 } as const;
 
 export default function TestimonialsSection() {
   return (
     <section className="home-container testimonials-section">
-
-      <HomeSectionHeader
-        icon={Quote}
-        kicker="emprendedores que ya compran con wooly"
-        title="historias reales que respaldan tu decisión"
-        description="clientes que abastecen sus campañas, mejoran su margen y compran con más seguridad."
-        align="center"
-      />
+      <div data-aos="fade-up">
+        <HomeSectionHeader
+          icon={Quote}
+          kicker="emprendedores que ya compran con wooly"
+          title="historias reales que respaldan tu decisión"
+          description="clientes que abastecen sus campañas, mejoran su margen y compran con más seguridad."
+          align="center"
+        />
+      </div>
 
       <div className="testimonials-grid">
-
-        {testimonials.map((item) => {
-
-          const styles =
-            colorStyles[item.color as keyof typeof colorStyles];
+        {testimonials.map((item, index) => {
+          const styles = colorStyles[item.color as keyof typeof colorStyles];
 
           return (
-
             <article
               key={`${item.business}-${item.city}`}
               className="testimonial-card group"
+              data-aos="fade-up"
+              data-aos-delay={(index % 3) * 70}
             >
-
-              <div
-                className={`testimonial-number ${styles.number}`}
-              >
+              <div className={`testimonial-number ${styles.number}`}>
                 {item.number}
               </div>
 
               <div className="testimonial-header">
-
                 <div className="testimonial-business">
-
-                  <div
-                    className={`testimonial-icon ${styles.iconHover}`}
-                  >
+                  <div className={`testimonial-icon ${styles.iconHover}`}>
                     <Quote className="h-5 w-5" />
                   </div>
 
                   <div className="testimonial-meta">
-
-                    <strong
-                      className={`testimonial-name ${styles.title}`}
-                    >
+                    <strong className={`testimonial-name ${styles.title}`}>
                       {item.business}
                     </strong>
 
@@ -133,46 +122,28 @@ export default function TestimonialsSection() {
                       <MapPin className="h-3 w-3 shrink-0" />
                       {item.city}
                     </span>
-
                   </div>
-
                 </div>
 
-                <span
-                  className={`testimonial-label ${styles.label}`}
-                >
+                <span className={`testimonial-label ${styles.label}`}>
                   {item.label}
                 </span>
-
               </div>
 
               <div className="testimonial-stars">
-
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star
-                    key={index}
-                    className="h-4 w-4 fill-current"
-                  />
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-current" />
                 ))}
-
               </div>
 
-              <p className="testimonial-text">
-                “{item.text}”
-              </p>
-
+              <p className="testimonial-text">“{item.text}”</p>
               <span className="testimonial-product">
                 compró: {item.product}
               </span>
-
             </article>
-
           );
-
         })}
-
       </div>
-
     </section>
   );
 }

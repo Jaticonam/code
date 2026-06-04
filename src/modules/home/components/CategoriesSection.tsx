@@ -3,79 +3,76 @@ import { ArrowRight, Tags } from "lucide-react";
 import HomeSectionHeader from "./HomeSectionHeader";
 
 const categories = [
-  { 
-    name: "Flores & Rosas", 
+  {
+    name: "Flores & Rosas",
     tag: "Alta demanda",
     description: "Ideales para ramos, campañas y ventas rápidas",
-    slug: "flores", 
+    slug: "flores",
     image: "https://woolyimports.com/og/flores.jpg",
-    priority: 100
+    priority: 100,
   },
-  { 
-    name: "Peluches", 
+  {
+    name: "Peluches",
     tag: "Sube ticket",
     description: "Perfectos para aumentar el valor del pedido",
-    slug: "peluches", 
+    slug: "peluches",
     image: "https://woolyimports.com/og/peluches.jpg",
-    priority: 90
+    priority: 90,
   },
-  { 
-    name: "Papel Coreano", 
+  {
+    name: "Papel Coreano",
     tag: "Acabado premium",
     description: "Eleva la presentación de cualquier detalle",
-    slug: "papeles", 
+    slug: "papeles",
     image: "https://woolyimports.com/og/papeles.jpg",
-    priority: 85
+    priority: 85,
   },
-  { 
-    name: "Cajas & Bolsas", 
+  {
+    name: "Cajas & Bolsas",
     tag: "Empaque listo",
     description: "Solución directa para empaquetar y vender",
-    slug: "cajas", 
+    slug: "cajas",
     image: "https://woolyimports.com/og/cajas.jpg",
-    priority: 95
+    priority: 95,
   },
-  { 
-    name: "Cintas & Deco", 
+  {
+    name: "Cintas & Deco",
     tag: "Detalle clave",
     description: "El toque final que hace destacar el producto",
-    slug: "cintas", 
+    slug: "cintas",
     image: "https://woolyimports.com/og/cintas.jpg",
-    priority: 80
+    priority: 80,
   },
-  { 
-    name: "Globos", 
+  {
+    name: "Globos",
     tag: "Venta rápida",
     description: "Alta rotación en fechas y campañas",
-    slug: "globos", 
+    slug: "globos",
     image: "https://woolyimports.com/og/globos.jpg",
-    priority: 88
+    priority: 88,
   },
-  { 
-    name: "Accesorios", 
+  {
+    name: "Accesorios",
     tag: "Producción total",
     description: "Complementos para armar pedidos completos",
-    slug: "accesorios", 
+    slug: "accesorios",
     image: "https://woolyimports.com/og/accesorios.jpg",
-    priority: 75
+    priority: 75,
   },
-  { 
-    name: "Hot Wheels", 
+  {
+    name: "Hot Wheels",
     tag: "Alta rotación",
     description: "Producto coleccionable con alta demanda",
-    slug: "hotwheels", 
+    slug: "hotwheels",
     image: "https://woolyimports.com/og/hotwheels.jpg",
-    priority: 92
+    priority: 92,
   },
 ];
 
-const loopCategories = [...categories, ...categories];
-
 export default function CategoriesSection() {
-  
   return (
     <section className="home-container home-categories-section">
-      <div className="home-categories-header">
+      <div className="home-categories-header" data-aos="fade-up">
         <HomeSectionHeader
           icon={Tags}
           kicker="Categorías más vendidas"
@@ -89,9 +86,9 @@ export default function CategoriesSection() {
           <Link
             key={cat.slug}
             to={`/catalogo/categoria.html?cat=${cat.slug}`}
-            className={`home-category-card group ${
-              index === 0 ? "home-category-card-featured" : ""
-            }`}
+            data-aos="fade-up"
+            data-aos-delay={(index % 4) * 60}
+            className={`home-category-card group ${index === 0 ? "home-category-card-featured" : ""}`}
           >
             <img
               src={cat.image}
@@ -102,16 +99,11 @@ export default function CategoriesSection() {
             <div className="home-category-overlay" />
 
             <div className="home-category-content">
-              <span className="home-category-tag">
-                🔥 {cat.tag}
-              </span>
+              <span className="home-category-tag">🔥 {cat.tag}</span>
 
               <div className="flex items-end justify-between gap-4">
                 <div className="flex max-w-[78%] flex-col gap-1">
-                  <h3 className="home-category-title">
-                    {cat.name}
-                  </h3>
-
+                  <h3 className="home-category-title">{cat.name}</h3>
                   <p className="line-clamp-2 text-sm font-medium leading-snug text-white/85 md:text-[15px]">
                     {cat.description}
                   </p>

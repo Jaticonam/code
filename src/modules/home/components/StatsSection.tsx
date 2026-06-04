@@ -67,15 +67,12 @@ function useCountUp(target: number, duration: number, started: boolean) {
 
     const counter = window.setInterval(() => {
       frame += 1;
-
       const progress = Math.min(frame / totalFrames, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
 
       setValue(Math.round(target * eased));
 
-      if (progress >= 1) {
-        window.clearInterval(counter);
-      }
+      if (progress >= 1) window.clearInterval(counter);
     }, 16);
 
     return () => window.clearInterval(counter);
@@ -87,15 +84,21 @@ function useCountUp(target: number, duration: number, started: boolean) {
 function StatCard({
   item,
   started,
+  index,
 }: {
   item: StatItem;
   started: boolean;
+  index: number;
 }) {
   const value = useCountUp(item.target, 1600, started);
   const Icon = item.icon;
 
   return (
-    <div className="home-stat-card group">
+    <div
+      className="home-stat-card group"
+      data-aos="zoom-in"
+      data-aos-delay={(index % 4) * 70}
+    >
       <div
         className={`home-stat-icon ${item.iconBg} ${item.iconColor} ${item.iconHover}`}
       >
@@ -121,7 +124,6 @@ export default function StatsSection() {
 
   useEffect(() => {
     const section = sectionRef.current;
-
     if (!section) return;
 
     const observer = new IntersectionObserver(
@@ -131,27 +133,33 @@ export default function StatsSection() {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.15 },
     );
 
     observer.observe(section);
-
     return () => observer.disconnect();
   }, []);
 
   return (
     <section ref={sectionRef} className="home-container home-stats-section">
-      <HomeSectionHeader
-        icon={BarChart3}
-        kicker="datos reales"
-        title="Resultados que respaldan tu decisión"
-        description="Clientes activos, cobertura nacional y pedidos entregados que reflejan movimiento real."
-        align="center"
-      />
+      <div data-aos="fade-up">
+        <HomeSectionHeader
+          icon={BarChart3}
+          kicker="datos reales"
+          title="Resultados que respaldan tu decisión"
+          description="Clientes activos, cobertura nacional y pedidos entregados que reflejan movimiento real."
+          align="center"
+        />
+      </div>
 
       <div className="home-stats-grid">
-        {stats.map((item) => (
-          <StatCard key={item.label} item={item} started={started} />
+        {stats.map((item, index) => (
+          <StatCard
+            key={item.label}
+            item={item}
+            started={started}
+            index={index}
+          />
         ))}
       </div>
     </section>
