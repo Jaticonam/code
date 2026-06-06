@@ -1,0 +1,23 @@
+import { MetaConnector } from "../connectors/meta/connector";
+import type { IntegrationConnector } from "../types/connector";
+
+class Registry {
+  private connectors: IntegrationConnector<any, any>[] = [];
+
+  register(connector: IntegrationConnector<any, any>) {
+    const exists = this.connectors.some((item) => item.key === connector.key);
+    if (!exists) this.connectors.push(connector);
+  }
+
+  getAll() {
+    return this.connectors;
+  }
+
+  getByKey(key: string) {
+    return this.connectors.find((connector) => connector.key === key);
+  }
+}
+
+export const ConnectorRegistry = new Registry();
+
+ConnectorRegistry.register(MetaConnector);

@@ -12,10 +12,10 @@
   "test": "vitest run",
   "test:watch": "vitest",
   "feed:meta": "tsx scripts/generate-meta-feed.ts",
-  "prepare:meta": "npm run feed:meta",
-  "prepare": "npm run prepare:meta && npm run build",
+  "prepare:integrations": "tsx scripts/prepare-integrations.ts",
+  "prepare": "npm run prepare:integrations && npm run build",
   "publish": "echo \"🚀 Platform ready to publish.\""
-} ,
+},
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
