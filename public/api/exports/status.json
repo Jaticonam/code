@@ -1,0 +1,11 @@
+{
+  "connector": "meta",
+  "status": "ok",
+  "products_loaded": 303,
+  "products_exported": 303,
+  "products_invalid": 0,
+  "generated_at": "2026-06-06T02:21:41.924Z",
+  "version": "20260606T022141Z",
+  "stable_feed": "/api/exports/meta.csv",
+  "cache_buster_url": "/api/exports/meta.csv?v=20260606T022141Z"
+}
