@@ -11,14 +11,10 @@
   "preview": "vite preview",
   "test": "vitest run",
   "test:watch": "vitest",
-
-  "meta:feed": "tsx scripts/generate-meta-feed.ts",
-
-  "prepare:meta": "npm run meta:feed && npm run build",
-
-  "prepare": "npm run prepare:meta",
-
-  "publish": "echo \"🚀 Plataforma preparada. Ejecuta el deploy al servidor.\""
+  "feed:meta": "tsx scripts/generate-meta-feed.ts",
+  "prepare:meta": "npm run feed:meta",
+  "prepare": "npm run prepare:meta && npm run build",
+  "publish": "echo \"🚀 Platform ready to publish.\""
 },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
