@@ -1,52 +1,22 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
 import { loadAllProducts } from "../src/modules/catalog/services/fetchProducts";
-import { exportMetaCsv, getMetaValidationReport } from "../src/modules/integrations/connectors/meta/exporter";
-
-const OUT_DIR = path.resolve(process.cwd(), "public/api/exports");
-const OUT_FILE = path.join(OUT_DIR, "meta.csv");
-const STATUS_FILE = path.join(OUT_DIR, "status.json");
-
-const stamp = () => new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z");
+import { CatalogEngine } from "../src/modules/integrations/engine/CatalogEngine";
+import { MetaConnector } from "../src/modules/integrations/connectors/meta/connector";
 
 async function main() {
-  console.log("🚀 Generando feed Meta desde Google Sheets...");
+  console.log("🚀 Generando feed Meta desde catálogo...");
 
   const products = await loadAllProducts();
-  const report = getMetaValidationReport(products);
-  const invalid = report.filter((item) => item.errors.length > 0);
-  const exportable = report.filter((item) => item.errors.length === 0 && item.product.status !== "Oculto");
-  const csv = exportMetaCsv(products);
+  const result = await CatalogEngine.publish(products, MetaConnector);
 
-  const generatedAt = new Date().toISOString();
-  const version = stamp();
+  console.log(`✅ Feed generado: ${result.outputFile}`);
+  console.log(`🧾 Status generado: ${result.statusFile}`);
+  console.log(`📦 Productos cargados: ${result.status.products_loaded}`);
+  console.log(`🟢 Productos exportados: ${result.status.products_exported}`);
+  console.log(`⚪ Productos omitidos: ${result.status.products_loaded - result.status.products_exported}`);
+  console.log(`🔴 Productos con errores: ${result.status.products_invalid}`);
+  console.log(`🔗 Cache buster: https://www.woolyimports.com${result.status.cache_buster_url}`);
 
-  const status = {
-    connector: "meta",
-    status: invalid.length ? "warning" : "ok",
-    products_loaded: products.length,
-    products_exported: exportable.length,
-    products_invalid: invalid.length,
-    generated_at: generatedAt,
-    version,
-    stable_feed: "/api/exports/meta.csv",
-    cache_buster_url: `/api/exports/meta.csv?v=${version}`,
-  };
-
-  await fs.mkdir(OUT_DIR, { recursive: true });
-  await fs.writeFile(OUT_FILE, csv, "utf8");
-  await fs.writeFile(STATUS_FILE, JSON.stringify(status, null, 2), "utf8");
-
-  console.log(`✅ Feed generado: ${OUT_FILE}`);
-  console.log(`🧾 Status generado: ${STATUS_FILE}`);
-  console.log(`📦 Productos cargados: ${products.length}`);
-  console.log(`🟢 Productos exportados: ${exportable.length}`);
-  console.log(`⚪ Productos omitidos: ${products.length - exportable.length}`);
-  console.log(`🔴 Productos con errores: ${invalid.length}`);
-  console.log(`🔗 Cache buster: https://www.woolyimports.com/api/exports/meta.csv?v=${version}`);
-
-  invalid.slice(0, 20).forEach(({ product, errors }) => {
+  result.invalid.slice(0, 20).forEach(({ product, errors }) => {
     console.log(` - ${product.id || "SIN_ID"} | ${product.title || "SIN_TITULO"} → ${errors.join(", ")}`);
   });
 }
