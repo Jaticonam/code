@@ -1,10 +1,10 @@
 import type { FeedProduct, MetaFeedItem } from "../../types/feed";
-import type { CatalogConnector } from "../../types/connector";
+import type { IntegrationConnector } from "../../types/connector";
 import { exportMetaCsv } from "./exporter";
 import { mapProductToMeta } from "./mapper";
 import { validateMetaProduct } from "./validator";
 
-export const MetaConnector: CatalogConnector<FeedProduct, MetaFeedItem> = {
+export const MetaConnector: IntegrationConnector<FeedProduct, MetaFeedItem> = {
   key: "meta",
   name: "Meta Commerce",
   outputFile: "meta.csv",
@@ -12,3 +12,6 @@ export const MetaConnector: CatalogConnector<FeedProduct, MetaFeedItem> = {
   map: mapProductToMeta,
   export: exportMetaCsv,
 };
+
+
+

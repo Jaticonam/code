@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { CatalogConnector } from "../types/connector";
+import type { IntegrationConnector } from "../types/connector";
 
 export const ExportEngine = {
   async write<TProduct, TMapped>(
-    connector: CatalogConnector<TProduct, TMapped>,
+    connector: IntegrationConnector<TProduct, TMapped>,
     products: TProduct[],
     outDir = "public/api/exports"
   ) {
@@ -18,3 +18,4 @@ export const ExportEngine = {
     return outputFile;
   },
 };
+

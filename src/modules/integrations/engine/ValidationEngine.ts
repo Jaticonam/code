@@ -1,9 +1,9 @@
-import type { CatalogConnector, ConnectorValidationResult } from "../types/connector";
+import type { IntegrationConnector, ConnectorValidationResult } from "../types/connector";
 
 export const ValidationEngine = {
   validate<TProduct, TMapped>(
     products: TProduct[],
-    connector: CatalogConnector<TProduct, TMapped>
+    connector: IntegrationConnector<TProduct, TMapped>
   ): ConnectorValidationResult<TProduct>[] {
     return products.map((product) => ({
       product,
@@ -19,3 +19,4 @@ export const ValidationEngine = {
     return report.filter((item) => item.errors.length === 0).map((item) => item.product);
   },
 };
+

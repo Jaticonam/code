@@ -1,15 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { CatalogConnector } from "../types/connector";
+import type { IntegrationConnector } from "../types/connector";
 import { ExportEngine } from "./ExportEngine";
 import { ValidationEngine } from "./ValidationEngine";
 
 const stamp = () => new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z");
 
-export const CatalogEngine = {
+export const IntegrationEngine = {
   async publish<TProduct extends { status?: string; id?: string; title?: string }, TMapped>(
     products: TProduct[],
-    connector: CatalogConnector<TProduct, TMapped>,
+    connector: IntegrationConnector<TProduct, TMapped>,
     outDir = "public/api/exports"
   ) {
     const report = ValidationEngine.validate(products, connector);
@@ -41,3 +41,5 @@ export const CatalogEngine = {
     return { outputFile, statusFile, globalStatusFile, status, invalid };
   },
 };
+
+

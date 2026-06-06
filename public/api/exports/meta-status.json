@@ -5,8 +5,8 @@
   "products_loaded": 303,
   "products_exported": 303,
   "products_invalid": 0,
-  "generated_at": "2026-06-06T04:54:07.335Z",
-  "version": "20260606T045407Z",
+  "generated_at": "2026-06-06T05:00:16.343Z",
+  "version": "20260606T050016Z",
   "stable_feed": "/api/exports/meta.csv",
-  "cache_buster_url": "/api/exports/meta.csv?v=20260606T045407Z"
+  "cache_buster_url": "/api/exports/meta.csv?v=20260606T050016Z"
 }

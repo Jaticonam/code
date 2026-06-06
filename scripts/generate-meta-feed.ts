@@ -1,12 +1,12 @@
 import { loadAllProducts } from "../src/modules/catalog/services/fetchProducts";
-import { CatalogEngine } from "../src/modules/integrations/engine/CatalogEngine";
+import { IntegrationEngine } from "../src/modules/integrations/engine/IntegrationEngine";
 import { MetaConnector } from "../src/modules/integrations/connectors/meta/connector";
 
 async function main() {
   console.log("🚀 Generando feed Meta desde catálogo...");
 
   const products = await loadAllProducts();
-  const result = await CatalogEngine.publish(products, MetaConnector);
+  const result = await IntegrationEngine.publish(products, MetaConnector);
 
   console.log(`✅ Feed generado: ${result.outputFile}`);
   console.log(`🧾 Status generado: ${result.statusFile}`);
@@ -25,3 +25,5 @@ main().catch((error) => {
   console.error("❌ Error generando feed Meta:", error);
   process.exit(1);
 });
+
+

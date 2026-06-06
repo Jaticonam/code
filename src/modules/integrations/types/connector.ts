@@ -3,7 +3,7 @@ export type ConnectorValidationResult<TProduct> = {
   errors: string[];
 };
 
-export type CatalogConnector<TProduct, TMapped> = {
+export type IntegrationConnector<TProduct, TMapped> = {
   key: string;
   name: string;
   outputFile: string;
@@ -11,3 +11,4 @@ export type CatalogConnector<TProduct, TMapped> = {
   map: (product: TProduct) => TMapped;
   export: (products: TProduct[]) => string;
 };
+
