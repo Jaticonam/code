@@ -3,16 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "meta:feed": "tsx scripts/generate-meta-feed.ts"
-  },
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "build:dev": "vite build --mode development",
+  "lint": "eslint .",
+  "preview": "vite preview",
+  "test": "vitest run",
+  "test:watch": "vitest",
+
+  "meta:feed": "tsx scripts/generate-meta-feed.ts",
+
+  "prepare:meta": "npm run meta:feed && npm run build",
+
+  "prepare": "npm run prepare:meta",
+
+  "publish": "echo \"🚀 Plataforma preparada. Ejecuta el deploy al servidor.\""
+},
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",

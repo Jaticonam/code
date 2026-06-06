@@ -13,7 +13,12 @@ import BlogPage from "@/app/pages/BlogPage";
 import BlogArticlePage from "@/app/pages/BlogArticlePage";
 import NotFound from "@/app/pages/NotFound";
 import BlogSectionPage from "./pages/BlogSectionPage";
+<<<<<<< HEAD
 import { HelmetProvider } from "react-helmet-async";
+=======
+import WoolyConnectPage from "@/modules/wooly-connect/pages/WoolyConnectPage";
+
+>>>>>>> 821061a (feat: nuevos modulos)
 
 const queryClient = new QueryClient();
 
@@ -65,12 +70,25 @@ export default function App() {
               <Route path="/producto/:id" element={<ProductDetailPage />} />
               <Route path="/categoria/:id" element={<CategoryPage />} />
 
+<<<<<<< HEAD
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
       </HelmetProvider>
+=======
+            {/* WOOLY CONNECT */}
+            <Route path="/wooly-connect" element={<WoolyConnectPage />} />
+
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+>>>>>>> 821061a (feat: nuevos modulos)
     </QueryClientProvider>
   );
 }
+
+
