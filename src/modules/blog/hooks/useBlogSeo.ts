@@ -1,25 +1,127 @@
 import { useEffect } from "react";
+import type { BlogArticle } from "../types/blog";
+import { getBlogSeo } from "../utils/getBlogSeo";
 
-export function useBlogSeo({title,description,image,slug}:{title:string;description:string;image:string;slug:string}) {
-  useEffect(()=>{
-    const url=`https://www.woolyimports.com/blog/${slug}`;
-    document.title=`${title} | Wooly Hub`;
+const SITE_URL = "https://www.woolyimports.com";
+const SITE_NAME = "Wooly Hub";
 
-    const setMeta=(key:string,value:string,attr:"name"|"property"="name")=>{
-      let el=document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement|null;
-      if(!el){el=document.createElement("meta");el.setAttribute(attr,key);document.head.appendChild(el);}
-      el.content=value;
-    };
+const setMeta = (
+  key: string,
+  value: string,
+  attr: "name" | "property" = "name",
+) => {
+  if (!value) return;
 
-    setMeta("description",description);
-    setMeta("og:title",title,"property");
-    setMeta("og:description",description,"property");
-    setMeta("og:image",image,"property");
-    setMeta("og:url",url,"property");
-    setMeta("twitter:card","summary_large_image");
+  let el = document.querySelector(
+    `meta[${attr}="${key}"]`,
+  ) as HTMLMetaElement | null;
 
-    let link=document.querySelector('link[rel="canonical"]') as HTMLLinkElement|null;
-    if(!link){link=document.createElement("link");link.rel="canonical";document.head.appendChild(link);}
-    link.href=url;
-  },[title,description,image,slug]);
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+
+  el.content = value;
+};
+
+const setCanonical = (url: string) => {
+  let link = document.querySelector(
+    'link[rel="canonical"]',
+  ) as HTMLLinkElement | null;
+
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "canonical";
+    document.head.appendChild(link);
+  }
+
+  link.href = url;
+};
+
+const setJsonLd = (id: string, data: object) => {
+  let el = document.querySelector(
+    `script[data-schema="${id}"]`,
+  ) as HTMLScriptElement | null;
+
+  if (!el) {
+    el = document.createElement("script");
+    el.type = "application/ld+json";
+    el.setAttribute("data-schema", id);
+    document.head.appendChild(el);
+  }
+
+  el.textContent = JSON.stringify(data);
+};
+
+export function useBlogSeo(article?: BlogArticle) {
+  useEffect(() => {
+    if (!article) return;
+
+    const seo = getBlogSeo(article);
+    const url = seo.canonical;
+    const metaTitle = seo.metaTitle;
+    const metaDescription = seo.metaDescription;
+    const ogTitle = seo.ogTitle;
+    const ogDescription = seo.ogDescription;
+    const ogImage = seo.ogImage;
+
+    document.title = metaTitle;
+
+    setMeta("description", metaDescription);
+    setMeta("keywords", seo.keywords.join(", "));
+    setMeta("author", article.author || "Wooly");
+
+    setMeta("og:type", "article", "property");
+    setMeta("og:site_name", SITE_NAME, "property");
+    setMeta("og:title", ogTitle, "property");
+    setMeta("og:description", ogDescription, "property");
+    setMeta("og:image", ogImage, "property");
+    setMeta("og:url", url, "property");
+
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", ogTitle);
+    setMeta("twitter:description", ogDescription);
+    setMeta("twitter:image", ogImage);
+
+    setCanonical(url);
+
+    setJsonLd("blog-article", {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.title,
+      description: metaDescription,
+      image: ogImage,
+      datePublished: article.published,
+      dateModified: article.updatedAt || article.published,
+      author: {
+        "@type": "Organization",
+        name: article.author || "Wooly",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Wooly Import Store",
+        logo: {
+          "@type": "ImageObject",
+          url: `${SITE_URL}/logo.png`,
+        },
+      },
+      mainEntityOfPage: url,
+    });
+
+    if (article.faq?.length) {
+      setJsonLd("blog-faq", {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: article.faq.map((item) => ({
+          "@type": "Question",
+          name: item.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.a,
+          },
+        })),
+      });
+    }
+  }, [article]);
 }

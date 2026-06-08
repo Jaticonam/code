@@ -1,95 +1,72 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShoppingBag } from "lucide-react";
-
 import { useProducts } from "@/modules/catalog/hooks/useProducts";
+import BlogCatalogProductCard from "./BlogCatalogProductCard";
 
-export default function BlogCatalogSection(){
+const INITIAL_LIMIT = 4;
+const STEP = 8;
 
-  const {data:products=[],isLoading}=useProducts();
+export default function BlogCatalogSection() {
+  const [visible, setVisible] = useState(INITIAL_LIMIT);
+  const { data: products = [], isLoading } = useProducts();
 
-  const catalog=products
-    .slice()
-    .sort((a,b)=>b.priority-a.priority)
-    .slice(0,4);
+  const catalog = useMemo(
+    () =>
+      products
+        .slice()
+        .filter((p) => p.status !== "Oculto")
+        .sort((a, b) => (b.priority || 0) - (a.priority || 0)),
+    [products],
+  );
 
-  if(isLoading){
-    return(
-      <section className="blog-catalog-section">
+  const shown = catalog.slice(0, visible);
+  const hasMore = visible < catalog.length;
+
+  if (isLoading)
+    return (
+      <section className="hub-section blog-catalog-section">
         <h2>Cargando catálogo...</h2>
       </section>
     );
-  }
+  if (!catalog.length) return null;
 
-  if(!catalog.length)return null;
+  return (
+    <section className="hub-section blog-catalog-section">
+      <ShoppingBag className="hub-ghost-icon" />
 
-  return(
-    <section className="blog-catalog-section">
-
-      <div className="blog-catalog-head">
-
+      <div className="hub-section-head">
         <span>
-          <ShoppingBag size={16}/>
-          CATÁLOGO WOOLY
+          <ShoppingBag size={16} /> CATÁLOGO ESTRATÉGICO
         </span>
-
-        <h2>
-          Productos para empezar hoy
-        </h2>
-
+        <h2>Productos para ejecutar tus oportunidades</h2>
         <p>
-          Descubre productos reales del catálogo Wooly
-          para convertir ideas en ventas.
+          Un grid curado para descubrir productos con potencial comercial,
+          precios mayoristas y uso estratégico.
         </p>
-
       </div>
 
       <div className="blog-catalog-grid">
-
-        {catalog.map(product=>(
-
-          <Link
-            key={product.id}
-            to={`/catalogo/producto.html?id=${product.id}&cat=${product.category}`}
-            className="blog-catalog-card"
-          >
-
-            <img
-              src={product.img}
-              alt={product.title}
-              loading="lazy"
-            />
-
-            <small>
-              {product.category}
-            </small>
-
-            <h3>
-              {product.title}
-            </h3>
-
-            <strong>
-              S/ {product.price_1}
-            </strong>
-
-          </Link>
-
+        {shown.map((product) => (
+          <BlogCatalogProductCard key={product.id} product={product} />
         ))}
-
       </div>
 
       <div className="blog-catalog-action">
+        {hasMore && (
+          <button
+            type="button"
+            onClick={() => setVisible((v) => v + STEP)}
+            className="hub-button"
+          >
+            Ver más productos <ArrowRight size={15} />
+          </button>
+        )}
 
-        <Link to="/catalogo">
-
-          Ver catálogo completo
-
-          <ArrowRight size={18}/>
-
+        <Link to="/catalogo" className="hub-section-more">
+          Explorar categorías <ArrowRight size={15} />
         </Link>
-
       </div>
-
     </section>
   );
-
 }

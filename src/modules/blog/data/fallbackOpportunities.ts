@@ -1,51 +1,56 @@
-export interface HubOpportunity{
-  id:string;
-  emoji:string;
-  title:string;
-  subtitle:string;
-  action:string;
-  href:string;
-  metrics:{label:string;score:number;}[];
+export interface HubOpportunity {
+  id: string;
+  emoji: string;
+  title: string;
+  subtitle: string;
+  action: string;
+  href: string;
+  metrics: { label: string; score: number }[];
 }
 
-export const FALLBACK_OPPORTUNITIES:HubOpportunity[]=[
+export const FALLBACK_OPPORTUNITIES: HubOpportunity[] = [
   {
-    id:"dia-madre-premium",
-    emoji:"🌷",
-    title:"Día de la Madre Premium",
-    subtitle:"Alta oportunidad para arreglos, cajas y regalos emocionales.",
-    action:"Abastecer stock 7 días antes y preparar combos por ticket.",
-    href:"/catalogo",
-    metrics:[
-      {label:"Flores premium",score:92},
-      {label:"Papel coreano",score:84},
-      {label:"Cajas premium",score:78}
-    ]
+    id: "san-valentin-combos",
+    emoji: "❤️",
+    title: "Combos para San Valentín",
+    subtitle:
+      "La oportunidad está en vender presentaciones completas, no productos sueltos.",
+    action:
+      "Arma 3 niveles de combo: detalle rápido, regalo premium y sorpresa completa.",
+    href: "/blog/campanas/san-valentin",
+    metrics: [
+      { label: "Papel coreano", score: 92 },
+      { label: "Peluches", score: 88 },
+      { label: "Cajas premium", score: 84 },
+    ],
   },
   {
-    id:"san-valentin-regalos",
-    emoji:"❤️",
-    title:"Regalos románticos",
-    subtitle:"Campaña fuerte para peluches, papeles decorativos y empaques premium.",
-    action:"Armar combos listos: detalle básico, premium y full sorpresa.",
-    href:"/blog/tipos-papel-coreano",
-    metrics:[
-      {label:"Peluches",score:88},
-      {label:"Papel coreano",score:82},
-      {label:"Cintas",score:70}
-    ]
+    id: "dia-madre-preventa",
+    emoji: "🌷",
+    title: "Preventa Día de la Madre",
+    subtitle:
+      "Alta demanda para arreglos, cajas grandes y regalos emocionales con planificación previa.",
+    action: "Crea preventa con cupos, fechas límite y combos por presupuesto.",
+    href: "/blog/campanas/dia-madre",
+    metrics: [
+      { label: "Flores premium", score: 90 },
+      { label: "Cajas grandes", score: 82 },
+      { label: "Papel elegante", score: 76 },
+    ],
   },
   {
-    id:"hotwheels-coleccion",
-    emoji:"🏎️",
-    title:"Hot Wheels coleccionable",
-    subtitle:"Nicho con compra impulsiva, regalos temáticos y rotación por modelos.",
-    action:"Crear packs por colección, regalo infantil y edición especial.",
-    href:"/catalogo",
-    metrics:[
-      {label:"Coleccionables",score:86},
-      {label:"Cajas regalo",score:64},
-      {label:"Empaque premium",score:58}
-    ]
-  }
+    id: "hotwheels-packs",
+    emoji: "🏎️",
+    title: "Packs Hot Wheels",
+    subtitle:
+      "Nicho ideal para compra recurrente, coleccionismo y regalos temáticos.",
+    action:
+      "Agrupa por modelo, color, categoría o misterio para aumentar ticket promedio.",
+    href: "/blog/campanas/hot-wheels",
+    metrics: [
+      { label: "Coleccionables", score: 86 },
+      { label: "Packs", score: 72 },
+      { label: "Mystery box", score: 64 },
+    ],
+  },
 ];

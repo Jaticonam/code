@@ -2,36 +2,71 @@ import { Link } from "react-router-dom";
 import { ArrowRight, CalendarDays, CheckCircle2 } from "lucide-react";
 import { FALLBACK_CAMPAIGNS } from "../data/fallbackCampaigns";
 
-export default function CampaignCenterSection(){
-  return(
-    <section className="campaign-center-section">
-      <div className="campaign-center-head">
-        <span><CalendarDays size={16}/> CAMPAÑAS COMERCIALES</span>
-        <h2>Prepárate antes que todos</h2>
+export default function CampaignCenterSection() {
+  const campaigns = [...FALLBACK_CAMPAIGNS].sort(
+    (a, b) => a.priority - b.priority,
+  );
+  const [main, ...rest] = campaigns;
+
+  return (
+    <section className="hub-section campaign-center-section">
+      <CalendarDays className="hub-ghost-icon" />
+
+      <div className="hub-section-head">
+        <span>
+          <CalendarDays size={16} /> CAMPAÑAS COMERCIALES
+        </span>
+        <h2>Planifica stock antes que la demanda explote</h2>
         <p>
-          Fechas clave para planificar inventario, crear combos y vender con más intención.
+          Organiza fechas clave, productos recomendados y acciones comerciales
+          para vender con más intención.
         </p>
       </div>
 
-      <div className="campaign-center-grid">
-        {FALLBACK_CAMPAIGNS.map(campaign=>(
-          <article key={campaign.id} className="campaign-center-card">
-            <div className="campaign-center-emoji">{campaign.emoji}</div>
-            <small>{campaign.season}</small>
-            <h3>{campaign.title}</h3>
-            <p>{campaign.description}</p>
+      <div className="campaign-center-layout">
+        <article className="hub-card campaign-featured-card">
+          <div className="campaign-center-emoji">{main.emoji}</div>
+          <span className="hub-pill">{main.season}</span>
+          <h3>{main.title}</h3>
+          <p>{main.description}</p>
 
-            <div className="campaign-center-checklist">
-              {campaign.checklist.map(item=>(
-                <span key={item}><CheckCircle2 size={13}/>{item}</span>
-              ))}
-            </div>
+          <div className="campaign-center-checklist">
+            {main.checklist.map((item) => (
+              <span key={item}>
+                <CheckCircle2 size={13} />
+                {item}
+              </span>
+            ))}
+          </div>
 
-            <Link to={campaign.href}>
-              Preparar campaña <ArrowRight size={16}/>
+          <Link to={main.href} className="hub-button">
+            Preparar campaña <ArrowRight size={16} />
+          </Link>
+        </article>
+
+        <div className="campaign-side-list">
+          {rest.map((campaign) => (
+            <Link
+              key={campaign.id}
+              to={campaign.href}
+              className="hub-card campaign-mini-card"
+            >
+              <div className="campaign-center-emoji small">
+                {campaign.emoji}
+              </div>
+              <div>
+                <small>{campaign.season}</small>
+                <strong>{campaign.title}</strong>
+                <p>{campaign.description}</p>
+              </div>
             </Link>
-          </article>
-        ))}
+          ))}
+        </div>
+      </div>
+      <div className="hub-section-footer">
+        <Link to="/blog/campanas" className="hub-section-more">
+          Explorar campañas <ArrowRight size={15} />
+        </Link>
       </div>
     </section>
   );
