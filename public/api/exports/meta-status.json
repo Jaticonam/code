@@ -2,14 +2,14 @@
   "connector": "meta",
   "name": "Meta Commerce",
   "status": "ok",
-  "items_loaded": 303,
-  "items_exported": 303,
+  "items_loaded": 62,
+  "items_exported": 62,
   "items_invalid": 0,
-  "products_loaded": 303,
-  "products_exported": 303,
+  "products_loaded": 62,
+  "products_exported": 62,
   "products_invalid": 0,
-  "generated_at": "2026-06-09T13:15:15.263Z",
-  "version": "20260609T131515Z",
+  "generated_at": "2026-06-09T14:24:21.763Z",
+  "version": "20260609T142421Z",
   "stable_feed": "/api/exports/meta.csv",
-  "cache_buster_url": "/api/exports/meta.csv?v=20260609T131515Z"
+  "cache_buster_url": "/api/exports/meta.csv?v=20260609T142421Z"
 }
