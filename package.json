@@ -3,20 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "build:dev": "vite build --mode development",
-  "lint": "eslint .",
-  "preview": "vite preview",
-  "test": "vitest run",
-  "test:watch": "vitest",
-  "feed:meta": "tsx scripts/feeds/generate-meta-feed.ts",
-  "prepare:integrations": "tsx scripts/prepare-integrations.ts",
-  "prepare": "tsx scripts/prepare.ts",
-  "publish": "tsx scripts/publish.ts"
-},
-
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "feed:meta": "tsx scripts/feeds/generate-meta-feed.ts",
+    "prepare:integrations": "tsx scripts/prepare-integrations.ts",
+    "prepare": "tsx scripts/prepare.ts",
+    "publish": "tsx scripts/publish.ts",
+    "quality:catalog": "tsx scripts/quality-report.ts"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
