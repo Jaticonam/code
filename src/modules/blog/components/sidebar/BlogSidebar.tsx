@@ -1,5 +1,6 @@
 import { MessageCircle, Search } from "lucide-react";
 import BlogSidebarMenu from "./BlogSidebarMenu";
+import BlogSidebarCard from "./BlogSidebarCard";
 
 interface Props {
   q: string;
@@ -27,7 +28,7 @@ export default function BlogSidebar({ q, setQ }: Props) {
         <BlogSidebarMenu />
       </div>
 
-      <div className="blog-sidebar-insights">
+      <BlogSidebarCard title="INSIGHTS" icon="💡">
         <div className="blog-side-mini">
           <small>🔥 MÁS LEÍDO</small>
           <strong>Papel Coreano Premium</strong>
@@ -42,7 +43,7 @@ export default function BlogSidebar({ q, setQ }: Props) {
           <small>📅 PRÓXIMA CAMPAÑA</small>
           <strong>Día del Padre</strong>
         </div>
-      </div>
+      </BlogSidebarCard>
 
       <a
         className="blog-sales"

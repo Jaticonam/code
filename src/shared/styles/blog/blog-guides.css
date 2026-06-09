@@ -23,11 +23,13 @@
   color: var(--hub-primary);
 }
 
+/* =========================================
+   GUÍAS - PÁGINA
+========================================= */
+
 .blog-guides-page {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 38px 24px 70px;
-  background: #f8fafc;
+  width: 100%;
+  min-width: 0;
 }
 
 .blog-guides-hero {
