@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "feed:meta": "tsx scripts/generate-meta-feed.ts",
+    "feed:meta": "tsx scripts/feeds/generate-meta-feed.ts",
     "prepare:integrations": "tsx scripts/prepare-integrations.ts",
     "prepare": "npm run prepare:integrations && npm run build",
     "publish": "echo \"🚀 Platform ready to publish.\""
