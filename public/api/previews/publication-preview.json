@@ -5,10 +5,54 @@
     "connector": "meta",
     "mode": "all"
   },
-  "totalItems": 310,
-  "selectedItems": 100,
-  "omittedItems": 210,
-  "generatedAt": "2026-06-10T07:38:32.624Z",
+  "publication": {
+    "totalItems": 310,
+    "selectedItems": 100,
+    "omittedItems": 210,
+    "generatedAt": "2026-06-10T07:40:55.637Z"
+  },
+  "quality": {
+    "exportable": true,
+    "score": {
+      "total": 100,
+      "percentage": 100,
+      "grade": "A+"
+    },
+    "summary": {
+      "totalItems": 100,
+      "exportableItems": 100,
+      "blockedItems": 0,
+      "warningItems": 0,
+      "averageScore": 100,
+      "globalGrade": "A+",
+      "exportable": true
+    },
+    "gates": [
+      {
+        "key": "id",
+        "name": "Identificador único",
+        "required": true,
+        "passed": true,
+        "score": 25
+      },
+      {
+        "key": "price",
+        "name": "Precio válido",
+        "required": true,
+        "passed": true,
+        "score": 20
+      },
+      {
+        "key": "image",
+        "name": "Imagen principal",
+        "required": true,
+        "passed": true,
+        "score": 20
+      }
+    ],
+    "errors": 0,
+    "warnings": 0
+  },
   "items": [
     {
       "id": "zDqp5h8Za",
@@ -910,5 +954,6 @@
       "priority": 80,
       "price": 10.8
     }
-  ]
+  ],
+  "issues": []
 }

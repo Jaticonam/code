@@ -4,6 +4,7 @@ import path from "node:path";
 import { loadAllProducts } from "../src/modules/catalog/services/fetchProducts";
 import { PublicationEngine } from "../src/modules/integrations/publication";
 import type { PublicationPlan } from "../src/modules/integrations/publication";
+import { QualityEngine } from "../src/modules/integrations/quality";
 import { getCliArg } from "./utils/cli";
 
 const PLANS_FILE = path.resolve(process.cwd(), "public/config/publication-plans.json");
@@ -26,20 +27,31 @@ async function main() {
 
   const products = await loadAllProducts();
   const plan = await loadPlan(planId);
-  const preview = PublicationEngine.apply(products, plan);
+  const publication = PublicationEngine.apply(products, plan);
+  const quality = QualityEngine.evaluate(publication.items);
 
   const data = {
     plan: {
-      id: preview.plan.id,
-      name: preview.plan.name,
-      connector: preview.plan.connector,
-      mode: preview.plan.mode,
+      id: publication.plan.id,
+      name: publication.plan.name,
+      connector: publication.plan.connector,
+      mode: publication.plan.mode,
     },
-    totalItems: preview.totalItems,
-    selectedItems: preview.selectedItems,
-    omittedItems: preview.omittedItems,
-    generatedAt: preview.generatedAt,
-    items: preview.items.map((product) => ({
+    publication: {
+      totalItems: publication.totalItems,
+      selectedItems: publication.selectedItems,
+      omittedItems: publication.omittedItems,
+      generatedAt: publication.generatedAt,
+    },
+    quality: {
+      exportable: quality.exportable,
+      score: quality.score,
+      summary: quality.summary,
+      gates: quality.gates,
+      errors: quality.errors,
+      warnings: quality.warnings,
+    },
+    items: publication.items.map((product) => ({
       id: product.id,
       title: product.title,
       category: product.category,
@@ -48,15 +60,20 @@ async function main() {
       priority: product.priority,
       price: product.price_offer || product.price_1,
     })),
+    issues: quality.issues.slice(0, 100),
   };
 
   await fs.mkdir(OUT_DIR, { recursive: true });
   await fs.writeFile(OUT_FILE, JSON.stringify(data, null, 2), "utf8");
 
   console.log(`✅ Preview generado: ${OUT_FILE}`);
-  console.log(`📦 Total catálogo: ${preview.totalItems}`);
-  console.log(`🟣 Seleccionados: ${preview.selectedItems}`);
-  console.log(`⚪ Omitidos: ${preview.omittedItems}`);
+  console.log(`📦 Total catálogo: ${publication.totalItems}`);
+  console.log(`🟣 Seleccionados: ${publication.selectedItems}`);
+  console.log(`⚪ Omitidos: ${publication.omittedItems}`);
+  console.log(`🏅 Quality Score: ${quality.score.percentage}/100 (${quality.score.grade})`);
+  console.log(`🚀 Exportable: ${quality.exportable ? "SI" : "NO"}`);
+  console.log(`🔴 Errores: ${quality.errors}`);
+  console.log(`⚠️ Warnings: ${quality.warnings}`);
 }
 
 main().catch((error) => {
