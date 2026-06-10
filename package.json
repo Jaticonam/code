@@ -16,7 +16,8 @@
     "prepare": "tsx scripts/prepare.ts",
     "publish": "tsx scripts/publish.ts",
     "quality:catalog": "tsx scripts/quality-report.ts",
-    "publication:preview": "tsx scripts/publication-preview.ts"
+    "publication:preview": "tsx scripts/publication-preview.ts",
+    "workflow:test": "tsx scripts/workflow-test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
