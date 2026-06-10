@@ -1,10 +1,10 @@
 {
   "execution": {
-    "id": "pub-meta-meta-top-priority-20260610-074410",
+    "id": "pub-meta-meta-top-priority-20260610-094039",
     "connector": "meta",
     "planId": "meta-top-priority",
     "planName": "Meta - Top prioridad",
-    "executedAt": "2026-06-10T07:44:10.952Z",
+    "executedAt": "2026-06-10T09:40:39.336Z",
     "totalItems": 310,
     "selectedItems": 100,
     "exportedItems": 100,
@@ -13,10 +13,10 @@
     "status": "success",
     "outputFile": "/api/exports/meta.csv",
     "statusFile": "/api/exports/meta-status.json",
-    "notes": "Publicación generada desde el plan Meta - Top prioridad."
+    "notes": "Publicación generada desde workflow con plan Meta - Top prioridad."
   },
   "snapshot": {
-    "executionId": "pub-meta-meta-top-priority-20260610-074410",
+    "executionId": "pub-meta-meta-top-priority-20260610-094039",
     "connector": "meta",
     "planId": "meta-top-priority",
     "productIds": [
@@ -121,6 +121,6 @@
       "GpxGCJSkf",
       "14654645"
     ],
-    "createdAt": "2026-06-10T07:44:10.952Z"
+    "createdAt": "2026-06-10T09:40:39.336Z"
   }
 }
