@@ -76,7 +76,9 @@ export function normalizeProduct(
     price_offer: parseNumber(row.price_offer),
 
     stock: parseNumber(row.stock),
-    img: cleanText(row.img),
+
+    img: cleanText(row.cover || row.img),
+    gallery: cleanText(row.gallery || row.images),
 
     badges: parsePipeArray(row.badge),
     campaigns: parseCampaigns(row.campaigns),

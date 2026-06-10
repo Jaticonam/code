@@ -16,6 +16,7 @@ export interface Product {
 
   stock?: number | null;
   img: string;
+  gallery?: string;
 
   status?: string;
   badges?: string[];

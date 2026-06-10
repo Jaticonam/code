@@ -1,3 +1,4 @@
+import { QualityEngine } from "../../quality";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
 
 export const QualityStep: WorkflowStep = {
@@ -6,8 +7,18 @@ export const QualityStep: WorkflowStep = {
   enabled: true,
 
   async execute(context) {
-    context.logs.push("✅ QualityStep ejecutado.");
-    context.state["quality"] = "completed";
+    const products = context.data as any[];
+    const quality = QualityEngine.evaluate(products);
+
+    context.state.quality = quality;
+    context.logs.push(`🏅 Quality Score: ${quality.score.percentage}/100 (${quality.score.grade})`);
+    context.logs.push(`🔴 Errores: ${quality.errors}`);
+    context.logs.push(`⚠️ Warnings: ${quality.warnings}`);
+
+    if (!quality.exportable && context.metadata.force !== true) {
+      throw new Error("Exportación bloqueada por errores críticos de calidad.");
+    }
+
     return context;
   },
 };

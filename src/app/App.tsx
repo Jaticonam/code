@@ -15,6 +15,7 @@ import BlogArticlePage from "@/app/pages/BlogArticlePage";
 import BlogSectionPage from "@/app/pages/BlogSectionPage";
 import NotFound from "@/app/pages/NotFound";
 import IntegrationsPage from "@/modules/integrations/pages/IntegrationsPage";
+import CommercialCenter from "@/modules/commercial/pages/CommercialCenter";
 
 const queryClient = new QueryClient();
 
@@ -60,9 +61,11 @@ export default function App() {
                 path="/catalogo/categoria.html"
                 element={<CategoryPage />}
               />
+            {/* COMMERCIAL CENTER */}
+            <Route path="/admin/commercial" element={<CommercialCenter />} />
 
-              {/* WOOLY CONNECT */}
-              <Route path="/wooly-connect" element={<IntegrationsPage />} />
+            {/* WOOLY CONNECT */}
+              <Route path="/admin/integrations" element={<IntegrationsPage />} />
 
               {/* LEGACY */}
               <Route path="/producto/:id" element={<ProductDetailPage />} />
@@ -77,4 +80,8 @@ export default function App() {
     </QueryClientProvider>
   );
 }
+
+
+
+
 

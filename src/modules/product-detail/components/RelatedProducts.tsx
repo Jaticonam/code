@@ -4,7 +4,7 @@ import { ProductCard } from "@/modules/catalog/components/ProductCard";
 interface RelatedProductsProps {
   products: Product[];
   onAddToCart: (product: Product) => void;
-  onImageClick: (src: string, title: string) => void;
+  onImageClick: (product: Product) => void;
 }
 
 export function RelatedProducts({
@@ -26,7 +26,7 @@ export function RelatedProducts({
             key={product.id}
             product={product}
             onAddToCart={onAddToCart}
-            onImageClick={onImageClick}
+            onImageClick={() => onImageClick(product)}
           />
         ))}
       </div>

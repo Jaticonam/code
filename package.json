@@ -17,7 +17,9 @@
     "publish": "tsx scripts/publish.ts",
     "quality:catalog": "tsx scripts/quality-report.ts",
     "publication:preview": "tsx scripts/publication-preview.ts",
-    "workflow:test": "tsx scripts/workflow-test.ts"
+    "workflow:test": "tsx scripts/workflow-test.ts",
+    "commercial:dashboard": "tsx scripts/dashboard.ts",
+    "dashboard": "npm run commercial:dashboard"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

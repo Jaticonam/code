@@ -38,6 +38,7 @@ import { RelatedProducts } from "@/modules/product-detail/components/RelatedProd
 import { ProductTierProgress } from "@/modules/product-detail/components/ProductTierProgress";
 import { ProductSeo } from "@/shared/seo/productSeoComponent";
 import { getProductSeo } from "@/shared/seo/productSeo";
+import { getProductMedia } from "@/shared/lib/productMedia";
 
 const ProductDetailPage = () => {
   const { id: paramId } = useParams<{ id: string }>();
@@ -59,9 +60,8 @@ const ProductDetailPage = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedRelated, setSelectedRelated] = useState<Product | null>(null);
-  const [zoomImage, setZoomImage] = useState<{
-    src: string;
-    title: string;
+  const [zoomGallery, setZoomGallery] = useState<{
+    initialIndex: number;
   } | null>(null);
 
   const [qty, setQty] = useState(1);
@@ -90,6 +90,7 @@ const ProductDetailPage = () => {
     [products, id],
   );
 
+  const productMedia = product ? getProductMedia(product) : [];
   const productSeo = getProductSeo(product, id);
 
   const selectedRelatedQty = selectedRelated
@@ -316,16 +317,22 @@ const ProductDetailPage = () => {
         </p>
 
         <button
-          onClick={() =>
+          onClick={() => {
+            if (window.history.length > 1) {
+              navigate(-1);
+              return;
+            }
+
             navigate(
               currentCategory
                 ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
                 : "/catalogo",
-            )
-          }
-          className="p-2 bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+            );
+          }}
+          className="flex h-11 w-11 items-center justify-center rounded-2xl bg-muted text-muted-foreground shadow-sm transition-all hover:bg-accent hover:text-foreground active:scale-95"
+          aria-label="Volver"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="h-5 w-5" />
         </button>
       </div>
     );
@@ -341,12 +348,12 @@ const ProductDetailPage = () => {
         onShare={handleShare}
       />
 
-      <main className="max-w-5xl mx-auto px-4 md:px-6 mt-4 md:mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-10 items-start">
+      <main className="max-w-7xl mx-auto px-4 md:px-6 mt-4 md:mt-10">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,560px)_minmax(420px,1fr)] xl:grid-cols-[minmax(0,620px)_minmax(460px,1fr)] lg:gap-8 xl:gap-10 items-start">
           <ProductGallery
             product={product}
             available={available}
-            onZoom={(src, title) => setZoomImage({ src, title })}
+            onZoom={(index) => setZoomGallery({ initialIndex: index })}
           />
 
           <div className="flex flex-col gap-4 md:gap-6 card-shop p-4 md:p-7 bg-white">
@@ -428,7 +435,11 @@ const ProductDetailPage = () => {
         <RelatedProducts
           products={related}
           onAddToCart={handleRelatedAddToCart}
-          onImageClick={(src, title) => setZoomImage({ src, title })}
+          onImageClick={(product) => {
+            navigate(
+              `/catalogo/producto.html?id=${product.id}&cat=${encodeURIComponent(product.category)}`,
+            );
+          }}
         />
       </main>
 
@@ -453,9 +464,11 @@ const ProductDetailPage = () => {
       />
 
       <ImageZoomModal
-        src={zoomImage?.src ?? null}
-        title={zoomImage?.title ?? ""}
-        onClose={() => setZoomImage(null)}
+        media={productMedia}
+        initialIndex={zoomGallery?.initialIndex ?? 0}
+        open={!!zoomGallery && productMedia.length > 0}
+        title={product?.title ?? ""}
+        onClose={() => setZoomGallery(null)}
       />
 
       <AddToCartModal

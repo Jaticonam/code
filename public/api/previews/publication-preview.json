@@ -2,14 +2,24 @@
   "plan": {
     "id": "meta-top-priority",
     "name": "Meta - Top prioridad",
+    "description": "Publica los mejores productos por prioridad.",
     "connector": "meta",
-    "mode": "all"
+    "enabled": true,
+    "mode": "all",
+    "filters": {
+      "excludeOutOfStock": true
+    },
+    "sorting": {
+      "by": "priority",
+      "direction": "desc"
+    },
+    "limit": 100
   },
   "publication": {
     "totalItems": 310,
     "selectedItems": 100,
     "omittedItems": 210,
-    "generatedAt": "2026-06-10T07:40:55.637Z"
+    "generatedAt": "2026-06-10T09:40:39.331Z"
   },
   "quality": {
     "exportable": true,
@@ -19,8 +29,8 @@
       "grade": "A+"
     },
     "summary": {
-      "totalItems": 100,
-      "exportableItems": 100,
+      "totalItems": 310,
+      "exportableItems": 310,
       "blockedItems": 0,
       "warningItems": 0,
       "averageScore": 100,

@@ -1,4 +1,9 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
+
+const OUT_DIR = path.resolve(process.cwd(), "public/api/previews");
+const OUT_FILE = path.join(OUT_DIR, "publication-preview.json");
 
 export const PreviewStep: WorkflowStep = {
   key: "preview",
@@ -6,8 +11,43 @@ export const PreviewStep: WorkflowStep = {
   enabled: true,
 
   async execute(context) {
-    context.logs.push("✅ PreviewStep ejecutado.");
-    context.state["preview"] = "completed";
+    const publication = context.state.publication as any;
+    const quality = context.state.quality as any;
+
+    const preview = {
+      plan: publication?.plan,
+      publication: {
+        totalItems: publication?.totalItems ?? 0,
+        selectedItems: publication?.selectedItems ?? 0,
+        omittedItems: publication?.omittedItems ?? 0,
+        generatedAt: publication?.generatedAt,
+      },
+      quality: {
+        exportable: quality?.exportable,
+        score: quality?.score,
+        summary: quality?.summary,
+        gates: quality?.gates,
+        errors: quality?.errors,
+        warnings: quality?.warnings,
+      },
+      items: (context.data as any[]).map((product) => ({
+        id: product.id,
+        title: product.title,
+        category: product.category,
+        status: product.status,
+        stock: product.stock,
+        priority: product.priority,
+        price: product.price_offer || product.price_1,
+      })),
+      issues: quality?.issues?.slice(0, 100) ?? [],
+    };
+
+    await fs.mkdir(OUT_DIR, { recursive: true });
+    await fs.writeFile(OUT_FILE, JSON.stringify(preview, null, 2), "utf8");
+
+    context.state.previewFile = OUT_FILE;
+    context.logs.push(`👀 Preview generado: ${OUT_FILE}`);
+
     return context;
   },
 };

@@ -1,3 +1,4 @@
+import { loadAllProducts } from "@/modules/catalog/services/fetchProducts";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
 
 export const LoadProductsStep: WorkflowStep = {
@@ -6,8 +7,12 @@ export const LoadProductsStep: WorkflowStep = {
   enabled: true,
 
   async execute(context) {
-    context.logs.push("✅ LoadProductsStep ejecutado.");
-    context.state["load-products"] = "completed";
+    const products = await loadAllProducts();
+
+    context.data = products;
+    context.state.products = products;
+    context.logs.push(`✅ Productos cargados: ${products.length}`);
+
     return context;
   },
 };

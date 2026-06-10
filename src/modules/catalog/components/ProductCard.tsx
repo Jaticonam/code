@@ -33,12 +33,24 @@ export function ProductCard({
     handleAdd,
     handleWhatsApp,
   } = useProductCard(p, cart, onAddToCart);
+
   const goToDetail = () =>
     navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
 
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const selectedText = window.getSelection()?.toString().trim();
+    if (selectedText) return;
+
+    const target = e.target as HTMLElement;
+    if (target.closest("[data-no-card-click],button,a,input,textarea,select"))
+      return;
+
+    goToDetail();
+  };
+
   return (
     <div
-      onClick={goToDetail}
+      onClick={handleCardClick}
       className="card-product group flex flex-col p-2 text-center md:p-2.5"
     >
       <div className="card-product-image relative mb-2 h-[140px] overflow-hidden rounded-[18px] sm:h-[160px] md:h-[250px] xl:h-[220px]">
@@ -64,7 +76,10 @@ export function ProductCard({
 
       <div className="flex flex-1 flex-col justify-between px-1">
         <div>
-          <div className="mb-1.5 flex flex-wrap items-center justify-center gap-0.5">
+          <div
+            data-no-card-click
+            className="mb-1.5 flex flex-wrap items-center justify-center gap-0.5"
+          >
             <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[9px] font-black uppercase text-slate-500">
               {p.id}
             </span>
@@ -75,13 +90,18 @@ export function ProductCard({
             </span>
           </div>
 
-          <h3 className="mb-0.3 card-product-title cursor-pointer line-clamp-2">
+          <h3
+            data-no-card-click
+            className="mb-0.3 card-product-title line-clamp-2"
+          >
             {p.title}
           </h3>
         </div>
 
         <ProductCardPrice product={p} />
+
         <ProductCardStock stock={p.stock} price={p.price_1} status={p.status} />
+
         <ProductCardTierBadges
           product={p}
           available={available}
