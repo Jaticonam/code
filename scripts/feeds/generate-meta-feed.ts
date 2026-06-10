@@ -6,6 +6,7 @@ import { IntegrationEngine } from "../../src/modules/integrations/engine/Integra
 import { MetaConnector } from "../../src/modules/integrations/connectors/meta/connector";
 import { PublicationEngine, savePublicationHistory } from "../../src/modules/integrations/publication";
 import type { PublicationPlan, PublicationExecution, PublicationSnapshot } from "../../src/modules/integrations/publication";
+import { QualityEngine } from "../../src/modules/integrations/quality";
 import { getCliArg } from "../utils/cli";
 
 const PLANS_FILE = path.resolve(process.cwd(), "public/config/publication-plans.json");
@@ -29,6 +30,7 @@ async function loadPlan(planId: string): Promise<PublicationPlan | null> {
 
 async function main() {
   const planId = getCliArg("plan", "meta-all");
+  const force = getCliArg("force", "false") === "true";
 
   console.log("🚀 Generando feed Meta desde catálogo...");
   console.log(`📋 Plan: ${planId}`);
@@ -54,8 +56,26 @@ async function main() {
       };
 
   const selectedProducts = publication.items;
-  const result = await IntegrationEngine.publish(selectedProducts, MetaConnector);
+  const quality = QualityEngine.evaluate(selectedProducts);
 
+  console.log(`🏅 Quality Score: ${quality.score.percentage}/100 (${quality.score.grade})`);
+  console.log(`🚀 Exportable: ${quality.exportable ? "SI" : "NO"}`);
+  console.log(`🔴 Errores: ${quality.errors}`);
+  console.log(`⚠️ Warnings: ${quality.warnings}`);
+
+  if (!quality.exportable && !force) {
+    console.log("🚫 Exportación cancelada por errores críticos de calidad.");
+    console.log('💡 Si necesitas forzar la exportación: npm run feed:meta -- --plan=meta-all --force=true');
+
+    quality.issues
+      .filter((issue) => issue.level === "error")
+      .slice(0, 20)
+      .forEach((issue) => console.log(` - ${issue.code} | ${issue.field} → ${issue.message}`));
+
+    process.exit(1);
+  }
+
+  const result = await IntegrationEngine.publish(selectedProducts, MetaConnector);
   const executionId = `pub-${MetaConnector.key}-${slug(publication.plan.id)}-${stamp()}`;
 
   const execution: PublicationExecution = {
@@ -68,8 +88,8 @@ async function main() {
     selectedItems: selectedProducts.length,
     exportedItems: result.status.items_exported,
     omittedItems: products.length - selectedProducts.length,
-    averageScore: undefined,
-    status: result.status.items_invalid > 0 ? "warning" : "success",
+    averageScore: quality.score.percentage,
+    status: result.status.items_invalid > 0 || quality.warnings > 0 ? "warning" : "success",
     outputFile: result.status.stable_feed,
     statusFile: `/api/exports/${MetaConnector.key}-status.json`,
     notes: `Publicación generada desde el plan ${publication.plan.name}.`,
