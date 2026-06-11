@@ -62,8 +62,12 @@ export function ProductGallery({
               <button
                 key={item.id}
                 type="button"
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => onZoom(index)}
+                onMouseEnter={() => {
+                  if (activeIndex !== index) {
+                    setActiveIndex(index);
+                  }
+                }}
+                onClick={() => setActiveIndex(index)}
                 className={[
                   "relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl border bg-white transition-all duration-200 md:h-[100px] md:w-[75px] xl:h-[100px] xl:w-[75px]",
                   isActive
@@ -72,17 +76,9 @@ export function ProductGallery({
                 ].join(" ")}
               >
                 <img
-                  key={activeMedia.id}
-                  src={activeMedia.src}
-                  alt={activeMedia.alt}
-                  onLoad={() => setHeroLoaded(true)}
-                  className={[
-                    "h-full w-full object-contain object-center bg-white transition-all duration-300 ease-out",
-                    heroLoaded
-                      ? "scale-100 opacity-100"
-                      : "scale-[0.985] opacity-0",
-                    !available ? "opacity-60 grayscale-[50%]" : "",
-                  ].join(" ")}
+                  src={item.thumb || item.src}
+                  alt={item.alt}
+                  className="h-full w-full object-cover object-center"
                 />
               </button>
             );
@@ -91,8 +87,8 @@ export function ProductGallery({
           {hiddenCount > 0 && (
             <button
               type="button"
-              onClick={() => setActiveIndex(maxVisibleThumbs)}
-              className="relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl md:h-[82px] md:w-[82px]"
+              onClick={() => onZoom(maxVisibleThumbs)}
+              className="relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl md:h-[100px] md:w-[75px] xl:h-[100px] xl:w-[75px]"
             >
               <img
                 src={
@@ -113,13 +109,20 @@ export function ProductGallery({
 
       <div
         className="order-1 relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-3xl border border-[#e2e8f0] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.16)] group cursor-zoom-in md:order-2 lg:min-h-[560px] xl:min-h-[620px]"
+        onClick={() => onZoom(activeIndex)}
+        onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         <img
+          key={activeMedia.id}
           src={activeMedia.src}
           alt={activeMedia.alt}
-          className={`h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105 ${!available ? "opacity-60 grayscale-[50%]" : ""}`}
           onLoad={() => setHeroLoaded(true)}
+          className={[
+            "h-full w-full object-cover object-center transition-all duration-300 ease-out group-hover:scale-[1.02]",
+            heroLoaded ? "scale-100 opacity-100" : "scale-[0.985] opacity-0",
+            !available ? "grayscale-[50%]" : "",
+          ].join(" ")}
         />
 
         {product.badges && product.badges.length > 0 && (

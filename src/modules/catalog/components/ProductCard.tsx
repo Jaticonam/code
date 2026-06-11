@@ -13,7 +13,7 @@ interface Props {
   product: Product;
   cart?: CartItem[];
   onAddToCart: (product: Product) => void;
-  onImageClick?: (src: string, title: string) => void;
+  onImageClick?: (product: Product) => void;
 }
 
 export function ProductCard({
@@ -53,7 +53,14 @@ export function ProductCard({
       onClick={handleCardClick}
       className="card-product group flex flex-col p-2 text-center md:p-2.5"
     >
-      <div className="card-product-image relative mb-2 h-[140px] overflow-hidden rounded-[18px] sm:h-[160px] md:h-[250px] xl:h-[220px]">
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("CLICK IMAGE CARD", p.id);
+          onImageClick?.(p);
+        }}
+        className="card-product-image relative mb-2 h-[140px] cursor-zoom-in overflow-hidden rounded-[18px] sm:h-[160px] md:h-[250px] xl:h-[220px]"
+      >
         <ProductCardBadges product={p} />
 
         {isInCart && (
@@ -65,11 +72,7 @@ export function ProductCard({
         <img
           src={p.img || "/placeholder.svg"}
           alt={p.title}
-          onClick={(e) => {
-            e.stopPropagation();
-            onImageClick?.(p.img, p.title);
-          }}
-          className="h-full w-full cursor-pointer object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]"
+          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]"
           loading="lazy"
         />
       </div>
@@ -83,6 +86,7 @@ export function ProductCard({
             <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[9px] font-black uppercase text-slate-500">
               {p.id}
             </span>
+
             <span
               className={`rounded-full px-2 py-[3px] text-[9px] font-black uppercase ${getCategoryColor(p.category)}`}
             >
@@ -111,10 +115,12 @@ export function ProductCard({
         <button
           onClick={(e) => {
             e.stopPropagation();
+
             if (showWhatsAppButton) {
               handleWhatsApp();
               return;
             }
+
             handleAdd();
           }}
           disabled={!available && !showWhatsAppButton}
@@ -136,6 +142,7 @@ export function ProductCard({
             ) : (
               <PlusCircle className="h-4 w-4" />
             )}
+
             {showWhatsAppButton
               ? "Consultar"
               : isInCart

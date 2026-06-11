@@ -22,6 +22,7 @@ import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPr
 import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
 import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
 import { getCatalogSeo } from "@/shared/seo/catalogSeo";
+import { getProductMedia, ProductMedia } from "@/shared/lib/productMedia";
 import AOS from "aos";
 
 const CatalogPage = () => {
@@ -47,8 +48,9 @@ const CatalogPage = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [zoomImage, setZoomImage] = useState<{
-    src: string;
+  const [zoomGallery, setZoomGallery] = useState<{
+    media: ProductMedia[];
+    initialIndex: number;
     title: string;
   } | null>(null);
   const [exploreOpen, setExploreOpen] = useState(false);
@@ -172,7 +174,22 @@ const CatalogPage = () => {
             product={p}
             cart={cart}
             onAddToCart={handleAddToCart}
-            onImageClick={(src, title) => setZoomImage({ src, title })}
+            onImageClick={(product) => {
+              const gallery = getProductMedia(product);
+
+              console.log(
+                "CATALOG RECEIVED PRODUCT",
+                product.id,
+                product.title,
+              );
+              console.log("CATALOG GALLERY", gallery);
+
+              setZoomGallery({
+                media: gallery,
+                initialIndex: 0,
+                title: product.title,
+              });
+            }}
           />
         </div>
       ))}
@@ -349,9 +366,11 @@ const CatalogPage = () => {
       />
 
       <ImageZoomModal
-        src={zoomImage?.src ?? null}
-        title={zoomImage?.title ?? ""}
-        onClose={() => setZoomImage(null)}
+        media={zoomGallery?.media ?? []}
+        initialIndex={zoomGallery?.initialIndex ?? 0}
+        open={!!zoomGallery}
+        title={zoomGallery?.title ?? ""}
+        onClose={() => setZoomGallery(null)}
       />
 
       <AddToCartModal

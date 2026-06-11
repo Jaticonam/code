@@ -73,14 +73,18 @@ export function ImageZoomModal({
   }, []);
 
   const goPrev = useCallback(() => {
-    setActiveIndex((index) => (index === 0 ? media.length - 1 : index - 1));
+    setActiveIndex((index) =>
+      index === 0 ? normalizedMedia.length - 1 : index - 1,
+    );
     reset();
-  }, [media.length, reset]);
+  }, [normalizedMedia.length, reset]);
 
   const goNext = useCallback(() => {
-    setActiveIndex((index) => (index === media.length - 1 ? 0 : index + 1));
+    setActiveIndex((index) =>
+      index === normalizedMedia.length - 1 ? 0 : index + 1,
+    );
     reset();
-  }, [media.length, reset]);
+  }, [normalizedMedia.length, reset]);
 
   const closeModal = useCallback(() => {
     if (historyPushedRef.current && !closingFromPopStateRef.current) {
@@ -160,6 +164,15 @@ export function ImageZoomModal({
       el.removeEventListener("wheel", handler);
     };
   }, [open]);
+
+  console.log("MODAL", {
+    open,
+    isOpen,
+    media,
+    normalizedMedia,
+    activeIndex,
+    activeMedia,
+  });
 
   if (!isOpen || !activeMedia) return null;
 
@@ -321,6 +334,32 @@ export function ImageZoomModal({
             </button>
           </div>
         </div>
+        {normalizedMedia.length > 1 && (
+          <div className="absolute left-4 top-20 bottom-6 z-20 hidden w-20 flex-col gap-2 overflow-y-auto lg:flex">
+            {normalizedMedia.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  setActiveIndex(index);
+                  reset();
+                }}
+                className={[
+                  "overflow-hidden rounded-2xl border transition-all",
+                  activeIndex === index
+                    ? "border-cyan-400 ring-2 ring-cyan-400/30 scale-105"
+                    : "border-white/10 opacity-70 hover:opacity-100",
+                ].join(" ")}
+              >
+                <img
+                  src={item.thumb || item.src}
+                  alt={item.alt}
+                  className="h-20 w-20 object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        )}
 
         {hasMany && scale <= 1 && (
           <>
@@ -354,19 +393,23 @@ export function ImageZoomModal({
           </>
         )}
 
-        <img
-          src={activeMedia.src}
-          alt={activeMedia.alt || title}
-          className={[
-            "max-h-full max-w-full object-contain drop-shadow-2xl transition-transform duration-75 origin-center",
-            scale > 1 ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in",
-          ].join(" ")}
-          style={{
-            transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
-          }}
-          onMouseDown={handleMouseDown}
-          draggable={false}
-        />
+        <div className="relative flex h-full w-full items-center justify-center lg:pl-24">
+          <img
+            src={activeMedia.src}
+            alt={activeMedia.alt || title}
+            className={[
+              "max-h-full max-w-full object-contain drop-shadow-2xl transition-transform duration-75 origin-center",
+              scale > 1
+                ? "cursor-grab active:cursor-grabbing"
+                : "cursor-zoom-in",
+            ].join(" ")}
+            style={{
+              transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
+            }}
+            onMouseDown={handleMouseDown}
+            draggable={false}
+          />
+        </div>
       </div>
     </div>
   );
