@@ -12,7 +12,10 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
     const status = normalizeStatus(p.status);
 
     if (!p.id) {
-      console.warn("Producto descartado: sin id", { title: p.title, status: p.status });
+      console.warn("Producto descartado: sin id", {
+        title: p.title,
+        status: p.status,
+      });
       return false;
     }
 
@@ -30,18 +33,20 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
 
     if (status === "publicado" || status === "agotado") {
       if (Number.isNaN(p.price_1) || p.price_1 <= 0) {
-        console.warn(`Producto ${status} descartado: price_1 inválido ->`, p.id);
+        console.warn(
+          `Producto ${status} descartado: price_1 inválido ->`,
+          p.id,
+        );
         return false;
       }
 
       if (!p.img) {
-        console.warn(`Producto ${status} descartado: sin imagen ->`, p.id);
+        console.warn(
+          `Producto ${status} descartado: sin imagen ->`,
+          p.id,
+        );
         return false;
       }
-    }
-
-    if (status === "preventa") {
-      // Preventa puede entrar con id + title.
     }
 
     seen.add(p.id);

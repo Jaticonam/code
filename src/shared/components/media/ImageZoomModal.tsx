@@ -47,6 +47,8 @@ export function ImageZoomModal({
   const isOpen = open ?? !!src;
 
   const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
 
@@ -101,6 +103,10 @@ export function ImageZoomModal({
     setActiveIndex(initialIndex);
     reset();
   }, [open, initialIndex, reset]);
+
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [activeIndex]);
 
   useEffect(() => {
     if (!open) return;
@@ -335,17 +341,23 @@ export function ImageZoomModal({
           </div>
         </div>
         {normalizedMedia.length > 1 && (
-          <div className="absolute left-4 top-20 bottom-6 z-20 hidden w-20 flex-col gap-2 overflow-y-auto lg:flex">
+          <div className="absolute bottom-14 left-1/2 z-40 flex max-w-[88vw] -translate-x-1/2 gap-2 overflow-x-auto rounded-2xl bg-black/25 p-2 backdrop-blur-md lg:bottom-6 lg:left-4 lg:top-20 lg:max-w-none lg:translate-x-0 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden">
             {normalizedMedia.map((item, index) => (
               <button
                 key={item.id}
                 type="button"
+                onMouseEnter={() => {
+                  if (activeIndex !== index) {
+                    setActiveIndex(index);
+                    reset();
+                  }
+                }}
                 onClick={() => {
                   setActiveIndex(index);
                   reset();
                 }}
                 className={[
-                  "overflow-hidden rounded-2xl border transition-all",
+                  "overflow-hidden rounded-xl border transition-all h-10 w-10 md:h-12 md:w-12 lg:h-20 lg:w-20",
                   activeIndex === index
                     ? "border-cyan-400 ring-2 ring-cyan-400/30 scale-105"
                     : "border-white/10 opacity-70 hover:opacity-100",
@@ -354,7 +366,7 @@ export function ImageZoomModal({
                 <img
                   src={item.thumb || item.src}
                   alt={item.alt}
-                  className="h-20 w-20 object-cover"
+                  className="h-10 w-10 rounded-xl object-cover md:h-12 md:w-12 lg:h-20 lg:w-20"
                 />
               </button>
             ))}

@@ -27,6 +27,7 @@ export function ProductCard({
   const {
     available,
     isPreventa,
+    isAgotado,
     showWhatsAppButton,
     isInCart,
     qtyInCart,
@@ -48,6 +49,14 @@ export function ProductCard({
     goToDetail();
   };
 
+  const buttonLabel = isAgotado
+    ? "Consultar reposición"
+    : showWhatsAppButton
+      ? "Consultar"
+      : isInCart
+        ? `Sumar (${qtyInCart})`
+        : "Agregar";
+
   return (
     <div
       onClick={handleCardClick}
@@ -56,7 +65,6 @@ export function ProductCard({
       <div
         onClick={(e) => {
           e.stopPropagation();
-          console.log("CLICK IMAGE CARD", p.id);
           onImageClick?.(p);
         }}
         className="card-product-image relative mb-2 h-[140px] cursor-zoom-in overflow-hidden rounded-[18px] sm:h-[160px] md:h-[250px] xl:h-[220px]"
@@ -69,10 +77,21 @@ export function ProductCard({
           </div>
         )}
 
+        {isAgotado && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
+            <span className="rounded-full border-2 border-white bg-orange-500 px-5 py-2 text-[12px] font-black uppercase tracking-wide text-white shadow-xl">
+              Agotado
+            </span>
+          </div>
+        )}
+
         <img
           src={p.img || "/placeholder.svg"}
           alt={p.title}
-          className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]"
+          className={[
+            "h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]",
+            isAgotado ? "opacity-90 saturate-[.9]" : "",
+          ].join(" ")}
           loading="lazy"
         />
       </div>
@@ -116,6 +135,8 @@ export function ProductCard({
           onClick={(e) => {
             e.stopPropagation();
 
+            if (isAgotado) return;
+
             if (showWhatsAppButton) {
               handleWhatsApp();
               return;
@@ -123,15 +144,17 @@ export function ProductCard({
 
             handleAdd();
           }}
-          disabled={!available && !showWhatsAppButton}
+          disabled={!showWhatsAppButton && !available}
           className={[
             "card-product-button mt-2.5 w-full min-h-[36px] rounded-2xl px-2.5 py-2 text-[12px] font-black text-white shadow-md transition-all active:scale-[.98] md:min-h-[38px] md:text-[13px]",
-            showWhatsAppButton
-              ? "bg-green-600 hover:bg-green-700"
-              : isInCart
-                ? "bg-gradient-to-r from-[#156f84] to-[#1d8299] hover:shadow-lg"
-                : "bg-gradient-to-r from-[#1d8299] to-[#156f84] hover:scale-[1.01] hover:shadow-lg",
-            !available && !showWhatsAppButton
+            isAgotado
+              ? "bg-orange-500 hover:bg-orange-600 hover:scale-[1.01] hover:shadow-lg"
+              : showWhatsAppButton
+                ? "bg-green-600 hover:bg-green-700"
+                : isInCart
+                  ? "bg-gradient-to-r from-[#156f84] to-[#1d8299] hover:shadow-lg"
+                  : "bg-gradient-to-r from-[#1d8299] to-[#156f84] hover:scale-[1.01] hover:shadow-lg",
+            !isAgotado && !available && !showWhatsAppButton
               ? "cursor-not-allowed opacity-50 shadow-none"
               : "",
           ].join(" ")}
@@ -143,11 +166,7 @@ export function ProductCard({
               <PlusCircle className="h-4 w-4" />
             )}
 
-            {showWhatsAppButton
-              ? "Consultar"
-              : isInCart
-                ? `Sumar (${qtyInCart})`
-                : "Agregar"}
+            {buttonLabel}
           </span>
         </button>
       </div>

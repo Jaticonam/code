@@ -17,6 +17,7 @@ import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
 import { CategorySkeleton } from "@/shared/components/skeletons/CategorySkeleton";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { getProductMedia, type ProductMedia } from "@/shared/lib/productMedia";
 
 const CategoryPage = () => {
   const { id: paramCategoryId } = useParams<{ id: string }>();
@@ -32,8 +33,10 @@ const CategoryPage = () => {
   const [categorySearch, setCategorySearch] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [zoomImage, setZoomImage] = useState<{
-    src: string;
+
+  const [zoomGallery, setZoomGallery] = useState<{
+    media: ProductMedia[];
+    initialIndex: number;
     title: string;
   } | null>(null);
 
@@ -125,7 +128,13 @@ const CategoryPage = () => {
             products={filteredProducts}
             cart={cart}
             onAddToCart={handleAddToCart}
-            onImageClick={(src, title) => setZoomImage({ src, title })}
+            onImageClick={(product) =>
+              setZoomGallery({
+                media: getProductMedia(product),
+                initialIndex: 0,
+                title: product.title,
+              })
+            }
           />
         )}
       </main>
@@ -150,9 +159,11 @@ const CategoryPage = () => {
       />
 
       <ImageZoomModal
-        src={zoomImage?.src ?? null}
-        title={zoomImage?.title ?? ""}
-        onClose={() => setZoomImage(null)}
+        media={zoomGallery?.media ?? []}
+        initialIndex={zoomGallery?.initialIndex ?? 0}
+        open={!!zoomGallery}
+        title={zoomGallery?.title ?? ""}
+        onClose={() => setZoomGallery(null)}
       />
 
       <AddToCartModal
