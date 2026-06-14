@@ -1,6 +1,6 @@
 import { ArrowRight, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
-import { FALLBACK_BUSINESS_TOOLS } from "../data/fallbackBusinessTools";
+import { FALLBACK_BUSINESS_TOOLS } from "../../data/fallbackBusinessTools";
 
 export default function BusinessToolsSection() {
   return (

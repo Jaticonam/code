@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, FlaskConical } from "lucide-react";
-import { FALLBACK_IDEAS } from "../data/fallbackIdeas";
+import { FALLBACK_IDEAS } from "../../data/fallbackIdeas";
 
 export default function IdeaLabSection() {
   return (

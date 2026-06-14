@@ -1,5 +1,5 @@
-import "@/shared/styles/blog/blog-article.css";
-import "@/shared/styles/blog/blog-article-sidebar.css";
+import "@/shared/styles/blog/article/blog-article.css";
+import "@/shared/styles/blog/article/blog-article-sidebar.css";
 import { useBlogArticles } from "@/modules/blog/hooks/useBlogArticles";
 import {
   BlogArticleCTA,

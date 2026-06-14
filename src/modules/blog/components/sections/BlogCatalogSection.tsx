@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import { useProducts } from "@/modules/catalog/hooks/useProducts";
-import BlogCatalogProductCard from "./BlogCatalogProductCard";
+import BlogCatalogProductCard from "../BlogCatalogProductCard";
 
 const INITIAL_LIMIT = 4;
 const STEP = 8;

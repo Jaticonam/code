@@ -3,8 +3,7 @@ import { ArrowLeft, BookOpen, Search, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBlogArticles } from "../hooks/useBlogArticles";
 import { useBlogSearch } from "../hooks/useBlogSearch";
-import BlogFeatured from "./BlogFeatured";
-import BlogGrid from "./BlogGrid";
+import { BlogFeatured, BlogGrid } from "./cards";
 import { useSearchParams } from "react-router-dom";
 
 const CATEGORIES = [

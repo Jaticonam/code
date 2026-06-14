@@ -1,6 +1,5 @@
-import BlogFeatured from "./BlogFeatured";
-import BlogGrid from "./BlogGrid";
-import type { BlogArticle } from "../types/blog";
+import { BlogFeatured, BlogGrid } from "../cards";
+import type { BlogArticle } from "../../types/blog";
 import { BookOpen, Sparkles, Tags } from "lucide-react";
 import { ArrowRight, Package } from "lucide-react";
 

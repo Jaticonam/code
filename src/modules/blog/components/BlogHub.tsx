@@ -1,11 +1,14 @@
 import BlogHero from "./BlogHero";
-import IdeaLabSection from "./IdeaLabSection";
-import TrendInsightsSection from "./TrendInsightsSection";
-import CampaignCenterSection from "./CampaignCenterSection";
-import BlogCatalogSection from "./BlogCatalogSection";
-import BlogArticlesSection from "./BlogArticlesSection";
-import OpportunityCenterSection from "./OpportunityCenterSection";
-import BusinessToolsSection from "./BusinessToolsSection";
+
+import {
+  BlogArticlesSection,
+  BlogCatalogSection,
+  BusinessToolsSection,
+  CampaignCenterSection,
+  IdeaLabSection,
+  OpportunityCenterSection,
+  TrendInsightsSection,
+} from "./sections";
 import { BlogHubRail } from "./rail";
 import BlogSidebar from "./sidebar/BlogSidebar";
 import BlogMobileNav from "./sidebar/BlogMobileNav";

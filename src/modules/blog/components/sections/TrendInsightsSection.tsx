@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Flame, Rocket, TrendingUp } from "lucide-react";
-import { FALLBACK_TRENDS } from "../data/fallbackTrends";
+import { FALLBACK_TRENDS } from "../../data/fallbackTrends";
 
 const RADAR = [
   { name: "Regalos emocionales", score: 92 },

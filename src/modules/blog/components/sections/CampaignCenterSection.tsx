@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, CalendarDays, CheckCircle2 } from "lucide-react";
-import { FALLBACK_CAMPAIGNS } from "../data/fallbackCampaigns";
+import { FALLBACK_CAMPAIGNS } from "../../data/fallbackCampaigns";
 
 export default function CampaignCenterSection() {
   const campaigns = [...FALLBACK_CAMPAIGNS].sort(

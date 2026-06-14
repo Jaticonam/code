@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Lightbulb, Zap } from "lucide-react";
-import { FALLBACK_OPPORTUNITIES } from "../data/fallbackOpportunities";
+import { FALLBACK_OPPORTUNITIES } from "../../data/fallbackOpportunities";
 
 export default function OpportunityCenterSection() {
   const main = FALLBACK_OPPORTUNITIES[0];
