@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useBlogArticles } from "../../hooks/useBlogArticles";
@@ -11,13 +11,17 @@ import BlogGuidesHero from "./BlogGuidesHero";
 const INITIAL_LIMIT = 6;
 const STEP = 6;
 
-export default function BlogGuidesPage() {
+type BlogGuidesPageProps = {
+  q: string;
+  setQ: (value: string) => void;
+};
+
+export default function BlogGuidesPage({ q, setQ }: BlogGuidesPageProps) {
   const articles = useBlogArticles();
   const [searchParams] = useSearchParams();
 
   const cat = searchParams.get("cat") || "all";
 
-  const [q, setQ] = useState("");
   const [visible, setVisible] = useState(INITIAL_LIMIT);
 
   const items = useBlogSearch(articles, q, cat);
@@ -36,9 +40,12 @@ export default function BlogGuidesPage() {
     [articles],
   );
 
+  useEffect(() => {
+    setVisible(INITIAL_LIMIT);
+  }, [q, cat]);
+
   const handleQueryChange = (value: string) => {
     setQ(value);
-    setVisible(INITIAL_LIMIT);
   };
 
   const handleLoadMore = () => {
