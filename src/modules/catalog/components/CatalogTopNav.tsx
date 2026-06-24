@@ -50,9 +50,7 @@ export function CatalogTopNav({
   searchPlaceholder = "Busca flores, cajas, peluches o código...",
   onLogoClick,
 }: CatalogTopNavProps) {
-  const hasVisibleCampaigns =
-    showCampaigns &&
-    campaigns.some((campaign) => (campaignCounts[campaign.id] ?? 0) > 0);
+  const hasCampaignSection = showCampaigns && campaigns.length > 0;
 
   return (
     <nav className="catalogTopNav" aria-label="Navegación principal del catálogo">
@@ -78,7 +76,7 @@ export function CatalogTopNav({
           />
         </section>
 
-        {hasVisibleCampaigns && (
+        {hasCampaignSection && (
           <section
             className="catalogTopNavSection catalogTopNavCampaigns"
             aria-label="Campañas activas"
@@ -87,7 +85,7 @@ export function CatalogTopNav({
               campaigns={campaigns}
               active={activeCampaign}
               counts={campaignCounts}
-              show={hasVisibleCampaigns}
+              show={hasCampaignSection}
               onSelect={onCampaignSelect}
             />
           </section>

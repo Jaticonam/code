@@ -24,6 +24,7 @@ export function useCatalogFilters({
     activeCampaign,
     searchQuery,
   });
+
   const hasCategory = activeCategory !== "todas";
   const hasCampaign = Boolean(activeCampaign);
 
@@ -34,6 +35,7 @@ export function useCatalogFilters({
         : products,
     [products, hasCampaign, activeCampaign],
   );
+
   const campaignBase = useMemo(
     () =>
       hasCategory
@@ -43,7 +45,6 @@ export function useCatalogFilters({
   );
 
   const categoryCounts = useMemo(() => {
-    if (!showCounts) return {};
     const counts = categoryBase.reduce<Record<string, number>>(
       (acc, product) => {
         acc[product.category] = (acc[product.category] || 0) + 1;
@@ -51,19 +52,21 @@ export function useCatalogFilters({
       },
       {},
     );
+
     counts.todas = categoryBase.length;
+
     return counts;
-  }, [categoryBase, showCounts]);
+  }, [categoryBase]);
 
   const campaignCounts = useMemo(() => {
-    if (!showCounts) return {};
     return campaignBase.reduce<Record<string, number>>((acc, product) => {
       product.campaigns?.forEach((campaign) => {
         acc[campaign] = (acc[campaign] || 0) + 1;
       });
+
       return acc;
     }, {});
-  }, [campaignBase, showCounts]);
+  }, [campaignBase]);
 
   const visibleCategories = useMemo<Category[]>(
     () =>

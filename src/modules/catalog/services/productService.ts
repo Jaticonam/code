@@ -28,7 +28,7 @@ type CampaignCacheEntry = {
 
 export type CatalogCategory = SheetCategory | "todas";
 
-const CACHE_TTL = 1000 * 60 * 15;
+const CACHE_TTL = 1000 * 60 * 5;
 
 const PRODUCT_REQUIRED_HEADERS = [
   "id",
@@ -43,6 +43,7 @@ const PRODUCT_REQUIRED_HEADERS = [
   "stock",
   "img",
   "badge",
+  "campaigns",
   "priority",
   "status",
   "updated_at",
@@ -58,8 +59,8 @@ const pendingRequests = new Map<SheetCategory, Promise<Product[]>>();
 let campaignsMemoryCache: CampaignCacheEntry | null = null;
 let pendingCampaignsRequest: Promise<Campaign[]> | null = null;
 
-const productKey = (category: string) => `jung_catalog_v2_${category}`;
-const campaignsKey = () => "jung_catalog_campaigns_v1";
+const productKey = (category: string) => `jung_catalog_v3_${category}`;
+const campaignsKey = () => "jung_catalog_campaigns_v2";
 const now = () => Date.now();
 
 const isFresh = (savedAt: number) => now() - savedAt <= CACHE_TTL;

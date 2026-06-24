@@ -21,6 +21,7 @@ interface Props {
   campaigns?: ReadonlyArray<CampaignOption>;
   cartCount: number;
   onClose: () => void;
+  onResetCatalog?: () => void;
   onCampaignSelect: (id: string) => void;
   onCategorySelect: (id: string) => void;
   onOpenCart: () => void;
@@ -38,15 +39,17 @@ export function CatalogExploreCenter({
   campaigns = CAMPAIGN_CONFIG,
   cartCount,
   onClose,
+  onResetCatalog,
   onCampaignSelect,
   onCategorySelect,
   onOpenCart,
 }: Props) {
   if (!open) return null;
 
-  const visibleCampaigns = campaigns.filter(
-    (c) => (campaignCounts[c.id] ?? 0) > 0,
-  );
+  const visibleCampaigns = campaigns.filter((c) => {
+    const count = campaignCounts[c.id] ?? 0;
+    return count > 0 || activeCampaign === c.id;
+  });
 
   const visibleCategories = categories.filter(
     (c) => c.id === "todas" || (categoryCounts[c.id] ?? 0) > 0,
@@ -55,8 +58,13 @@ export function CatalogExploreCenter({
   const hasFilters = Boolean(activeCampaign || activeCategory !== "todas");
 
   const clearFilters = () => {
-    onCampaignSelect("");
-    onCategorySelect("todas");
+    if (onResetCatalog) {
+      onResetCatalog();
+    } else {
+      onCampaignSelect("");
+      onCategorySelect("todas");
+    }
+
     onClose();
   };
 

@@ -25,7 +25,11 @@ export function HeaderCampaignFilter({
 }: Props) {
   if (!show) return null;
 
-  const visible = campaigns.filter((c) => (counts[c.id] ?? 0) > 0);
+  const visible = campaigns.filter((c) => {
+    const count = counts[c.id] ?? 0;
+    return count > 0 || active === c.id;
+  });
+
   if (!visible.length) return null;
 
   return (

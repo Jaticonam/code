@@ -262,7 +262,7 @@ const CatalogPage = () => {
           campaigns={CATALOG_CAMPAIGNS}
           activeCampaign={activeCampaign}
           campaignCounts={campaignCounts}
-          showCampaigns={isFullCatalogLoaded}
+          showCampaigns={CATALOG_CAMPAIGNS.length > 0}
           onCampaignSelect={handleCampaignSelect}
           onLogoClick={handleResetCatalog}
         />

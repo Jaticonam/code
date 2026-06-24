@@ -16,12 +16,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 
   overflow-x: auto;
   scrollbar-width: none;
 
-  padding: 0 0 2px;
+  padding: 0 4px 2px;
 }
 
 .catalogTopNav .header-campaign-filter::-webkit-scrollbar {
@@ -33,7 +33,7 @@
 .catalogTopNav .header-campaign-chip {
   position: relative;
 
-  width: clamp(205px, 18vw, 245px);
+  width: clamp(190px, 17vw, 230px);
   height: 58px;
   padding: 0 46px 0 18px;
 
