@@ -1,6 +1,5 @@
 import type { Category } from "@/shared/types/product";
-import "@/shared/styles/catalog/header-category-filter.css";
-
+import "./HeaderCategoryFilter.css";
 interface Props {
   categories: Category[];
   active: string;
@@ -35,6 +34,7 @@ export function HeaderCategoryFilter({
           >
             <span className="header-category-icon">{c.icon}</span>
             <span className="header-category-name">{c.name}</span>
+
             {hasCounts && (
               <span className="header-category-count">({count})</span>
             )}
