@@ -171,15 +171,6 @@ export function ImageZoomModal({
     };
   }, [open]);
 
-  console.log("MODAL", {
-    open,
-    isOpen,
-    media,
-    normalizedMedia,
-    activeIndex,
-    activeMedia,
-  });
-
   if (!isOpen || !activeMedia) return null;
 
   const handleMouseDown = (e: React.MouseEvent) => {

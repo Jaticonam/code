@@ -12,8 +12,7 @@
 
   background: rgba(255, 255, 255, 0.97);
 
-  box-shadow:
-    0 8px 22px rgba(15, 23, 42, 0.045);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
 
   backdrop-filter: blur(18px);
 }
@@ -126,8 +125,7 @@
   font-size: 14px;
   font-weight: 700;
 
-  box-shadow:
-    0 8px 18px rgba(15, 23, 42, 0.035);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.035);
 
   transition:
     border-color 0.22s ease,
@@ -137,12 +135,106 @@
 .catalogTopNav .search-input:focus {
   border-color: rgba(29, 130, 153, 0.38);
 
-  box-shadow:
-    0 12px 28px rgba(29, 130, 153, 0.12);
+  box-shadow: 0 12px 28px rgba(29, 130, 153, 0.12);
 }
 
 .catalogTopNav .search-icon {
   color: #8ca0b8;
+}
+
+/* =========================================================
+   CAMPAIGN COLOR VARIANTS
+   Clases visuales generadas desde Campaigns Sheet.
+   ========================================================= */
+
+.catalog-campaign-purple {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  color: #ffffff;
+}
+
+.catalog-campaign-pink {
+  background: linear-gradient(135deg, #d946ef, #f58ac8);
+  color: #ffffff;
+}
+
+.catalog-campaign-blue {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: #ffffff;
+}
+
+.catalog-campaign-green {
+  background: linear-gradient(135deg, #38b56a, #68d391);
+  color: #ffffff;
+}
+
+.catalog-campaign-red {
+  background: linear-gradient(135deg, #e5484d, #ff7a7f);
+  color: #ffffff;
+}
+
+.catalog-campaign-gold {
+  background: linear-gradient(135deg, #b7791f, #f6c453);
+  color: #3f2d0b;
+}
+
+.catalog-campaign-teal {
+  background: linear-gradient(135deg, #44ada0, #2f8f84);
+  color: #ffffff;
+}
+
+.catalog-campaign-dark {
+  background: linear-gradient(135deg, #2c2c2c, #555555);
+  color: #ffffff;
+}
+
+.catalog-campaign-yellow {
+  background: linear-gradient(135deg, #ffd84d, #f9c95b);
+  color: #4b3510;
+}
+
+.catalog-campaign-sky {
+  background: linear-gradient(135deg, #7cc8f8, #a8ddff);
+  color: #17415f;
+}
+
+.catalog-campaign-copper {
+  background: linear-gradient(135deg, #c97a56, #e9a47f);
+  color: #ffffff;
+}
+
+.catalog-campaign-emerald {
+  background: linear-gradient(135deg, #0f9d7a, #34c9a6);
+  color: #ffffff;
+}
+
+.catalog-campaign-fuchsia {
+  background: linear-gradient(135deg, #e94fb5, #ff8bd4);
+  color: #ffffff;
+}
+
+.catalog-campaign-lavender {
+  background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+  color: #ffffff;
+}
+
+.catalog-campaign-orange {
+  background: linear-gradient(135deg, #f28c28, #ffb347);
+  color: #ffffff;
+}
+
+.catalog-campaign-silver {
+  background: linear-gradient(135deg, #bfc5d2, #e5e7eb);
+  color: #2c2c2c;
+}
+
+.catalog-campaign-wine {
+  background: linear-gradient(135deg, #8b1e3f, #b8325f);
+  color: #ffffff;
+}
+
+.catalog-campaign-coral {
+  background: linear-gradient(135deg, #fb7185, #fda4af);
+  color: #ffffff;
 }
 
 /* =========================================================

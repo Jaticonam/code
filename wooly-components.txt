@@ -1,0 +1,17 @@
+Listado de rutas de carpetas para el volumen Nuevo vol
+El número de serie del volumen es 00000230 2613:BA26
+D:\JUNG\CODE\WOOLY\WOOLY-WEB\SRC\MODULES\CATALOG\COMPONENTS
+    CatalogExploreCenter.tsx
+    CategoryFilter.tsx
+    CategoryFilterDesktop.tsx
+    CategoryFilterMobile.tsx
+    HeaderCampaignFilter.tsx
+    HeaderCategoryFilter.tsx
+    ProductCard.tsx
+    ProductCardBadges.tsx
+    ProductCardPrice.tsx
+    ProductCardStock.tsx
+    ProductCardTierBadges.tsx
+    
+No existe ninguna subcarpeta 
+

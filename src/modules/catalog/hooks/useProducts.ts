@@ -1,26 +1,62 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Product } from "@/shared/types/product";
-import { loadCatalogProgressive, type CatalogCategory } from "@/modules/catalog/services/fetchProducts";
+import {
+  getCachedCatalogSnapshot,
+  loadCatalogProgressive,
+  type CatalogCategory,
+} from "@/modules/catalog/services/fetchProducts";
 
-export function useProducts(activeCategory:CatalogCategory="todas"){
-  const [data,setData]=useState<Product[]>([]);
-  const [isLoading,setIsLoading]=useState(true);
-  const [isFullCatalogLoaded,setIsFullCatalogLoaded]=useState(false);
+export function useProducts(activeCategory: CatalogCategory = "todas") {
+  const initialSnapshot = getCachedCatalogSnapshot();
 
-  useEffect(()=>{
-    let cancelled=false;
-    setIsLoading(true);
-    setIsFullCatalogLoaded(false);
+  const [data, setData] = useState<Product[]>(() => initialSnapshot.products);
+  const [isLoading, setIsLoading] = useState(
+    () => initialSnapshot.products.length === 0,
+  );
+  const [isFullCatalogLoaded, setIsFullCatalogLoaded] = useState(
+    () => initialSnapshot.isFullCatalogLoaded,
+  );
 
-    loadCatalogProgressive(activeCategory,(products,fullLoaded)=>{
-      if(cancelled) return;
-      setData(products);
-      setIsLoading(products.length===0&&!fullLoaded);
-      setIsFullCatalogLoaded(fullLoaded);
+  const dataRef = useRef(data);
+
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const hasPreviousProducts = dataRef.current.length > 0;
+
+    /*
+      Regla UX:
+      - Skeleton solo en primera carga real.
+      - Si ya existe data, mantenemos pantalla mientras se actualiza.
+    */
+    setIsLoading(!hasPreviousProducts);
+
+    loadCatalogProgressive(activeCategory, (products, fullLoaded) => {
+      if (cancelled) return;
+
+      const hasIncomingProducts = products.length > 0;
+
+      if (hasIncomingProducts) {
+        setData(products);
+      }
+
+      setIsLoading(false);
+
+      setIsFullCatalogLoaded((current) => current || fullLoaded);
     });
 
-    return()=>{cancelled=true;};
-  },[activeCategory]);
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCategory]);
 
-  return {data,isLoading,isFullCatalogLoaded};
+  return {
+    data,
+    isLoading,
+    isFullCatalogLoaded,
+  };
 }

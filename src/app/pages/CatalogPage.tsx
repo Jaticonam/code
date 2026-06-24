@@ -2,10 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SearchX } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store";
-import { useProducts } from "@/modules/catalog/hooks/useProducts";
+import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
 import { Product } from "@/shared/types/product";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
-import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
 import { CatalogTopNav } from "@/modules/catalog/components/CatalogTopNav";
 import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
@@ -16,6 +15,7 @@ import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 import { useCatalogFilters } from "@/modules/catalog/hooks/useCatalogFilters";
+import { useCatalogCampaigns } from "@/modules/catalog/hooks/useCatalogCampaigns";
 import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPrioritySections";
 import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
 import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
@@ -23,26 +23,20 @@ import { getCatalogSeo } from "@/shared/seo/catalogSeo";
 import { getProductMedia, ProductMedia } from "@/shared/lib/productMedia";
 import AOS from "aos";
 
-const CATALOG_CAMPAIGNS = CAMPAIGN_CONFIG.filter(
-  (campaign) => campaign.id !== "todo-el-ano",
-);
+const getCategoryFromUrl = () =>
+  new URLSearchParams(window.location.search).get("cat") || "todas";
 
-const isCatalogCampaignId = (id: string) =>
-  !id || CATALOG_CAMPAIGNS.some((campaign) => campaign.id === id);
+const getCampaignFromUrl = () =>
+  new URLSearchParams(window.location.search).get("cpg") || "";
 
+const isValidCategory = (id: string) =>
+  id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
 const CatalogPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const getCategoryFromUrl = () =>
-    new URLSearchParams(window.location.search).get("cat") || "todas";
-  const getCampaignFromUrl = () => {
-    const campaign =
-      new URLSearchParams(window.location.search).get("cpg") || "";
-    return isCatalogCampaignId(campaign) ? campaign : "";
-  };
-  const isValidCategory = (id: string) =>
-    id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
+  const { campaigns: catalogCampaigns } = useCatalogCampaigns();
+  const CATALOG_CAMPAIGNS = catalogCampaigns;
 
   const [activeCategory, setActiveCategory] = useState(() => {
     const initialCat = getCategoryFromUrl();
@@ -52,6 +46,7 @@ const CatalogPage = () => {
   const [activeCampaign, setActiveCampaign] = useState(() =>
     getCampaignFromUrl(),
   );
+
   const [searchQuery, setSearchQuery] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -62,6 +57,12 @@ const CatalogPage = () => {
     title: string;
   } | null>(null);
   const [exploreOpen, setExploreOpen] = useState(false);
+
+  const isCatalogCampaignId = useCallback(
+    (id: string) =>
+      !id || CATALOG_CAMPAIGNS.some((campaign) => campaign.id === id),
+    [CATALOG_CAMPAIGNS],
+  );
 
   const {
     cart,
@@ -80,21 +81,35 @@ const CatalogPage = () => {
     data: products = [],
     isLoading: loading,
     isFullCatalogLoaded,
-  } = useProducts(activeCategory as any);
+    isCategoryLoading,
+  } = useCatalogData(activeCategory as any);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const cat = params.get("cat") || "todas";
     const campaign = params.get("cpg") || "";
+
     setActiveCategory(isValidCategory(cat) ? cat : "todas");
-    setActiveCampaign(isCatalogCampaignId(campaign) ? campaign : "");
+    setActiveCampaign(campaign);
   }, [location.search]);
+
+  useEffect(() => {
+    if (!activeCampaign) return;
+    if (CATALOG_CAMPAIGNS.length === 0) return;
+
+    if (!isCatalogCampaignId(activeCampaign)) {
+      setActiveCampaign("");
+      navigate("/catalogo", { replace: true });
+    }
+  }, [activeCampaign, CATALOG_CAMPAIGNS, isCatalogCampaignId, navigate]);
 
   useEffect(() => {
     const restored =
       location.state?.restoreSearch ||
       sessionStorage.getItem("wooly_restore_search");
+
     if (!restored) return;
+
     setSearchQuery(restored);
     sessionStorage.removeItem("wooly_restore_search");
     window.history.replaceState({}, document.title);
@@ -106,6 +121,7 @@ const CatalogPage = () => {
       setActiveCategory(id);
 
       const params = new URLSearchParams();
+
       if (id !== "todas") params.set("cat", id);
       if (activeCampaign) params.set("cpg", activeCampaign);
 
@@ -120,6 +136,7 @@ const CatalogPage = () => {
       setActiveCampaign(campaign);
 
       const params = new URLSearchParams();
+
       if (activeCategory !== "todas") params.set("cat", activeCategory);
       if (campaign) params.set("cpg", campaign);
 
@@ -140,8 +157,6 @@ const CatalogPage = () => {
     categoryCounts,
     campaignCounts,
     visibleCategories,
-    hasCategory,
-    hasCampaign,
   } = useCatalogFilters({
     products,
     activeCategory,
@@ -154,10 +169,10 @@ const CatalogPage = () => {
     activeCategory !== "todas"
       ? CATEGORY_CONFIG.find((c) => c.id === activeCategory)
       : null;
+
   const activeCampaignData = activeCampaign
     ? CATALOG_CAMPAIGNS.find((c) => c.id === activeCampaign)
     : null;
-  const hasActiveFilters = Boolean(activeCampaignData || activeCat);
 
   const handleAddToCart = useCallback(
     (product: Product) => {
@@ -192,13 +207,6 @@ const CatalogPage = () => {
             onImageClick={(product) => {
               const gallery = getProductMedia(product);
 
-              console.log(
-                "CATALOG RECEIVED PRODUCT",
-                product.id,
-                product.title,
-              );
-              console.log("CATALOG GALLERY", gallery);
-
               setZoomGallery({
                 media: gallery,
                 initialIndex: 0,
@@ -226,17 +234,20 @@ const CatalogPage = () => {
   });
 
   const seo = getCatalogSeo(activeCategory);
+
   useEffect(() => {
+    if (loading || products.length === 0) return;
+
     const timer = setTimeout(() => {
-      AOS.refreshHard();
-    }, 100);
+      AOS.refresh();
+    }, 120);
 
     return () => clearTimeout(timer);
-  }, [filteredProducts, activeCategory, activeCampaign, searchQuery]);
-
+  }, [loading, products.length]);
   return (
     <div className="min-h-screen bg-background pb-40">
       <CatalogSeo seo={seo} />
+
       <header className="sticky top-0 z-[100] flex w-full flex-col shadow-sm">
         <CountdownTimer />
 
@@ -260,6 +271,20 @@ const CatalogPage = () => {
       <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
         {loading ? (
           <CatalogSkeleton />
+        ) : isCategoryLoading && filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+            <div className="mb-4 rounded-full bg-muted p-6">
+              <SearchX className="h-10 w-10 opacity-30" />
+            </div>
+
+            <p className="text-center text-sm font-black tracking-widest">
+              Cargando categoría...
+            </p>
+
+            <p className="mt-2 text-center text-xs font-medium text-muted-foreground">
+              Estamos preparando los productos de esta sección.
+            </p>
+          </div>
         ) : filteredProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
             <div className="mb-4 rounded-full bg-muted p-6">
@@ -282,6 +307,7 @@ const CatalogPage = () => {
                     Productos con mayor rotación ahora mismo.
                   </p>
                 </div>
+
                 {renderGrid(topProducts)}
               </section>
             )}
@@ -296,6 +322,7 @@ const CatalogPage = () => {
                     Seleccionados para vender fácil y mover stock.
                   </p>
                 </div>
+
                 {renderGrid(strongProducts)}
               </section>
             )}
@@ -310,6 +337,7 @@ const CatalogPage = () => {
                     Opciones para ampliar tu oferta y comprar con estrategia.
                   </p>
                 </div>
+
                 {renderGrid(highlightProducts)}
               </section>
             )}
@@ -356,6 +384,7 @@ const CatalogPage = () => {
       />
 
       <RecentActivity products={products} />
+
       <FloatingButtons
         cartCount={totalItems}
         onCartClick={() => setCartOpen(true)}

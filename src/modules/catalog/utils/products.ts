@@ -21,7 +21,6 @@ function getCached(): Product[] | null {
       return null;
     }
 
-    console.log(`Productos cargados desde caché (${entry.source})`);
     return entry.data;
   } catch {
     return null;
@@ -48,7 +47,6 @@ export async function fetchProducts(): Promise<Product[]> {
     const products = await loadAllProducts();
 
     if (products?.length) {
-      console.log(`Catálogo cargado desde Sheets: ${products.length} productos`);
       setCache(products, "sheets");
       return products;
     }

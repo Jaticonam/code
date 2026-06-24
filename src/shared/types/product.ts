@@ -1,3 +1,32 @@
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+export type CampaignComputedStatus =
+  | "activa"
+  | "programada"
+  | "finalizada"
+  | "borrador"
+  | "oculta";
+
+export interface Campaign {
+  id: string;
+  name: string;
+  icon: string;
+
+  color?: string;
+  colorClass: string;
+
+  startDate: string;
+  endDate: string;
+  priority: number;
+
+  publicationStatus: string;
+  computedStatus: CampaignComputedStatus;
+}
+
 export interface Product {
   id: string;
 

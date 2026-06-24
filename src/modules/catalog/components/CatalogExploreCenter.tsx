@@ -1,15 +1,12 @@
-import "./CatalogExploreCenter.css";
+import type { Category } from "@/shared/types/product";
+import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+import "@/shared/styles/catalog/catalog-explore-center.css";
 
-export interface CatalogExploreCampaignOption {
+interface CampaignOption {
   id: string;
   name: string;
   icon: string;
-}
-
-interface CatalogExploreCategoryOption {
-  id: string;
-  name: string;
-  icon: string;
+  colorClass?: string;
 }
 
 interface Props {
@@ -18,30 +15,16 @@ interface Props {
   activeCategory: string;
   activeCampaignName?: string;
   activeCategoryName?: string;
-  campaigns: ReadonlyArray<CatalogExploreCampaignOption>;
   campaignCounts: Record<string, number>;
   categoryCounts: Record<string, number>;
-  categories: CatalogExploreCategoryOption[];
+  categories: Category[];
+  campaigns?: ReadonlyArray<CampaignOption>;
   cartCount: number;
   onClose: () => void;
-  onResetCatalog: () => void;
   onCampaignSelect: (id: string) => void;
   onCategorySelect: (id: string) => void;
   onOpenCart: () => void;
 }
-
-const CAMPAIGN_STYLE: Record<string, string> = {
-  "san-valentin": "explore-campaign-pink",
-  "dia-padre": "explore-campaign-blue",
-  "dia-madre": "explore-campaign-purple",
-  "dia-mujer": "explore-campaign-rose",
-  escolar: "explore-campaign-green",
-  graduaciones: "explore-campaign-violet",
-  graduados: "explore-campaign-violet",
-  "flores-amarillas": "explore-campaign-yellow",
-  "hot-wheels": "explore-campaign-red",
-  hotwheels: "explore-campaign-red",
-};
 
 export function CatalogExploreCenter({
   open,
@@ -49,13 +32,12 @@ export function CatalogExploreCenter({
   activeCategory,
   activeCampaignName,
   activeCategoryName,
-  campaigns,
   campaignCounts,
   categoryCounts,
   categories,
+  campaigns = CAMPAIGN_CONFIG,
   cartCount,
   onClose,
-  onResetCatalog,
   onCampaignSelect,
   onCategorySelect,
   onOpenCart,
@@ -63,29 +45,18 @@ export function CatalogExploreCenter({
   if (!open) return null;
 
   const visibleCampaigns = campaigns.filter(
-    (campaign) => (campaignCounts[campaign.id] ?? 0) > 0,
+    (c) => (campaignCounts[c.id] ?? 0) > 0,
   );
 
   const visibleCategories = categories.filter(
-    (category) =>
-      category.id === "todas" || (categoryCounts[category.id] ?? 0) > 0,
+    (c) => c.id === "todas" || (categoryCounts[c.id] ?? 0) > 0,
   );
 
   const hasFilters = Boolean(activeCampaign || activeCategory !== "todas");
 
-  const handleResetCatalog = () => {
-    onResetCatalog();
-    onClose();
-  };
-
-  const handleCampaignClick = (campaignId: string) => {
-    const nextCampaign = activeCampaign === campaignId ? "" : campaignId;
-    onCampaignSelect(nextCampaign);
-    onClose();
-  };
-
-  const handleCategoryClick = (categoryId: string) => {
-    onCategorySelect(categoryId);
+  const clearFilters = () => {
+    onCampaignSelect("");
+    onCategorySelect("todas");
     onClose();
   };
 
@@ -93,7 +64,7 @@ export function CatalogExploreCenter({
     <div className="catalog-explore-overlay" onClick={onClose}>
       <aside
         className="catalog-explore-panel"
-        onClick={(event) => event.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="catalog-explore-handle" />
 
@@ -117,101 +88,96 @@ export function CatalogExploreCenter({
         {hasFilters && (
           <div className="catalog-explore-active">
             {activeCampaign && (
-              <button
-                type="button"
-                onClick={() => handleCampaignClick(activeCampaign)}
-              >
-                {activeCampaignName || activeCampaign} ✕
+              <button type="button" onClick={() => onCampaignSelect("")}>
+                {activeCampaignName} ✕
               </button>
             )}
 
             {activeCategory !== "todas" && (
-              <button
-                type="button"
-                onClick={() => handleCategoryClick("todas")}
-              >
-                {activeCategoryName || activeCategory} ✕
+              <button type="button" onClick={() => onCategorySelect("todas")}>
+                {activeCategoryName} ✕
               </button>
             )}
           </div>
         )}
 
-        {visibleCampaigns.length > 0 && (
-          <section className="catalog-explore-section">
-            <h4>🎁 Campañas</h4>
-
-            <div className="catalog-explore-campaign-grid">
-              {visibleCampaigns.map((campaign) => {
-                const isActive = activeCampaign === campaign.id;
-                const styleClass =
-                  CAMPAIGN_STYLE[campaign.id] || "explore-campaign-teal";
-
-                return (
-                  <button
-                    key={campaign.id}
-                    type="button"
-                    onClick={() => handleCampaignClick(campaign.id)}
-                    className={`catalog-explore-campaign ${styleClass} ${
-                      isActive ? "active" : ""
-                    }`}
-                  >
-                    <span className="catalog-explore-campaign-content">
-                      <strong>{campaign.name}</strong>
-                    </span>
-
-                    <b className="catalog-explore-campaign-icon">
-                      {campaign.icon}
-                    </b>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
         <section className="catalog-explore-section">
-          <h4>🛍️ Categorías</h4>
+          <h4>🎁 Campañas</h4>
 
-          <div className="catalog-explore-category-grid">
-            {visibleCategories.map((category) => {
-              const isActive = activeCategory === category.id;
+          <div className="catalog-explore-campaign-grid">
+            {visibleCampaigns.map((c) => {
+              const isActive = activeCampaign === c.id;
+              const styleClass = c.colorClass ?? "catalog-campaign-purple";
 
               return (
                 <button
-                  key={category.id}
+                  key={c.id}
                   type="button"
-                  onClick={() => handleCategoryClick(category.id)}
-                  className={`catalog-explore-category ${
+                  onClick={() => onCampaignSelect(isActive ? "" : c.id)}
+                  className={`catalog-explore-campaign ${styleClass} ${
                     isActive ? "active" : ""
                   }`}
                 >
-                  <span className="catalog-explore-category-icon">
-                    {category.icon}
+                  <span>
+                    <strong>{c.name}</strong>
+                    <small>{campaignCounts[c.id] ?? 0} productos</small>
                   </span>
 
-                  <strong>{category.name}</strong>
+                  <b>{c.icon}</b>
                 </button>
               );
             })}
           </div>
         </section>
 
-        <section className="catalog-explore-footer-actions">
-          <button
-            type="button"
-            onClick={handleResetCatalog}
-            className="catalog-explore-action-clear"
-          >
-            🛍️ Ver todo el catálogo
-          </button>
+        <section className="catalog-explore-section">
+          <h4>🛍️ Categorías</h4>
 
+          <div className="catalog-explore-category-grid">
+            {visibleCategories.map((c) => {
+              const count = categoryCounts[c.id] ?? 0;
+              const isActive = activeCategory === c.id;
+
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => onCategorySelect(c.id)}
+                  className={`catalog-explore-category ${
+                    isActive ? "active" : ""
+                  }`}
+                >
+                  <span className="catalog-explore-category-icon">
+                    {c.icon}
+                  </span>
+                  <strong>{c.name}</strong>
+                  <small>({count})</small>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="catalog-explore-section">
+          <h4>⚡ Accesos rápidos</h4>
+
+          <div className="catalog-explore-quick-grid">
+            <button type="button" onClick={clearFilters}>
+              Ver todo
+            </button>
+            <button type="button">Más vendidos</button>
+            <button type="button">Recomendados</button>
+            <button type="button">Ofertas</button>
+          </div>
+        </section>
+
+        <section className="catalog-explore-footer-actions">
           <button
             type="button"
             onClick={() => {
               onClose();
               onOpenCart();
             }}
-            className="catalog-explore-action-cart"
           >
             📦 Mi Caja ({cartCount})
           </button>
@@ -220,7 +186,6 @@ export function CatalogExploreCenter({
             href="https://wa.me/51936188636"
             target="_blank"
             rel="noopener noreferrer"
-            className="catalog-explore-action-whatsapp"
           >
             💬 Asesora
           </a>

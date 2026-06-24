@@ -1,34 +1,23 @@
+import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
 import "./HeaderCampaignFilter.css";
 
 export interface HeaderCampaignOption {
   id: string;
   name: string;
   icon: string;
+  colorClass?: string;
 }
 
 interface Props {
-  campaigns: ReadonlyArray<HeaderCampaignOption>;
+  campaigns?: ReadonlyArray<HeaderCampaignOption>;
   active: string;
   counts?: Record<string, number>;
   show?: boolean;
   onSelect: (id: string) => void;
 }
 
-const CAMPAIGN_STYLE: Record<string, string> = {
-  "san-valentin": "header-campaign-pink",
-  "dia-padre": "header-campaign-blue",
-  "dia-madre": "header-campaign-purple",
-  "dia-mujer": "header-campaign-rose",
-  escolar: "header-campaign-green",
-  graduaciones: "header-campaign-violet",
-  graduados: "header-campaign-violet",
-  "flores-amarillas": "header-campaign-yellow",
-  "hot-wheels": "header-campaign-red",
-  hotwheels: "header-campaign-red",
-};
-
 export function HeaderCampaignFilter({
-  campaigns,
+  campaigns = CAMPAIGN_CONFIG,
   active,
   counts = {},
   show = false,
@@ -44,7 +33,7 @@ export function HeaderCampaignFilter({
       {visible.map((c) => {
         const count = counts[c.id] ?? 0;
         const isActive = active === c.id;
-        const styleClass = CAMPAIGN_STYLE[c.id] ?? "header-campaign-default";
+        const styleClass = c.colorClass ?? "catalog-campaign-purple";
 
         return (
           <button
