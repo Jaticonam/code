@@ -7,7 +7,7 @@ import { Product } from "@/shared/types/product";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
 import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
-import { HeaderBar } from "@/shared/components/layout/HeaderBar";
+import { CatalogTopNav } from "@/modules/catalog/components/CatalogTopNav";
 import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
 import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
@@ -15,8 +15,6 @@ import { ProductCard } from "@/modules/catalog/components/ProductCard";
 import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
-import { HeaderCategoryFilter } from "@/modules/catalog/components/HeaderCategoryFilter";
-import { HeaderCampaignFilter } from "@/modules/catalog/components/HeaderCampaignFilter";
 import { useCatalogFilters } from "@/modules/catalog/hooks/useCatalogFilters";
 import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPrioritySections";
 import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
@@ -25,14 +23,24 @@ import { getCatalogSeo } from "@/shared/seo/catalogSeo";
 import { getProductMedia, ProductMedia } from "@/shared/lib/productMedia";
 import AOS from "aos";
 
+const CATALOG_CAMPAIGNS = CAMPAIGN_CONFIG.filter(
+  (campaign) => campaign.id !== "todo-el-ano",
+);
+
+const isCatalogCampaignId = (id: string) =>
+  !id || CATALOG_CAMPAIGNS.some((campaign) => campaign.id === id);
+
 const CatalogPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const getCategoryFromUrl = () =>
     new URLSearchParams(window.location.search).get("cat") || "todas";
-  const getCampaignFromUrl = () =>
-    new URLSearchParams(window.location.search).get("cpg") || "";
+  const getCampaignFromUrl = () => {
+    const campaign =
+      new URLSearchParams(window.location.search).get("cpg") || "";
+    return isCatalogCampaignId(campaign) ? campaign : "";
+  };
   const isValidCategory = (id: string) =>
     id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
 
@@ -79,7 +87,7 @@ const CatalogPage = () => {
     const cat = params.get("cat") || "todas";
     const campaign = params.get("cpg") || "";
     setActiveCategory(isValidCategory(cat) ? cat : "todas");
-    setActiveCampaign(campaign);
+    setActiveCampaign(isCatalogCampaignId(campaign) ? campaign : "");
   }, [location.search]);
 
   useEffect(() => {
@@ -120,6 +128,13 @@ const CatalogPage = () => {
     [navigate, activeCategory],
   );
 
+  const handleResetCatalog = useCallback(() => {
+    setSearchQuery("");
+    setActiveCategory("todas");
+    setActiveCampaign("");
+    navigate("/catalogo");
+  }, [navigate]);
+
   const {
     filteredProducts,
     categoryCounts,
@@ -140,7 +155,7 @@ const CatalogPage = () => {
       ? CATEGORY_CONFIG.find((c) => c.id === activeCategory)
       : null;
   const activeCampaignData = activeCampaign
-    ? CAMPAIGN_CONFIG.find((c) => c.id === activeCampaign)
+    ? CATALOG_CAMPAIGNS.find((c) => c.id === activeCampaign)
     : null;
   const hasActiveFilters = Boolean(activeCampaignData || activeCat);
 
@@ -225,26 +240,20 @@ const CatalogPage = () => {
       <header className="sticky top-0 z-[100] flex w-full flex-col shadow-sm">
         <CountdownTimer />
 
-        <HeaderBar
+        <CatalogTopNav
+          products={products}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          products={products}
-          topContent={
-            <HeaderCampaignFilter
-              active={activeCampaign}
-              counts={campaignCounts}
-              show={isFullCatalogLoaded}
-              onSelect={handleCampaignSelect}
-            />
-          }
-          bottomContent={
-            <HeaderCategoryFilter
-              categories={visibleCategories}
-              active={activeCategory}
-              counts={categoryCounts}
-              onSelect={handleCategorySelect}
-            />
-          }
+          categories={visibleCategories}
+          activeCategory={activeCategory}
+          categoryCounts={categoryCounts}
+          onCategorySelect={handleCategorySelect}
+          campaigns={CATALOG_CAMPAIGNS}
+          activeCampaign={activeCampaign}
+          campaignCounts={campaignCounts}
+          showCampaigns={isFullCatalogLoaded}
+          onCampaignSelect={handleCampaignSelect}
+          onLogoClick={handleResetCatalog}
         />
       </header>
 
@@ -334,11 +343,13 @@ const CatalogPage = () => {
         activeCategory={activeCategory}
         activeCampaignName={activeCampaignData?.name}
         activeCategoryName={activeCat?.name}
+        campaigns={CATALOG_CAMPAIGNS}
         campaignCounts={campaignCounts}
         categoryCounts={categoryCounts}
         categories={visibleCategories}
         cartCount={totalItems}
         onClose={() => setExploreOpen(false)}
+        onResetCatalog={handleResetCatalog}
         onCampaignSelect={handleCampaignSelect}
         onCategorySelect={handleCategorySelect}
         onOpenCart={() => setCartOpen(true)}
@@ -384,57 +395,6 @@ const CatalogPage = () => {
           setCartOpen(true);
         }}
       />
-
-      {exploreOpen && (
-        <div className="explore-overlay" onClick={() => setExploreOpen(false)}>
-          <div className="explore-sheet" onClick={(e) => e.stopPropagation()}>
-            <div className="explore-panel">
-              <div className="explore-handle" />
-
-              <div className="explore-head">
-                <div>
-                  <h3 className="explore-title">Explorar</h3>
-                  {hasActiveFilters && (
-                    <span className="explore-active-label">
-                      Filtros activos
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setExploreOpen(false)}
-                  className="explore-close"
-                >
-                  Cerrar
-                </button>
-              </div>
-
-              {hasActiveFilters && (
-                <div className="explore-active-list">
-                  {activeCampaign && (
-                    <button
-                      onClick={() => handleCampaignSelect("")}
-                      className="explore-chip explore-chip-primary"
-                    >
-                      {activeCampaignData?.icon} {activeCampaignData?.name} ✕
-                    </button>
-                  )}
-
-                  {activeCat && (
-                    <button
-                      onClick={() => handleCategorySelect("todas")}
-                      className="explore-chip explore-chip-secondary"
-                    >
-                      {activeCat.icon} {activeCat.name} ✕
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
