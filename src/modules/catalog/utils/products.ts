@@ -1,4 +1,5 @@
 import type { Product } from "@/shared/types/product";
+import { loadAllProducts } from "@/modules/catalog/services/fetchProducts";
 
 const CACHE_KEY = "wooly_products_cache";
 const CACHE_DURATION = 10 * 1000;
@@ -31,11 +32,22 @@ function setCache(data: Product[], source: CacheEntry["source"]) {
   try {
     sessionStorage.setItem(
       CACHE_KEY,
-      JSON.stringify({ data, timestamp: Date.now(), source })
+      JSON.stringify({
+        data,
+        timestamp: Date.now(),
+        source,
+      }),
     );
   } catch {
-    // Ignorar errores de storage
+    // Ignorar errores de storage.
   }
+}
+
+async function loadFallbackProducts(): Promise<Product[]> {
+  const { FALLBACK_PRODUCTS } =
+    await import("@/modules/catalog/data/fallback-products");
+
+  return FALLBACK_PRODUCTS;
 }
 
 export async function fetchProducts(): Promise<Product[]> {
@@ -43,7 +55,6 @@ export async function fetchProducts(): Promise<Product[]> {
   if (cached) return cached;
 
   try {
-    const { loadAllProducts } = await import("@/modules/catalog/services/fetchProducts");
     const products = await loadAllProducts();
 
     if (products?.length) {
@@ -51,18 +62,21 @@ export async function fetchProducts(): Promise<Product[]> {
       return products;
     }
 
-    console.warn("Sheets vacío o sin productos publicados. Usando fallback local.");
-    const { FALLBACK_PRODUCTS } = await import("@/modules/catalog/data/fallback-products");
+    console.warn(
+      "Sheets vacío o sin productos publicados. Usando fallback local.",
+    );
 
-    setCache(FALLBACK_PRODUCTS, "fallback");
-    return FALLBACK_PRODUCTS;
+    const fallbackProducts = await loadFallbackProducts();
+    setCache(fallbackProducts, "fallback");
+
+    return fallbackProducts;
   } catch (error) {
     console.error("Error cargando catálogo desde Sheets:", error);
 
-    const { FALLBACK_PRODUCTS } = await import("@/modules/catalog/data/fallback-products");
+    const fallbackProducts = await loadFallbackProducts();
+    setCache(fallbackProducts, "fallback");
 
-    setCache(FALLBACK_PRODUCTS, "fallback");
-    return FALLBACK_PRODUCTS;
+    return fallbackProducts;
   }
 }
 
@@ -70,7 +84,7 @@ export function clearProductsCache() {
   try {
     sessionStorage.removeItem(CACHE_KEY);
   } catch {
-    // Ignorar errores de storage
+    // Ignorar errores de storage.
   }
 }
 
@@ -86,6 +100,7 @@ export function getEffectivePrice(item: {
   if (item.price_50 && item.qty >= 50) return item.price_50;
   if (item.price_12 && item.qty >= 12) return item.price_12;
   if (item.price_3 && item.qty >= 3) return item.price_3;
+
   return item.price_1;
 }
 
@@ -104,5 +119,6 @@ export function isProductAvailable(product: Product): boolean {
   if (!product.price_1 || product.price_1 <= 0) return false;
   if (product.stock === 0) return false;
   if (product.stock === null || product.stock === undefined) return false;
+
   return true;
 }

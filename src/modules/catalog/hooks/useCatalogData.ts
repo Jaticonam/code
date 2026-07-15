@@ -16,7 +16,7 @@ type StatusByCategory = Record<SheetCategory, CategoryLoadStatus>;
 const CATALOG_CATEGORIES = getCatalogCategories();
 
 const sortProducts = (items: Product[]) =>
-  [...items].sort((a, b) => b.priority - a.priority);
+  [...items].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
 
 const flattenByCategory = (byCategory: ProductsByCategory) =>
   sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
@@ -58,13 +58,10 @@ export function useCatalogData(activeCategory: CatalogCategory = "todas") {
     };
   }, []);
 
-  const syncProductsByCategory = useCallback(
-    (next: ProductsByCategory) => {
-      productsByCategoryRef.current = next;
-      setProductsByCategory(next);
-    },
-    [],
-  );
+  const syncProductsByCategory = useCallback((next: ProductsByCategory) => {
+    productsByCategoryRef.current = next;
+    setProductsByCategory(next);
+  }, []);
 
   const syncStatusByCategory = useCallback((next: StatusByCategory) => {
     statusByCategoryRef.current = next;
