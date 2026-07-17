@@ -1,106 +1,96 @@
 /* =========================================================
    Catalog PDF Page
-   Vista imprimible mobile-first para WhatsApp / celular
+   Vista imprimible del catálogo mayorista Wooly
    ========================================================= */
-
-/* ===== PAGE PREVIEW ===== */
 
 .catalog-pdf-page {
   min-height: 100vh;
-  padding: 28px;
+  padding: 32px;
   background:
-    radial-gradient(circle at top left, rgba(29, 130, 153, 0.12), transparent 30%),
-    radial-gradient(circle at top right, rgba(242, 134, 190, 0.16), transparent 34%),
-    linear-gradient(135deg, #f8fafc 0%, #ffffff 52%, #eef9fb 100%);
-  color: #0f172a;
+    radial-gradient(
+      circle at top left,
+      rgba(242, 134, 190, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #fff7fb 0%, #f8fafc 50%, #ffffff 100%);
+  color: #111827;
 }
 
 .catalog-pdf-toolbar {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  max-width: 980px;
-  margin: 0 auto 22px;
-  padding: 18px;
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  border-radius: 26px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow:
-    0 10px 30px rgba(15, 23, 42, 0.05),
-    0 18px 45px rgba(15, 23, 42, 0.06);
+  max-width: 1120px;
+  margin: 0 auto 24px;
+  padding: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
   backdrop-filter: blur(14px);
 }
 
 .catalog-pdf-toolbar__eyebrow {
   margin: 0 0 6px;
-  color: var(--w-primary, #1d8299);
+  color: #e11d48;
   font-size: 0.72rem;
-  font-weight: 950;
+  font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .catalog-pdf-toolbar__title {
   margin: 0;
-  color: #0f172a;
-  font-size: clamp(1.35rem, 2.4vw, 1.95rem);
-  font-weight: 1000;
-  line-height: 1.02;
-  letter-spacing: -0.045em;
+  color: #111827;
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  line-height: 1.05;
 }
 
 .catalog-pdf-toolbar__description {
-  max-width: 620px;
+  max-width: 640px;
   margin: 8px 0 0;
   color: #64748b;
-  font-size: 0.92rem;
-  font-weight: 750;
-  line-height: 1.35;
+  font-size: 0.95rem;
 }
 
 .catalog-pdf-toolbar__warning {
   margin: 12px 0 0;
   color: #92400e;
-  font-size: 0.84rem;
-  font-weight: 900;
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .catalog-pdf-toolbar__actions {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .catalog-pdf-toolbar__link,
 .catalog-pdf-toolbar__button {
-  display: inline-flex;
   min-height: 42px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
   padding: 0 16px;
-  font-size: 0.84rem;
-  font-weight: 950;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 800;
   text-decoration: none;
   cursor: pointer;
 }
 
 .catalog-pdf-toolbar__link {
-  border: 1px solid rgba(226, 232, 240, 0.95);
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.45);
   background: #ffffff;
   color: #334155;
 }
 
 .catalog-pdf-toolbar__button {
   border: 0;
-  background: linear-gradient(
-    135deg,
-    var(--w-primary, #1d8299),
-    var(--w-primary-dark, #156f84)
-  );
+  background: linear-gradient(135deg, #e11d48, #f472b6);
   color: #ffffff;
-  box-shadow: 0 8px 18px rgba(29, 130, 153, 0.18);
+  box-shadow: 0 14px 28px rgba(225, 29, 72, 0.26);
 }
 
 .catalog-pdf-toolbar__button:disabled {
@@ -108,32 +98,29 @@
   opacity: 0.55;
 }
 
-/* ===== A4 SHEET ===== */
-
 .catalog-pdf-sheet {
   width: 210mm;
   min-height: 297mm;
   margin: 0 auto;
-  padding: 10mm;
+  padding: 14mm;
   background: #ffffff;
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.18);
 }
 
 .catalog-pdf-state {
   display: grid;
   min-height: 220px;
   place-items: center;
-  margin: 16px 0;
+  margin: 24px 0;
   border: 1px dashed #cbd5e1;
   border-radius: 24px;
-  background: #f8fafc;
   color: #64748b;
   text-align: center;
 }
 
 .catalog-pdf-state h2 {
   margin: 0 0 8px;
-  color: #0f172a;
+  color: #111827;
   font-size: 1.25rem;
 }
 
@@ -142,26 +129,21 @@
   font-size: 0.92rem;
 }
 
-/* ===== FOOTER ===== */
-
 .catalog-pdf-footer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  justify-content: space-between;
   gap: 18px;
-  margin-top: 14px;
-  padding: 12px 2px 0;
-  border-top: 1px dashed rgba(226, 232, 240, 0.95);
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
   color: #64748b;
   font-size: 0.72rem;
-  font-weight: 750;
   line-height: 1.35;
 }
 
 .catalog-pdf-footer p {
   margin: 0;
 }
-
-/* ===== PRINT ===== */
 
 @page {
   size: A4;
@@ -201,11 +183,9 @@
   }
 }
 
-/* ===== SMALL PREVIEW ===== */
-
 @media (max-width: 900px) {
   .catalog-pdf-page {
-    padding: 14px;
+    padding: 16px;
   }
 
   .catalog-pdf-toolbar {
@@ -219,25 +199,6 @@
   .catalog-pdf-sheet {
     width: 100%;
     min-height: auto;
-    padding: 12px;
-    border-radius: 24px;
+    padding: 18px;
   }
 }
-
-@media (max-width: 640px) {
-  .catalog-pdf-page {
-    padding: 10px;
-  }
-
-  .catalog-pdf-toolbar {
-    padding: 14px;
-    border-radius: 24px;
-  }
-
-  .catalog-pdf-footer {
-    grid-template-columns: 1fr;
-    gap: 6px;
-    font-size: 0.66rem;
-  }
-}
-

@@ -133,7 +133,9 @@ export default function CatalogPdfPage() {
   );
 
   const campaignId = cleanParam(
-    searchParams.get("cpg") || searchParams.get("campania") || searchParams.get("campaign"),
+    searchParams.get("campania") ||
+      searchParams.get("campaign") ||
+      searchParams.get("cpg"),
   );
 
   const { data, isLoading, isFullCatalogLoaded } = useCatalogData("todas");
@@ -252,5 +254,4 @@ export default function CatalogPdfPage() {
     </main>
   );
 }
-
 

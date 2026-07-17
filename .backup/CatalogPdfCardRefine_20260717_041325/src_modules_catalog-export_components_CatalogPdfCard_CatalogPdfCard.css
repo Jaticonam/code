@@ -1,0 +1,360 @@
+/* =========================================================
+   Catalog PDF Card
+   Card horizontal mobile-first estilo /catalogo Wooly
+   ========================================================= */
+
+/* ===== BASE ===== */
+
+.catalog-pdf-card {
+  display: grid;
+  grid-template-columns: minmax(150px, 38%) minmax(0, 1fr);
+  gap: 14px;
+  min-height: 198px;
+  padding: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), #ffffff),
+    #ffffff;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.05),
+    0 18px 45px rgba(15, 23, 42, 0.06);
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* ===== MEDIA ===== */
+
+.catalog-pdf-card__media {
+  position: relative;
+  overflow: hidden;
+  min-height: 174px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top left, rgba(29, 130, 153, 0.08), transparent 42%),
+    #f8fafc;
+  box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.75);
+}
+
+.catalog-pdf-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 174px;
+  object-fit: contain;
+  object-position: center;
+  padding: 7px;
+}
+
+.catalog-pdf-card__offerBadge {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f286be, #ffb7d5);
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 18px rgba(242, 134, 190, 0.28);
+}
+
+/* ===== CONTENT ===== */
+
+.catalog-pdf-card__content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.catalog-pdf-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.catalog-pdf-card__code,
+.catalog-pdf-card__category {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 26px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 0.68rem;
+  font-weight: 950;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.catalog-pdf-card__code {
+  background: #f1f5f9;
+  color: #334155;
+  letter-spacing: 0.04em;
+}
+
+.catalog-pdf-card__category {
+  background: linear-gradient(
+    135deg,
+    var(--w-primary, #1d8299),
+    var(--w-primary-dark, #156f84)
+  );
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(29, 130, 153, 0.18);
+}
+
+.catalog-pdf-card__title {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #334155;
+  font-size: 1.04rem;
+  font-weight: 950;
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* ===== PRICE ===== */
+
+.catalog-pdf-card__pricePanel {
+  padding: 10px 12px;
+  border: 1px solid rgba(29, 130, 153, 0.12);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(230, 246, 248, 0.96), rgba(255, 255, 255, 0.95)),
+    #ffffff;
+  box-shadow: 0 8px 18px rgba(29, 130, 153, 0.06);
+}
+
+.catalog-pdf-card__priceLabel {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--w-primary-dark, #156f84);
+  font-size: 0.62rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.catalog-pdf-card__priceRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.catalog-pdf-card__price {
+  color: var(--w-primary, #1d8299);
+  font-size: 1.72rem;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+
+.catalog-pdf-card__oldPrice {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: line-through;
+}
+
+/* ===== TIERS ===== */
+
+.catalog-pdf-card__tiers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.catalog-pdf-card__tier {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 34px;
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 7px 9px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.catalog-pdf-card__tierLabel {
+  font-size: 0.68rem;
+  font-weight: 950;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.catalog-pdf-card__tierPrice {
+  font-size: 0.72rem;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.catalog-pdf-card__tier--price3 {
+  border-color: #f5b025;
+  background: rgba(245, 176, 37, 0.12);
+  color: #92400e;
+}
+
+.catalog-pdf-card__tier--price12 {
+  border-color: #f286be;
+  background: rgba(242, 134, 190, 0.13);
+  color: #9d174d;
+}
+
+.catalog-pdf-card__tier--price50 {
+  border-color: #7c3aed;
+  background: rgba(124, 58, 237, 0.11);
+  color: #5b21b6;
+}
+
+.catalog-pdf-card__tier--price100 {
+  border-color: #22c55e;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.1),
+    rgba(74, 222, 128, 0.18)
+  );
+  color: #15803d;
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.08),
+    0 6px 14px rgba(34, 197, 94, 0.12);
+}
+
+.catalog-pdf-card__noTiers {
+  margin: 0;
+  border-radius: 14px;
+  padding: 9px 10px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.catalog-pdf-card__stock {
+  margin: 0;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* ===== PRINT ===== */
+
+@media print {
+  .catalog-pdf-card {
+    min-height: 190px;
+    padding: 10px;
+    border-radius: 22px;
+    box-shadow:
+      0 6px 18px rgba(15, 23, 42, 0.04),
+      0 10px 28px rgba(15, 23, 42, 0.04);
+  }
+
+  .catalog-pdf-card__media {
+    min-height: 166px;
+    border-radius: 18px;
+  }
+
+  .catalog-pdf-card__image {
+    min-height: 166px;
+  }
+
+  .catalog-pdf-card__title {
+    font-size: 0.98rem;
+  }
+
+  .catalog-pdf-card__price {
+    font-size: 1.55rem;
+  }
+
+  .catalog-pdf-card__tier {
+    min-height: 31px;
+    padding: 6px 8px;
+  }
+
+  .catalog-pdf-card__tierLabel,
+  .catalog-pdf-card__tierPrice {
+    font-size: 0.66rem;
+  }
+}
+
+/* ===== SMALL PREVIEW ===== */
+
+@media (max-width: 640px) {
+  .catalog-pdf-card {
+    grid-template-columns: 42% minmax(0, 1fr);
+    gap: 10px;
+    min-height: 178px;
+    padding: 9px;
+    border-radius: 22px;
+  }
+
+  .catalog-pdf-card__media {
+    min-height: 158px;
+    border-radius: 18px;
+  }
+
+  .catalog-pdf-card__image {
+    min-height: 158px;
+    padding: 6px;
+  }
+
+  .catalog-pdf-card__code,
+  .catalog-pdf-card__category {
+    min-height: 22px;
+    padding: 0 8px;
+    font-size: 0.56rem;
+  }
+
+  .catalog-pdf-card__title {
+    font-size: 0.82rem;
+  }
+
+  .catalog-pdf-card__pricePanel {
+    padding: 8px 9px;
+    border-radius: 15px;
+  }
+
+  .catalog-pdf-card__priceLabel {
+    font-size: 0.52rem;
+  }
+
+  .catalog-pdf-card__price {
+    font-size: 1.22rem;
+  }
+
+  .catalog-pdf-card__tiers {
+    gap: 5px;
+  }
+
+  .catalog-pdf-card__tier {
+    min-height: 28px;
+    border-radius: 12px;
+    padding: 5px 6px;
+  }
+
+  .catalog-pdf-card__tierLabel,
+  .catalog-pdf-card__tierPrice {
+    font-size: 0.55rem;
+  }
+
+  .catalog-pdf-card__stock {
+    font-size: 0.62rem;
+  }
+}

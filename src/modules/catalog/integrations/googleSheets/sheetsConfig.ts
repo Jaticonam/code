@@ -55,4 +55,4 @@ export const CAMPAIGNS_SHEET_CONFIG = {
 export const SHEETS_CONFIG = PRODUCT_SHEETS_CONFIG;
 
 export type SheetSource = (typeof PRODUCT_SHEETS_CONFIG)[number];
-export type SheetCategory = SheetSource["category"];
+export type CatalogCategoryId = SheetSource["category"];

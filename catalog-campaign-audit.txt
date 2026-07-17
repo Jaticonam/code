@@ -127,10 +127,10 @@ export type CampaignId = (typeof CAMPAIGN_CONFIG)[number]["id"];
 ============================================================
 FILE: src\shared\config\categories.ts
 ============================================================
-import type { SheetCategory } from "@/modules/catalog/services/productsConfig";
+import type { CatalogCategoryId } from "@/modules/catalog/services/productsConfig";
 
 export interface CategoryConfig {
-  id: SheetCategory | "todas";
+  id: CatalogCategoryId | "todas";
   name: string;
   icon: string;
 }
@@ -248,7 +248,7 @@ export const CAMPAIGNS_SHEET_CONFIG = {
 export const SHEETS_CONFIG = PRODUCT_SHEETS_CONFIG;
 
 export type SheetSource = (typeof PRODUCT_SHEETS_CONFIG)[number];
-export type SheetCategory = SheetSource["category"];
+export type CatalogCategoryId = SheetSource["category"];
 
 ============================================================
 FILE: src\modules\catalog\integrations\googleSheets\fetchSheets.ts
@@ -534,7 +534,7 @@ export function buildCampaignNameToIdMap(campaigns: Campaign[]) {
 FILE: src\modules\catalog\integrations\googleSheets\normalizeProduct.ts
 ============================================================
 import type { Product } from "@/shared/types/product";
-import type { SheetCategory } from "./sheetsConfig";
+import type { CatalogCategoryId } from "./sheetsConfig";
 import type { CsvRow } from "./fetchSheets";
 
 export interface SheetProduct extends Product {
@@ -590,7 +590,7 @@ function parseCampaigns(
 
 export function normalizeProduct(
   row: CsvRow,
-  categoryFromConfig: SheetCategory,
+  categoryFromConfig: CatalogCategoryId,
   campaignNameToIdMap: CampaignNameToIdMap = {},
 ): SheetProduct {
   return {
@@ -665,7 +665,7 @@ import {
   CAMPAIGNS_SHEET_CONFIG,
   PRODUCT_SHEETS_CONFIG,
   type SheetSource,
-  type SheetCategory,
+  type CatalogCategoryId,
 } from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
 import { fetchSheetRows } from "@/modules/catalog/integrations/googleSheets/fetchSheets";
 import {
@@ -687,7 +687,7 @@ type CampaignCacheEntry = {
   items: Campaign[];
 };
 
-export type CatalogCategory = SheetCategory | "todas";
+export type CatalogCategory = CatalogCategoryId | "todas";
 
 const CACHE_TTL = 1000 * 60 * 15;
 
@@ -714,8 +714,8 @@ const PRODUCT_REQUIRED_HEADERS = [
    CACHE EN MEMORIA
    ========================================================= */
 
-const memoryCache = new Map<SheetCategory, CategoryCacheEntry>();
-const pendingRequests = new Map<SheetCategory, Promise<Product[]>>();
+const memoryCache = new Map<CatalogCategoryId, CategoryCacheEntry>();
+const pendingRequests = new Map<CatalogCategoryId, Promise<Product[]>>();
 
 let campaignsMemoryCache: CampaignCacheEntry | null = null;
 let pendingCampaignsRequest: Promise<Campaign[]> | null = null;
@@ -736,7 +736,7 @@ const sortCampaigns = (items: Campaign[]) =>
   [...items].sort((a, b) => b.priority - a.priority);
 
 const flattenByCategory = (
-  byCategory: Partial<Record<SheetCategory, Product[]>>,
+  byCategory: Partial<Record<CatalogCategoryId, Product[]>>,
 ) => sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
 
 /* =========================================================
@@ -867,7 +867,7 @@ async function getCampaignNameToIdMap() {
    CACHE LOCAL PRODUCTOS
    ========================================================= */
 
-function readStorageCache(category: SheetCategory): Product[] | null {
+function readStorageCache(category: CatalogCategoryId): Product[] | null {
   if (typeof window === "undefined") return null;
 
   try {
@@ -891,7 +891,7 @@ function readStorageCache(category: SheetCategory): Product[] | null {
 }
 
 export function readCachedCategoryProducts(
-  category: SheetCategory,
+  category: CatalogCategoryId,
 ): Product[] | null {
   const memoryEntry = memoryCache.get(category);
 
@@ -907,7 +907,7 @@ export function readCachedCategoryProducts(
   return storageItems ? sortProducts(storageItems) : null;
 }
 
-function writeCache(category: SheetCategory, items: Product[]) {
+function writeCache(category: CatalogCategoryId, items: Product[]) {
   const entry: CategoryCacheEntry = {
     savedAt: now(),
     items,
@@ -925,7 +925,7 @@ function writeCache(category: SheetCategory, items: Product[]) {
 }
 
 export function getCachedCatalogSnapshot() {
-  const byCategory: Partial<Record<SheetCategory, Product[]>> = {};
+  const byCategory: Partial<Record<CatalogCategoryId, Product[]>> = {};
 
   PRODUCT_SHEETS_CONFIG.forEach((source) => {
     const cached = readCachedCategoryProducts(source.category);
@@ -951,12 +951,12 @@ export function getCachedCatalogSnapshot() {
    FETCH REAL POR CATEGORÍA
    ========================================================= */
 
-function getSource(category: SheetCategory) {
+function getSource(category: CatalogCategoryId) {
   return PRODUCT_SHEETS_CONFIG.find((source) => source.category === category);
 }
 
 async function fetchCategoryProducts(
-  category: SheetCategory,
+  category: CatalogCategoryId,
 ): Promise<Product[]> {
   const source = getSource(category);
   if (!source) return [];
@@ -984,7 +984,7 @@ async function fetchCategoryProducts(
    ========================================================= */
 
 export async function loadCategoryProducts(
-  category: SheetCategory,
+  category: CatalogCategoryId,
   options: { forceRefresh?: boolean } = {},
 ): Promise<Product[]> {
   if (!options.forceRefresh) {
@@ -1071,7 +1071,7 @@ export {
 
 export type {
   SheetSource,
-  SheetCategory,
+  CatalogCategoryId,
 } from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
 
 ============================================================
@@ -1138,7 +1138,7 @@ FILE: src\modules\catalog\hooks\useCatalogData.ts
 ============================================================
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Product } from "@/shared/types/product";
-import type { SheetCategory } from "@/modules/catalog/services/productsConfig";
+import type { CatalogCategoryId } from "@/modules/catalog/services/productsConfig";
 import {
   getCachedCatalogSnapshot,
   getCatalogCategories,
@@ -1148,8 +1148,8 @@ import {
 
 type CategoryLoadStatus = "idle" | "loading" | "loaded" | "error";
 
-type ProductsByCategory = Partial<Record<SheetCategory, Product[]>>;
-type StatusByCategory = Record<SheetCategory, CategoryLoadStatus>;
+type ProductsByCategory = Partial<Record<CatalogCategoryId, Product[]>>;
+type StatusByCategory = Record<CatalogCategoryId, CategoryLoadStatus>;
 
 const CATALOG_CATEGORIES = getCatalogCategories();
 
@@ -1160,9 +1160,9 @@ const flattenByCategory = (byCategory: ProductsByCategory) =>
   sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
 
 const createInitialStatus = (
-  loadedCategories: SheetCategory[],
+  loadedCategories: CatalogCategoryId[],
 ): StatusByCategory => {
-  const loaded = new Set<SheetCategory>(loadedCategories);
+  const loaded = new Set<CatalogCategoryId>(loadedCategories);
 
   return CATALOG_CATEGORIES.reduce((acc, category) => {
     acc[category] = loaded.has(category) ? "loaded" : "idle";
@@ -1210,7 +1210,7 @@ export function useCatalogData(activeCategory: CatalogCategory = "todas") {
   }, []);
 
   const setCategoryStatus = useCallback(
-    (category: SheetCategory, status: CategoryLoadStatus) => {
+    (category: CatalogCategoryId, status: CategoryLoadStatus) => {
       const next = {
         ...statusByCategoryRef.current,
         [category]: status,
@@ -1222,7 +1222,7 @@ export function useCatalogData(activeCategory: CatalogCategory = "todas") {
   );
 
   const setCategoryProducts = useCallback(
-    (category: SheetCategory, products: Product[]) => {
+    (category: CatalogCategoryId, products: Product[]) => {
       const next = {
         ...productsByCategoryRef.current,
         [category]: products,
@@ -1234,7 +1234,7 @@ export function useCatalogData(activeCategory: CatalogCategory = "todas") {
   );
 
   const ensureCategoryLoaded = useCallback(
-    async (category: SheetCategory) => {
+    async (category: CatalogCategoryId) => {
       const currentStatus = statusByCategoryRef.current[category];
 
       if (currentStatus === "loaded" || currentStatus === "loading") {

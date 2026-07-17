@@ -1,25 +1,29 @@
-import type { Category } from "@/shared/types/product";
-import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+import type { Campaign, Category } from "@/shared/types/product";
+
 import "@/shared/styles/catalog/catalog-explore-center.css";
 
-interface CampaignOption {
-  id: string;
-  name: string;
-  icon: string;
-  colorClass?: string;
-}
+type CatalogExploreCampaign = Pick<
+  Campaign,
+  "id" | "name" | "icon" | "colorClass"
+>;
 
 interface Props {
   open: boolean;
+
   activeCampaign: string;
   activeCategory: string;
+
   activeCampaignName?: string;
   activeCategoryName?: string;
+
   campaignCounts: Record<string, number>;
   categoryCounts: Record<string, number>;
-  categories: Category[];
-  campaigns?: ReadonlyArray<CampaignOption>;
+
+  categories: ReadonlyArray<Category>;
+  campaigns: ReadonlyArray<CatalogExploreCampaign>;
+
   cartCount: number;
+
   onClose: () => void;
   onResetCatalog?: () => void;
   onCampaignSelect: (id: string) => void;
@@ -36,7 +40,7 @@ export function CatalogExploreCenter({
   campaignCounts,
   categoryCounts,
   categories,
-  campaigns = CAMPAIGN_CONFIG,
+  campaigns,
   cartCount,
   onClose,
   onResetCatalog,
@@ -46,9 +50,10 @@ export function CatalogExploreCenter({
 }: Props) {
   if (!open) return null;
 
-  const visibleCampaigns = campaigns.filter((c) => {
-    const count = campaignCounts[c.id] ?? 0;
-    return count > 0 || activeCampaign === c.id;
+  const visibleCampaigns = campaigns.filter((campaign) => {
+    const count = campaignCounts[campaign.id] ?? 0;
+
+    return count > 0 || activeCampaign === campaign.id;
   });
 
   const visibleCategories = categories.filter(
@@ -109,34 +114,39 @@ export function CatalogExploreCenter({
           </div>
         )}
 
-        <section className="catalog-explore-section">
-          <h4>🎁 Campañas</h4>
+        <div className="catalog-explore-campaign-grid">
+          {visibleCampaigns.map((campaign) => {
+            const isActive = activeCampaign === campaign.id;
+            const count = campaignCounts[campaign.id] ?? 0;
 
-          <div className="catalog-explore-campaign-grid">
-            {visibleCampaigns.map((c) => {
-              const isActive = activeCampaign === c.id;
-              const styleClass = c.colorClass ?? "catalog-campaign-purple";
+            return (
+              <button
+                key={campaign.id}
+                type="button"
+                onClick={() => onCampaignSelect(isActive ? "" : campaign.id)}
+                className={[
+                  "catalog-explore-campaign",
+                  campaign.colorClass,
+                  isActive ? "active" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-pressed={isActive}
+                title={campaign.name}
+              >
+                <span>
+                  <strong>{campaign.name}</strong>
 
-              return (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => onCampaignSelect(isActive ? "" : c.id)}
-                  className={`catalog-explore-campaign ${styleClass} ${
-                    isActive ? "active" : ""
-                  }`}
-                >
-                  <span>
-                    <strong>{c.name}</strong>
-                    <small>{campaignCounts[c.id] ?? 0} productos</small>
-                  </span>
+                  <small>
+                    {count} {count === 1 ? "producto" : "productos"}
+                  </small>
+                </span>
 
-                  <b>{c.icon}</b>
-                </button>
-              );
-            })}
-          </div>
-        </section>
+                <b aria-hidden="true">{campaign.icon}</b>
+              </button>
+            );
+          })}
+        </div>
 
         <section className="catalog-explore-section">
           <h4>🛍️ Categorías</h4>

@@ -12,7 +12,7 @@ interface CatalogPdfHeaderProps {
   validUntil: string;
   productCount: number;
   contactNumber: string;
-  isComplete?: boolean;
+  isComplete: boolean;
   brandFootnote?: string;
 }
 
@@ -32,26 +32,27 @@ export default function CatalogPdfHeader({
   validUntil,
   productCount,
   contactNumber,
+  isComplete,
   brandFootnote = "Una marca de JUNG INVERSIONES SAC RUC 20616037120",
 }: CatalogPdfHeaderProps) {
   return (
     <header className="catalog-pdf-header">
       <section className="catalog-pdf-header__cover">
         <div className="catalog-pdf-header__logoWrap">
-          {logoSrc ? (
-            <img
-              className="catalog-pdf-header__logoImage"
-              src={logoSrc}
-              alt="Wooly Imports"
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
-          ) : (
-            <span className="catalog-pdf-header__logoFallback">
-              Wooly Imports
-            </span>
-          )}
+          <div className="catalog-pdf-header__logoViewport">
+            {logoSrc ? (
+              <img
+                className="catalog-pdf-header__logoImage"
+                src={logoSrc}
+                alt="Wooly"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              />
+            ) : null}
+
+            <span className="catalog-pdf-header__logoFallback">Wooly</span>
+          </div>
 
           <p className="catalog-pdf-header__brandFootnote">
             {brandFootnote}
@@ -86,6 +87,7 @@ export default function CatalogPdfHeader({
         </div>
 
         <div className="catalog-pdf-header__statusRow">
+          <span>{isComplete ? "Catálogo listo" : "Cargando categorías"}</span>
           <span>Generado: {generatedAt}</span>
         </div>
       </section>

@@ -32,16 +32,6 @@ const formatMoney = (value?: number | null) => {
   return moneyFormatter.format(amount);
 };
 
-const formatPriceNumber = (value?: number | null) => {
-  const amount = Number(value || 0);
-
-  if (amount <= 0) {
-    return "0.00";
-  }
-
-  return amount.toFixed(2);
-};
-
 const formatCategory = (category: string) =>
   category.replace(/-/g, " ").replace(/\s+/g, " ").trim();
 
@@ -110,25 +100,25 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
           <h2 className="catalog-pdf-card__title">{product.title}</h2>
         </div>
 
-        <div className="catalog-pdf-card__unitRow">
-          <div className="catalog-pdf-card__priceGroup">
-            <span className="catalog-pdf-card__sectionLabel">
-              Precio unitario
-            </span>
+        <div className="catalog-pdf-card__separator" />
 
-            <div className="catalog-pdf-card__unitPriceRow">
-              <span className="catalog-pdf-card__currency">S/</span>
-              <strong className="catalog-pdf-card__unitPriceValue">
-                {formatPriceNumber(product.primaryPrice)}
-              </strong>
-            </div>
+        <div className="catalog-pdf-card__unitSection">
+          <span className="catalog-pdf-card__sectionLabel">
+            Precio unitario
+          </span>
 
-            {hasOffer ? (
-              <span className="catalog-pdf-card__oldPrice">
-                Antes {formatMoney(product.price1)}
-              </span>
-            ) : null}
+          <div className="catalog-pdf-card__unitPriceRow">
+            <span className="catalog-pdf-card__currency">S/</span>
+            <strong className="catalog-pdf-card__unitPriceValue">
+              {Number(product.primaryPrice || 0).toFixed(2)}
+            </strong>
           </div>
+
+          {hasOffer ? (
+            <span className="catalog-pdf-card__oldPrice">
+              Antes {formatMoney(product.price1)}
+            </span>
+          ) : null}
 
           <div className="catalog-pdf-card__stockPill">
             <span className="catalog-pdf-card__stockIcon">✓</span>
@@ -136,7 +126,7 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
           </div>
         </div>
 
-        <div className="catalog-pdf-card__separator" />
+        <div className="catalog-pdf-card__separator catalog-pdf-card__separator--dashed" />
 
         <div className="catalog-pdf-card__wholesaleSection">
           <span className="catalog-pdf-card__sectionLabel">

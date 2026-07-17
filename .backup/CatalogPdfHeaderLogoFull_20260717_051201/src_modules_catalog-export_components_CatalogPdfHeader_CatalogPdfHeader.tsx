@@ -38,20 +38,20 @@ export default function CatalogPdfHeader({
     <header className="catalog-pdf-header">
       <section className="catalog-pdf-header__cover">
         <div className="catalog-pdf-header__logoWrap">
-          {logoSrc ? (
-            <img
-              className="catalog-pdf-header__logoImage"
-              src={logoSrc}
-              alt="Wooly Imports"
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
-          ) : (
-            <span className="catalog-pdf-header__logoFallback">
-              Wooly Imports
-            </span>
-          )}
+          <div className="catalog-pdf-header__logoViewport">
+            {logoSrc ? (
+              <img
+                className="catalog-pdf-header__logoImage"
+                src={logoSrc}
+                alt="Wooly"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              />
+            ) : (
+              <span className="catalog-pdf-header__logoFallback">Wooly</span>
+            )}
+          </div>
 
           <p className="catalog-pdf-header__brandFootnote">
             {brandFootnote}

@@ -13,8 +13,8 @@ import "./CatalogPdfPage.css";
   Configuración comercial del PDF.
   Cambia estos valores cuando tengamos el número/logo oficial final.
 */
-const PDF_CONTACT_NUMBER = "+51 936 188 636";
-const PDF_LOGO_SRC = "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
+const PDF_CONTACT_NUMBER = "+51 000 000 000";
+const PDF_LOGO_SRC = "/logo.png";
 const PDF_VALID_DAYS = 7;
 
 const formatDate = (date: Date, includeTime = false) =>
@@ -133,7 +133,9 @@ export default function CatalogPdfPage() {
   );
 
   const campaignId = cleanParam(
-    searchParams.get("cpg") || searchParams.get("campania") || searchParams.get("campaign"),
+    searchParams.get("campania") ||
+      searchParams.get("campaign") ||
+      searchParams.get("cpg"),
   );
 
   const { data, isLoading, isFullCatalogLoaded } = useCatalogData("todas");
@@ -252,5 +254,3 @@ export default function CatalogPdfPage() {
     </main>
   );
 }
-
-

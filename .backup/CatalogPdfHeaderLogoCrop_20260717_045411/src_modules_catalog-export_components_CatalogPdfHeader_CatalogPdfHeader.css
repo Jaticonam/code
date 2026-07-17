@@ -1,6 +1,6 @@
 /* =========================================================
    Catalog PDF Header
-   Portada blanca con logo completo centrado
+   Portada blanca con logo protagonista centrado
    ========================================================= */
 
 /* ===== BASE ===== */
@@ -34,37 +34,22 @@
 .catalog-pdf-header__logoWrap {
   display: flex;
   width: 100%;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 22px;
-  text-align: center;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 
 .catalog-pdf-header__logoImage {
   display: block;
-  width: min(430px, 92%);
-  height: auto;
-  max-height: 138px;
+  width: min(320px, 78%);
+  max-height: 116px;
   object-fit: contain;
-  object-position: center;
-  user-select: none;
 }
 
 .catalog-pdf-header__logoFallback {
   color: var(--w-primary, #1d8299);
-  font-size: 2.25rem;
+  font-size: 2rem;
   font-weight: 1000;
   letter-spacing: -0.05em;
-}
-
-.catalog-pdf-header__brandFootnote {
-  max-width: 560px;
-  margin: 8px 0 0;
-  color: #6b7280;
-  font-size: 0.72rem;
-  font-weight: 700;
-  line-height: 1.35;
-  text-align: center;
 }
 
 /* ===== COPY ===== */
@@ -102,6 +87,10 @@
   font-weight: 1000;
   line-height: 1.02;
   letter-spacing: -0.065em;
+}
+
+.catalog-pdf-header__title::first-line {
+  color: #202124;
 }
 
 .catalog-pdf-header__subtitle {
@@ -223,14 +212,8 @@
   }
 
   .catalog-pdf-header__logoImage {
-    width: min(380px, 88%);
-    max-height: 118px;
-  }
-
-  .catalog-pdf-header__brandFootnote {
-    max-width: 500px;
-    margin-top: 6px;
-    font-size: 0.64rem;
+    width: min(285px, 76%);
+    max-height: 94px;
   }
 
   .catalog-pdf-header__title {
@@ -273,19 +256,12 @@
   }
 
   .catalog-pdf-header__logoWrap {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
 
   .catalog-pdf-header__logoImage {
-    width: min(340px, 92%);
-    max-height: 108px;
-  }
-
-  .catalog-pdf-header__brandFootnote {
-    max-width: 300px;
-    margin-top: 6px;
-    font-size: 0.6rem;
-    line-height: 1.3;
+    width: min(280px, 84%);
+    max-height: 90px;
   }
 
   .catalog-pdf-header__segment {

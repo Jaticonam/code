@@ -5,5 +5,5 @@ export {
 
 export type {
   SheetSource,
-  SheetCategory,
+  CatalogCategoryId,
 } from "@/modules/catalog/integrations/googleSheets/sheetsConfig";

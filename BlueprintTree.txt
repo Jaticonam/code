@@ -1,0 +1,699 @@
+Listado de rutas de carpetas para el volumen Nuevo vol
+El número de serie del volumen es 00000175 2613:BA26
+D:\JUNG\CODE\WOOLY\WOOLY-WEB\SRC
+|   index.css
+|   vite-env.d.ts
+|   
++---app
+|   |   App.tsx
+|   |   main.tsx
+|   |   
+|   \---pages
+|           BlogArticlePage.tsx
+|           BlogPage.tsx
+|           BlogSectionPage.tsx
+|           CatalogPage.tsx
+|           CatalogPdfPage.tsx
+|           CategoryPage.tsx
+|           HomePage.tsx
+|           MetaFeedPage.tsx
+|           NotFound.tsx
+|           ProductDetailPage.tsx
+|           
++---data
+|       blogArticles.ts
+|       
++---hooks
+|       useBlogSeo.ts
+|       
++---modules
+|   +---blog
+|   |   +---components
+|   |   |   |   BlogBlockRenderer.tsx
+|   |   |   |   BlogCatalogProductCard.tsx
+|   |   |   |   BlogGuidesLayout.tsx
+|   |   |   |   BlogGuidesPage.tsx
+|   |   |   |   BlogHero.tsx
+|   |   |   |   BlogHub.tsx
+|   |   |   |   BlogIdeaBox.tsx
+|   |   |   |   
+|   |   |   +---article
+|   |   |   |       BlogArticleCTA.tsx
+|   |   |   |       BlogArticleMeta.tsx
+|   |   |   |       BlogArticleSidebar.tsx
+|   |   |   |       BlogBreadcrumbs.tsx
+|   |   |   |       BlogFAQ.tsx
+|   |   |   |       BlogReadingProgress.tsx
+|   |   |   |       BlogRelatedArticles.tsx
+|   |   |   |       BlogRelatedProducts.tsx
+|   |   |   |       BlogTOC.tsx
+|   |   |   |       index.ts
+|   |   |   |       
+|   |   |   +---cards
+|   |   |   |       BlogCard.tsx
+|   |   |   |       BlogFeatured.tsx
+|   |   |   |       BlogGrid.tsx
+|   |   |   |       index.ts
+|   |   |   |       
+|   |   |   +---guides
+|   |   |   |       BlogGuidesContent.tsx
+|   |   |   |       BlogGuidesEmptyState.tsx
+|   |   |   |       BlogGuidesHero.tsx
+|   |   |   |       BlogGuidesLayout.tsx
+|   |   |   |       BlogGuidesPage.tsx
+|   |   |   |       BlogGuidesStats.tsx
+|   |   |   |       BlogIdeaBox.tsx
+|   |   |   |       index.ts
+|   |   |   |       
+|   |   |   +---hub
+|   |   |   |       BlogHero.tsx
+|   |   |   |       BlogHub.tsx
+|   |   |   |       BlogHubCatalogBanner.tsx
+|   |   |   |       BlogHubEmptyState.tsx
+|   |   |   |       BlogHubMainSections.tsx
+|   |   |   |       index.ts
+|   |   |   |       
+|   |   |   +---products
+|   |   |   |       BlogCatalogProductCard.tsx
+|   |   |   |       index.ts
+|   |   |   |       
+|   |   |   +---rail
+|   |   |   |       BlogExploreSheet.tsx
+|   |   |   |       BlogGuidesRail.tsx
+|   |   |   |       BlogHubRail.tsx
+|   |   |   |       BlogRailCard.tsx
+|   |   |   |       index.ts
+|   |   |   |       
+|   |   |   +---renderers
+|   |   |   |       BlogBlockRenderer.tsx
+|   |   |   |       index.ts
+|   |   |   |       
+|   |   |   +---sections
+|   |   |   |       BlogArticlesSection.tsx
+|   |   |   |       BlogCatalogSection.tsx
+|   |   |   |       BusinessToolsSection.tsx
+|   |   |   |       CampaignCenterSection.tsx
+|   |   |   |       IdeaLabSection.tsx
+|   |   |   |       index.ts
+|   |   |   |       OpportunityCenterSection.tsx
+|   |   |   |       TrendInsightsSection.tsx
+|   |   |   |       
+|   |   |   \---sidebar
+|   |   |           BlogMobileNav.tsx
+|   |   |           BlogSidebar.tsx
+|   |   |           BlogSidebarCard.tsx
+|   |   |           BlogSidebarMenu.tsx
+|   |   |           index.ts
+|   |   |           
+|   |   +---config
+|   |   |       blogCategories.ts
+|   |   |       blogGuideCategories.ts
+|   |   |       hubNavigation.ts
+|   |   |       
+|   |   +---data
+|   |   |       blogArticles.ts
+|   |   |       blogTemplates.ts
+|   |   |       fallbackBlogArticles.ts
+|   |   |       fallbackBusinessTools.ts
+|   |   |       fallbackCampaigns.ts
+|   |   |       fallbackIdeas.ts
+|   |   |       fallbackOpportunities.ts
+|   |   |       fallbackTrends.ts
+|   |   |       
+|   |   +---hooks
+|   |   |       useBlogArticles.ts
+|   |   |       useBlogSearch.ts
+|   |   |       useBlogSeo.ts
+|   |   |       useBreadcrumbSchema.ts
+|   |   |       useFaqSchema.ts
+|   |   |       useReadingProgress.ts
+|   |   |       
+|   |   +---services
+|   |   |       relatedArticles.ts
+|   |   |       
+|   |   +---types
+|   |   |       blog.ts
+|   |   |       
+|   |   \---utils
+|   |           estimateReadingTime.ts
+|   |           getBlogSeo.ts
+|   |           
+|   +---cart
+|   |   +---components
+|   |   |       AddToCartModal.tsx
+|   |   |       AddToCartModalHeader.tsx
+|   |   |       AddToCartModalInfo.tsx
+|   |   |       CartEmpty.tsx
+|   |   |       CartFooter.tsx
+|   |   |       CartHeader.tsx
+|   |   |       CartNoteTextarea.tsx
+|   |   |       CartQtyControls.tsx
+|   |   |       CartQtyInput.tsx
+|   |   |       CartRow.tsx
+|   |   |       CartSidebar.tsx
+|   |   |       CartTierSelector.tsx
+|   |   |       
+|   |   +---store
+|   |   |       cart.actions.ts
+|   |   |       cart.context.tsx
+|   |   |       cart.persistence.ts
+|   |   |       cart.selectors.ts
+|   |   |       cart.store.ts
+|   |   |       index.ts
+|   |   |       
+|   |   \---utils
+|   |           checkout.ts
+|   |           getActiveTierQty.ts
+|   |           getNextTier.ts
+|   |           getTierUnlockMessage.ts
+|   |           
+|   +---catalog
+|   |   +---components
+|   |   |       CatalogExploreCenter.css
+|   |   |       CatalogExploreCenter.tsx
+|   |   |       CatalogTopNav.css
+|   |   |       CatalogTopNav.tsx
+|   |   |       CategoryFilter.tsx
+|   |   |       CategoryFilterDesktop.tsx
+|   |   |       CategoryFilterMobile.tsx
+|   |   |       HeaderCampaignFilter.css
+|   |   |       HeaderCampaignFilter.tsx
+|   |   |       HeaderCategoryFilter.css
+|   |   |       HeaderCategoryFilter.tsx
+|   |   |       ProductCard.tsx
+|   |   |       ProductCardBadges.tsx
+|   |   |       ProductCardPrice.tsx
+|   |   |       ProductCardStock.tsx
+|   |   |       ProductCardTierBadges.tsx
+|   |   |       
+|   |   +---data
+|   |   |       fallback-products.ts
+|   |   |       
+|   |   +---hooks
+|   |   |       useCatalogCampaigns.ts
+|   |   |       useCatalogData.ts
+|   |   |       useCatalogFilters.ts
+|   |   |       useCatalogPrioritySections.ts
+|   |   |       useFilteredProducts.ts
+|   |   |       useProducts.ts
+|   |   |       useProductViewers.ts
+|   |   |       
+|   |   +---integrations
+|   |   |   \---googleSheets
+|   |   |           campaignColors.ts
+|   |   |           fetchSheets.ts
+|   |   |           normalizeCampaign.ts
+|   |   |           normalizeProduct.ts
+|   |   |           sheetsConfig.ts
+|   |   |           validateProducts.ts
+|   |   |           
+|   |   +---services
+|   |   |       fetchProducts.ts
+|   |   |       normalizeProduct.ts
+|   |   |       productsConfig.ts
+|   |   |       productService.ts
+|   |   |       validateProducts.ts
+|   |   |       
+|   |   \---utils
+|   |           products.ts
+|   |           
+|   +---category
+|   |   +---components
+|   |   |       CategoryEmpty.tsx
+|   |   |       CategoryGrid.tsx
+|   |   |       CategoryHeader.tsx
+|   |   |       
+|   |   +---hooks
+|   |   |       useCategoryProducts.ts
+|   |   |       
+|   |   \---utils
+|   |           filterCategoryProducts.ts
+|   |           
+|   +---commercial
+|   |   +---pages
+|   |   |       CommercialCenter.tsx
+|   |   |       
+|   |   \---services
+|   |           getCommercialDashboard.ts
+|   |           
+|   +---feedback
+|   |   +---components
+|   |   |       NotificationStack.tsx
+|   |   |       RecentActivity.tsx
+|   |   |       RecentActivityCard.tsx
+|   |   |       
+|   |   +---config
+|   |   |       recentActivity.ts
+|   |   |       
+|   |   \---hooks
+|   |           useRecentActivity.ts
+|   |           
+|   +---home
+|   |   +---components
+|   |   |   |   BenefitsSection.tsx
+|   |   |   |   BrandStorySection.tsx
+|   |   |   |   CategoriesSection.tsx
+|   |   |   |   FeaturedProductsSection.tsx
+|   |   |   |   FinalCTASection.tsx
+|   |   |   |   GrowthCenterSection.tsx
+|   |   |   |   HeroSlider.tsx
+|   |   |   |   HomeFooter.tsx
+|   |   |   |   HomeHeader.tsx
+|   |   |   |   HomeSectionHeader.tsx
+|   |   |   |   HowToBuySection.tsx
+|   |   |   |   ShippingSection.tsx
+|   |   |   |   SocialSection.tsx
+|   |   |   |   StatsSection.tsx
+|   |   |   |   TestimonialsSection.tsx
+|   |   |   |   TikTokSection.tsx
+|   |   |   |   TopBar.tsx
+|   |   |   |   VipSection.tsx
+|   |   |   |   
+|   |   |   \---CampaignHero
+|   |   |           ActiveCampaignHero.tsx
+|   |   |           CampaignHeroCyber.tsx
+|   |   |           CampaignHeroDefault.tsx
+|   |   |           CampaignHeroDiaPadre.tsx
+|   |   |           
+|   |   \---data
+|   |           blogdata.ts
+|   |           
+|   +---integrations
+|   |   +---channels
+|   |   |   \---pdf
+|   |   |       +---components
+|   |   |       |   +---CatalogPdfCard
+|   |   |       |   |       CatalogPdfCard.css
+|   |   |       |   |       CatalogPdfCard.tsx
+|   |   |       |   |       
+|   |   |       |   +---CatalogPdfGrid
+|   |   |       |   |       CatalogPdfGrid.css
+|   |   |       |   |       CatalogPdfGrid.tsx
+|   |   |       |   |       
+|   |   |       |   +---CatalogPdfHeader
+|   |   |       |   |       CatalogPdfHeader.css
+|   |   |       |   |       CatalogPdfHeader.tsx
+|   |   |       |   |       
+|   |   |       |   \---CatalogPdfPage
+|   |   |       |           CatalogPdfPage.css
+|   |   |       |           CatalogPdfPage.tsx
+|   |   |       |           
+|   |   |       +---mappers
+|   |   |       |       PdfProductMapper.ts
+|   |   |       |       
+|   |   |       \---types
+|   |   |               PdfProduct.ts
+|   |   |               
+|   |   +---connectors
+|   |   |   +---google
+|   |   |   +---mercadolibre
+|   |   |   +---meta
+|   |   |   |       connector.ts
+|   |   |   |       exporter.ts
+|   |   |   |       mapper.ts
+|   |   |   |       validator.ts
+|   |   |   |       
+|   |   |   \---pinterest
+|   |   +---dashboard
+|   |   |   |   index.ts
+|   |   |   |   
+|   |   |   +---collectors
+|   |   |   |       ConnectorCollector.ts
+|   |   |   |       index.ts
+|   |   |   |       PublicationCollector.ts
+|   |   |   |       
+|   |   |   +---contracts
+|   |   |   |       DashboardCollector.ts
+|   |   |   |       
+|   |   |   +---engine
+|   |   |   |       DashboardEngine.ts
+|   |   |   |       
+|   |   |   \---registry
+|   |   |           CollectorRegistry.ts
+|   |   |           index.ts
+|   |   |           
+|   |   +---engine
+|   |   |       ExportEngine.ts
+|   |   |       IntegrationEngine.ts
+|   |   |       ValidationEngine.ts
+|   |   |       
+|   |   +---pages
+|   |   |       IntegrationsPage.tsx
+|   |   |       
+|   |   +---publication
+|   |   |   |   index.ts
+|   |   |   |   
+|   |   |   +---engine
+|   |   |   |       PublicationEngine.ts
+|   |   |   |       
+|   |   |   +---history
+|   |   |   |       PublicationHistory.ts
+|   |   |   |       
+|   |   |   +---models
+|   |   |   |       index.ts
+|   |   |   |       PublicationExecution.ts
+|   |   |   |       PublicationPlan.ts
+|   |   |   |       PublicationPreview.ts
+|   |   |   |       PublicationResult.ts
+|   |   |   |       PublicationSnapshot.ts
+|   |   |   |       
+|   |   |   +---pipeline
+|   |   |   |   |   index.ts
+|   |   |   |   |   PublicationPipeline.ts
+|   |   |   |   |   
+|   |   |   |   \---models
+|   |   |   |           PublicationJob.ts
+|   |   |   |           PublicationPipelineResult.ts
+|   |   |   |           
+|   |   |   +---services
+|   |   |   |       publicationPlans.ts
+|   |   |   |       
+|   |   |   \---utils
+|   |   +---quality
+|   |   |   |   index.ts
+|   |   |   |   
+|   |   |   +---contracts
+|   |   |   |       QualityRule.ts
+|   |   |   |       
+|   |   |   +---engine
+|   |   |   |       QualityEngine.ts
+|   |   |   |       
+|   |   |   +---models
+|   |   |   |       index.ts
+|   |   |   |       QualityGate.ts
+|   |   |   |       QualityIssue.ts
+|   |   |   |       QualityReport.ts
+|   |   |   |       QualityScore.ts
+|   |   |   |       QualitySummary.ts
+|   |   |   |       
+|   |   |   +---registry
+|   |   |   |       index.ts
+|   |   |   |       RuleRegistry.ts
+|   |   |   |       
+|   |   |   +---utils
+|   |   |   |       score.ts
+|   |   |   |       
+|   |   |   \---validators
+|   |   |           IdRule.ts
+|   |   |           ImageRule.ts
+|   |   |           PriceRule.ts
+|   |   |           
+|   |   +---registry
+|   |   |       ConnectorRegistry.ts
+|   |   |       SourceRegistry.ts
+|   |   |       
+|   |   +---sources
+|   |   |   \---catalog
+|   |   |           source.ts
+|   |   |           
+|   |   +---types
+|   |   |       connector.ts
+|   |   |       feed.ts
+|   |   |       source.ts
+|   |   |       
+|   |   +---utils
+|   |   |       csv.ts
+|   |   |       
+|   |   \---workflow
+|   |       |   index.ts
+|   |       |   
+|   |       +---contracts
+|   |       |       WorkflowStep.ts
+|   |       |       
+|   |       +---engine
+|   |       |       WorkflowEngine.ts
+|   |       |       
+|   |       +---models
+|   |       |       Workflow.ts
+|   |       |       WorkflowContext.ts
+|   |       |       WorkflowResult.ts
+|   |       |       
+|   |       +---registry
+|   |       |       index.ts
+|   |       |       StepRegistry.ts
+|   |       |       
+|   |       \---steps
+|   |               HistoryStep.ts
+|   |               index.ts
+|   |               IntegrationStep.ts
+|   |               LoadProductsStep.ts
+|   |               PreviewStep.ts
+|   |               PublicationStep.ts
+|   |               QualityStep.ts
+|   |               
+|   +---monitoring
+|   |   +---collectors
+|   |   +---contracts
+|   |   |       HealthCollector.ts
+|   |   |       
+|   |   +---engine
+|   |   |       HealthEngine.ts
+|   |   |       
+|   |   +---models
+|   |   |       HealthReport.ts
+|   |   |       
+|   |   \---registry
+|   |           HealthCollectorRegistry.ts
+|   |           
+|   +---product-detail
+|   |   +---components
+|   |   |       ProductDetailHeader.tsx
+|   |   |       ProductGallery.tsx
+|   |   |       ProductPriceBlock.tsx
+|   |   |       ProductPurchaseActions.tsx
+|   |   |       ProductQuantitySelector.tsx
+|   |   |       ProductStockInfo.tsx
+|   |   |       ProductTierProgress.tsx
+|   |   |       ProductTierSelector.tsx
+|   |   |       RelatedProducts.tsx
+|   |   |       
+|   |   +---hooks
+|   |   |       useProductCard.ts
+|   |   |       useProductViewers.ts
+|   |   |       useRelatedProducts.ts
+|   |   |       
+|   |   \---utils
+|   |           buildWhatsappMessage.ts
+|   |           
+|   \---search
+|       +---components
+|       |       SearchBox.tsx
+|       |       SearchInput.tsx
+|       |       SearchSuggestions.tsx
+|       |       SearchTopSearches.tsx
+|       |       
+|       +---hooks
+|       |       useSearchKeyboard.ts
+|       |       useSearchNavigation.ts
+|       |       useSearchShortcut.ts
+|       |       useSearchUrlSync.ts
+|       |       
+|       \---utils
+|               detectCategory.ts
+|               getResultsCount.ts
+|               getSuggestions.ts
+|               
++---shared
+|   +---components
+|   |   +---commerce
+|   |   |       CountdownTimer.tsx
+|   |   |       
+|   |   +---layout
+|   |   |       FloatingButtons.tsx
+|   |   |       HeaderBar.tsx
+|   |   |       NavLink.tsx
+|   |   |       
+|   |   +---media
+|   |   |       ImageZoomModal.tsx
+|   |   |       
+|   |   +---skeletons
+|   |   |       CatalogSkeleton.tsx
+|   |   |       CategorySkeleton.tsx
+|   |   |       ProductSkeleton.tsx
+|   |   |       
+|   |   \---ui
+|   |           accordion.tsx
+|   |           alert-dialog.tsx
+|   |           alert.tsx
+|   |           aspect-ratio.tsx
+|   |           avatar.tsx
+|   |           badge.tsx
+|   |           breadcrumb.tsx
+|   |           button.tsx
+|   |           calendar.tsx
+|   |           card.tsx
+|   |           carousel.tsx
+|   |           chart.tsx
+|   |           checkbox.tsx
+|   |           collapsible.tsx
+|   |           command.tsx
+|   |           context-menu.tsx
+|   |           dialog.tsx
+|   |           drawer.tsx
+|   |           dropdown-menu.tsx
+|   |           form.tsx
+|   |           hover-card.tsx
+|   |           input-otp.tsx
+|   |           input.tsx
+|   |           label.tsx
+|   |           menubar.tsx
+|   |           navigation-menu.tsx
+|   |           pagination.tsx
+|   |           popover.tsx
+|   |           progress.tsx
+|   |           radio-group.tsx
+|   |           resizable.tsx
+|   |           scroll-area.tsx
+|   |           select.tsx
+|   |           separator.tsx
+|   |           sheet.tsx
+|   |           sidebar.tsx
+|   |           skeleton.tsx
+|   |           slider.tsx
+|   |           SocialIcons.tsx
+|   |           sonner.tsx
+|   |           switch.tsx
+|   |           table.tsx
+|   |           tabs.tsx
+|   |           textarea.tsx
+|   |           toast.tsx
+|   |           toaster.tsx
+|   |           toggle-group.tsx
+|   |           toggle.tsx
+|   |           tooltip.tsx
+|   |           
+|   +---config
+|   |       badgeRules.ts
+|   |       campaigns.ts
+|   |       cartTiers.ts
+|   |       categories.ts
+|   |       categoryColors.ts
+|   |       priceTiers.ts
+|   |       searchConfig.ts
+|   |       
+|   +---hooks
+|   |       use-toast.ts
+|   |       
+|   +---lib
+|   |   |   productMedia.ts
+|   |   |   random.ts
+|   |   |   search.ts
+|   |   |   sort.ts
+|   |   |   utils.ts
+|   |   |   
+|   |   \---product
+|   |           getBestProductTier.ts
+|   |           getNextTier.ts
+|   |           getStockPresentation.ts
+|   |           getUnitPrice.ts
+|   |           index.ts
+|   |           
+|   +---providers
+|   |       AOSProvider.tsx
+|   |       
+|   +---seo
+|   |       catalogSeo.ts
+|   |       catalogSeoComponent.tsx
+|   |       productSeo.ts
+|   |       productSeoComponent.tsx
+|   |       
+|   +---styles
+|   |   |   animations.css
+|   |   |   base.css
+|   |   |   components.css
+|   |   |   utilities.css
+|   |   |   
+|   |   +---blog
+|   |   |   |   hub-design-system.css
+|   |   |   |   hub.css
+|   |   |   |   
+|   |   |   +---article
+|   |   |   |       blog-article-sidebar.css
+|   |   |   |       blog-article.css
+|   |   |   |       
+|   |   |   +---cards
+|   |   |   |       blog-banner.css
+|   |   |   |       blog-card.css
+|   |   |   |       blog-featured.css
+|   |   |   |       
+|   |   |   +---pages
+|   |   |   |       blog-guides.css
+|   |   |   |       blog-hero.css
+|   |   |   |       
+|   |   |   +---rail
+|   |   |   |       blog-rail.css
+|   |   |   |       
+|   |   |   +---sections
+|   |   |   |       blog-articles-section.css
+|   |   |   |       blog-catalog.css
+|   |   |   |       business-tools.css
+|   |   |   |       campaign-center.css
+|   |   |   |       idea-lab.css
+|   |   |   |       opportunity-center.css
+|   |   |   |       trend-insights.css
+|   |   |   |       
+|   |   |   \---sidebar
+|   |   |           blog-sidebar-menu.css
+|   |   |           blog-sidebar.css
+|   |   |           
+|   |   +---cart
+|   |   |       cart-footer.css
+|   |   |       cart-item.css
+|   |   |       cart-panel.css
+|   |   |       cart-sidebar.css
+|   |   |       
+|   |   +---catalog
+|   |   |       catalog-control-header.css
+|   |   |       catalog-explore-center.css
+|   |   |       category-filter-mobile.css
+|   |   |       category-filter.css
+|   |   |       category-mobile-responsive.css
+|   |   |       header-campaign-filter.css
+|   |   |       header-category-filter.css
+|   |   |       notifications.css
+|   |   |       product-card.css
+|   |   |       search.css
+|   |   |       
+|   |   +---components
+|   |   |       badges.css
+|   |   |       buttons.css
+|   |   |       cards.css
+|   |   |       countdown-timer.css
+|   |   |       explore-mobile.css
+|   |   |       explore.css
+|   |   |       floating-buttons.css
+|   |   |       forms.css
+|   |   |       glass.css
+|   |   |       modals.css
+|   |   |       recent-activity.css
+|   |   |       
+|   |   +---home
+|   |   |       benefits.css
+|   |   |       brand-story.css
+|   |   |       categories.css
+|   |   |       featured-products.css
+|   |   |       final-cta.css
+|   |   |       footer.css
+|   |   |       growth-center.css
+|   |   |       hero.css
+|   |   |       how-to-buy.css
+|   |   |       shipping.css
+|   |   |       social.css
+|   |   |       stats.css
+|   |   |       testimonials.css
+|   |   |       tiktok.css
+|   |   |       trend-insights.css
+|   |   |       vip.css
+|   |   |       
+|   |   \---skeletons
+|   |           catalog-skeleton.css
+|   |           category-skeleton.css
+|   |           product-skeleton.css
+|   |           
+|   \---types
+|           product.ts
+|           
+\---test
+        example.test.ts
+        setup.ts
+        

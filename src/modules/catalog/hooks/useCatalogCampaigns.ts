@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Campaign } from "@/shared/types/product";
-import { loadCatalogCampaigns } from "@/modules/catalog/services/productService";
-
+import { loadCatalogCampaigns } from "@/modules/catalog/services/campaignService";
 export function useCatalogCampaigns() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);

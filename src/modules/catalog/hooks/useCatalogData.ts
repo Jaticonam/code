@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Product } from "@/shared/types/product";
-import type { SheetCategory } from "@/modules/catalog/services/productsConfig";
+import type { CatalogCategoryId } from "@/modules/catalog/services/productsConfig";
 import {
   getCachedCatalogSnapshot,
   getCatalogCategories,
@@ -10,8 +10,8 @@ import {
 
 type CategoryLoadStatus = "idle" | "loading" | "loaded" | "error";
 
-type ProductsByCategory = Partial<Record<SheetCategory, Product[]>>;
-type StatusByCategory = Record<SheetCategory, CategoryLoadStatus>;
+type ProductsByCategory = Partial<Record<CatalogCategoryId, Product[]>>;
+type StatusByCategory = Record<CatalogCategoryId, CategoryLoadStatus>;
 
 const CATALOG_CATEGORIES = getCatalogCategories();
 
@@ -22,9 +22,9 @@ const flattenByCategory = (byCategory: ProductsByCategory) =>
   sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
 
 const createInitialStatus = (
-  loadedCategories: SheetCategory[],
+  loadedCategories: CatalogCategoryId[],
 ): StatusByCategory => {
-  const loaded = new Set<SheetCategory>(loadedCategories);
+  const loaded = new Set<CatalogCategoryId>(loadedCategories);
 
   return CATALOG_CATEGORIES.reduce((acc, category) => {
     acc[category] = loaded.has(category) ? "loaded" : "idle";
@@ -69,7 +69,7 @@ export function useCatalogData(activeCategory: CatalogCategory = "todas") {
   }, []);
 
   const setCategoryStatus = useCallback(
-    (category: SheetCategory, status: CategoryLoadStatus) => {
+    (category: CatalogCategoryId, status: CategoryLoadStatus) => {
       const next = {
         ...statusByCategoryRef.current,
         [category]: status,
@@ -81,7 +81,7 @@ export function useCatalogData(activeCategory: CatalogCategory = "todas") {
   );
 
   const setCategoryProducts = useCallback(
-    (category: SheetCategory, products: Product[]) => {
+    (category: CatalogCategoryId, products: Product[]) => {
       const next = {
         ...productsByCategoryRef.current,
         [category]: products,
@@ -93,7 +93,7 @@ export function useCatalogData(activeCategory: CatalogCategory = "todas") {
   );
 
   const ensureCategoryLoaded = useCallback(
-    async (category: SheetCategory) => {
+    async (category: CatalogCategoryId) => {
       const currentStatus = statusByCategoryRef.current[category];
 
       if (currentStatus === "loaded" || currentStatus === "loading") {

@@ -1,5 +1,5 @@
 import type { Product } from "@/shared/types/product";
-import type { SheetCategory } from "./sheetsConfig";
+import type { CatalogCategoryId } from "./sheetsConfig";
 import type { CsvRow } from "./fetchSheets";
 
 export interface SheetProduct extends Product {
@@ -55,7 +55,7 @@ function parseCampaigns(
 
 export function normalizeProduct(
   row: CsvRow,
-  categoryFromConfig: SheetCategory,
+  categoryFromConfig: CatalogCategoryId,
   campaignNameToIdMap: CampaignNameToIdMap = {},
 ): SheetProduct {
   return {

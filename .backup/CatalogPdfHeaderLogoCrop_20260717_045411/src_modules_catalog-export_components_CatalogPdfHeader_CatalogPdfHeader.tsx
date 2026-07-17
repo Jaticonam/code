@@ -12,8 +12,7 @@ interface CatalogPdfHeaderProps {
   validUntil: string;
   productCount: number;
   contactNumber: string;
-  isComplete?: boolean;
-  brandFootnote?: string;
+  isComplete: boolean;
 }
 
 const getSegmentLabel = (segmentType: CatalogPdfSegmentType) => {
@@ -32,7 +31,7 @@ export default function CatalogPdfHeader({
   validUntil,
   productCount,
   contactNumber,
-  brandFootnote = "Una marca de JUNG INVERSIONES SAC RUC 20616037120",
+  isComplete,
 }: CatalogPdfHeaderProps) {
   return (
     <header className="catalog-pdf-header">
@@ -47,15 +46,11 @@ export default function CatalogPdfHeader({
                 event.currentTarget.style.display = "none";
               }}
             />
-          ) : (
-            <span className="catalog-pdf-header__logoFallback">
-              Wooly Imports
-            </span>
-          )}
+          ) : null}
 
-          <p className="catalog-pdf-header__brandFootnote">
-            {brandFootnote}
-          </p>
+          <span className="catalog-pdf-header__logoFallback">
+            Wooly Imports
+          </span>
         </div>
 
         <div className="catalog-pdf-header__copy">
@@ -86,6 +81,7 @@ export default function CatalogPdfHeader({
         </div>
 
         <div className="catalog-pdf-header__statusRow">
+          <span>{isComplete ? "Catálogo listo" : "Cargando categorías"}</span>
           <span>Generado: {generatedAt}</span>
         </div>
       </section>

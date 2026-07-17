@@ -1,0 +1,328 @@
+/* =========================================================
+   Catalog PDF Header
+   Header comercial dinámico para catálogo PDF Wooly
+   ========================================================= */
+
+/* ===== BASE ===== */
+
+.catalog-pdf-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(230px, 0.72fr);
+  gap: 18px;
+  margin-bottom: 14px;
+  padding: 16px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.3), transparent 36%),
+    radial-gradient(circle at bottom left, rgba(245, 176, 37, 0.18), transparent 34%),
+    linear-gradient(
+      135deg,
+      var(--w-primary, #1d8299),
+      var(--w-primary-dark, #156f84)
+    );
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(29, 130, 153, 0.16);
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.catalog-pdf-header__main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.catalog-pdf-header__brandRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.catalog-pdf-header__logoMark {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.catalog-pdf-header__logoImage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.catalog-pdf-header__logoFallback {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: -0.08em;
+}
+
+.catalog-pdf-header__brandText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.catalog-pdf-header__eyebrow {
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 0.78rem;
+  font-weight: 1000;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.catalog-pdf-header__brandTagline {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.66rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.catalog-pdf-header__copy {
+  min-width: 0;
+}
+
+.catalog-pdf-header__segment {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 25px;
+  align-items: center;
+  margin-bottom: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  padding: 0 10px;
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.66rem;
+  font-weight: 950;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.catalog-pdf-header__title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.72rem;
+  font-weight: 1000;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.catalog-pdf-header__subtitle {
+  max-width: 520px;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.28;
+}
+
+/* ===== META ===== */
+
+.catalog-pdf-header__meta {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.catalog-pdf-header__metaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.catalog-pdf-header__pill,
+.catalog-pdf-header__contact,
+.catalog-pdf-header__validity {
+  display: flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  padding: 0 11px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 950;
+  line-height: 1;
+  backdrop-filter: blur(12px);
+}
+
+.catalog-pdf-header__contact,
+.catalog-pdf-header__validity {
+  min-height: 39px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 16px;
+  padding: 7px 11px;
+}
+
+.catalog-pdf-header__contact span,
+.catalog-pdf-header__validity span {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.56rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.catalog-pdf-header__contact strong,
+.catalog-pdf-header__validity strong {
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.catalog-pdf-header__date {
+  display: block;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.56rem;
+  font-weight: 750;
+  line-height: 1.2;
+  text-align: right;
+}
+
+/* ===== PRINT ===== */
+
+@media print {
+  .catalog-pdf-header {
+    margin-bottom: 9px;
+    padding: 13px;
+    border-radius: 24px;
+    box-shadow: none;
+  }
+
+  .catalog-pdf-header__logoMark {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+  }
+
+  .catalog-pdf-header__title {
+    font-size: 1.42rem;
+  }
+
+  .catalog-pdf-header__subtitle {
+    font-size: 0.7rem;
+  }
+
+  .catalog-pdf-header__pill,
+  .catalog-pdf-header__contact,
+  .catalog-pdf-header__validity {
+    min-height: 27px;
+  }
+
+  .catalog-pdf-header__contact,
+  .catalog-pdf-header__validity {
+    min-height: 35px;
+  }
+}
+
+/* ===== MOBILE PREVIEW ===== */
+
+@media (max-width: 640px) {
+  .catalog-pdf-header {
+    grid-template-columns: 1fr;
+    gap: 11px;
+    padding: 14px;
+    border-radius: 24px;
+  }
+
+  .catalog-pdf-header__main {
+    gap: 10px;
+  }
+
+  .catalog-pdf-header__logoMark {
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+  }
+
+  .catalog-pdf-header__eyebrow {
+    font-size: 0.68rem;
+  }
+
+  .catalog-pdf-header__brandTagline {
+    font-size: 0.58rem;
+  }
+
+  .catalog-pdf-header__segment {
+    min-height: 22px;
+    margin-bottom: 6px;
+    padding: 0 9px;
+    font-size: 0.56rem;
+  }
+
+  .catalog-pdf-header__title {
+    font-size: 1.26rem;
+    line-height: 1;
+  }
+
+  .catalog-pdf-header__subtitle {
+    margin-top: 6px;
+    font-size: 0.68rem;
+    line-height: 1.24;
+  }
+
+  .catalog-pdf-header__metaGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .catalog-pdf-header__pill {
+    justify-content: center;
+    min-height: 26px;
+    padding: 0 8px;
+    font-size: 0.56rem;
+    text-align: center;
+  }
+
+  .catalog-pdf-header__contact,
+  .catalog-pdf-header__validity {
+    grid-column: span 2;
+    min-height: 34px;
+    border-radius: 15px;
+    padding: 6px 10px;
+  }
+
+  .catalog-pdf-header__contact span,
+  .catalog-pdf-header__validity span {
+    font-size: 0.5rem;
+  }
+
+  .catalog-pdf-header__contact strong,
+  .catalog-pdf-header__validity strong {
+    font-size: 0.66rem;
+  }
+
+  .catalog-pdf-header__date {
+    font-size: 0.5rem;
+    text-align: left;
+  }
+}

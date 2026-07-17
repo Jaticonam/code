@@ -1,222 +1,81 @@
-import type { Campaign, Product } from "@/shared/types/product";
-import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
-import {
-  CAMPAIGNS_SHEET_CONFIG,
-  PRODUCT_SHEETS_CONFIG,
-  type SheetSource,
-  type SheetCategory,
-} from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
-import { fetchSheetRows } from "@/modules/catalog/integrations/googleSheets/fetchSheets";
-import {
-  CAMPAIGN_REQUIRED_HEADERS,
-  buildCampaignNameToIdMap,
-  isCampaignActive,
-  normalizeCampaign,
-} from "@/modules/catalog/integrations/googleSheets/normalizeCampaign";
-import { normalizeProduct } from "@/modules/catalog/integrations/googleSheets/normalizeProduct";
-import { validateProducts } from "@/modules/catalog/integrations/googleSheets/validateProducts";
+import type { Product } from "@/shared/types/product";
+
+import type { CatalogCategoryId } from "@/modules/catalog/providers/CatalogProvider";
+import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
+
+import { getCampaignNameToIdMap } from "./campaignService";
+
+/* =========================================================
+   TIPOS INTERNOS
+   ========================================================= */
 
 type CategoryCacheEntry = {
   savedAt: number;
   items: Product[];
 };
 
-type CampaignCacheEntry = {
-  savedAt: number;
-  items: Campaign[];
-};
+export type CatalogCategory = CatalogCategoryId | "todas";
 
-export type CatalogCategory = SheetCategory | "todas";
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
 
 const CACHE_TTL = 1000 * 60 * 5;
-
-const PRODUCT_REQUIRED_HEADERS = [
-  "id",
-  "title",
-  "description",
-  "category",
-  "price_1",
-  "price_3",
-  "price_12",
-  "price_50",
-  "price_100",
-  "stock",
-  "img",
-  "badge",
-  "campaigns",
-  "priority",
-  "status",
-  "updated_at",
-] as const;
 
 /* =========================================================
    CACHE EN MEMORIA
    ========================================================= */
 
-const memoryCache = new Map<SheetCategory, CategoryCacheEntry>();
-const pendingRequests = new Map<SheetCategory, Promise<Product[]>>();
+const memoryCache = new Map<CatalogCategoryId, CategoryCacheEntry>();
 
-let campaignsMemoryCache: CampaignCacheEntry | null = null;
-let pendingCampaignsRequest: Promise<Campaign[]> | null = null;
+const pendingRequests = new Map<CatalogCategoryId, Promise<Product[]>>();
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
 const productKey = (category: string) => `jung_catalog_v3_${category}`;
-const campaignsKey = () => "jung_catalog_campaigns_v2";
+
 const now = () => Date.now();
 
 const isFresh = (savedAt: number) => now() - savedAt <= CACHE_TTL;
 
-export const getCatalogCategories = () =>
-  PRODUCT_SHEETS_CONFIG.map((source) => source.category);
+export const getCatalogCategories = (): CatalogCategoryId[] => [
+  ...catalogProvider.getCategories(),
+];
 
 const sortProducts = (items: Product[]) =>
   [...items].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
 
-const sortCampaigns = (items: Campaign[]) =>
-  [...items].sort((a, b) => b.priority - a.priority);
-
 const flattenByCategory = (
-  byCategory: Partial<Record<SheetCategory, Product[]>>,
+  byCategory: Partial<Record<CatalogCategoryId, Product[]>>,
 ) => sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
 
 /* =========================================================
-   FALLBACK CAMPAIGNS
-   Si Google Sheets falla, el catálogo sigue respirando.
+   CACHE LOCAL DE PRODUCTOS
    ========================================================= */
 
-function getFallbackCampaigns(): Campaign[] {
-  return CAMPAIGN_CONFIG.map((campaign) => ({
-    id: campaign.id,
-    name: campaign.name,
-    icon: campaign.icon,
-    color: campaign.color,
-    colorClass: campaign.colorClass,
-    startDate: "",
-    endDate: "",
-    priority: campaign.priority,
-    publicationStatus: "Publicado",
-    computedStatus: "activa",
-  }));
-}
-
-/* =========================================================
-   CACHE LOCAL CAMPAIGNS
-   ========================================================= */
-
-function readStoredCampaigns(): Campaign[] | null {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const raw = localStorage.getItem(campaignsKey());
-    if (!raw) return null;
-
-    const parsed = JSON.parse(raw) as CampaignCacheEntry;
-
-    if (!parsed?.savedAt || !isFresh(parsed.savedAt)) return null;
-    if (!Array.isArray(parsed.items)) return null;
-
-    campaignsMemoryCache = parsed;
-
-    return parsed.items;
-  } catch {
+function readStorageCache(category: CatalogCategoryId): Product[] | null {
+  if (typeof window === "undefined") {
     return null;
   }
-}
-
-function writeCampaignsCache(items: Campaign[]) {
-  const entry: CampaignCacheEntry = {
-    savedAt: now(),
-    items,
-  };
-
-  campaignsMemoryCache = entry;
-
-  if (typeof window === "undefined") return;
-
-  try {
-    localStorage.setItem(campaignsKey(), JSON.stringify(entry));
-  } catch {
-    // Si localStorage falla, seguimos con cache en memoria.
-  }
-}
-
-async function fetchCampaignsFromSheet(): Promise<Campaign[]> {
-  const rows = await fetchSheetRows(
-    CAMPAIGNS_SHEET_CONFIG,
-    CAMPAIGN_REQUIRED_HEADERS,
-  );
-
-  return sortCampaigns(rows.map(normalizeCampaign));
-}
-
-async function loadAllCatalogCampaigns(
-  options: { forceRefresh?: boolean } = {},
-): Promise<Campaign[]> {
-  if (!options.forceRefresh) {
-    if (campaignsMemoryCache && isFresh(campaignsMemoryCache.savedAt)) {
-      return campaignsMemoryCache.items;
-    }
-
-    const stored = readStoredCampaigns();
-    if (stored) return stored;
-  }
-
-  if (pendingCampaignsRequest) return pendingCampaignsRequest;
-
-  pendingCampaignsRequest = fetchCampaignsFromSheet()
-    .then((campaigns) => {
-      writeCampaignsCache(campaigns);
-      return campaigns;
-    })
-    .catch((error) => {
-      console.error("Error cargando Campaigns Sheet. Usando fallback:", error);
-
-      const fallback = sortCampaigns(getFallbackCampaigns());
-      writeCampaignsCache(fallback);
-
-      return fallback;
-    })
-    .finally(() => {
-      pendingCampaignsRequest = null;
-    });
-
-  return pendingCampaignsRequest;
-}
-
-export async function loadCatalogCampaigns(
-  options: { includeInactive?: boolean; forceRefresh?: boolean } = {},
-): Promise<Campaign[]> {
-  const campaigns = await loadAllCatalogCampaigns({
-    forceRefresh: options.forceRefresh,
-  });
-
-  return options.includeInactive
-    ? campaigns
-    : campaigns.filter(isCampaignActive);
-}
-
-async function getCampaignNameToIdMap() {
-  const campaigns = await loadCatalogCampaigns({
-    includeInactive: true,
-  });
-
-  return buildCampaignNameToIdMap(campaigns);
-}
-
-/* =========================================================
-   CACHE LOCAL PRODUCTOS
-   ========================================================= */
-
-function readStorageCache(category: SheetCategory): Product[] | null {
-  if (typeof window === "undefined") return null;
 
   try {
     const raw = localStorage.getItem(productKey(category));
-    if (!raw) return null;
+
+    if (!raw) {
+      return null;
+    }
 
     const parsed = JSON.parse(raw) as CategoryCacheEntry;
 
-    if (!parsed?.savedAt || !isFresh(parsed.savedAt)) return null;
-    if (!Array.isArray(parsed.items)) return null;
+    if (!parsed?.savedAt || !isFresh(parsed.savedAt)) {
+      return null;
+    }
+
+    if (!Array.isArray(parsed.items)) {
+      return null;
+    }
 
     memoryCache.set(category, {
       savedAt: parsed.savedAt,
@@ -230,7 +89,7 @@ function readStorageCache(category: SheetCategory): Product[] | null {
 }
 
 export function readCachedCategoryProducts(
-  category: SheetCategory,
+  category: CatalogCategoryId,
 ): Product[] | null {
   const memoryEntry = memoryCache.get(category);
 
@@ -243,10 +102,11 @@ export function readCachedCategoryProducts(
   }
 
   const storageItems = readStorageCache(category);
+
   return storageItems ? sortProducts(storageItems) : null;
 }
 
-function writeCache(category: SheetCategory, items: Product[]) {
+function writeCache(category: CatalogCategoryId, items: Product[]): void {
   const entry: CategoryCacheEntry = {
     savedAt: now(),
     items,
@@ -254,29 +114,39 @@ function writeCache(category: SheetCategory, items: Product[]) {
 
   memoryCache.set(category, entry);
 
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {
+    return;
+  }
 
   try {
     localStorage.setItem(productKey(category), JSON.stringify(entry));
   } catch {
-    // Si localStorage falla, seguimos con cache en memoria.
+    // Si localStorage falla, se conserva el cache en memoria.
   }
 }
 
-export function getCachedCatalogSnapshot() {
-  const byCategory: Partial<Record<SheetCategory, Product[]>> = {};
+/* =========================================================
+   SNAPSHOT DEL CATÁLOGO
+   ========================================================= */
 
-  PRODUCT_SHEETS_CONFIG.forEach((source) => {
-    const cached = readCachedCategoryProducts(source.category);
-    if (cached) byCategory[source.category] = cached;
+export function getCachedCatalogSnapshot() {
+  const categories = getCatalogCategories();
+
+  const byCategory: Partial<Record<CatalogCategoryId, Product[]>> = {};
+
+  categories.forEach((category) => {
+    const cached = readCachedCategoryProducts(category);
+
+    if (cached) {
+      byCategory[category] = cached;
+    }
   });
 
-  const loadedCategories = PRODUCT_SHEETS_CONFIG.filter(
-    (source) => byCategory[source.category],
-  ).map((source) => source.category);
+  const loadedCategories = categories.filter(
+    (category) => byCategory[category],
+  );
 
-  const isFullCatalogLoaded =
-    loadedCategories.length === PRODUCT_SHEETS_CONFIG.length;
+  const isFullCatalogLoaded = loadedCategories.length === categories.length;
 
   return {
     byCategory,
@@ -287,52 +157,46 @@ export function getCachedCatalogSnapshot() {
 }
 
 /* =========================================================
-   FETCH REAL POR CATEGORÍA
+   CARGA DESDE EL PROVIDER
    ========================================================= */
 
-function getSource(category: SheetCategory) {
-  return PRODUCT_SHEETS_CONFIG.find((source) => source.category === category);
-}
-
 async function fetchCategoryProducts(
-  category: SheetCategory,
+  category: CatalogCategoryId,
 ): Promise<Product[]> {
-  const source = getSource(category);
-  if (!source) return [];
-
   const campaignNameToIdMap = await getCampaignNameToIdMap();
 
-  const rows = await fetchSheetRows(source, PRODUCT_REQUIRED_HEADERS);
-
-  const normalized = rows.map((row) =>
-    normalizeProduct(row, source.category, campaignNameToIdMap),
+  const products = await catalogProvider.loadCategoryProducts(
+    category,
+    campaignNameToIdMap,
   );
 
-  const products = validateProducts(normalized).map(
-    ({ updated_at, ...product }) => product,
-  );
+  const sortedProducts = sortProducts(products);
 
-  const sorted = sortProducts(products);
-  writeCache(category, sorted);
+  writeCache(category, sortedProducts);
 
-  return sorted;
+  return sortedProducts;
 }
-
 /* =========================================================
    API DE CARGA POR CATEGORÍA
    ========================================================= */
 
 export async function loadCategoryProducts(
-  category: SheetCategory,
+  category: CatalogCategoryId,
   options: { forceRefresh?: boolean } = {},
 ): Promise<Product[]> {
   if (!options.forceRefresh) {
     const cached = readCachedCategoryProducts(category);
-    if (cached) return cached;
+
+    if (cached) {
+      return cached;
+    }
   }
 
-  const pending = pendingRequests.get(category);
-  if (pending) return pending;
+  const pendingRequest = pendingRequests.get(category);
+
+  if (pendingRequest) {
+    return pendingRequest;
+  }
 
   const request = fetchCategoryProducts(category).finally(() => {
     pendingRequests.delete(category);
@@ -344,10 +208,13 @@ export async function loadCategoryProducts(
 }
 
 export async function loadAllProducts(): Promise<Product[]> {
+  const categories = getCatalogCategories();
+
   const results = await Promise.all(
-    PRODUCT_SHEETS_CONFIG.map((source) =>
-      loadCategoryProducts(source.category).catch((error) => {
-        console.error(`Error en fuente "${source.category}":`, error);
+    categories.map((category) =>
+      loadCategoryProducts(category).catch((error: unknown) => {
+        console.error(`Error en categoría "${category}":`, error);
+
         return [];
       }),
     ),
@@ -357,18 +224,22 @@ export async function loadAllProducts(): Promise<Product[]> {
 }
 
 /* =========================================================
-   LEGACY COMPATIBLE
+   CARGA PROGRESIVA
    ========================================================= */
 
 export async function loadCatalogProgressive(
   activeCategory: CatalogCategory,
   onUpdate: (products: Product[], isFullCatalogLoaded: boolean) => void,
-) {
+): Promise<void> {
   const categories = getCatalogCategories();
-  const preferred = activeCategory !== "todas" ? activeCategory : null;
 
-  const order = preferred
-    ? [preferred, ...categories.filter((category) => category !== preferred)]
+  const preferredCategory = activeCategory !== "todas" ? activeCategory : null;
+
+  const categoryOrder = preferredCategory
+    ? [
+        preferredCategory,
+        ...categories.filter((category) => category !== preferredCategory),
+      ]
     : categories;
 
   const byCategory = getCachedCatalogSnapshot().byCategory;
@@ -378,13 +249,16 @@ export async function loadCatalogProgressive(
     Object.keys(byCategory).length === categories.length,
   );
 
-  for (const category of order) {
-    if (byCategory[category]) continue;
+  for (const category of categoryOrder) {
+    if (byCategory[category]) {
+      continue;
+    }
 
     try {
       byCategory[category] = await loadCategoryProducts(category);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(`Error cargando "${category}":`, error);
+
       byCategory[category] = [];
     }
 

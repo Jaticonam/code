@@ -1,7 +1,7 @@
-import type { SheetCategory } from "@/modules/catalog/services/productsConfig";
+import type { CatalogCategoryId } from "@/modules/catalog/services/productsConfig";
 
 export interface CategoryConfig {
-  id: SheetCategory | "todas";
+  id: CatalogCategoryId | "todas";
   name: string;
   icon: string;
 }
@@ -48,10 +48,10 @@ export const CATEGORY_CONFIG: CategoryConfig[] = [
     icon: "✨",
   },
   {
-    id:"llaveros",
-    name:"Llaveros",
-    icon:"🔑",
-   },
+    id: "llaveros",
+    name: "Llaveros",
+    icon: "🔑",
+  },
   {
     id: "hotwheels",
     name: "Hot Wheels",
