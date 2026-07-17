@@ -53,8 +53,12 @@ export function CatalogTopNav({
   const hasCampaignSection = showCampaigns && campaigns.length > 0;
 
   return (
-    <nav className="catalogTopNav" aria-label="Navegación principal del catálogo">
+    <nav
+      className="catalogTopNav"
+      aria-label="Navegación principal del catálogo"
+    >
       <div className="catalogTopNavInner">
+        {/*
         <button
           type="button"
           className="catalogTopNavLogo"
@@ -63,6 +67,7 @@ export function CatalogTopNav({
         >
           <img src={logoUrl} alt="Wooly" />
         </button>
+        */}
 
         <section
           className="catalogTopNavSection catalogTopNavCategories"

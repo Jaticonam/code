@@ -66,7 +66,7 @@ export function ProductCardTierBadges({
               }`}
             >
               <span className="block w-full text-center">
-                {LABELS[tier.key]} ({tier.label}) a S/{total.toFixed(0)}
+                {LABELS[tier.key]} ({tier.label}) x S/{total.toFixed(0)}
               </span>
             </div>
           );

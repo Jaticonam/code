@@ -1,6 +1,6 @@
 import TopBar from "@/modules/home/components/TopBar";
 import HomeHeader from "@/modules/home/components/HomeHeader";
-import HeroSlider from "@/modules/home/components/HeroSlider";
+import ActiveCampaignHero from "@/modules/home/components/CampaignHero/ActiveCampaignHero";
 import TikTokSection from "@/modules/home/components/TikTokSection";
 import FeaturedProductsSection from "@/modules/home/components/FeaturedProductsSection";
 import GrowthCenterSection from "@/modules/home/components/GrowthCenterSection";
@@ -26,8 +26,8 @@ export default function HomePage(){
     <div className="min-h-screen overflow-x-hidden bg-background font-sans">
       <TopBar/>
       <HomeHeader/>
-      <HeroSlider/>
-      <TikTokSection/>
+      <ActiveCampaignHero/>
+      
       <FeaturedProductsSection/>
       <GrowthCenterSection/>
       <CategoriesSection/>

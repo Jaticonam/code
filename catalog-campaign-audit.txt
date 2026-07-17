@@ -1,0 +1,3080 @@
+CATALOG CAMPAIGN AUDIT - WOOLY
+Generated: 06/24/2026 11:24:57
+
+============================================================
+FILE: src\shared\types\product.ts
+============================================================
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+export type CampaignComputedStatus =
+  | "activa"
+  | "programada"
+  | "finalizada"
+  | "borrador"
+  | "oculta";
+
+export interface Campaign {
+  id: string;
+  name: string;
+  icon: string;
+
+  color?: string;
+  colorClass: string;
+
+  startDate: string;
+  endDate: string;
+  priority: number;
+
+  publicationStatus: string;
+  computedStatus: CampaignComputedStatus;
+}
+
+export interface Product {
+  id: string;
+
+  title: string;
+  description: string;
+
+  category: string;
+
+  price_1: number;
+  price_3?: number | null;
+  price_12?: number | null;
+  price_50?: number | null;
+  price_100?: number | null;
+
+  price_offer?: number | null;
+
+  stock?: number | null;
+  img: string;
+  gallery?: string;
+
+  status?: string;
+  badges?: string[];
+  campaigns?: string[];
+
+  priority?: number;
+}
+
+============================================================
+FILE: src\shared\config\campaigns.ts
+============================================================
+export const CAMPAIGN_CONFIG = [
+  {
+    id: "san-valentin",
+    name: "San Valentín",
+    icon: "❤️",
+    color: "rosado",
+    colorClass: "catalog-campaign-pink",
+    priority: 100,
+  },
+  {
+    id: "dia-mujer",
+    name: "Día de la Mujer",
+    icon: "🌷",
+    color: "fucsia",
+    colorClass: "catalog-campaign-fuchsia",
+    priority: 95,
+  },
+  {
+    id: "dia-madre",
+    name: "Día de la Madre",
+    icon: "💐",
+    color: "lavanda",
+    colorClass: "catalog-campaign-lavender",
+    priority: 90,
+  },
+  {
+    id: "dia-padre",
+    name: "Día del Padre",
+    icon: "👔",
+    color: "azul",
+    colorClass: "catalog-campaign-blue",
+    priority: 85,
+  },
+  {
+    id: "graduados",
+    name: "Graduados",
+    icon: "🎓",
+    color: "morado",
+    colorClass: "catalog-campaign-purple",
+    priority: 80,
+  },
+  {
+    id: "flores-amarillas",
+    name: "Flores Amarillas",
+    icon: "🌻",
+    color: "amarillo",
+    colorClass: "catalog-campaign-yellow",
+    priority: 75,
+  },
+  {
+    id: "hotwheels",
+    name: "Hot Wheels",
+    icon: "🏎️",
+    color: "rojo",
+    colorClass: "catalog-campaign-red",
+    priority: 70,
+  },
+] as const;
+
+export type CampaignId = (typeof CAMPAIGN_CONFIG)[number]["id"];
+
+============================================================
+FILE: src\shared\config\categories.ts
+============================================================
+import type { SheetCategory } from "@/modules/catalog/services/productsConfig";
+
+export interface CategoryConfig {
+  id: SheetCategory | "todas";
+  name: string;
+  icon: string;
+}
+
+export const CATEGORY_CONFIG: CategoryConfig[] = [
+  {
+    id: "todas",
+    name: "Todas",
+    icon: "🛍️",
+  },
+  {
+    id: "flores",
+    name: "Flores",
+    icon: "🌸",
+  },
+  {
+    id: "peluches",
+    name: "Peluches",
+    icon: "🧸",
+  },
+  {
+    id: "papeles",
+    name: "Papeles",
+    icon: "🎁",
+  },
+  {
+    id: "cajas",
+    name: "Cajas",
+    icon: "📦",
+  },
+  {
+    id: "cintas",
+    name: "Cintas",
+    icon: "🎀",
+  },
+  {
+    id: "globos",
+    name: "Globos",
+    icon: "🎈",
+  },
+  {
+    id: "accesorios",
+    name: "Accesorios",
+    icon: "✨",
+  },
+  {
+    id:"llaveros",
+    name:"Llaveros",
+    icon:"🔑",
+   },
+  {
+    id: "hotwheels",
+    name: "Hot Wheels",
+    icon: "🏎️",
+  },
+];
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\sheetsConfig.ts
+============================================================
+export const PRODUCT_SHEETS_CONFIG = [
+  {
+    category: "flores",
+    docId: "14HvNWxOltXtr3NUKXUpbK0ah5DG-atKz7UqTkq-p5lk",
+    gid: "999826345",
+  },
+  {
+    category: "peluches",
+    docId: "1-LdkBcXRDBIAkVOjQ2QLusgqKmGjAOAZeyO7C8_TIow",
+    gid: "849795903",
+  },
+  {
+    category: "papeles",
+    docId: "1Y19zwLoqf2x6FFyrQJSYZFfldFWNOpZe0EdrLl6tsuM",
+    gid: "1583553647",
+  },
+  {
+    category: "cajas",
+    docId: "1g0ZKFSPYi30P9DFfwPSvTIFtt-5kM1ZuOUqvxbyKfcM",
+    gid: "1169240357",
+  },
+  {
+    category: "cintas",
+    docId: "1RxaXXw8jRmwmMvky_nJP8IbgdmqezkXInS2WcnNKlVk",
+    gid: "1583553647",
+  },
+  {
+    category: "globos",
+    docId: "17-KL3wegV3DQolFBukLiFen5Co0_Q7lgAHXwE0U5dNI",
+    gid: "1169240357",
+  },
+  {
+    category: "accesorios",
+    docId: "1WDA6BzHWzeD57YJWKGD0SGzXDDcKvRXLU1lrXOJU-JE",
+    gid: "1381335916",
+  },
+  {
+    category: "llaveros",
+    docId: "1CI5Waxa4AnyEPFK5okCVKJhqEZhsonqAUynl54mf_xg",
+    gid: "849795903",
+  },
+  {
+    category: "hotwheels",
+    docId: "1maHH-C8kYc5GyKeg4O0kxKWtxFLb6Pz5GbxkV6w-E_8",
+    gid: "465428229",
+  },
+] as const;
+
+export const CAMPAIGNS_SHEET_CONFIG = {
+  name: "Campaigns",
+  docId: "1B_s6fXN6FLLeu0F6KBB2fFCNPMIvXBvNEDG1Mubk7qk",
+  gid: "1364232111",
+} as const;
+
+export const SHEETS_CONFIG = PRODUCT_SHEETS_CONFIG;
+
+export type SheetSource = (typeof PRODUCT_SHEETS_CONFIG)[number];
+export type SheetCategory = SheetSource["category"];
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\fetchSheets.ts
+============================================================
+export type CsvRow = Record<string, string>;
+
+export interface GoogleSheetSource {
+  docId: string;
+  gid: string;
+  name?: string;
+  category?: string;
+}
+
+function parseCSVLine(line: string) {
+  const result: string[] = [];
+  let current = "";
+  let insideQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    const nextChar = line[i + 1];
+
+    if (char === '"' && insideQuotes && nextChar === '"') {
+      current += '"';
+      i++;
+      continue;
+    }
+
+    if (char === '"') {
+      insideQuotes = !insideQuotes;
+      continue;
+    }
+
+    if (char === "," && !insideQuotes) {
+      result.push(current);
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  result.push(current);
+  return result;
+}
+
+export function parseCSV(text: string): { headers: string[]; rows: CsvRow[] } {
+  const lines = text
+    .replace(/\r/g, "")
+    .split("\n")
+    .filter((line) => line.trim() !== "");
+
+  if (!lines.length) return { headers: [], rows: [] };
+
+  const headers = parseCSVLine(lines[0]).map((header) =>
+    header.trim().toLowerCase(),
+  );
+
+  const rows = lines.slice(1).map((line) => {
+    const values = parseCSVLine(line);
+    const row: CsvRow = {};
+
+    headers.forEach((header, index) => {
+      row[header] = (values[index] ?? "").trim();
+    });
+
+    return row;
+  });
+
+  return { headers, rows };
+}
+
+export function validateSheetHeaders(
+  headers: string[],
+  requiredHeaders: readonly string[],
+  source: GoogleSheetSource,
+) {
+  const normalizedHeaders = headers.map((header) =>
+    header.trim().toLowerCase(),
+  );
+
+  const missing = requiredHeaders.filter(
+    (required) => !normalizedHeaders.includes(required.toLowerCase()),
+  );
+
+  if (!missing.length) return;
+
+  const label = source.category || source.name || "Google Sheet";
+
+  throw new Error(
+    `La hoja "${label}" docId="${source.docId}" gid="${source.gid}" no cumple el schema. Faltan columnas: ${missing.join(", ")}`,
+  );
+}
+
+export async function fetchSheetRows(
+  source: GoogleSheetSource,
+  requiredHeaders: readonly string[],
+): Promise<CsvRow[]> {
+  const url = `https://docs.google.com/spreadsheets/d/${source.docId}/export?format=csv&gid=${source.gid}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const label = source.category || source.name || "Google Sheet";
+
+    throw new Error(
+      `Error cargando "${label}" docId="${source.docId}" gid="${source.gid}": HTTP ${response.status}`,
+    );
+  }
+
+  const csvText = await response.text();
+  const { headers, rows } = parseCSV(csvText);
+
+  validateSheetHeaders(headers, requiredHeaders, source);
+
+  return rows.filter((row) =>
+    Object.values(row).some((value) => (value ?? "").trim() !== ""),
+  );
+}
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\campaignColors.ts
+============================================================
+export const CAMPAIGN_COLOR_MAP: Record<string, string> = {
+  morado: "catalog-campaign-purple",
+  rosado: "catalog-campaign-pink",
+  azul: "catalog-campaign-blue",
+  verde: "catalog-campaign-green",
+  rojo: "catalog-campaign-red",
+  dorado: "catalog-campaign-gold",
+  turquesa: "catalog-campaign-teal",
+  negro: "catalog-campaign-dark",
+
+  naranja: "catalog-campaign-orange",
+  coral: "catalog-campaign-coral",
+  lavanda: "catalog-campaign-lavender",
+  plata: "catalog-campaign-silver",
+  cobre: "catalog-campaign-copper",
+  esmeralda: "catalog-campaign-emerald",
+  vino: "catalog-campaign-wine",
+  celeste: "catalog-campaign-sky",
+  fucsia: "catalog-campaign-fuchsia",
+  amarillo: "catalog-campaign-yellow",
+};
+
+export function getCampaignColorClass(
+  color: string | undefined | null,
+): string {
+  const key = (color ?? "").trim().toLowerCase();
+
+  return CAMPAIGN_COLOR_MAP[key] ?? "catalog-campaign-purple";
+}
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts
+============================================================
+import type { Campaign } from "@/shared/types/product";
+import { getCampaignColorClass } from "./campaignColors";
+import type { CsvRow } from "./fetchSheets";
+
+export const CAMPAIGN_REQUIRED_HEADERS = [
+  "id",
+  "name",
+  "icon",
+  "color",
+  "startdate",
+  "enddate",
+  "priority",
+  "publicationstatus",
+] as const;
+
+function cleanText(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+function parseSheetDate(value: unknown) {
+  const clean = cleanText(value);
+
+  if (!clean) return null;
+
+  const humanDate = clean.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+
+  if (humanDate) {
+    const [, day, month, year] = humanDate;
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  const isoDate = new Date(clean);
+
+  return Number.isNaN(isoDate.getTime()) ? null : isoDate;
+}
+
+function normalizePublicationStatus(
+  value: unknown,
+): Campaign["computedStatus"] {
+  const status = cleanText(value).toLowerCase();
+
+  const map: Record<string, Campaign["computedStatus"]> = {
+    publicado: "activa",
+    publicada: "activa",
+    publicadas: "activa",
+    active: "activa",
+    published: "activa",
+
+    oculto: "oculta",
+    oculta: "oculta",
+    hidden: "oculta",
+
+    borrador: "borrador",
+    draft: "borrador",
+  };
+
+  return map[status] ?? "borrador";
+}
+
+function parsePriority(value: unknown): number {
+  const priority = Number(cleanText(value));
+
+  return Number.isFinite(priority) ? priority : 0;
+}
+
+export function getCampaignComputedStatus(
+  campaign: Pick<Campaign, "startDate" | "endDate" | "publicationStatus">,
+): Campaign["computedStatus"] {
+  const publicationStatus = normalizePublicationStatus(
+    campaign.publicationStatus,
+  );
+
+  if (publicationStatus === "oculta") return "oculta";
+  if (publicationStatus === "borrador") return "borrador";
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const start = parseSheetDate(campaign.startDate);
+  const end = parseSheetDate(campaign.endDate);
+
+  if (start) start.setHours(0, 0, 0, 0);
+  if (end) end.setHours(23, 59, 59, 999);
+
+  if (start && today < start) return "programada";
+  if (end && today > end) return "finalizada";
+
+  return "activa";
+}
+
+export function normalizeCampaign(row: CsvRow): Campaign {
+  const campaign: Campaign = {
+    id: cleanText(row.id),
+    name: cleanText(row.name),
+    icon: cleanText(row.icon),
+    color: cleanText(row.color),
+    colorClass: getCampaignColorClass(row.color),
+    startDate: cleanText(row.startdate),
+    endDate: cleanText(row.enddate),
+    priority: parsePriority(row.priority),
+    publicationStatus: cleanText(row.publicationstatus),
+    computedStatus: "borrador",
+  };
+
+  return {
+    ...campaign,
+    computedStatus: getCampaignComputedStatus(campaign),
+  };
+}
+
+export function isCampaignActive(campaign: Campaign) {
+  return campaign.computedStatus === "activa";
+}
+
+export function buildCampaignNameToIdMap(campaigns: Campaign[]) {
+  return campaigns.reduce<Record<string, string>>((acc, campaign) => {
+    acc[campaign.name] = campaign.id;
+    acc[campaign.id] = campaign.id;
+
+    return acc;
+  }, {});
+}
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\normalizeProduct.ts
+============================================================
+import type { Product } from "@/shared/types/product";
+import type { SheetCategory } from "./sheetsConfig";
+import type { CsvRow } from "./fetchSheets";
+
+export interface SheetProduct extends Product {
+  badges: string[];
+  campaigns: string[];
+  priority: number;
+  status: string;
+  updated_at: string;
+}
+
+export type CampaignNameToIdMap = Record<string, string>;
+
+function cleanText(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+function parseNumber(value: unknown): number | null {
+  let cleaned = cleanText(value)
+    .replace(/S\/\.?/gi, "")
+    .replace(/\s/g, "");
+
+  if (!cleaned) return null;
+
+  if (cleaned.includes(",") && cleaned.includes(".")) {
+    cleaned = cleaned.replace(/,/g, "");
+  } else {
+    cleaned = cleaned.replace(",", ".");
+  }
+
+  const num = Number(cleaned);
+  return Number.isFinite(num) ? num : null;
+}
+
+function parseRequiredNumber(value: unknown): number {
+  return parseNumber(value) ?? 0;
+}
+
+function parsePipeArray(value: unknown): string[] {
+  return cleanText(value)
+    .split("|")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseCampaigns(
+  value: unknown,
+  campaignNameToIdMap: CampaignNameToIdMap,
+): string[] {
+  return parsePipeArray(value)
+    .map((campaignName) => campaignNameToIdMap[campaignName])
+    .filter(Boolean);
+}
+
+export function normalizeProduct(
+  row: CsvRow,
+  categoryFromConfig: SheetCategory,
+  campaignNameToIdMap: CampaignNameToIdMap = {},
+): SheetProduct {
+  return {
+    id: cleanText(row.id),
+    title: cleanText(row.title),
+    description: cleanText(row.description),
+
+    category: categoryFromConfig,
+
+    price_1: parseRequiredNumber(row.price_1),
+    price_3: parseNumber(row.price_3),
+    price_12: parseNumber(row.price_12),
+    price_50: parseNumber(row.price_50),
+    price_100: parseNumber(row.price_100),
+
+    price_offer: parseNumber(row.price_offer),
+
+    stock: parseNumber(row.stock),
+
+    img: cleanText(row.cover || row.img),
+    gallery: cleanText(row.gallery || row.images),
+
+    badges: parsePipeArray(row.badge),
+    campaigns: parseCampaigns(row.campaigns, campaignNameToIdMap),
+
+    priority: parseRequiredNumber(row.priority),
+    status: cleanText(row.status),
+    updated_at: cleanText(row.updated_at),
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\validateProducts.ts
+============================================================
+import type { SheetProduct } from "./normalizeProduct";
+
+const PUBLIC_STATUSES = new Set([
+  "",
+  "publicado",
+  "publicada",
+  "published",
+  "activo",
+  "activa",
+  "active",
+  "preventa",
+]);
+
+function normalizeStatus(status: string | undefined) {
+  return String(status ?? "")
+    .trim()
+    .toLowerCase();
+}
+
+export function validateProducts(products: SheetProduct[]) {
+  return products.filter((product) => {
+    if (!product.id) return false;
+    if (!product.title) return false;
+    if (!product.img) return false;
+
+    const status = normalizeStatus(product.status);
+
+    return PUBLIC_STATUSES.has(status);
+  });
+}
+
+============================================================
+FILE: src\modules\catalog\services\productService.ts
+============================================================
+import type { Campaign, Product } from "@/shared/types/product";
+import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+import {
+  CAMPAIGNS_SHEET_CONFIG,
+  PRODUCT_SHEETS_CONFIG,
+  type SheetSource,
+  type SheetCategory,
+} from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
+import { fetchSheetRows } from "@/modules/catalog/integrations/googleSheets/fetchSheets";
+import {
+  CAMPAIGN_REQUIRED_HEADERS,
+  buildCampaignNameToIdMap,
+  isCampaignActive,
+  normalizeCampaign,
+} from "@/modules/catalog/integrations/googleSheets/normalizeCampaign";
+import { normalizeProduct } from "@/modules/catalog/integrations/googleSheets/normalizeProduct";
+import { validateProducts } from "@/modules/catalog/integrations/googleSheets/validateProducts";
+
+type CategoryCacheEntry = {
+  savedAt: number;
+  items: Product[];
+};
+
+type CampaignCacheEntry = {
+  savedAt: number;
+  items: Campaign[];
+};
+
+export type CatalogCategory = SheetCategory | "todas";
+
+const CACHE_TTL = 1000 * 60 * 15;
+
+const PRODUCT_REQUIRED_HEADERS = [
+  "id",
+  "title",
+  "description",
+  "category",
+  "price_1",
+  "price_3",
+  "price_12",
+  "price_50",
+  "price_100",
+  "stock",
+  "img",
+  "badge",
+  "campaigns",
+  "priority",
+  "status",
+  "updated_at",
+] as const;
+
+/* =========================================================
+   CACHE EN MEMORIA
+   ========================================================= */
+
+const memoryCache = new Map<SheetCategory, CategoryCacheEntry>();
+const pendingRequests = new Map<SheetCategory, Promise<Product[]>>();
+
+let campaignsMemoryCache: CampaignCacheEntry | null = null;
+let pendingCampaignsRequest: Promise<Campaign[]> | null = null;
+
+const productKey = (category: string) => `jung_catalog_v2_${category}`;
+const campaignsKey = () => "jung_catalog_campaigns_v1";
+const now = () => Date.now();
+
+const isFresh = (savedAt: number) => now() - savedAt <= CACHE_TTL;
+
+export const getCatalogCategories = () =>
+  PRODUCT_SHEETS_CONFIG.map((source) => source.category);
+
+const sortProducts = (items: Product[]) =>
+  [...items].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+
+const sortCampaigns = (items: Campaign[]) =>
+  [...items].sort((a, b) => b.priority - a.priority);
+
+const flattenByCategory = (
+  byCategory: Partial<Record<SheetCategory, Product[]>>,
+) => sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
+
+/* =========================================================
+   FALLBACK CAMPAIGNS
+   Si Google Sheets falla, el catálogo sigue respirando.
+   ========================================================= */
+
+function getFallbackCampaigns(): Campaign[] {
+  return CAMPAIGN_CONFIG.map((campaign) => ({
+    id: campaign.id,
+    name: campaign.name,
+    icon: campaign.icon,
+    color: campaign.color,
+    colorClass: campaign.colorClass,
+    startDate: "",
+    endDate: "",
+    priority: campaign.priority,
+    publicationStatus: "Publicado",
+    computedStatus: "activa",
+  }));
+}
+
+/* =========================================================
+   CACHE LOCAL CAMPAIGNS
+   ========================================================= */
+
+function readStoredCampaigns(): Campaign[] | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = localStorage.getItem(campaignsKey());
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as CampaignCacheEntry;
+
+    if (!parsed?.savedAt || !isFresh(parsed.savedAt)) return null;
+    if (!Array.isArray(parsed.items)) return null;
+
+    campaignsMemoryCache = parsed;
+
+    return parsed.items;
+  } catch {
+    return null;
+  }
+}
+
+function writeCampaignsCache(items: Campaign[]) {
+  const entry: CampaignCacheEntry = {
+    savedAt: now(),
+    items,
+  };
+
+  campaignsMemoryCache = entry;
+
+  if (typeof window === "undefined") return;
+
+  try {
+    localStorage.setItem(campaignsKey(), JSON.stringify(entry));
+  } catch {
+    // Si localStorage falla, seguimos con cache en memoria.
+  }
+}
+
+async function fetchCampaignsFromSheet(): Promise<Campaign[]> {
+  const rows = await fetchSheetRows(
+    CAMPAIGNS_SHEET_CONFIG,
+    CAMPAIGN_REQUIRED_HEADERS,
+  );
+
+  return sortCampaigns(rows.map(normalizeCampaign));
+}
+
+async function loadAllCatalogCampaigns(
+  options: { forceRefresh?: boolean } = {},
+): Promise<Campaign[]> {
+  if (!options.forceRefresh) {
+    if (campaignsMemoryCache && isFresh(campaignsMemoryCache.savedAt)) {
+      return campaignsMemoryCache.items;
+    }
+
+    const stored = readStoredCampaigns();
+    if (stored) return stored;
+  }
+
+  if (pendingCampaignsRequest) return pendingCampaignsRequest;
+
+  pendingCampaignsRequest = fetchCampaignsFromSheet()
+    .then((campaigns) => {
+      writeCampaignsCache(campaigns);
+      return campaigns;
+    })
+    .catch((error) => {
+      console.error("Error cargando Campaigns Sheet. Usando fallback:", error);
+
+      const fallback = sortCampaigns(getFallbackCampaigns());
+      writeCampaignsCache(fallback);
+
+      return fallback;
+    })
+    .finally(() => {
+      pendingCampaignsRequest = null;
+    });
+
+  return pendingCampaignsRequest;
+}
+
+export async function loadCatalogCampaigns(
+  options: { includeInactive?: boolean; forceRefresh?: boolean } = {},
+): Promise<Campaign[]> {
+  const campaigns = await loadAllCatalogCampaigns({
+    forceRefresh: options.forceRefresh,
+  });
+
+  return options.includeInactive
+    ? campaigns
+    : campaigns.filter(isCampaignActive);
+}
+
+async function getCampaignNameToIdMap() {
+  const campaigns = await loadCatalogCampaigns({
+    includeInactive: true,
+  });
+
+  return buildCampaignNameToIdMap(campaigns);
+}
+
+/* =========================================================
+   CACHE LOCAL PRODUCTOS
+   ========================================================= */
+
+function readStorageCache(category: SheetCategory): Product[] | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = localStorage.getItem(productKey(category));
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as CategoryCacheEntry;
+
+    if (!parsed?.savedAt || !isFresh(parsed.savedAt)) return null;
+    if (!Array.isArray(parsed.items)) return null;
+
+    memoryCache.set(category, {
+      savedAt: parsed.savedAt,
+      items: parsed.items,
+    });
+
+    return parsed.items;
+  } catch {
+    return null;
+  }
+}
+
+export function readCachedCategoryProducts(
+  category: SheetCategory,
+): Product[] | null {
+  const memoryEntry = memoryCache.get(category);
+
+  if (memoryEntry && isFresh(memoryEntry.savedAt)) {
+    return sortProducts(memoryEntry.items);
+  }
+
+  if (memoryEntry && !isFresh(memoryEntry.savedAt)) {
+    memoryCache.delete(category);
+  }
+
+  const storageItems = readStorageCache(category);
+  return storageItems ? sortProducts(storageItems) : null;
+}
+
+function writeCache(category: SheetCategory, items: Product[]) {
+  const entry: CategoryCacheEntry = {
+    savedAt: now(),
+    items,
+  };
+
+  memoryCache.set(category, entry);
+
+  if (typeof window === "undefined") return;
+
+  try {
+    localStorage.setItem(productKey(category), JSON.stringify(entry));
+  } catch {
+    // Si localStorage falla, seguimos con cache en memoria.
+  }
+}
+
+export function getCachedCatalogSnapshot() {
+  const byCategory: Partial<Record<SheetCategory, Product[]>> = {};
+
+  PRODUCT_SHEETS_CONFIG.forEach((source) => {
+    const cached = readCachedCategoryProducts(source.category);
+    if (cached) byCategory[source.category] = cached;
+  });
+
+  const loadedCategories = PRODUCT_SHEETS_CONFIG.filter(
+    (source) => byCategory[source.category],
+  ).map((source) => source.category);
+
+  const isFullCatalogLoaded =
+    loadedCategories.length === PRODUCT_SHEETS_CONFIG.length;
+
+  return {
+    byCategory,
+    products: flattenByCategory(byCategory),
+    loadedCategories,
+    isFullCatalogLoaded,
+  };
+}
+
+/* =========================================================
+   FETCH REAL POR CATEGORÍA
+   ========================================================= */
+
+function getSource(category: SheetCategory) {
+  return PRODUCT_SHEETS_CONFIG.find((source) => source.category === category);
+}
+
+async function fetchCategoryProducts(
+  category: SheetCategory,
+): Promise<Product[]> {
+  const source = getSource(category);
+  if (!source) return [];
+
+  const campaignNameToIdMap = await getCampaignNameToIdMap();
+
+  const rows = await fetchSheetRows(source, PRODUCT_REQUIRED_HEADERS);
+
+  const normalized = rows.map((row) =>
+    normalizeProduct(row, source.category, campaignNameToIdMap),
+  );
+
+  const products = validateProducts(normalized).map(
+    ({ updated_at, ...product }) => product,
+  );
+
+  const sorted = sortProducts(products);
+  writeCache(category, sorted);
+
+  return sorted;
+}
+
+/* =========================================================
+   API DE CARGA POR CATEGORÍA
+   ========================================================= */
+
+export async function loadCategoryProducts(
+  category: SheetCategory,
+  options: { forceRefresh?: boolean } = {},
+): Promise<Product[]> {
+  if (!options.forceRefresh) {
+    const cached = readCachedCategoryProducts(category);
+    if (cached) return cached;
+  }
+
+  const pending = pendingRequests.get(category);
+  if (pending) return pending;
+
+  const request = fetchCategoryProducts(category).finally(() => {
+    pendingRequests.delete(category);
+  });
+
+  pendingRequests.set(category, request);
+
+  return request;
+}
+
+export async function loadAllProducts(): Promise<Product[]> {
+  const results = await Promise.all(
+    PRODUCT_SHEETS_CONFIG.map((source) =>
+      loadCategoryProducts(source.category).catch((error) => {
+        console.error(`Error en fuente "${source.category}":`, error);
+        return [];
+      }),
+    ),
+  );
+
+  return sortProducts(results.flat());
+}
+
+/* =========================================================
+   LEGACY COMPATIBLE
+   ========================================================= */
+
+export async function loadCatalogProgressive(
+  activeCategory: CatalogCategory,
+  onUpdate: (products: Product[], isFullCatalogLoaded: boolean) => void,
+) {
+  const categories = getCatalogCategories();
+  const preferred = activeCategory !== "todas" ? activeCategory : null;
+
+  const order = preferred
+    ? [preferred, ...categories.filter((category) => category !== preferred)]
+    : categories;
+
+  const byCategory = getCachedCatalogSnapshot().byCategory;
+
+  onUpdate(
+    flattenByCategory(byCategory),
+    Object.keys(byCategory).length === categories.length,
+  );
+
+  for (const category of order) {
+    if (byCategory[category]) continue;
+
+    try {
+      byCategory[category] = await loadCategoryProducts(category);
+    } catch (error) {
+      console.error(`Error cargando "${category}":`, error);
+      byCategory[category] = [];
+    }
+
+    onUpdate(
+      flattenByCategory(byCategory),
+      Object.keys(byCategory).length === categories.length,
+    );
+  }
+}
+
+============================================================
+FILE: src\modules\catalog\services\fetchProducts.ts
+============================================================
+export * from "./productService";
+
+============================================================
+FILE: src\modules\catalog\services\productsConfig.ts
+============================================================
+export {
+  PRODUCT_SHEETS_CONFIG as SHEETS_CONFIG,
+  SHEETS_CONFIG as LEGACY_SHEETS_CONFIG,
+} from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
+
+export type {
+  SheetSource,
+  SheetCategory,
+} from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
+
+============================================================
+FILE: src\modules\catalog\services\normalizeProduct.ts
+============================================================
+export * from "@/modules/catalog/integrations/googleSheets/normalizeProduct";
+
+============================================================
+FILE: src\modules\catalog\services\validateProducts.ts
+============================================================
+export * from "@/modules/catalog/integrations/googleSheets/validateProducts";
+
+============================================================
+FILE: src\modules\catalog\hooks\useCatalogCampaigns.ts
+============================================================
+import { useEffect, useState } from "react";
+import type { Campaign } from "@/shared/types/product";
+import { loadCatalogCampaigns } from "@/modules/catalog/services/productService";
+
+export function useCatalogCampaigns() {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      setIsLoading(true);
+
+      try {
+        const result = await loadCatalogCampaigns();
+
+        if (!cancelled) {
+          setCampaigns(result);
+        }
+      } catch (error) {
+        console.error("Error cargando campañas:", error);
+
+        if (!cancelled) {
+          setCampaigns([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return {
+    campaigns,
+    isLoading,
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\hooks\useCatalogData.ts
+============================================================
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Product } from "@/shared/types/product";
+import type { SheetCategory } from "@/modules/catalog/services/productsConfig";
+import {
+  getCachedCatalogSnapshot,
+  getCatalogCategories,
+  loadCategoryProducts,
+  type CatalogCategory,
+} from "@/modules/catalog/services/fetchProducts";
+
+type CategoryLoadStatus = "idle" | "loading" | "loaded" | "error";
+
+type ProductsByCategory = Partial<Record<SheetCategory, Product[]>>;
+type StatusByCategory = Record<SheetCategory, CategoryLoadStatus>;
+
+const CATALOG_CATEGORIES = getCatalogCategories();
+
+const sortProducts = (items: Product[]) =>
+  [...items].sort((a, b) => b.priority - a.priority);
+
+const flattenByCategory = (byCategory: ProductsByCategory) =>
+  sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
+
+const createInitialStatus = (
+  loadedCategories: SheetCategory[],
+): StatusByCategory => {
+  const loaded = new Set<SheetCategory>(loadedCategories);
+
+  return CATALOG_CATEGORIES.reduce((acc, category) => {
+    acc[category] = loaded.has(category) ? "loaded" : "idle";
+    return acc;
+  }, {} as StatusByCategory);
+};
+
+export function useCatalogData(activeCategory: CatalogCategory = "todas") {
+  const initialSnapshotRef = useRef(getCachedCatalogSnapshot());
+
+  const [productsByCategory, setProductsByCategory] =
+    useState<ProductsByCategory>(() => initialSnapshotRef.current.byCategory);
+
+  const [statusByCategory, setStatusByCategory] = useState<StatusByCategory>(
+    () => createInitialStatus(initialSnapshotRef.current.loadedCategories),
+  );
+
+  const [isBootstrapping, setIsBootstrapping] = useState(
+    () => initialSnapshotRef.current.products.length === 0,
+  );
+
+  const mountedRef = useRef(false);
+  const productsByCategoryRef = useRef(productsByCategory);
+  const statusByCategoryRef = useRef(statusByCategory);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const syncProductsByCategory = useCallback(
+    (next: ProductsByCategory) => {
+      productsByCategoryRef.current = next;
+      setProductsByCategory(next);
+    },
+    [],
+  );
+
+  const syncStatusByCategory = useCallback((next: StatusByCategory) => {
+    statusByCategoryRef.current = next;
+    setStatusByCategory(next);
+  }, []);
+
+  const setCategoryStatus = useCallback(
+    (category: SheetCategory, status: CategoryLoadStatus) => {
+      const next = {
+        ...statusByCategoryRef.current,
+        [category]: status,
+      };
+
+      syncStatusByCategory(next);
+    },
+    [syncStatusByCategory],
+  );
+
+  const setCategoryProducts = useCallback(
+    (category: SheetCategory, products: Product[]) => {
+      const next = {
+        ...productsByCategoryRef.current,
+        [category]: products,
+      };
+
+      syncProductsByCategory(next);
+    },
+    [syncProductsByCategory],
+  );
+
+  const ensureCategoryLoaded = useCallback(
+    async (category: SheetCategory) => {
+      const currentStatus = statusByCategoryRef.current[category];
+
+      if (currentStatus === "loaded" || currentStatus === "loading") {
+        return;
+      }
+
+      setCategoryStatus(category, "loading");
+
+      try {
+        const products = await loadCategoryProducts(category);
+
+        if (!mountedRef.current) return;
+
+        setCategoryProducts(category, products);
+        setCategoryStatus(category, "loaded");
+      } catch (error) {
+        console.error(`Error cargando categoría "${category}":`, error);
+
+        if (!mountedRef.current) return;
+
+        setCategoryProducts(category, []);
+        setCategoryStatus(category, "error");
+      } finally {
+        if (mountedRef.current) {
+          setIsBootstrapping(false);
+        }
+      }
+    },
+    [setCategoryProducts, setCategoryStatus],
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      const preferredCategory =
+        activeCategory !== "todas" ? activeCategory : CATALOG_CATEGORIES[0];
+
+      if (preferredCategory) {
+        await ensureCategoryLoaded(preferredCategory);
+      }
+
+      if (cancelled) return;
+
+      /*
+        Precarga suave:
+        carga el resto de categorías una por una.
+        No depende de campañas ni de búsqueda.
+      */
+      for (const category of CATALOG_CATEGORIES) {
+        if (cancelled) break;
+        await ensureCategoryLoaded(category);
+      }
+
+      if (!cancelled && mountedRef.current) {
+        setIsBootstrapping(false);
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCategory, ensureCategoryLoaded]);
+
+  const data = useMemo(
+    () => flattenByCategory(productsByCategory),
+    [productsByCategory],
+  );
+
+  const loadedCount = useMemo(
+    () =>
+      CATALOG_CATEGORIES.filter(
+        (category) => statusByCategory[category] === "loaded",
+      ).length,
+    [statusByCategory],
+  );
+
+  const isFullCatalogLoaded = loadedCount === CATALOG_CATEGORIES.length;
+
+  const activeCategoryStatus =
+    activeCategory === "todas" ? "loaded" : statusByCategory[activeCategory];
+
+  const isCategoryLoading =
+    activeCategory !== "todas" && activeCategoryStatus === "loading";
+
+  const isLoading = isBootstrapping && data.length === 0;
+
+  return {
+    data,
+    productsByCategory,
+    statusByCategory,
+    activeCategoryStatus,
+    isCategoryLoading,
+    isLoading,
+    isFullCatalogLoaded,
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\hooks\useCatalogFilters.ts
+============================================================
+import { useMemo } from "react";
+import type { Product, Category } from "@/shared/types/product";
+import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { useFilteredProducts } from "@/modules/catalog/hooks/useFilteredProducts";
+
+interface Params {
+  products: Product[];
+  activeCategory: string;
+  activeCampaign: string;
+  searchQuery: string;
+  showCounts?: boolean;
+}
+
+export function useCatalogFilters({
+  products,
+  activeCategory,
+  activeCampaign,
+  searchQuery,
+  showCounts = false,
+}: Params) {
+  const filteredProducts = useFilteredProducts({
+    products,
+    activeCategory,
+    activeCampaign,
+    searchQuery,
+  });
+  const hasCategory = activeCategory !== "todas";
+  const hasCampaign = Boolean(activeCampaign);
+
+  const categoryBase = useMemo(
+    () =>
+      hasCampaign
+        ? products.filter((p) => p.campaigns?.includes(activeCampaign))
+        : products,
+    [products, hasCampaign, activeCampaign],
+  );
+  const campaignBase = useMemo(
+    () =>
+      hasCategory
+        ? products.filter((p) => p.category === activeCategory)
+        : products,
+    [products, hasCategory, activeCategory],
+  );
+
+  const categoryCounts = useMemo(() => {
+    if (!showCounts) return {};
+    const counts = categoryBase.reduce<Record<string, number>>(
+      (acc, product) => {
+        acc[product.category] = (acc[product.category] || 0) + 1;
+        return acc;
+      },
+      {},
+    );
+    counts.todas = categoryBase.length;
+    return counts;
+  }, [categoryBase, showCounts]);
+
+  const campaignCounts = useMemo(() => {
+    if (!showCounts) return {};
+    return campaignBase.reduce<Record<string, number>>((acc, product) => {
+      product.campaigns?.forEach((campaign) => {
+        acc[campaign] = (acc[campaign] || 0) + 1;
+      });
+      return acc;
+    }, {});
+  }, [campaignBase, showCounts]);
+
+  const visibleCategories = useMemo<Category[]>(
+    () =>
+      showCounts
+        ? CATEGORY_CONFIG.filter(
+            (c) => c.id === "todas" || (categoryCounts[c.id] || 0) > 0,
+          )
+        : CATEGORY_CONFIG,
+    [categoryCounts, showCounts],
+  );
+
+  return {
+    filteredProducts,
+    categoryCounts,
+    campaignCounts,
+    visibleCategories,
+    hasCategory,
+    hasCampaign,
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\hooks\useFilteredProducts.ts
+============================================================
+import { useMemo } from "react";
+import { searchProducts } from "@/shared/lib/search";
+import type { Product } from "@/shared/types/product";
+
+interface UseFilteredProductsParams {
+  products: Product[];
+  activeCategory?: string;
+  activeCampaign?: string;
+  searchQuery?: string;
+}
+
+export function useFilteredProducts({
+  products,
+  activeCategory = "todas",
+  activeCampaign = "",
+  searchQuery = "",
+}: UseFilteredProductsParams) {
+  return useMemo(() => {
+    const term = searchQuery.trim();
+
+    let filtered = products;
+
+    if (activeCategory !== "todas") {
+      filtered = filtered.filter(
+        (product) => product.category === activeCategory,
+      );
+    }
+
+    if (activeCampaign) {
+      filtered = filtered.filter((product) =>
+        product.campaigns?.includes(activeCampaign),
+      );
+    }
+
+    if (!term) return filtered;
+
+    const insideFilters = searchProducts(filtered, term);
+
+    return insideFilters.length
+      ? insideFilters
+      : searchProducts(products, term);
+  }, [products, activeCategory, activeCampaign, searchQuery]);
+}
+
+============================================================
+FILE: src\modules\catalog\hooks\useCatalogPrioritySections.ts
+============================================================
+import { useMemo } from "react";
+import type { Product } from "@/shared/types/product";
+
+const TOP_PRIORITY = 100;
+const STRONG_PRIORITY = 80;
+const HIGHLIGHT_PRIORITY = 50;
+
+const getRotationSeed = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const block = now.getHours() < 12 ? "AM" : "PM";
+  return `${year}-${month}-${day}-${block}`;
+};
+
+const seededShuffle = <T extends { id: string }>(items: T[], seed: string) => {
+  const hash = (text: string) => {
+    let h = 0;
+    for (let i = 0; i < text.length; i++) {
+      h = (h << 5) - h + text.charCodeAt(i);
+      h |= 0;
+    }
+    return h;
+  };
+
+  return [...items].sort((a, b) => hash(seed + a.id) - hash(seed + b.id));
+};
+
+const sortByPriorityAndShuffleSameLevel = (items: Product[]) => {
+  const seed = getRotationSeed();
+
+  const groups = items.reduce<Record<number, Product[]>>((acc, product) => {
+    const priority = product.priority || 0;
+    (acc[priority] ||= []).push(product);
+    return acc;
+  }, {});
+
+  return Object.keys(groups)
+    .map(Number)
+    .sort((a, b) => b - a)
+    .flatMap((priority) => seededShuffle(groups[priority], seed));
+};
+
+interface Params {
+  products: Product[];
+  filteredProducts: Product[];
+  activeCategory: string;
+  activeCampaign: string;
+  searchQuery: string;
+}
+
+export function useCatalogPrioritySections({
+  products,
+  filteredProducts,
+  activeCategory,
+  activeCampaign,
+  searchQuery,
+}: Params) {
+  const showPriorityBlocks =
+    activeCategory === "todas" && !activeCampaign && !searchQuery.trim();
+
+  const topProducts = useMemo(
+    () =>
+      showPriorityBlocks
+        ? sortByPriorityAndShuffleSameLevel(
+            products.filter((p) => (p.priority || 0) >= TOP_PRIORITY),
+          )
+        : [],
+    [products, showPriorityBlocks],
+  );
+
+  const strongProducts = useMemo(
+    () =>
+      showPriorityBlocks
+        ? sortByPriorityAndShuffleSameLevel(
+            products.filter((p) => {
+              const priority = p.priority || 0;
+              return priority >= STRONG_PRIORITY && priority < TOP_PRIORITY;
+            }),
+          )
+        : [],
+    [products, showPriorityBlocks],
+  );
+
+  const highlightProducts = useMemo(
+    () =>
+      showPriorityBlocks
+        ? sortByPriorityAndShuffleSameLevel(
+            products.filter((p) => {
+              const priority = p.priority || 0;
+              return (
+                priority >= HIGHLIGHT_PRIORITY && priority < STRONG_PRIORITY
+              );
+            }),
+          )
+        : [],
+    [products, showPriorityBlocks],
+  );
+
+  const regularProducts = useMemo(
+    () =>
+      sortByPriorityAndShuffleSameLevel(
+        showPriorityBlocks
+          ? filteredProducts.filter(
+              (p) => (p.priority || 0) < HIGHLIGHT_PRIORITY,
+            )
+          : filteredProducts,
+      ),
+    [filteredProducts, showPriorityBlocks],
+  );
+
+  return {
+    showPriorityBlocks,
+    topProducts,
+    strongProducts,
+    highlightProducts,
+    regularProducts,
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\components\CatalogTopNav.tsx
+============================================================
+import { SearchInput } from "@/modules/search/components/SearchInput";
+import { HeaderCampaignFilter } from "@/modules/catalog/components/HeaderCampaignFilter";
+import { HeaderCategoryFilter } from "@/modules/catalog/components/HeaderCategoryFilter";
+import type { HeaderCampaignOption } from "@/modules/catalog/components/HeaderCampaignFilter";
+import type { Category, Product } from "@/shared/types/product";
+import "./CatalogTopNav.css";
+
+interface CatalogTopNavProps {
+  products: Product[];
+
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+
+  categories: Category[];
+  activeCategory: string;
+  categoryCounts?: Record<string, number>;
+  onCategorySelect: (id: string) => void;
+
+  campaigns: ReadonlyArray<HeaderCampaignOption>;
+  activeCampaign: string;
+  campaignCounts?: Record<string, number>;
+  showCampaigns?: boolean;
+  onCampaignSelect: (id: string) => void;
+
+  logoUrl?: string;
+  searchPlaceholder?: string;
+  onLogoClick?: () => void;
+}
+
+const DEFAULT_LOGO_URL =
+  "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
+
+export function CatalogTopNav({
+  products,
+  searchQuery,
+  onSearchChange,
+
+  categories,
+  activeCategory,
+  categoryCounts = {},
+  onCategorySelect,
+
+  campaigns,
+  activeCampaign,
+  campaignCounts = {},
+  showCampaigns = false,
+  onCampaignSelect,
+
+  logoUrl = DEFAULT_LOGO_URL,
+  searchPlaceholder = "Busca flores, cajas, peluches o código...",
+  onLogoClick,
+}: CatalogTopNavProps) {
+  const hasVisibleCampaigns =
+    showCampaigns &&
+    campaigns.some((campaign) => (campaignCounts[campaign.id] ?? 0) > 0);
+
+  return (
+    <nav className="catalogTopNav" aria-label="Navegación principal del catálogo">
+      <div className="catalogTopNavInner">
+        <button
+          type="button"
+          className="catalogTopNavLogo"
+          onClick={onLogoClick}
+          aria-label="Volver al catálogo completo"
+        >
+          <img src={logoUrl} alt="Wooly" />
+        </button>
+
+        <section
+          className="catalogTopNavSection catalogTopNavCategories"
+          aria-label="Categorías del catálogo"
+        >
+          <HeaderCategoryFilter
+            categories={categories}
+            active={activeCategory}
+            counts={categoryCounts}
+            onSelect={onCategorySelect}
+          />
+        </section>
+
+        {hasVisibleCampaigns && (
+          <section
+            className="catalogTopNavSection catalogTopNavCampaigns"
+            aria-label="Campañas activas"
+          >
+            <HeaderCampaignFilter
+              campaigns={campaigns}
+              active={activeCampaign}
+              counts={campaignCounts}
+              show={hasVisibleCampaigns}
+              onSelect={onCampaignSelect}
+            />
+          </section>
+        )}
+
+        <section
+          className="catalogTopNavSection catalogTopNavSearch"
+          aria-label="Buscador del catálogo"
+        >
+          <SearchInput
+            value={searchQuery}
+            onChange={onSearchChange}
+            products={products}
+            placeholder={searchPlaceholder}
+          />
+        </section>
+      </div>
+    </nav>
+  );
+}
+
+============================================================
+FILE: src\modules\catalog\components\HeaderCampaignFilter.tsx
+============================================================
+import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+import "./HeaderCampaignFilter.css";
+
+export interface HeaderCampaignOption {
+  id: string;
+  name: string;
+  icon: string;
+  colorClass?: string;
+}
+
+interface Props {
+  campaigns?: ReadonlyArray<HeaderCampaignOption>;
+  active: string;
+  counts?: Record<string, number>;
+  show?: boolean;
+  onSelect: (id: string) => void;
+}
+
+export function HeaderCampaignFilter({
+  campaigns = CAMPAIGN_CONFIG,
+  active,
+  counts = {},
+  show = false,
+  onSelect,
+}: Props) {
+  if (!show) return null;
+
+  const visible = campaigns.filter((c) => (counts[c.id] ?? 0) > 0);
+  if (!visible.length) return null;
+
+  return (
+    <div className="header-campaign-filter">
+      {visible.map((c) => {
+        const count = counts[c.id] ?? 0;
+        const isActive = active === c.id;
+        const styleClass = c.colorClass ?? "catalog-campaign-purple";
+
+        return (
+          <button
+            key={c.id}
+            type="button"
+            onClick={() => onSelect(isActive ? "" : c.id)}
+            className={`header-campaign-chip ${styleClass} ${
+              isActive ? "active" : ""
+            }`}
+          >
+            <span className="header-campaign-content">
+              <span className="header-campaign-name">{c.name}</span>
+
+              <span className="header-campaign-count">
+                {count} {count === 1 ? "producto" : "productos"} de campaña
+              </span>
+            </span>
+
+            <span className="header-campaign-icon">{c.icon}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+============================================================
+FILE: src\modules\catalog\components\CatalogExploreCenter.tsx
+============================================================
+import type { Category } from "@/shared/types/product";
+import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+import "@/shared/styles/catalog/catalog-explore-center.css";
+
+interface CampaignOption {
+  id: string;
+  name: string;
+  icon: string;
+  colorClass?: string;
+}
+
+interface Props {
+  open: boolean;
+  activeCampaign: string;
+  activeCategory: string;
+  activeCampaignName?: string;
+  activeCategoryName?: string;
+  campaignCounts: Record<string, number>;
+  categoryCounts: Record<string, number>;
+  categories: Category[];
+  campaigns?: ReadonlyArray<CampaignOption>;
+  cartCount: number;
+  onClose: () => void;
+  onCampaignSelect: (id: string) => void;
+  onCategorySelect: (id: string) => void;
+  onOpenCart: () => void;
+}
+
+export function CatalogExploreCenter({
+  open,
+  activeCampaign,
+  activeCategory,
+  activeCampaignName,
+  activeCategoryName,
+  campaignCounts,
+  categoryCounts,
+  categories,
+  campaigns = CAMPAIGN_CONFIG,
+  cartCount,
+  onClose,
+  onCampaignSelect,
+  onCategorySelect,
+  onOpenCart,
+}: Props) {
+  if (!open) return null;
+
+  const visibleCampaigns = campaigns.filter(
+    (c) => (campaignCounts[c.id] ?? 0) > 0,
+  );
+
+  const visibleCategories = categories.filter(
+    (c) => c.id === "todas" || (categoryCounts[c.id] ?? 0) > 0,
+  );
+
+  const hasFilters = Boolean(activeCampaign || activeCategory !== "todas");
+
+  const clearFilters = () => {
+    onCampaignSelect("");
+    onCategorySelect("todas");
+    onClose();
+  };
+
+  return (
+    <div className="catalog-explore-overlay" onClick={onClose}>
+      <aside
+        className="catalog-explore-panel"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="catalog-explore-handle" />
+
+        <header className="catalog-explore-head">
+          <div>
+            <h3 className="catalog-explore-title">Explorar catálogo</h3>
+            <p className="catalog-explore-subtitle">
+              Campañas, categorías y accesos rápidos
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="catalog-explore-close"
+          >
+            Cerrar
+          </button>
+        </header>
+
+        {hasFilters && (
+          <div className="catalog-explore-active">
+            {activeCampaign && (
+              <button type="button" onClick={() => onCampaignSelect("")}>
+                {activeCampaignName} ✕
+              </button>
+            )}
+
+            {activeCategory !== "todas" && (
+              <button type="button" onClick={() => onCategorySelect("todas")}>
+                {activeCategoryName} ✕
+              </button>
+            )}
+          </div>
+        )}
+
+        <section className="catalog-explore-section">
+          <h4>🎁 Campañas</h4>
+
+          <div className="catalog-explore-campaign-grid">
+            {visibleCampaigns.map((c) => {
+              const isActive = activeCampaign === c.id;
+              const styleClass = c.colorClass ?? "catalog-campaign-purple";
+
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => onCampaignSelect(isActive ? "" : c.id)}
+                  className={`catalog-explore-campaign ${styleClass} ${
+                    isActive ? "active" : ""
+                  }`}
+                >
+                  <span>
+                    <strong>{c.name}</strong>
+                    <small>{campaignCounts[c.id] ?? 0} productos</small>
+                  </span>
+
+                  <b>{c.icon}</b>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="catalog-explore-section">
+          <h4>🛍️ Categorías</h4>
+
+          <div className="catalog-explore-category-grid">
+            {visibleCategories.map((c) => {
+              const count = categoryCounts[c.id] ?? 0;
+              const isActive = activeCategory === c.id;
+
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => onCategorySelect(c.id)}
+                  className={`catalog-explore-category ${
+                    isActive ? "active" : ""
+                  }`}
+                >
+                  <span className="catalog-explore-category-icon">
+                    {c.icon}
+                  </span>
+                  <strong>{c.name}</strong>
+                  <small>({count})</small>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="catalog-explore-section">
+          <h4>⚡ Accesos rápidos</h4>
+
+          <div className="catalog-explore-quick-grid">
+            <button type="button" onClick={clearFilters}>
+              Ver todo
+            </button>
+            <button type="button">Más vendidos</button>
+            <button type="button">Recomendados</button>
+            <button type="button">Ofertas</button>
+          </div>
+        </section>
+
+        <section className="catalog-explore-footer-actions">
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              onOpenCart();
+            }}
+          >
+            📦 Mi Caja ({cartCount})
+          </button>
+
+          <a
+            href="https://wa.me/51936188636"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            💬 Asesora
+          </a>
+        </section>
+      </aside>
+    </div>
+  );
+}
+
+============================================================
+FILE: src\modules\catalog\components\CatalogTopNav.css
+============================================================
+/* =========================================================
+   CATALOG TOP NAV
+   Navegación superior del catálogo Wooly.
+   Jerarquía visual:
+   Logo → Categorías → Campañas activas → Buscador
+   ========================================================= */
+
+.catalogTopNav {
+  width: 100%;
+
+  border-bottom: 1px solid #e2e8f0;
+
+  background: rgba(255, 255, 255, 0.97);
+
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+
+  backdrop-filter: blur(18px);
+}
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
+.catalogTopNavInner {
+  width: 100%;
+  max-width: 1500px;
+
+  margin: 0 auto;
+  padding: 8px 16px 12px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+}
+
+/* =========================================================
+   ZONA DE LOGO
+   El logo tiene su propio espacio visual para que no parezca sticker.
+   ========================================================= */
+
+.catalogTopNavLogo {
+  width: 100%;
+  max-width: 1320px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 0 8px;
+  margin: 0;
+
+  border: 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.catalogTopNavLogo img {
+  width: 142px;
+  height: auto;
+  display: block;
+}
+
+/* =========================================================
+   SECCIONES DEL TOP NAV
+   ========================================================= */
+
+.catalogTopNavSection {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ===== CATEGORÍAS PRINCIPALES ===== */
+
+.catalogTopNavCategories {
+  width: 100%;
+  max-width: 1320px;
+
+  padding-top: 1px;
+}
+
+/* ===== CAMPAÑAS ACTIVAS ===== */
+
+.catalogTopNavCampaigns {
+  width: 100%;
+  max-width: 620px;
+
+  padding-top: 2px;
+}
+
+/* ===== BUSCADOR ===== */
+
+.catalogTopNavSearch {
+  width: 100%;
+  max-width: 1280px;
+
+  margin-top: 3px;
+  padding-top: 10px;
+
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+/* =========================================================
+   BUSCADOR DENTRO DEL TOP NAV
+   ========================================================= */
+
+.catalogTopNav .search-wrapper {
+  width: 100%;
+}
+
+.catalogTopNav .search-input {
+  width: 100%;
+  height: 48px;
+
+  border-radius: 18px;
+  border-color: #dbe5ee;
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.035);
+
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.catalogTopNav .search-input:focus {
+  border-color: rgba(29, 130, 153, 0.38);
+
+  box-shadow: 0 12px 28px rgba(29, 130, 153, 0.12);
+}
+
+.catalogTopNav .search-icon {
+  color: #8ca0b8;
+}
+
+/* =========================================================
+   CAMPAIGN COLOR VARIANTS
+   Clases visuales generadas desde Campaigns Sheet.
+   ========================================================= */
+
+.catalog-campaign-purple {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  color: #ffffff;
+}
+
+.catalog-campaign-pink {
+  background: linear-gradient(135deg, #d946ef, #f58ac8);
+  color: #ffffff;
+}
+
+.catalog-campaign-blue {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: #ffffff;
+}
+
+.catalog-campaign-green {
+  background: linear-gradient(135deg, #38b56a, #68d391);
+  color: #ffffff;
+}
+
+.catalog-campaign-red {
+  background: linear-gradient(135deg, #e5484d, #ff7a7f);
+  color: #ffffff;
+}
+
+.catalog-campaign-gold {
+  background: linear-gradient(135deg, #b7791f, #f6c453);
+  color: #3f2d0b;
+}
+
+.catalog-campaign-teal {
+  background: linear-gradient(135deg, #44ada0, #2f8f84);
+  color: #ffffff;
+}
+
+.catalog-campaign-dark {
+  background: linear-gradient(135deg, #2c2c2c, #555555);
+  color: #ffffff;
+}
+
+.catalog-campaign-yellow {
+  background: linear-gradient(135deg, #ffd84d, #f9c95b);
+  color: #4b3510;
+}
+
+.catalog-campaign-sky {
+  background: linear-gradient(135deg, #7cc8f8, #a8ddff);
+  color: #17415f;
+}
+
+.catalog-campaign-copper {
+  background: linear-gradient(135deg, #c97a56, #e9a47f);
+  color: #ffffff;
+}
+
+.catalog-campaign-emerald {
+  background: linear-gradient(135deg, #0f9d7a, #34c9a6);
+  color: #ffffff;
+}
+
+.catalog-campaign-fuchsia {
+  background: linear-gradient(135deg, #e94fb5, #ff8bd4);
+  color: #ffffff;
+}
+
+.catalog-campaign-lavender {
+  background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+  color: #ffffff;
+}
+
+.catalog-campaign-orange {
+  background: linear-gradient(135deg, #f28c28, #ffb347);
+  color: #ffffff;
+}
+
+.catalog-campaign-silver {
+  background: linear-gradient(135deg, #bfc5d2, #e5e7eb);
+  color: #2c2c2c;
+}
+
+.catalog-campaign-wine {
+  background: linear-gradient(135deg, #8b1e3f, #b8325f);
+  color: #ffffff;
+}
+
+.catalog-campaign-coral {
+  background: linear-gradient(135deg, #fb7185, #fda4af);
+  color: #ffffff;
+}
+
+/* =========================================================
+   ANIMACIONES LOCALES
+   Usadas por categorías y campañas.
+   ========================================================= */
+
+@keyframes catalogTopNavFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes catalogTopNavChipIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .catalogTopNavInner {
+    padding: 8px 10px 10px;
+    gap: 7px;
+  }
+
+  .catalogTopNavLogo {
+    display: none;
+  }
+
+  .catalogTopNavCategories,
+  .catalogTopNavCampaigns,
+  .catalogTopNavSearch {
+    max-width: 100%;
+  }
+
+  .catalogTopNavCampaigns {
+    padding-top: 0;
+  }
+
+  .catalogTopNavSearch {
+    margin-top: 2px;
+    padding-top: 8px;
+  }
+
+  .catalogTopNav .search-input {
+    height: 44px;
+    border-radius: 16px;
+
+    font-size: 13px;
+  }
+}
+
+============================================================
+FILE: src\modules\catalog\components\HeaderCampaignFilter.css
+============================================================
+/* =========================================================
+   HEADER CAMPAIGN FILTER
+   Campañas temporales del catálogo Wooly.
+   Regla de negocio:
+   - Categorías mandan.
+   - Campañas son efímeras.
+   - Máximo 3 o 4 campañas visibles.
+   - El conteo se comunica como valor comercial.
+   ========================================================= */
+
+/* ===== CONTENEDOR DE CAMPAÑAS ===== */
+
+.catalogTopNav .header-campaign-filter {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  padding: 0 0 2px;
+}
+
+.catalogTopNav .header-campaign-filter::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== CHIP / MINI CARD DE CAMPAÑA ===== */
+
+.catalogTopNav .header-campaign-chip {
+  position: relative;
+
+  width: clamp(205px, 18vw, 245px);
+  height: 58px;
+  padding: 0 46px 0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 0;
+  border-radius: 18px;
+
+  color: #ffffff;
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 22px rgba(15, 23, 42, 0.1);
+
+  opacity: 0.97;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease,
+    filter 0.18s ease;
+}
+
+.catalogTopNav .header-campaign-chip:hover {
+  transform: translateY(-1px);
+
+  opacity: 1;
+
+  box-shadow:
+    0 14px 28px rgba(15, 23, 42, 0.15);
+
+  filter: saturate(1.03);
+}
+
+.catalogTopNav .header-campaign-chip.active {
+  background: linear-gradient(
+    135deg,
+    var(--w-primary),
+    var(--w-primary-dark)
+  ) !important;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 12px 28px rgba(29, 130, 153, 0.24);
+
+  opacity: 1;
+}
+
+/* ===== CONTENIDO CENTRAL ===== */
+
+.catalogTopNav .header-campaign-content {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  text-align: center;
+
+  pointer-events: none;
+}
+
+.catalogTopNav .header-campaign-name {
+  max-width: 100%;
+
+  font-size: 14px;
+  font-weight: 950;
+  line-height: 1.05;
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.catalogTopNav .header-campaign-count {
+  max-width: 100%;
+
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1;
+  opacity: 0.93;
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== ÍCONO A LA DERECHA ===== */
+
+.catalogTopNav .header-campaign-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  font-size: 25px;
+  line-height: 1;
+  opacity: 0.92;
+
+  pointer-events: none;
+}
+
+/* ===== TEMAS TEMPORALES ===== */
+
+.catalogTopNav .header-campaign-default {
+  background: linear-gradient(135deg, #44ada0, #2f8f84);
+}
+
+.catalogTopNav .header-campaign-pink {
+  background: linear-gradient(135deg, #d946ef, #f58ac8);
+}
+
+.catalogTopNav .header-campaign-blue {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+}
+
+.catalogTopNav .header-campaign-purple {
+  background: linear-gradient(135deg, #8b5cf6, #f472b6);
+}
+
+.catalogTopNav .header-campaign-rose {
+  background: linear-gradient(135deg, #be185d, #fb7185);
+}
+
+.catalogTopNav .header-campaign-green {
+  background: linear-gradient(135deg, #0f766e, #22c55e);
+}
+
+.catalogTopNav .header-campaign-violet {
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+}
+
+.catalogTopNav .header-campaign-yellow {
+  background: linear-gradient(135deg, #f59e0b, #facc15);
+}
+
+.catalogTopNav .header-campaign-red {
+  background: linear-gradient(135deg, #dc2626, #f97316);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+  .catalogTopNav .header-campaign-filter {
+    justify-content: flex-start;
+    gap: 8px;
+
+    padding-bottom: 1px;
+
+    animation: catalogTopNavFadeSlide 0.28s ease both;
+  }
+
+  .catalogTopNav .header-campaign-chip {
+    width: auto;
+    min-width: 176px;
+    max-width: 215px;
+    height: 52px;
+    padding: 0 40px 0 14px;
+
+    border-radius: 16px;
+
+    animation: catalogTopNavChipIn 0.24s ease both;
+  }
+
+  .catalogTopNav .header-campaign-name {
+    font-size: 12px;
+  }
+
+  .catalogTopNav .header-campaign-count {
+    font-size: 9px;
+  }
+
+  .catalogTopNav .header-campaign-icon {
+    right: 12px;
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 420px) {
+  .catalogTopNav .header-campaign-chip {
+    min-width: 162px;
+    max-width: 190px;
+    height: 50px;
+    padding: 0 36px 0 12px;
+  }
+
+  .catalogTopNav .header-campaign-name {
+    font-size: 11px;
+  }
+
+  .catalogTopNav .header-campaign-count {
+    font-size: 8.5px;
+  }
+
+  .catalogTopNav .header-campaign-icon {
+    right: 10px;
+    font-size: 20px;
+  }
+}
+
+============================================================
+FILE: src\modules\catalog\utils\products.ts
+============================================================
+import type { Product } from "@/shared/types/product";
+
+const CACHE_KEY = "wooly_products_cache";
+const CACHE_DURATION = 10 * 1000;
+
+interface CacheEntry {
+  data: Product[];
+  timestamp: number;
+  source: "sheets" | "fallback";
+}
+
+function getCached(): Product[] | null {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+
+    const entry: CacheEntry = JSON.parse(raw);
+
+    if (Date.now() - entry.timestamp > CACHE_DURATION) {
+      sessionStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+
+    return entry.data;
+  } catch {
+    return null;
+  }
+}
+
+function setCache(data: Product[], source: CacheEntry["source"]) {
+  try {
+    sessionStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({ data, timestamp: Date.now(), source })
+    );
+  } catch {
+    // Ignorar errores de storage
+  }
+}
+
+export async function fetchProducts(): Promise<Product[]> {
+  const cached = getCached();
+  if (cached) return cached;
+
+  try {
+    const { loadAllProducts } = await import("@/modules/catalog/services/fetchProducts");
+    const products = await loadAllProducts();
+
+    if (products?.length) {
+      setCache(products, "sheets");
+      return products;
+    }
+
+    console.warn("Sheets vacío o sin productos publicados. Usando fallback local.");
+    const { FALLBACK_PRODUCTS } = await import("@/modules/catalog/data/fallback-products");
+
+    setCache(FALLBACK_PRODUCTS, "fallback");
+    return FALLBACK_PRODUCTS;
+  } catch (error) {
+    console.error("Error cargando catálogo desde Sheets:", error);
+
+    const { FALLBACK_PRODUCTS } = await import("@/modules/catalog/data/fallback-products");
+
+    setCache(FALLBACK_PRODUCTS, "fallback");
+    return FALLBACK_PRODUCTS;
+  }
+}
+
+export function clearProductsCache() {
+  try {
+    sessionStorage.removeItem(CACHE_KEY);
+  } catch {
+    // Ignorar errores de storage
+  }
+}
+
+export function getEffectivePrice(item: {
+  price_1: number;
+  price_3: number | null;
+  price_12: number | null;
+  price_50: number | null;
+  price_100: number | null;
+  qty: number;
+}): number {
+  if (item.price_100 && item.qty >= 100) return item.price_100;
+  if (item.price_50 && item.qty >= 50) return item.price_50;
+  if (item.price_12 && item.qty >= 12) return item.price_12;
+  if (item.price_3 && item.qty >= 3) return item.price_3;
+  return item.price_1;
+}
+
+export function getMinPrice(product: Product): number {
+  return (
+    product.price_100 ||
+    product.price_50 ||
+    product.price_12 ||
+    product.price_3 ||
+    product.price_1 ||
+    0
+  );
+}
+
+export function isProductAvailable(product: Product): boolean {
+  if (!product.price_1 || product.price_1 <= 0) return false;
+  if (product.stock === 0) return false;
+  if (product.stock === null || product.stock === undefined) return false;
+  return true;
+}
+
+============================================================
+FILE: src\app\pages\CatalogPage.tsx
+============================================================
+import { useState, useEffect, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { SearchX } from "lucide-react";
+import { useCartStore } from "@/modules/cart/store";
+import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
+import { Product } from "@/shared/types/product";
+import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
+import { CatalogTopNav } from "@/modules/catalog/components/CatalogTopNav";
+import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
+import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
+import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
+import { ProductCard } from "@/modules/catalog/components/ProductCard";
+import { CartSidebar } from "@/modules/cart/components/CartSidebar";
+import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
+import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
+import { useCatalogFilters } from "@/modules/catalog/hooks/useCatalogFilters";
+import { useCatalogCampaigns } from "@/modules/catalog/hooks/useCatalogCampaigns";
+import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPrioritySections";
+import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
+import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
+import { getCatalogSeo } from "@/shared/seo/catalogSeo";
+import { getProductMedia, ProductMedia } from "@/shared/lib/productMedia";
+import AOS from "aos";
+
+const getCategoryFromUrl = () =>
+  new URLSearchParams(window.location.search).get("cat") || "todas";
+
+const getCampaignFromUrl = () =>
+  new URLSearchParams(window.location.search).get("cpg") || "";
+
+const isValidCategory = (id: string) =>
+  id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
+const CatalogPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { campaigns: catalogCampaigns } = useCatalogCampaigns();
+  const CATALOG_CAMPAIGNS = catalogCampaigns;
+
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const initialCat = getCategoryFromUrl();
+    return isValidCategory(initialCat) ? initialCat : "todas";
+  });
+
+  const [activeCampaign, setActiveCampaign] = useState(() =>
+    getCampaignFromUrl(),
+  );
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [cartOpen, setCartOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [zoomGallery, setZoomGallery] = useState<{
+    media: ProductMedia[];
+    initialIndex: number;
+    title: string;
+  } | null>(null);
+  const [exploreOpen, setExploreOpen] = useState(false);
+
+  const isCatalogCampaignId = useCallback(
+    (id: string) =>
+      !id || CATALOG_CAMPAIGNS.some((campaign) => campaign.id === id),
+    [CATALOG_CAMPAIGNS],
+  );
+
+  const {
+    cart,
+    addToCart,
+    totalItems,
+    totalPrice,
+    savings,
+    removeFromCart,
+    changeQty,
+    setExactQty,
+    setItemNote,
+    clearCart,
+  } = useCartStore();
+
+  const {
+    data: products = [],
+    isLoading: loading,
+    isFullCatalogLoaded,
+    isCategoryLoading,
+  } = useCatalogData(activeCategory as any);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get("cat") || "todas";
+    const campaign = params.get("cpg") || "";
+
+    setActiveCategory(isValidCategory(cat) ? cat : "todas");
+    setActiveCampaign(campaign);
+  }, [location.search]);
+
+  useEffect(() => {
+    if (!activeCampaign) return;
+    if (CATALOG_CAMPAIGNS.length === 0) return;
+
+    if (!isCatalogCampaignId(activeCampaign)) {
+      setActiveCampaign("");
+      navigate("/catalogo", { replace: true });
+    }
+  }, [activeCampaign, CATALOG_CAMPAIGNS, isCatalogCampaignId, navigate]);
+
+  useEffect(() => {
+    const restored =
+      location.state?.restoreSearch ||
+      sessionStorage.getItem("wooly_restore_search");
+
+    if (!restored) return;
+
+    setSearchQuery(restored);
+    sessionStorage.removeItem("wooly_restore_search");
+    window.history.replaceState({}, document.title);
+  }, [location.state]);
+
+  const handleCategorySelect = useCallback(
+    (id: string) => {
+      setSearchQuery("");
+      setActiveCategory(id);
+
+      const params = new URLSearchParams();
+
+      if (id !== "todas") params.set("cat", id);
+      if (activeCampaign) params.set("cpg", activeCampaign);
+
+      navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
+    },
+    [navigate, activeCampaign],
+  );
+
+  const handleCampaignSelect = useCallback(
+    (campaign: string) => {
+      setSearchQuery("");
+      setActiveCampaign(campaign);
+
+      const params = new URLSearchParams();
+
+      if (activeCategory !== "todas") params.set("cat", activeCategory);
+      if (campaign) params.set("cpg", campaign);
+
+      navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
+    },
+    [navigate, activeCategory],
+  );
+
+  const handleResetCatalog = useCallback(() => {
+    setSearchQuery("");
+    setActiveCategory("todas");
+    setActiveCampaign("");
+    navigate("/catalogo");
+  }, [navigate]);
+
+  const {
+    filteredProducts,
+    categoryCounts,
+    campaignCounts,
+    visibleCategories,
+  } = useCatalogFilters({
+    products,
+    activeCategory,
+    activeCampaign,
+    searchQuery,
+    showCounts: isFullCatalogLoaded,
+  });
+
+  const activeCat =
+    activeCategory !== "todas"
+      ? CATEGORY_CONFIG.find((c) => c.id === activeCategory)
+      : null;
+
+  const activeCampaignData = activeCampaign
+    ? CATALOG_CAMPAIGNS.find((c) => c.id === activeCampaign)
+    : null;
+
+  const handleAddToCart = useCallback(
+    (product: Product) => {
+      addToCart(product, 1);
+      setSelectedProduct(product);
+      setAddModalOpen(true);
+    },
+    [addToCart],
+  );
+
+  const handleCloseAddModal = useCallback(() => setAddModalOpen(false), []);
+
+  const handleAddExtra = useCallback(
+    (qty: number) => {
+      if (selectedProduct && qty > 0) addToCart(selectedProduct, qty);
+    },
+    [addToCart, selectedProduct],
+  );
+
+  const currentQtyInCart = selectedProduct
+    ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
+    : 0;
+
+  const renderGrid = (items: Product[]) => (
+    <div className="grid grid-cols-2 gap-[3px] md:grid-cols-3 md:gap-2 xl:grid-cols-5 xl:gap-2">
+      {items.map((p, index) => (
+        <div key={p.id} data-aos="fade-up" data-aos-delay={(index % 5) * 40}>
+          <ProductCard
+            product={p}
+            cart={cart}
+            onAddToCart={handleAddToCart}
+            onImageClick={(product) => {
+              const gallery = getProductMedia(product);
+
+              setZoomGallery({
+                media: gallery,
+                initialIndex: 0,
+                title: product.title,
+              });
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
+  const {
+    showPriorityBlocks,
+    topProducts,
+    strongProducts,
+    highlightProducts,
+    regularProducts,
+  } = useCatalogPrioritySections({
+    products,
+    filteredProducts,
+    activeCategory,
+    activeCampaign,
+    searchQuery,
+  });
+
+  const seo = getCatalogSeo(activeCategory);
+
+  useEffect(() => {
+    if (loading || products.length === 0) return;
+
+    const timer = setTimeout(() => {
+      AOS.refresh();
+    }, 120);
+
+    return () => clearTimeout(timer);
+  }, [loading, products.length]);
+  return (
+    <div className="min-h-screen bg-background pb-40">
+      <CatalogSeo seo={seo} />
+
+      <header className="sticky top-0 z-[100] flex w-full flex-col shadow-sm">
+        <CountdownTimer />
+
+        <CatalogTopNav
+          products={products}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          categories={visibleCategories}
+          activeCategory={activeCategory}
+          categoryCounts={categoryCounts}
+          onCategorySelect={handleCategorySelect}
+          campaigns={CATALOG_CAMPAIGNS}
+          activeCampaign={activeCampaign}
+          campaignCounts={campaignCounts}
+          showCampaigns={isFullCatalogLoaded}
+          onCampaignSelect={handleCampaignSelect}
+          onLogoClick={handleResetCatalog}
+        />
+      </header>
+
+      <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
+        {loading ? (
+          <CatalogSkeleton />
+        ) : isCategoryLoading && filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+            <div className="mb-4 rounded-full bg-muted p-6">
+              <SearchX className="h-10 w-10 opacity-30" />
+            </div>
+
+            <p className="text-center text-sm font-black tracking-widest">
+              Cargando categoría...
+            </p>
+
+            <p className="mt-2 text-center text-xs font-medium text-muted-foreground">
+              Estamos preparando los productos de esta sección.
+            </p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+            <div className="mb-4 rounded-full bg-muted p-6">
+              <SearchX className="h-10 w-10 opacity-30" />
+            </div>
+
+            <p className="text-center text-sm font-black tracking-widest">
+              Sin resultados
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {showPriorityBlocks && topProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    🔥 Lo más vendido hoy
+                  </h2>
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    Productos con mayor rotación ahora mismo.
+                  </p>
+                </div>
+
+                {renderGrid(topProducts)}
+              </section>
+            )}
+
+            {showPriorityBlocks && strongProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    ⭐ Recomendados para vender rápido
+                  </h2>
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    Seleccionados para vender fácil y mover stock.
+                  </p>
+                </div>
+
+                {renderGrid(strongProducts)}
+              </section>
+            )}
+
+            {showPriorityBlocks && highlightProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    🟡 Oportunidades del catálogo
+                  </h2>
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    Opciones para ampliar tu oferta y comprar con estrategia.
+                  </p>
+                </div>
+
+                {renderGrid(highlightProducts)}
+              </section>
+            )}
+
+            {regularProducts.length > 0 && (
+              <section className="space-y-3">
+                <div className="px-2 md:px-0">
+                  <h2 className="text-lg font-black text-foreground md:text-xl">
+                    {showPriorityBlocks
+                      ? "🛍️ Todo el catálogo"
+                      : "🛍️ Resultados"}
+                  </h2>
+
+                  <p className="text-[12px] font-medium text-muted-foreground">
+                    {showPriorityBlocks
+                      ? "Explora todos los productos disponibles para tu negocio."
+                      : "Productos encontrados según tu búsqueda, campaña o categoría."}
+                  </p>
+                </div>
+
+                {renderGrid(regularProducts)}
+              </section>
+            )}
+          </div>
+        )}
+      </main>
+
+      <CatalogExploreCenter
+        open={exploreOpen}
+        activeCampaign={activeCampaign}
+        activeCategory={activeCategory}
+        activeCampaignName={activeCampaignData?.name}
+        activeCategoryName={activeCat?.name}
+        campaigns={CATALOG_CAMPAIGNS}
+        campaignCounts={campaignCounts}
+        categoryCounts={categoryCounts}
+        categories={visibleCategories}
+        cartCount={totalItems}
+        onClose={() => setExploreOpen(false)}
+        onResetCatalog={handleResetCatalog}
+        onCampaignSelect={handleCampaignSelect}
+        onCategorySelect={handleCategorySelect}
+        onOpenCart={() => setCartOpen(true)}
+      />
+
+      <RecentActivity products={products} />
+
+      <FloatingButtons
+        cartCount={totalItems}
+        onCartClick={() => setCartOpen(true)}
+        onExploreClick={() => setExploreOpen(true)}
+      />
+
+      <CartSidebar
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        cart={cart}
+        totalItems={totalItems}
+        totalPrice={totalPrice}
+        savings={savings}
+        onRemove={removeFromCart}
+        onChangeQty={changeQty}
+        onSetQty={setExactQty}
+        onChangeNote={setItemNote}
+        onClearCart={clearCart}
+      />
+
+      <ImageZoomModal
+        media={zoomGallery?.media ?? []}
+        initialIndex={zoomGallery?.initialIndex ?? 0}
+        open={!!zoomGallery}
+        title={zoomGallery?.title ?? ""}
+        onClose={() => setZoomGallery(null)}
+      />
+
+      <AddToCartModal
+        open={addModalOpen}
+        product={selectedProduct}
+        currentQty={currentQtyInCart}
+        onClose={handleCloseAddModal}
+        onAddExtra={handleAddExtra}
+        onOpenCart={() => {
+          setAddModalOpen(false);
+          setCartOpen(true);
+        }}
+      />
+    </div>
+  );
+};
+
+export default CatalogPage;
+
