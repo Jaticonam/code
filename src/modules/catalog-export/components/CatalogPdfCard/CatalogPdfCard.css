@@ -1,0 +1,185 @@
+/* =========================================================
+   Catalog PDF Card
+   Card compacta para impresión/exportación PDF
+   ========================================================= */
+
+.catalog-pdf-card {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: 10px;
+  min-height: 174px;
+  padding: 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.catalog-pdf-card__imageWrap {
+  position: relative;
+  overflow: hidden;
+  min-height: 154px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.catalog-pdf-card__image {
+  width: 100%;
+  height: 100%;
+  min-height: 154px;
+  object-fit: cover;
+  display: block;
+}
+
+.catalog-pdf-card__badge {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #e11d48;
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.catalog-pdf-card__body {
+  min-width: 0;
+}
+
+.catalog-pdf-card__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.catalog-pdf-card__code {
+  overflow: hidden;
+  max-width: 52%;
+  color: #0f172a;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catalog-pdf-card__category {
+  overflow: hidden;
+  max-width: 48%;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 0.57rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.catalog-pdf-card__title {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 34px;
+  margin: 0 0 8px;
+  color: #111827;
+  font-size: 0.83rem;
+  font-weight: 900;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.catalog-pdf-card__priceBlock {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 8px 9px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #fff1f2, #fff7ed);
+}
+
+.catalog-pdf-card__priceLabel {
+  color: #9f1239;
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.catalog-pdf-card__price {
+  color: #be123c;
+  font-size: 0.95rem;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.catalog-pdf-card__tiers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 8px;
+  margin: 0 0 8px;
+}
+
+.catalog-pdf-card__tier {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding-bottom: 3px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.catalog-pdf-card__tier dt,
+.catalog-pdf-card__tier dd {
+  margin: 0;
+  font-size: 0.62rem;
+  line-height: 1.15;
+}
+
+.catalog-pdf-card__tier dt {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.catalog-pdf-card__tier dd {
+  color: #111827;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.catalog-pdf-card__stock {
+  margin: 0;
+  color: #475569;
+  font-size: 0.64rem;
+  font-weight: 850;
+}
+
+@media print {
+  .catalog-pdf-card {
+    min-height: 166px;
+    padding: 8px;
+    border-radius: 14px;
+  }
+
+  .catalog-pdf-card__imageWrap,
+  .catalog-pdf-card__image {
+    min-height: 145px;
+  }
+
+  .catalog-pdf-card__title {
+    font-size: 0.78rem;
+  }
+
+  .catalog-pdf-card__price {
+    font-size: 0.86rem;
+  }
+}

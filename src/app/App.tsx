@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/shared/components/ui/tooltip";
 
 import HomePage from "@/app/pages/HomePage";
 import CatalogPage from "@/app/pages/CatalogPage";
+import CatalogPdfPage from "@/app/pages/CatalogPdfPage";
 import ProductDetailPage from "@/app/pages/ProductDetailPage";
 import CategoryPage from "@/app/pages/CategoryPage";
 import BlogPage from "@/app/pages/BlogPage";
@@ -53,6 +54,7 @@ export default function App() {
 
               {/* CATALOGO */}
               <Route path="/catalogo" element={<CatalogPage />} />
+              <Route path="/catalogo/pdf" element={<CatalogPdfPage />} />
               <Route
                 path="/catalogo/producto.html"
                 element={<ProductDetailPage />}
@@ -61,11 +63,15 @@ export default function App() {
                 path="/catalogo/categoria.html"
                 element={<CategoryPage />}
               />
-            {/* COMMERCIAL CENTER */}
-            <Route path="/admin/commercial" element={<CommercialCenter />} />
 
-            {/* WOOLY CONNECT */}
-              <Route path="/admin/integrations" element={<IntegrationsPage />} />
+              {/* COMMERCIAL CENTER */}
+              <Route path="/admin/commercial" element={<CommercialCenter />} />
+
+              {/* WOOLY CONNECT */}
+              <Route
+                path="/admin/integrations"
+                element={<IntegrationsPage />}
+              />
 
               {/* LEGACY */}
               <Route path="/producto/:id" element={<ProductDetailPage />} />
@@ -80,8 +86,4 @@ export default function App() {
     </QueryClientProvider>
   );
 }
-
-
-
-
 
