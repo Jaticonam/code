@@ -42,4 +42,7 @@ build/
 __pycache__/
 *.pyc
 .env
-.env.local
+.env.local# Local generated backups
+.backup/
+backups/
+*.bak
