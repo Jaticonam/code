@@ -108,6 +108,12 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
           </div>
 
           <h2 className="catalog-pdf-card__title">{product.title}</h2>
+
+          {product.description ? (
+            <p className="catalog-pdf-card__description">
+              {product.description}
+            </p>
+          ) : null}
         </div>
 
         <div className="catalog-pdf-card__unitRow">

@@ -13,10 +13,10 @@ export const PDF_PRODUCT_PLACEHOLDER_IMAGE = `data:image/svg+xml;utf8,${encodeUR
 </svg>
 `)}`;
 
+const PDF_DESCRIPTION_MAX_LENGTH = 190;
+
 const cleanText = (value?: string | null, fallback = "") =>
-  String(value || fallback)
-    .replace(/\s+/g, " ")
-    .trim();
+  String(value || fallback).replace(/\s+/g, " ").trim();
 
 const normalizeStatus = (status?: string) => cleanText(status).toLowerCase();
 
@@ -25,6 +25,7 @@ const isHiddenProduct = (product: Product) =>
 
 const getMainImage = (product: Product) => {
   const image = cleanText(product.img);
+
   return image || PDF_PRODUCT_PLACEHOLDER_IMAGE;
 };
 
@@ -53,9 +54,24 @@ const getStockLabel = (product: Product) => {
   return `Stock: ${product.stock} und.`;
 };
 
+const getShortDescription = (product: Product) => {
+  const description = cleanText(product.description);
+
+  if (!description) {
+    return "";
+  }
+
+  if (description.length <= PDF_DESCRIPTION_MAX_LENGTH) {
+    return description;
+  }
+
+  return `${description.slice(0, PDF_DESCRIPTION_MAX_LENGTH - 3).trim()}...`;
+};
+
 export const mapProductToPdfProduct = (product: Product): PdfProduct => ({
   id: cleanText(product.id),
   title: cleanText(product.title, "Producto Wooly"),
+  description: getShortDescription(product),
   category: cleanText(product.category, "Sin categoría"),
   image: getMainImage(product),
 
@@ -79,3 +95,4 @@ export const mapProductsToPdfProducts = (products: Product[]) =>
     .filter((product) => !isHiddenProduct(product))
     .map(mapProductToPdfProduct)
     .sort((a, b) => b.priority - a.priority);
+

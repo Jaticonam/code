@@ -1,22 +1,22 @@
 /* =========================================================
    Catalog PDF Card
-   Imagen más ancha + info derecha acomodada
+   Imagen amplia + descripción breve + densidad optimizada
    ========================================================= */
 
 /* ===== BASE ===== */
 
 .catalog-pdf-card {
   display: grid;
-  grid-template-columns: minmax(260px, 52%) minmax(0, 1fr);
-  gap: 20px;
-  min-height: 300px;
-  padding: 16px;
+  grid-template-columns: minmax(245px, 51%) minmax(0, 1fr);
+  gap: 17px;
+  min-height: 258px;
+  padding: 13px;
   border: 1px solid rgba(226, 232, 240, 0.92);
-  border-radius: 26px;
+  border-radius: 24px;
   background: #ffffff;
   box-shadow:
-    0 8px 24px rgba(15, 23, 42, 0.04),
-    0 14px 34px rgba(15, 23, 42, 0.04);
+    0 8px 24px rgba(15, 23, 42, 0.035),
+    0 14px 34px rgba(15, 23, 42, 0.035);
   break-inside: avoid;
   page-break-inside: avoid;
 }
@@ -26,8 +26,8 @@
 .catalog-pdf-card__media {
   position: relative;
   overflow: hidden;
-  min-height: 268px;
-  border-radius: 18px;
+  min-height: 232px;
+  border-radius: 16px;
   background: #f8f9fa;
 }
 
@@ -35,20 +35,20 @@
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 268px;
+  min-height: 232px;
   object-fit: cover;
   object-position: center;
 }
 
 .catalog-pdf-card__offerBadge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 6px 10px;
+  top: 9px;
+  left: 9px;
+  padding: 5px 9px;
   border-radius: 999px;
   background: linear-gradient(135deg, #f286be, #ffb7d5);
   color: #ffffff;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 950;
   line-height: 1;
   letter-spacing: 0.08em;
@@ -63,21 +63,21 @@
   min-width: 0;
   flex-direction: column;
   justify-content: center;
-  gap: 14px;
-  padding: 6px 4px 6px 0;
+  gap: 10px;
+  padding: 3px 2px 3px 0;
 }
 
 .catalog-pdf-card__top {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 7px;
 }
 
 .catalog-pdf-card__meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .catalog-pdf-card__code,
@@ -85,10 +85,10 @@
   display: inline-flex;
   align-items: center;
   max-width: 100%;
-  min-height: 26px;
+  min-height: 24px;
   border-radius: 9px;
-  padding: 0 10px;
-  font-size: 0.68rem;
+  padding: 0 9px;
+  font-size: 0.63rem;
   font-weight: 950;
   line-height: 1;
   text-transform: uppercase;
@@ -116,12 +116,24 @@
   overflow: hidden;
   margin: 0;
   color: #202124;
-  font-size: 1.32rem;
+  font-size: 1.08rem;
   font-weight: 950;
-  line-height: 1.15;
+  line-height: 1.12;
   letter-spacing: -0.035em;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.catalog-pdf-card__description {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: #5f6368;
+  font-size: 0.74rem;
+  font-weight: 650;
+  line-height: 1.28;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 /* ===== PRICE + STOCK ===== */
@@ -130,7 +142,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
 }
 
 .catalog-pdf-card__priceGroup {
@@ -139,9 +151,9 @@
 
 .catalog-pdf-card__sectionLabel {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   color: #5f6368;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 950;
   line-height: 1;
   letter-spacing: 0.1em;
@@ -151,19 +163,19 @@
 .catalog-pdf-card__unitPriceRow {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 4px;
 }
 
 .catalog-pdf-card__currency {
   color: #5f6368;
-  font-size: 1.16rem;
+  font-size: 1rem;
   font-weight: 950;
   line-height: 1;
 }
 
 .catalog-pdf-card__unitPriceValue {
   color: var(--w-primary, #1d8299);
-  font-size: 2.7rem;
+  font-size: 2.2rem;
   font-weight: 1000;
   line-height: 0.95;
   letter-spacing: -0.07em;
@@ -171,9 +183,9 @@
 
 .catalog-pdf-card__oldPrice {
   display: block;
-  margin-top: 4px;
+  margin-top: 3px;
   color: #9aa0a6;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 850;
   line-height: 1;
   text-decoration: line-through;
@@ -184,13 +196,13 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-height: 34px;
+  min-height: 30px;
   flex: 0 0 auto;
   border-radius: 10px;
-  padding: 0 12px;
+  padding: 0 10px;
   background: #e6f4ea;
   color: #137333;
-  font-size: 0.76rem;
+  font-size: 0.68rem;
   font-weight: 950;
   line-height: 1;
   white-space: nowrap;
@@ -200,11 +212,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   border-radius: 999px;
   color: #137333;
-  font-size: 0.64rem;
+  font-size: 0.6rem;
   font-weight: 1000;
 }
 
@@ -220,34 +232,34 @@
 .catalog-pdf-card__wholesaleSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 7px;
 }
 
 .catalog-pdf-card__tiers {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .catalog-pdf-card__tier {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  min-height: 42px;
+  gap: 8px;
+  min-height: 34px;
   border: 1px solid;
-  border-radius: 14px;
-  padding: 0 14px;
+  border-radius: 12px;
+  padding: 0 12px;
 }
 
 .catalog-pdf-card__tierText {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 950;
   line-height: 1;
 }
 
 .catalog-pdf-card__tierPrice {
-  font-size: 0.88rem;
+  font-size: 0.76rem;
   font-weight: 1000;
   line-height: 1;
   white-space: nowrap;
@@ -279,50 +291,54 @@
 
 .catalog-pdf-card__noTiers {
   margin: 0;
-  border-radius: 12px;
-  padding: 10px;
+  border-radius: 10px;
+  padding: 8px 10px;
   background: #f8f9fa;
   color: #5f6368;
-  font-size: 0.75rem;
+  font-size: 0.66rem;
   font-weight: 850;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 /* ===== PRINT ===== */
 
 @media print {
   .catalog-pdf-card {
-    grid-template-columns: minmax(245px, 52%) minmax(0, 1fr);
-    gap: 16px;
-    min-height: 276px;
-    padding: 13px;
-    border-radius: 24px;
+    grid-template-columns: minmax(230px, 51%) minmax(0, 1fr);
+    gap: 14px;
+    min-height: 242px;
+    padding: 11px;
+    border-radius: 22px;
     box-shadow: none;
   }
 
   .catalog-pdf-card__media {
-    min-height: 250px;
-    border-radius: 16px;
+    min-height: 220px;
+    border-radius: 15px;
   }
 
   .catalog-pdf-card__image {
-    min-height: 250px;
+    min-height: 220px;
   }
 
   .catalog-pdf-card__content {
-    gap: 11px;
+    gap: 8px;
   }
 
   .catalog-pdf-card__title {
-    font-size: 1.14rem;
+    font-size: 1rem;
+  }
+
+  .catalog-pdf-card__description {
+    font-size: 0.68rem;
   }
 
   .catalog-pdf-card__unitPriceValue {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 
   .catalog-pdf-card__tier {
-    min-height: 37px;
+    min-height: 31px;
   }
 }
 
@@ -330,30 +346,30 @@
 
 @media (max-width: 640px) {
   .catalog-pdf-card {
-    grid-template-columns: minmax(160px, 50%) minmax(0, 1fr);
-    gap: 10px;
-    min-height: 215px;
+    grid-template-columns: minmax(150px, 50%) minmax(0, 1fr);
+    gap: 9px;
+    min-height: 198px;
     padding: 8px;
     border-radius: 20px;
   }
 
   .catalog-pdf-card__media {
-    min-height: 198px;
+    min-height: 182px;
     border-radius: 12px;
   }
 
   .catalog-pdf-card__image {
-    min-height: 198px;
+    min-height: 182px;
   }
 
   .catalog-pdf-card__content {
     justify-content: center;
-    gap: 7px;
+    gap: 6px;
     padding: 2px 2px 2px 0;
   }
 
   .catalog-pdf-card__top {
-    gap: 6px;
+    gap: 5px;
   }
 
   .catalog-pdf-card__meta {
@@ -362,41 +378,51 @@
 
   .catalog-pdf-card__code,
   .catalog-pdf-card__category {
-    min-height: 22px;
+    min-height: 21px;
     border-radius: 8px;
     padding: 0 7px;
-    font-size: 0.52rem;
+    font-size: 0.5rem;
   }
 
   .catalog-pdf-card__title {
-    font-size: 0.77rem;
-    line-height: 1.12;
+    font-size: 0.72rem;
+    line-height: 1.1;
+  }
+
+  .catalog-pdf-card__description {
+    font-size: 0.55rem;
+    line-height: 1.22;
+    -webkit-line-clamp: 3;
   }
 
   .catalog-pdf-card__unitRow {
     align-items: flex-start;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
   }
 
   .catalog-pdf-card__sectionLabel {
     margin-bottom: 3px;
-    font-size: 0.52rem;
+    font-size: 0.5rem;
   }
 
   .catalog-pdf-card__currency {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
   }
 
   .catalog-pdf-card__unitPriceValue {
-    font-size: 1.46rem;
+    font-size: 1.32rem;
   }
 
   .catalog-pdf-card__stockPill {
-    min-height: 24px;
+    min-height: 22px;
     width: 100%;
     padding: 0 8px;
-    font-size: 0.55rem;
+    font-size: 0.52rem;
+  }
+
+  .catalog-pdf-card__separator {
+    margin: 1px 0;
   }
 
   .catalog-pdf-card__wholesaleSection {
@@ -408,13 +434,18 @@
   }
 
   .catalog-pdf-card__tier {
-    min-height: 28px;
+    min-height: 27px;
     border-radius: 10px;
     padding: 0 8px;
   }
 
   .catalog-pdf-card__tierText,
   .catalog-pdf-card__tierPrice {
-    font-size: 0.54rem;
+    font-size: 0.5rem;
+  }
+
+  .catalog-pdf-card__noTiers {
+    padding: 6px 8px;
+    font-size: 0.5rem;
   }
 }
