@@ -5,7 +5,7 @@ import { getCampaignColorClass } from "@/modules/catalog/integrations/googleShee
 import {
   buildCampaignNameToIdMap,
   isCampaignActive,
-} from "@/modules/catalog/integrations/googleSheets/normalizeCampaign";
+} from "@/modules/catalog/domain/CampaignRules";
 
 import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
 
@@ -204,3 +204,4 @@ export async function getCampaignNameToIdMap() {
 
   return buildCampaignNameToIdMap(campaigns);
 }
+

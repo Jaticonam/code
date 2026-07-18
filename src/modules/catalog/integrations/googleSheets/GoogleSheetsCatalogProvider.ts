@@ -1,7 +1,8 @@
 import type { Campaign, Product } from "@/shared/types/product";
 
+import { buildCampaignNameToIdMap } from "@/modules/catalog/domain/CampaignRules";
+
 import type {
-  CampaignNameToIdMap,
   CatalogCategoryId,
   CatalogProvider,
 } from "@/modules/catalog/providers/CatalogProvider";
@@ -15,7 +16,10 @@ import {
 
 import { normalizeProduct } from "./normalizeProduct";
 
-import { CAMPAIGNS_SHEET_CONFIG, PRODUCT_SHEETS_CONFIG } from "./sheetsConfig";
+import {
+  CAMPAIGNS_SHEET_CONFIG,
+  PRODUCT_SHEETS_CONFIG,
+} from "./sheetsConfig";
 
 import { validateProducts } from "./validateProducts";
 
@@ -47,7 +51,9 @@ const PRODUCT_REQUIRED_HEADERS = [
    ========================================================= */
 
 function getProductSource(category: CatalogCategoryId) {
-  return PRODUCT_SHEETS_CONFIG.find((source) => source.category === category);
+  return PRODUCT_SHEETS_CONFIG.find(
+    (source) => source.category === category,
+  );
 }
 
 /* =========================================================
@@ -56,7 +62,9 @@ function getProductSource(category: CatalogCategoryId) {
 
 export const googleSheetsCatalogProvider: CatalogProvider = {
   getCategories(): readonly CatalogCategoryId[] {
-    return PRODUCT_SHEETS_CONFIG.map((source) => source.category);
+    return PRODUCT_SHEETS_CONFIG.map(
+      (source) => source.category,
+    );
   },
 
   async loadCampaigns(): Promise<Campaign[]> {
@@ -70,7 +78,7 @@ export const googleSheetsCatalogProvider: CatalogProvider = {
 
   async loadCategoryProducts(
     category: CatalogCategoryId,
-    campaignNameToIdMap: CampaignNameToIdMap,
+    campaigns: readonly Campaign[],
   ): Promise<Product[]> {
     const source = getProductSource(category);
 
@@ -78,10 +86,20 @@ export const googleSheetsCatalogProvider: CatalogProvider = {
       return [];
     }
 
-    const rows = await fetchSheetRows(source, PRODUCT_REQUIRED_HEADERS);
+    const rows = await fetchSheetRows(
+      source,
+      PRODUCT_REQUIRED_HEADERS,
+    );
+
+    const campaignNameToIdMap =
+      buildCampaignNameToIdMap(campaigns);
 
     const normalizedProducts = rows.map((row) =>
-      normalizeProduct(row, source.category, campaignNameToIdMap),
+      normalizeProduct(
+        row,
+        source.category,
+        campaignNameToIdMap,
+      ),
     );
 
     return validateProducts(normalizedProducts).map(

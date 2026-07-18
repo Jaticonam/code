@@ -3,7 +3,7 @@ import type { Product } from "@/shared/types/product";
 import type { CatalogCategoryId } from "@/modules/catalog/providers/CatalogProvider";
 import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
 
-import { getCampaignNameToIdMap } from "./campaignService";
+import { loadCatalogCampaigns } from "./campaignService";
 
 /* =========================================================
    TIPOS INTERNOS
@@ -163,16 +163,24 @@ export function getCachedCatalogSnapshot() {
 async function fetchCategoryProducts(
   category: CatalogCategoryId,
 ): Promise<Product[]> {
-  const campaignNameToIdMap = await getCampaignNameToIdMap();
+  const campaigns =
+    await loadCatalogCampaigns({
+      includeInactive: true,
+    });
 
-  const products = await catalogProvider.loadCategoryProducts(
+  const products =
+    await catalogProvider.loadCategoryProducts(
+      category,
+      campaigns,
+    );
+
+  const sortedProducts =
+    sortProducts(products);
+
+  writeCache(
     category,
-    campaignNameToIdMap,
+    sortedProducts,
   );
-
-  const sortedProducts = sortProducts(products);
-
-  writeCache(category, sortedProducts);
 
   return sortedProducts;
 }
@@ -268,3 +276,6 @@ export async function loadCatalogProgressive(
     );
   }
 }
+
+
+
