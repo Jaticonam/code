@@ -46,3 +46,6 @@ __pycache__/
 .backup/
 backups/
 *.bak
+
+# Generated catalog image reports
+reports/catalog/pdf-images-report.json

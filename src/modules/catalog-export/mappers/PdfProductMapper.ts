@@ -1,4 +1,5 @@
 import type { Product } from "@/shared/types/product";
+import { PDF_IMAGE_MANIFEST } from "../data/PdfImageManifest";
 import type { PdfProduct } from "../types/PdfProduct";
 
 export const PDF_PRODUCT_PLACEHOLDER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(`
@@ -24,9 +25,11 @@ const isHiddenProduct = (product: Product) =>
   normalizeStatus(product.status) === "oculto";
 
 const getMainImage = (product: Product) => {
-  const image = cleanText(product.img);
+  const productId = cleanText(product.id);
+  const optimizedPdfImage = cleanText(PDF_IMAGE_MANIFEST[productId]);
+  const catalogImage = cleanText(product.img);
 
-  return image || PDF_PRODUCT_PLACEHOLDER_IMAGE;
+  return optimizedPdfImage || catalogImage || PDF_PRODUCT_PLACEHOLDER_IMAGE;
 };
 
 const getPrimaryPrice = (product: Product) => {
@@ -95,4 +98,3 @@ export const mapProductsToPdfProducts = (products: Product[]) =>
     .filter((product) => !isHiddenProduct(product))
     .map(mapProductToPdfProduct)
     .sort((a, b) => b.priority - a.priority);
-

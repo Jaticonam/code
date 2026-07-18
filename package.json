@@ -19,7 +19,8 @@
     "publication:preview": "tsx scripts/publication-preview.ts",
     "workflow:test": "tsx scripts/workflow-test.ts",
     "commercial:dashboard": "tsx scripts/dashboard.ts",
-    "dashboard": "npm run commercial:dashboard"
+    "dashboard": "npm run commercial:dashboard",
+    "images:pdf": "tsx scripts/catalog/OptimizePdfImages.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -93,6 +94,7 @@
     "jsdom": "^20.0.3",
     "lovable-tagger": "^1.1.13",
     "postcss": "^8.5.6",
+    "sharp": "^0.35.3",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.22.4",
     "typescript": "^5.8.3",
