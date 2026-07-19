@@ -1,17 +1,25 @@
 /* =========================================================
    Catalog PDF Grid
-   Mobile-first: 1 columna legible para PDF en celular
+   Fase 2.2B: catálogo en 2 columnas
    ========================================================= */
 
 .catalog-pdf-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
 }
 
 @media print {
   .catalog-pdf-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+}
+
+@media (max-width: 640px) {
+  .catalog-pdf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
   }
 }

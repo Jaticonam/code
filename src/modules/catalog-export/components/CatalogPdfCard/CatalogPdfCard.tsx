@@ -12,7 +12,6 @@ type TierKind = "price3" | "price12" | "price50" | "price100";
 type TierPrice = {
   kind: TierKind;
   label: string;
-  shortLabel: string;
   value?: number | null;
 };
 
@@ -32,16 +31,6 @@ const formatMoney = (value?: number | null) => {
   return moneyFormatter.format(amount);
 };
 
-const formatPriceNumber = (value?: number | null) => {
-  const amount = Number(value || 0);
-
-  if (amount <= 0) {
-    return "0.00";
-  }
-
-  return amount.toFixed(2);
-};
-
 const formatCategory = (category: string) =>
   category.replace(/-/g, " ").replace(/\s+/g, " ").trim();
 
@@ -49,26 +38,22 @@ const getTierPrices = (product: PdfProduct): TierPrice[] =>
   [
     {
       kind: "price3",
-      label: "Por Mayor (3u)",
-      shortLabel: "3U",
+      label: "Por Mayor (3u) a",
       value: product.price3,
     },
     {
       kind: "price12",
-      label: "Por Docena (12u)",
-      shortLabel: "DZ",
+      label: "Por Docena (12u) a",
       value: product.price12,
     },
     {
       kind: "price50",
-      label: "Por 50 und.",
-      shortLabel: "50U",
+      label: "Por 50 (50u) a",
       value: product.price50,
     },
     {
       kind: "price100",
-      label: "Por 100 und.",
-      shortLabel: "100U",
+      label: "Por 100 (100u) a",
       value: product.price100,
     },
   ].filter((tier) => Number(tier.value || 0) > 0);
@@ -79,6 +64,9 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
   const hasOffer =
     Number(product.offerPrice || 0) > 0 &&
     Number(product.offerPrice || 0) < Number(product.price1 || 0);
+
+  const unitPrice = Number(product.price1 || product.primaryPrice || 0);
+  const offerPrice = hasOffer ? Number(product.offerPrice || 0) : 0;
 
   return (
     <article className="catalog-pdf-card">
@@ -99,54 +87,41 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
       </div>
 
       <div className="catalog-pdf-card__content">
-        <div className="catalog-pdf-card__top">
-          <div className="catalog-pdf-card__meta">
-            <span className="catalog-pdf-card__code">{product.id}</span>
-            <span className="catalog-pdf-card__category">
-              {formatCategory(product.category)}
-            </span>
+        <div className="catalog-pdf-card__meta">
+          <span className="catalog-pdf-card__code">{product.id}</span>
+
+          <span className="catalog-pdf-card__category">
+            {formatCategory(product.category)}
+          </span>
+
+          <span className="catalog-pdf-card__stock">
+            ✓ {product.stockLabel}
+          </span>
+        </div>
+
+        <h2 className="catalog-pdf-card__title">{product.title}</h2>
+
+        <div
+          className={`catalog-pdf-card__priceSummary ${
+            hasOffer ? "" : "catalog-pdf-card__priceSummary--single"
+          }`}
+        >
+          <div className="catalog-pdf-card__priceBox catalog-pdf-card__priceBox--unit">
+            <span>Precio unidad:</span>
+            <strong>{formatMoney(unitPrice)}</strong>
           </div>
 
-          <h2 className="catalog-pdf-card__title">{product.title}</h2>
-
-          {product.description ? (
-            <p className="catalog-pdf-card__description">
-              {product.description}
-            </p>
+          {hasOffer ? (
+            <div className="catalog-pdf-card__priceBox catalog-pdf-card__priceBox--offer">
+              <span>Precio oferta:</span>
+              <strong>{formatMoney(offerPrice)}</strong>
+            </div>
           ) : null}
         </div>
 
-        <div className="catalog-pdf-card__unitRow">
-          <div className="catalog-pdf-card__priceGroup">
-            <span className="catalog-pdf-card__sectionLabel">
-              Precio unitario
-            </span>
-
-            <div className="catalog-pdf-card__unitPriceRow">
-              <span className="catalog-pdf-card__currency">S/</span>
-              <strong className="catalog-pdf-card__unitPriceValue">
-                {formatPriceNumber(product.primaryPrice)}
-              </strong>
-            </div>
-
-            {hasOffer ? (
-              <span className="catalog-pdf-card__oldPrice">
-                Antes {formatMoney(product.price1)}
-              </span>
-            ) : null}
-          </div>
-
-          <div className="catalog-pdf-card__stockPill">
-            <span className="catalog-pdf-card__stockIcon">✓</span>
-            <span>{product.stockLabel}</span>
-          </div>
-        </div>
-
-        <div className="catalog-pdf-card__separator" />
-
         <div className="catalog-pdf-card__wholesaleSection">
           <span className="catalog-pdf-card__sectionLabel">
-            Precios mayorista
+            Precios mayoristas
           </span>
 
           {tierPrices.length > 0 ? (
@@ -159,9 +134,10 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
                   className={`catalog-pdf-card__tier catalog-pdf-card__tier--${tier.kind}`}
                   key={tier.kind}
                 >
-                  <span className="catalog-pdf-card__tierText">
+                  <span className="catalog-pdf-card__tierLabel">
                     {tier.label}
                   </span>
+
                   <strong className="catalog-pdf-card__tierPrice">
                     {formatMoney(tier.value)}
                   </strong>
@@ -170,10 +146,16 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
             </div>
           ) : (
             <p className="catalog-pdf-card__noTiers">
-              Precio mayorista sujeto a confirmación
+              Mayorista: consultar con asesora
             </p>
           )}
         </div>
+
+        {product.description ? (
+          <p className="catalog-pdf-card__description">
+            <span>Descripción:</span> {product.description}
+          </p>
+        ) : null}
       </div>
     </article>
   );
