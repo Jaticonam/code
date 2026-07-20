@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/shared/components/ui/tooltip";
 import HomePage from "@/app/pages/HomePage";
 import CatalogPage from "@/app/pages/CatalogPage";
 import CatalogPdfPage from "@/app/pages/CatalogPdfPage";
+import SalesCatalogToolsPage from "@/app/pages/SalesCatalogToolsPage";
 import ProductDetailPage from "@/app/pages/ProductDetailPage";
 import CategoryPage from "@/app/pages/CategoryPage";
 import BlogPage from "@/app/pages/BlogPage";
@@ -55,6 +56,7 @@ export default function App() {
               {/* CATALOGO */}
               <Route path="/catalogo" element={<CatalogPage />} />
               <Route path="/catalogo/pdf" element={<CatalogPdfPage />} />
+              <Route path="/ventas/catalogos" element={<SalesCatalogToolsPage />} />
               <Route
                 path="/catalogo/producto.html"
                 element={<ProductDetailPage />}
@@ -86,4 +88,5 @@ export default function App() {
     </QueryClientProvider>
   );
 }
+
 
