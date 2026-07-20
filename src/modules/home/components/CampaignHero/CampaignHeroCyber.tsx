@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 export default function App() {
   const [timers, setTimers] = useState({});
 
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     // Fechas objetivo de cada campaña
@@ -55,10 +55,17 @@ export default function App() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let particlesArray = [];
-    let animationFrameId;
+    let particlesArray: Particle[] = [];
+    let animationFrameId = 0;
 
     class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedY: number;
+      speedX: number;
+      opacity: number;
+      color: string;
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;

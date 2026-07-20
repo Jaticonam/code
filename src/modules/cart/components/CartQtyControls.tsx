@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { CartQtyInput } from "@/modules/cart/components/CartQtyInput";
 
 interface CartQtyControlsProps {

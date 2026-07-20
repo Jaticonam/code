@@ -1,4 +1,4 @@
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 
 export function getActiveTierQty(item: CartItem): number {
   if (item.price_100 && item.qty >= 100) return 100;

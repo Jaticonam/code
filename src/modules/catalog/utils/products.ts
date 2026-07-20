@@ -90,10 +90,10 @@ export function clearProductsCache() {
 
 export function getEffectivePrice(item: {
   price_1: number;
-  price_3: number | null;
-  price_12: number | null;
-  price_50: number | null;
-  price_100: number | null;
+  price_3?: number | null;
+  price_12?: number | null;
+  price_50?: number | null;
+  price_100?: number | null;
   qty: number;
 }): number {
   if (item.price_100 && item.qty >= 100) return item.price_100;

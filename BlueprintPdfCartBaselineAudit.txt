@@ -1,0 +1,115 @@
+BLUEPRINT PDF AND CART BASELINE AUDIT
+GeneratedAt: 2026-07-20 04:36:07
+Root: D:\JUNG\code\wooly\wooly-web
+
+============================================================
+CARTITEM DEFINITIONS
+============================================================
+
+
+============================================================
+PACKAGE SCRIPTS
+============================================================
+
+
+============================================================
+TYPESCRIPT TYPECHECK
+============================================================
+
+ExitCode: 0
+
+
+============================================================
+ACTIVE PDF MODULE TREE
+============================================================
+
+[DIR]  src\modules\catalog-export\components
+[DIR]  src\modules\catalog-export\data
+[DIR]  src\modules\catalog-export\mappers
+[DIR]  src\modules\catalog-export\types
+[DIR]  src\modules\catalog-export\utils
+[FILE] src\modules\catalog-export\index.ts
+[DIR]  src\modules\catalog-export\components\CatalogPdfCard
+[DIR]  src\modules\catalog-export\components\CatalogPdfGrid
+[DIR]  src\modules\catalog-export\components\CatalogPdfHeader
+[DIR]  src\modules\catalog-export\components\CatalogPdfPage
+[FILE] src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css
+[FILE] src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx
+[FILE] src\modules\catalog-export\components\CatalogPdfGrid\CatalogPdfGrid.css
+[FILE] src\modules\catalog-export\components\CatalogPdfGrid\CatalogPdfGrid.tsx
+[FILE] src\modules\catalog-export\components\CatalogPdfHeader\CatalogPdfHeader.css
+[FILE] src\modules\catalog-export\components\CatalogPdfHeader\CatalogPdfHeader.tsx
+[FILE] src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.css
+[FILE] src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.tsx
+[FILE] src\modules\catalog-export\data\PdfImageManifest.ts
+[FILE] src\modules\catalog-export\mappers\PdfProductMapper.ts
+[FILE] src\modules\catalog-export\types\PdfProduct.ts
+
+============================================================
+ACTIVE PDF MODULE FILES
+============================================================
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfGrid\CatalogPdfGrid.css
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfGrid\CatalogPdfGrid.tsx
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfHeader\CatalogPdfHeader.css
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfHeader\CatalogPdfHeader.tsx
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.css
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.tsx
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\data\PdfImageManifest.ts
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\index.ts
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\mappers\PdfProductMapper.ts
+============================================================
+
+
+============================================================
+FILE: src\modules\catalog-export\types\PdfProduct.ts
+============================================================
+
+
+============================================================
+PDF EXTERNAL REFERENCES
+============================================================
+

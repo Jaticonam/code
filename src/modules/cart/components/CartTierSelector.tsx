@@ -1,4 +1,4 @@
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { CART_TIERS,TIER_COLORS } from "@/shared/config/cartTiers";
 
 interface CartTierSelectorProps{

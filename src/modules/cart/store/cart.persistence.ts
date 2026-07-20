@@ -1,4 +1,4 @@
-import type { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 
 export const CART_KEY = "wooly_cart";
 

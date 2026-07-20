@@ -80,6 +80,7 @@ const ProductDetailPage = () => {
     changeQty,
     setExactQty,
     setItemNote,
+    clearCart,
     totalItems,
     totalPrice,
     savings,
@@ -461,6 +462,7 @@ const ProductDetailPage = () => {
         onChangeQty={changeQty}
         onSetQty={setExactQty}
         onChangeNote={setItemNote}
+        onClearCart={clearCart}
       />
 
       <ImageZoomModal

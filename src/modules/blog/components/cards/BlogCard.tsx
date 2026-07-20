@@ -1,6 +1,6 @@
 import { ArrowRight, Clock, Flame, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { BlogArticle } from "../types/blog";
+import type { BlogArticle } from "../../types/blog";
 
 export default function BlogCard({ article }: { article: BlogArticle }) {
   return (

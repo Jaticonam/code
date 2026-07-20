@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import type { CartItem, Product } from "@/shared/types/product";
+import type { Product } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { isProductAvailable } from "@/modules/catalog/utils/products";
 import { buildWhatsappMessage } from "@/modules/product-detail/utils/buildWhatsappMessage";
 

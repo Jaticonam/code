@@ -1,6 +1,6 @@
 import { ArrowRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { BlogArticle } from "../types/blog";
+import type { BlogArticle } from "../../types/blog";
 
 export default function BlogGrid({ items }: { items: BlogArticle[] }) {
   if (!items.length) return null;

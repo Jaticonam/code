@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { CartItem, Product } from "@/shared/types/product";
+import type { Product } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 
 import {
   getTotalItems,

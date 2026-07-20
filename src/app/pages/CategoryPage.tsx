@@ -46,6 +46,8 @@ const CategoryPage = () => {
     removeFromCart,
     changeQty,
     setExactQty,
+    setItemNote,
+    clearCart,
     totalItems,
     totalPrice,
     savings,
@@ -156,6 +158,8 @@ const CategoryPage = () => {
         onRemove={removeFromCart}
         onChangeQty={changeQty}
         onSetQty={setExactQty}
+        onChangeNote={setItemNote}
+        onClearCart={clearCart}
       />
 
       <ImageZoomModal

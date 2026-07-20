@@ -1,7 +1,12 @@
+import type { ReactNode } from "react";
+
+import type { ReactNode } from "react";
+
 type Toast = {
   id: string;
-  title?: string;
-  description?: string;
+  title?: ReactNode;
+  description?: ReactNode;
+  action?: ReactNode;
 };
 
 const toasts: Toast[] = [];

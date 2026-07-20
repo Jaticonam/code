@@ -1,0 +1,74 @@
+src/app/pages/BlogSectionPage.tsx(6,24): error TS2552: Cannot find name 'useLocation'. Did you mean 'Location'?
+src/app/pages/CategoryPage.tsx(133,40): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Product'.
+src/app/pages/CategoryPage.tsx(135,32): error TS2339: Property 'title' does not exist on type 'string'.
+src/app/pages/CategoryPage.tsx(149,8): error TS2739: Type '{ isOpen: boolean; onClose: () => void; cart: CartItem[]; totalItems: CartItem; totalPrice: CartItem; savings: number; onRemove: (id: string) => void; onChangeQty: (id: string, delta: number) => void; onSetQty: (id: string, qty: number) => void; }' is missing the following properties from type 'CartSidebarProps': onChangeNote, onClearCart
+src/app/pages/MetaFeedPage.tsx(2,46): error TS2307: Cannot find module '@/modules/integrations/services/generateMetaFeed' or its corresponding type declarations.
+src/app/pages/ProductDetailPage.tsx(356,49): error TS2322: Type 'string' is not assignable to type 'number'.
+src/app/pages/ProductDetailPage.tsx(453,8): error TS2741: Property 'onClearCart' is missing in type '{ isOpen: boolean; onClose: () => void; cart: CartItem[]; totalItems: CartItem; totalPrice: CartItem; savings: number; onRemove: (id: string) => void; onChangeQty: (id: string, delta: number) => void; onSetQty: (id: string, qty: number) => void; onChangeNote: (id: string, note: string) => void; }' but required in type 'CartSidebarProps'.
+src/modules/blog/components/cards/BlogCard.tsx(3,34): error TS2307: Cannot find module '../types/blog' or its corresponding type declarations.
+src/modules/blog/components/cards/BlogFeatured.tsx(3,34): error TS2307: Cannot find module '../types/blog' or its corresponding type declarations.
+src/modules/blog/components/cards/BlogGrid.tsx(3,34): error TS2307: Cannot find module '../types/blog' or its corresponding type declarations.
+src/modules/cart/components/AddToCartModal.tsx(48,86): error TS2339: Property 'qty' does not exist on type '{ targetQty: number; unitPrice: number; }'.
+src/modules/cart/components/CartFooter.tsx(2,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/components/CartNoteTextarea.tsx(2,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/components/CartQtyControls.tsx(2,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/components/CartQtyInput.tsx(2,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/components/CartRow.tsx(4,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/components/CartSidebar.tsx(1,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/components/CartTierSelector.tsx(1,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/store/cart.actions.ts(1,15): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/store/cart.persistence.ts(1,15): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/store/cart.selectors.ts(1,15): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/store/cart.selectors.ts(19,51): error TS2554: Expected 1 arguments, but got 2.
+src/modules/cart/store/cart.store.ts(2,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/utils/checkout.ts(1,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/utils/getActiveTierQty.ts(1,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/cart/utils/getTierUnlockMessage.ts(1,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(38,3): error TS2322: Type '{ kind: string; label: string; value: number; }[]' is not assignable to type 'TierPrice[]'.
+  Type '{ kind: string; label: string; value: number; }' is not assignable to type 'TierPrice'.
+    Types of property 'kind' are incompatible.
+      Type 'string' is not assignable to type 'TierKind'.
+src/modules/catalog/components/ProductCard.tsx(4,10): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/catalog/components/ProductCardTierBadges.tsx(40,12): error TS2367: This comparison appears to be unintentional because the types '"price_3" | "price_12" | "price_50" | "price_100"' and '"price_1"' have no overlap.
+src/modules/catalog/hooks/useCatalogData.ts(30,32): error TS2345: Argument of type 'string' is not assignable to parameter of type '"flores" | "peluches" | "papeles" | "cajas" | "cintas" | "globos" | "accesorios" | "hotwheels" | "llaveros"'.
+src/modules/catalog/hooks/useCatalogData.ts(42,31): error TS2345: Argument of type 'string[]' is not assignable to parameter of type '("flores" | "peluches" | "papeles" | "cajas" | "cintas" | "globos" | "accesorios" | "hotwheels" | "llaveros")[]'.
+  Type 'string' is not assignable to type '"flores" | "peluches" | "papeles" | "cajas" | "cintas" | "globos" | "accesorios" | "hotwheels" | "llaveros"'.
+src/modules/catalog/hooks/useCatalogData.ts(136,36): error TS2345: Argument of type 'string' is not assignable to parameter of type '"flores" | "peluches" | "papeles" | "cajas" | "cintas" | "globos" | "accesorios" | "hotwheels" | "llaveros"'.
+src/modules/catalog/hooks/useCatalogData.ts(148,36): error TS2345: Argument of type 'string' is not assignable to parameter of type '"flores" | "peluches" | "papeles" | "cajas" | "cintas" | "globos" | "accesorios" | "hotwheels" | "llaveros"'.
+src/modules/catalog/integrations/googleSheets/GoogleSheetsCatalogProvider.ts(95,32): error TS2345: Argument of type 'readonly Campaign[]' is not assignable to parameter of type 'Campaign[]'.
+  The type 'readonly Campaign[]' is 'readonly' and cannot be assigned to the mutable type 'Campaign[]'.
+src/modules/category/components/CategoryGrid.tsx(1,24): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/modules/category/components/CategoryGrid.tsx(25,11): error TS2322: Type '(src: string, title: string) => void' is not assignable to type '(product: Product) => void'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(63,14): error TS2339: Property 'x' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(64,14): error TS2339: Property 'y' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(65,14): error TS2339: Property 'size' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(66,14): error TS2339: Property 'speedY' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(67,14): error TS2339: Property 'speedX' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(68,14): error TS2339: Property 'opacity' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(72,39): error TS2339: Property 'opacity' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(73,38): error TS2339: Property 'opacity' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(74,38): error TS2339: Property 'opacity' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(75,38): error TS2339: Property 'opacity' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(77,14): error TS2339: Property 'color' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(81,14): error TS2339: Property 'y' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(81,24): error TS2339: Property 'speedY' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(82,14): error TS2339: Property 'x' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(82,24): error TS2339: Property 'speedX' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(83,18): error TS2339: Property 'y' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(84,16): error TS2339: Property 'y' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(85,16): error TS2339: Property 'x' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(90,30): error TS2339: Property 'color' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(92,22): error TS2339: Property 'x' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(92,30): error TS2339: Property 'y' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(92,38): error TS2339: Property 'size' does not exist on type 'Particle'.
+src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(95,32): error TS2339: Property 'color' does not exist on type 'Particle'.
+src/modules/home/components/FeaturedProductsSection.tsx(136,17): error TS2322: Type '(src: any, title: any) => void' is not assignable to type '(product: Product) => void'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1.
+src/modules/home/data/blogdata.ts(2,7): error TS2451: Cannot redeclare block-scoped variable 'ARTICLES_DB'.
+src/modules/home/data/blogdata.ts(74,7): error TS2451: Cannot redeclare block-scoped variable 'ARTICLES_DB'.
+src/modules/product-detail/components/ProductGallery.tsx(90,30): error TS2554: Expected 2 arguments, but got 1.
+src/modules/product-detail/components/ProductGallery.tsx(112,24): error TS2554: Expected 2 arguments, but got 1.
+src/modules/product-detail/hooks/useProductCard.ts(2,15): error TS2305: Module '"@/shared/types/product"' has no exported member 'CartItem'.
+src/shared/components/ui/sidebar.tsx(6,29): error TS2307: Cannot find module '@/shared/hooks/use-mobile' or its corresponding type declarations.
+src/shared/components/ui/toaster.tsx(9,55): error TS2339: Property 'action' does not exist on type 'Toast'.

@@ -1,4 +1,4 @@
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { getEffectivePrice } from "@/modules/catalog/utils/products";
 
 export function checkout(

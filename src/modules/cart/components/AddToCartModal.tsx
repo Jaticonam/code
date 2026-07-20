@@ -45,7 +45,7 @@ export function AddToCartModal({open,product,currentQty,onClose,onAddExtra,onOpe
         <div className="mt-4 space-y-2">
           <div className="grid grid-cols-2 gap-2">
             {hasUpsell?(
-              <button onClick={()=>onAddExtra(Math.max((nextTier.targetQty??nextTier.qty)-currentQty,0))} className="w-full rounded-xl bg-[#1d8299] py-3 text-[13px] font-extrabold text-white transition-all hover:bg-[#16697a] active:scale-[.97]">
+              <button onClick={()=>onAddExtra(Math.max(nextTier.targetQty-currentQty,0))} className="w-full rounded-xl bg-[#1d8299] py-3 text-[13px] font-extrabold text-white transition-all hover:bg-[#16697a] active:scale-[.97]">
                 (+{missingQty}) Mejorar precio
               </button>
             ):(

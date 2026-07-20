@@ -34,8 +34,8 @@ const formatMoney = (value?: number | null) => {
 const formatCategory = (category: string) =>
   category.replace(/-/g, " ").replace(/\s+/g, " ").trim();
 
-const getTierPrices = (product: PdfProduct): TierPrice[] =>
-  [
+const getTierPrices = (product: PdfProduct): TierPrice[] => {
+  const tiers: TierPrice[] = [
     {
       kind: "price3",
       label: "Por Mayor (3u) a",
@@ -56,8 +56,10 @@ const getTierPrices = (product: PdfProduct): TierPrice[] =>
       label: "Por 100 (100u) a",
       value: product.price100,
     },
-  ].filter((tier) => Number(tier.value || 0) > 0);
+  ];
 
+  return tiers.filter((tier) => Number(tier.value || 0) > 0);
+};
 export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
   const tierPrices = getTierPrices(product);
 
@@ -160,3 +162,4 @@ export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
     </article>
   );
 }
+

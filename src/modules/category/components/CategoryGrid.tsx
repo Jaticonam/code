@@ -1,11 +1,12 @@
-import type { Product, CartItem } from "@/shared/types/product";
+import type { Product } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { ProductCard } from "@/modules/catalog/components/ProductCard";
 
 interface CategoryGridProps {
   products: Product[];
   cart: CartItem[];
   onAddToCart: (product: Product) => void;
-  onImageClick: (src: string, title: string) => void;
+  onImageClick: (product: Product) => void;
 }
 
 export function CategoryGrid({

@@ -1,4 +1,5 @@
-import type { CartItem, Product } from "@/shared/types/product";
+import type { Product } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 
 export function addItemToCart(
   cart: CartItem[],

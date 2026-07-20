@@ -7,7 +7,7 @@ import { getBadgePresentation, sortBadges } from "@/shared/config/badgeRules";
 interface ProductGalleryProps {
   product: Product;
   available: boolean;
-  onZoom: (src: string, title: string) => void;
+  onZoom: (initialIndex: number) => void;
 }
 
 export function ProductGallery({

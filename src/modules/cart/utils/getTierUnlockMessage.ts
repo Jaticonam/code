@@ -1,4 +1,4 @@
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { getActiveTierQty } from "@/modules/cart/utils/getActiveTierQty";
 
 export function getTierUnlockMessage(item: CartItem): string | null {

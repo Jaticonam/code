@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 
 interface CartNoteTextareaProps {
   item: CartItem;

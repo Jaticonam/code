@@ -1,4 +1,4 @@
-import type { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { getEffectivePrice } from "@/modules/catalog/utils/products";
 
 function toMoney(value: unknown) {
@@ -16,7 +16,7 @@ export function getTotalItems(cart: CartItem[]) {
 export function getTotalPrice(cart: CartItem[]) {
   return cart.reduce((acc, item) => {
     const qty = toMoney(item.qty);
-    const price = toMoney(getEffectivePrice(item, qty));
+    const price = toMoney(getEffectivePrice(item));
 
     return acc + price * qty;
   }, 0);

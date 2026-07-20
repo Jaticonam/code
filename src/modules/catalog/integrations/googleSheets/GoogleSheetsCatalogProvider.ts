@@ -92,7 +92,7 @@ export const googleSheetsCatalogProvider: CatalogProvider = {
     );
 
     const campaignNameToIdMap =
-      buildCampaignNameToIdMap(campaigns);
+      buildCampaignNameToIdMap([...campaigns]);
 
     const normalizedProducts = rows.map((row) =>
       normalizeProduct(

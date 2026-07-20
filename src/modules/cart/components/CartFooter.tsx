@@ -1,5 +1,5 @@
 import { MessageCircle,Sparkles } from "lucide-react";
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { checkout } from "@/modules/cart/utils/checkout";
 
 interface CartFooterProps{

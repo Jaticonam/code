@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 
 interface CartQtyInputProps {
   item: CartItem;

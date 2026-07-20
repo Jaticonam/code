@@ -1,4 +1,4 @@
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 
 import { CartHeader } from "@/modules/cart/components/CartHeader";
 import { CartEmpty } from "@/modules/cart/components/CartEmpty";

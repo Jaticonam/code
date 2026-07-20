@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Product } from "@/shared/types/product";
-import type { CatalogCategoryId } from "@/modules/catalog/services/productsConfig";
+import type { CatalogCategoryId } from "@/modules/catalog/providers/CatalogProvider";
 import {
   getCachedCatalogSnapshot,
   getCatalogCategories,

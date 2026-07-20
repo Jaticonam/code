@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Trash2, Zap } from "lucide-react";
 
-import { CartItem } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { getEffectivePrice } from "@/modules/catalog/utils/products";
 import { getActiveTierQty } from "@/modules/cart/utils/getActiveTierQty";
 import { getTierUnlockMessage } from "@/modules/cart/utils/getTierUnlockMessage";

@@ -35,10 +35,7 @@ export function ProductCardTierBadges({
 }: Props) {
   if (!available || isPreventa) return null;
 
-  const tiers = getAvailablePriceTiers(product).filter((tier) => {
-    const price = Number(product[tier.key]);
-    return tier.key !== "price_1" && price > 0;
-  });
+  const tiers = getAvailablePriceTiers(product);
 
   if (!tiers.length) return null;
 

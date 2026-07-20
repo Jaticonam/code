@@ -1,0 +1,2884 @@
+BLUEPRINT BASELINE BATCH A INPUTS
+GeneratedAt: 2026-07-20 05:50:47
+Root: D:\JUNG\code\wooly\wooly-web
+
+============================================================
+RELEVANT TREES
+============================================================
+
+TREE: src\modules\blog
+src\modules\blog\components
+src\modules\blog\config
+src\modules\blog\data
+src\modules\blog\hooks
+src\modules\blog\services
+src\modules\blog\types
+src\modules\blog\utils
+src\modules\blog\components\article
+src\modules\blog\components\cards
+src\modules\blog\components\guides
+src\modules\blog\components\hub
+src\modules\blog\components\products
+src\modules\blog\components\rail
+src\modules\blog\components\renderers
+src\modules\blog\components\sections
+src\modules\blog\components\sidebar
+src\modules\blog\components\BlogBlockRenderer.tsx
+src\modules\blog\components\BlogCatalogProductCard.tsx
+src\modules\blog\components\BlogGuidesLayout.tsx
+src\modules\blog\components\BlogGuidesPage.tsx
+src\modules\blog\components\BlogHero.tsx
+src\modules\blog\components\BlogHub.tsx
+src\modules\blog\components\BlogIdeaBox.tsx
+src\modules\blog\components\article\BlogArticleCTA.tsx
+src\modules\blog\components\article\BlogArticleMeta.tsx
+src\modules\blog\components\article\BlogArticleSidebar.tsx
+src\modules\blog\components\article\BlogBreadcrumbs.tsx
+src\modules\blog\components\article\BlogFAQ.tsx
+src\modules\blog\components\article\BlogReadingProgress.tsx
+src\modules\blog\components\article\BlogRelatedArticles.tsx
+src\modules\blog\components\article\BlogRelatedProducts.tsx
+src\modules\blog\components\article\BlogTOC.tsx
+src\modules\blog\components\article\index.ts
+src\modules\blog\components\cards\BlogCard.tsx
+src\modules\blog\components\cards\BlogFeatured.tsx
+src\modules\blog\components\cards\BlogGrid.tsx
+src\modules\blog\components\cards\index.ts
+src\modules\blog\components\guides\BlogGuidesContent.tsx
+src\modules\blog\components\guides\BlogGuidesEmptyState.tsx
+src\modules\blog\components\guides\BlogGuidesHero.tsx
+src\modules\blog\components\guides\BlogGuidesLayout.tsx
+src\modules\blog\components\guides\BlogGuidesPage.tsx
+src\modules\blog\components\guides\BlogGuidesStats.tsx
+src\modules\blog\components\guides\BlogIdeaBox.tsx
+src\modules\blog\components\guides\index.ts
+src\modules\blog\components\hub\BlogHero.tsx
+src\modules\blog\components\hub\BlogHub.tsx
+src\modules\blog\components\hub\BlogHubCatalogBanner.tsx
+src\modules\blog\components\hub\BlogHubEmptyState.tsx
+src\modules\blog\components\hub\BlogHubMainSections.tsx
+src\modules\blog\components\hub\index.ts
+src\modules\blog\components\products\BlogCatalogProductCard.tsx
+src\modules\blog\components\products\index.ts
+src\modules\blog\components\rail\BlogExploreSheet.tsx
+src\modules\blog\components\rail\BlogGuidesRail.tsx
+src\modules\blog\components\rail\BlogHubRail.tsx
+src\modules\blog\components\rail\BlogRailCard.tsx
+src\modules\blog\components\rail\index.ts
+src\modules\blog\components\renderers\BlogBlockRenderer.tsx
+src\modules\blog\components\renderers\index.ts
+src\modules\blog\components\sections\BlogArticlesSection.tsx
+src\modules\blog\components\sections\BlogCatalogSection.tsx
+src\modules\blog\components\sections\BusinessToolsSection.tsx
+src\modules\blog\components\sections\CampaignCenterSection.tsx
+src\modules\blog\components\sections\IdeaLabSection.tsx
+src\modules\blog\components\sections\index.ts
+src\modules\blog\components\sections\OpportunityCenterSection.tsx
+src\modules\blog\components\sections\TrendInsightsSection.tsx
+src\modules\blog\components\sidebar\BlogMobileNav.tsx
+src\modules\blog\components\sidebar\BlogSidebar.tsx
+src\modules\blog\components\sidebar\BlogSidebarCard.tsx
+src\modules\blog\components\sidebar\BlogSidebarMenu.tsx
+src\modules\blog\components\sidebar\index.ts
+src\modules\blog\config\blogCategories.ts
+src\modules\blog\config\blogGuideCategories.ts
+src\modules\blog\config\hubNavigation.ts
+src\modules\blog\data\blogArticles.ts
+src\modules\blog\data\blogTemplates.ts
+src\modules\blog\data\fallbackBlogArticles.ts
+src\modules\blog\data\fallbackBusinessTools.ts
+src\modules\blog\data\fallbackCampaigns.ts
+src\modules\blog\data\fallbackIdeas.ts
+src\modules\blog\data\fallbackOpportunities.ts
+src\modules\blog\data\fallbackTrends.ts
+src\modules\blog\hooks\useBlogArticles.ts
+src\modules\blog\hooks\useBlogSearch.ts
+src\modules\blog\hooks\useBlogSeo.ts
+src\modules\blog\hooks\useBreadcrumbSchema.ts
+src\modules\blog\hooks\useFaqSchema.ts
+src\modules\blog\hooks\useReadingProgress.ts
+src\modules\blog\services\relatedArticles.ts
+src\modules\blog\types\blog.ts
+src\modules\blog\utils\estimateReadingTime.ts
+src\modules\blog\utils\getBlogSeo.ts
+
+TREE: src\shared\hooks
+src\shared\hooks\use-toast.ts
+
+TREE: src\modules\integrations
+src\modules\integrations\channels
+src\modules\integrations\connectors
+src\modules\integrations\dashboard
+src\modules\integrations\engine
+src\modules\integrations\pages
+src\modules\integrations\publication
+src\modules\integrations\quality
+src\modules\integrations\registry
+src\modules\integrations\sources
+src\modules\integrations\types
+src\modules\integrations\utils
+src\modules\integrations\workflow
+src\modules\integrations\channels\pdf
+src\modules\integrations\channels\pdf\components
+src\modules\integrations\channels\pdf\mappers
+src\modules\integrations\channels\pdf\types
+src\modules\integrations\channels\pdf\components\CatalogPdfCard
+src\modules\integrations\channels\pdf\components\CatalogPdfGrid
+src\modules\integrations\channels\pdf\components\CatalogPdfHeader
+src\modules\integrations\channels\pdf\components\CatalogPdfPage
+src\modules\integrations\connectors\google
+src\modules\integrations\connectors\mercadolibre
+src\modules\integrations\connectors\meta
+src\modules\integrations\connectors\pinterest
+src\modules\integrations\connectors\meta\connector.ts
+src\modules\integrations\connectors\meta\exporter.ts
+src\modules\integrations\connectors\meta\mapper.ts
+src\modules\integrations\connectors\meta\validator.ts
+src\modules\integrations\dashboard\collectors
+src\modules\integrations\dashboard\contracts
+src\modules\integrations\dashboard\engine
+src\modules\integrations\dashboard\registry
+src\modules\integrations\dashboard\index.ts
+src\modules\integrations\dashboard\collectors\ConnectorCollector.ts
+src\modules\integrations\dashboard\collectors\index.ts
+src\modules\integrations\dashboard\collectors\PublicationCollector.ts
+src\modules\integrations\dashboard\contracts\DashboardCollector.ts
+src\modules\integrations\dashboard\engine\DashboardEngine.ts
+src\modules\integrations\dashboard\registry\CollectorRegistry.ts
+src\modules\integrations\dashboard\registry\index.ts
+src\modules\integrations\engine\ExportEngine.ts
+src\modules\integrations\engine\IntegrationEngine.ts
+src\modules\integrations\engine\ValidationEngine.ts
+src\modules\integrations\pages\IntegrationsPage.tsx
+src\modules\integrations\publication\engine
+src\modules\integrations\publication\history
+src\modules\integrations\publication\models
+src\modules\integrations\publication\pipeline
+src\modules\integrations\publication\services
+src\modules\integrations\publication\utils
+src\modules\integrations\publication\index.ts
+src\modules\integrations\publication\engine\PublicationEngine.ts
+src\modules\integrations\publication\history\PublicationHistory.ts
+src\modules\integrations\publication\models\index.ts
+src\modules\integrations\publication\models\PublicationExecution.ts
+src\modules\integrations\publication\models\PublicationPlan.ts
+src\modules\integrations\publication\models\PublicationPreview.ts
+src\modules\integrations\publication\models\PublicationResult.ts
+src\modules\integrations\publication\models\PublicationSnapshot.ts
+src\modules\integrations\publication\pipeline\models
+src\modules\integrations\publication\pipeline\index.ts
+src\modules\integrations\publication\pipeline\PublicationPipeline.ts
+src\modules\integrations\publication\pipeline\models\PublicationJob.ts
+src\modules\integrations\publication\pipeline\models\PublicationPipelineResult.ts
+src\modules\integrations\publication\services\publicationPlans.ts
+src\modules\integrations\quality\contracts
+src\modules\integrations\quality\engine
+src\modules\integrations\quality\models
+src\modules\integrations\quality\registry
+src\modules\integrations\quality\utils
+src\modules\integrations\quality\validators
+src\modules\integrations\quality\index.ts
+src\modules\integrations\quality\contracts\QualityRule.ts
+src\modules\integrations\quality\engine\QualityEngine.ts
+src\modules\integrations\quality\models\index.ts
+src\modules\integrations\quality\models\QualityGate.ts
+src\modules\integrations\quality\models\QualityIssue.ts
+src\modules\integrations\quality\models\QualityReport.ts
+src\modules\integrations\quality\models\QualityScore.ts
+src\modules\integrations\quality\models\QualitySummary.ts
+src\modules\integrations\quality\registry\index.ts
+src\modules\integrations\quality\registry\RuleRegistry.ts
+src\modules\integrations\quality\utils\score.ts
+src\modules\integrations\quality\validators\IdRule.ts
+src\modules\integrations\quality\validators\ImageRule.ts
+src\modules\integrations\quality\validators\PriceRule.ts
+src\modules\integrations\registry\ConnectorRegistry.ts
+src\modules\integrations\registry\SourceRegistry.ts
+src\modules\integrations\sources\catalog
+src\modules\integrations\sources\catalog\source.ts
+src\modules\integrations\types\connector.ts
+src\modules\integrations\types\feed.ts
+src\modules\integrations\types\source.ts
+src\modules\integrations\utils\csv.ts
+src\modules\integrations\workflow\contracts
+src\modules\integrations\workflow\engine
+src\modules\integrations\workflow\models
+src\modules\integrations\workflow\registry
+src\modules\integrations\workflow\steps
+src\modules\integrations\workflow\index.ts
+src\modules\integrations\workflow\contracts\WorkflowStep.ts
+src\modules\integrations\workflow\engine\WorkflowEngine.ts
+src\modules\integrations\workflow\models\Workflow.ts
+src\modules\integrations\workflow\models\WorkflowContext.ts
+src\modules\integrations\workflow\models\WorkflowResult.ts
+src\modules\integrations\workflow\registry\index.ts
+src\modules\integrations\workflow\registry\StepRegistry.ts
+src\modules\integrations\workflow\steps\HistoryStep.ts
+src\modules\integrations\workflow\steps\index.ts
+src\modules\integrations\workflow\steps\IntegrationStep.ts
+src\modules\integrations\workflow\steps\LoadProductsStep.ts
+src\modules\integrations\workflow\steps\PreviewStep.ts
+src\modules\integrations\workflow\steps\PublicationStep.ts
+src\modules\integrations\workflow\steps\QualityStep.ts
+
+============================================================
+MISSING REQUESTS
+============================================================
+[NONE]
+
+============================================================
+FILE: src\app\App.tsx
+============================================================
+00001: import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+00002: import { BrowserRouter, Route, Routes } from "react-router-dom";
+00003: import { HelmetProvider } from "react-helmet-async";
+00004: 
+00005: import { Toaster } from "@/shared/components/ui/toaster";
+00006: import { Toaster as Sonner } from "@/shared/components/ui/sonner";
+00007: import { TooltipProvider } from "@/shared/components/ui/tooltip";
+00008: 
+00009: import HomePage from "@/app/pages/HomePage";
+00010: import CatalogPage from "@/app/pages/CatalogPage";
+00011: import CatalogPdfPage from "@/app/pages/CatalogPdfPage";
+00012: import SalesCatalogToolsPage from "@/app/pages/SalesCatalogToolsPage";
+00013: import ProductDetailPage from "@/app/pages/ProductDetailPage";
+00014: import CategoryPage from "@/app/pages/CategoryPage";
+00015: import BlogPage from "@/app/pages/BlogPage";
+00016: import BlogArticlePage from "@/app/pages/BlogArticlePage";
+00017: import BlogSectionPage from "@/app/pages/BlogSectionPage";
+00018: import NotFound from "@/app/pages/NotFound";
+00019: import IntegrationsPage from "@/modules/integrations/pages/IntegrationsPage";
+00020: import CommercialCenter from "@/modules/commercial/pages/CommercialCenter";
+00021: 
+00022: const queryClient = new QueryClient();
+00023: 
+00024: export default function App() {
+00025:   return (
+00026:     <QueryClientProvider client={queryClient}>
+00027:       <HelmetProvider>
+00028:         <TooltipProvider>
+00029:           <Toaster />
+00030:           <Sonner />
+00031: 
+00032:           <BrowserRouter future={{ v7_relativeSplatPath: true }}>
+00033:             <Routes>
+00034:               {/* HOME */}
+00035:               <Route path="/" element={<HomePage />} />
+00036: 
+00037:               {/* BLOG */}
+00038:               <Route path="/blog" element={<BlogPage />} />
+00039:               <Route path="/blog/laboratorio" element={<BlogSectionPage />} />
+00040:               <Route path="/blog/tendencias" element={<BlogSectionPage />} />
+00041:               <Route path="/blog/oportunidades" element={<BlogSectionPage />} />
+00042:               <Route path="/blog/herramientas" element={<BlogSectionPage />} />
+00043:               <Route
+00044:                 path="/blog/herramientas/:tool"
+00045:                 element={<BlogSectionPage />}
+00046:               />
+00047:               <Route path="/blog/campanas" element={<BlogSectionPage />} />
+00048:               <Route
+00049:                 path="/blog/campanas/:campaign"
+00050:                 element={<BlogSectionPage />}
+00051:               />
+00052:               <Route path="/blog/catalogo" element={<BlogSectionPage />} />
+00053:               <Route path="/blog/guias" element={<BlogSectionPage />} />
+00054:               <Route path="/blog/:slug" element={<BlogArticlePage />} />
+00055: 
+00056:               {/* CATALOGO */}
+00057:               <Route path="/catalogo" element={<CatalogPage />} />
+00058:               <Route path="/catalogo/pdf" element={<CatalogPdfPage />} />
+00059:               <Route path="/ventas/catalogos" element={<SalesCatalogToolsPage />} />
+00060:               <Route
+00061:                 path="/catalogo/producto.html"
+00062:                 element={<ProductDetailPage />}
+00063:               />
+00064:               <Route
+00065:                 path="/catalogo/categoria.html"
+00066:                 element={<CategoryPage />}
+00067:               />
+00068: 
+00069:               {/* COMMERCIAL CENTER */}
+00070:               <Route path="/admin/commercial" element={<CommercialCenter />} />
+00071: 
+00072:               {/* WOOLY CONNECT */}
+00073:               <Route
+00074:                 path="/admin/integrations"
+00075:                 element={<IntegrationsPage />}
+00076:               />
+00077: 
+00078:               {/* LEGACY */}
+00079:               <Route path="/producto/:id" element={<ProductDetailPage />} />
+00080:               <Route path="/categoria/:id" element={<CategoryPage />} />
+00081: 
+00082:               {/* 404 */}
+00083:               <Route path="*" element={<NotFound />} />
+00084:             </Routes>
+00085:           </BrowserRouter>
+00086:         </TooltipProvider>
+00087:       </HelmetProvider>
+00088:     </QueryClientProvider>
+00089:   );
+00090: }
+00091: 
+00092: 
+
+============================================================
+FILE: src\modules\blog\data\blogArticles.ts
+============================================================
+00001: export type { BlogArticle, BlogSection, BlogBlockType, BlogTemplate } from "../types/blog";
+00002: export { FALLBACK_BLOG_ARTICLES as BLOG_ARTICLES } from "./fallbackBlogArticles";
+
+============================================================
+FILE: src\modules\blog\data\blogTemplates.ts
+============================================================
+00001: export type BlogBlockType=
+00002: |"hero"
+00003: |"paragraph"
+00004: |"list"
+00005: |"tip"
+00006: |"warning"
+00007: |"checklist"
+00008: |"cta"
+00009: |"faq";
+00010: 
+00011: export interface BlogTemplate{
+00012:  id:string;
+00013:  blocks:BlogBlockType[];
+00014: }
+00015: 
+00016: export const BLOG_TEMPLATES:Record<string,BlogTemplate>={
+00017: 
+00018: guide:{
+00019:  id:"guide",
+00020:  blocks:[
+00021:  "hero",
+00022:  "paragraph",
+00023:  "list",
+00024:  "tip",
+00025:  "cta",
+00026:  "faq"
+00027:  ]
+00028: },
+00029: 
+00030: business:{
+00031:  id:"business",
+00032:  blocks:[
+00033:  "hero",
+00034:  "paragraph",
+00035:  "checklist",
+00036:  "tip",
+00037:  "cta"
+00038:  ]
+00039: },
+00040: 
+00041: strategy:{
+00042:  id:"strategy",
+00043:  blocks:[
+00044:  "hero",
+00045:  "paragraph",
+00046:  "warning",
+00047:  "list",
+00048:  "tip",
+00049:  "cta"
+00050:  ]
+00051: },
+00052: 
+00053: campaign:{
+00054:  id:"campaign",
+00055:  blocks:[
+00056:  "hero",
+00057:  "paragraph",
+00058:  "list",
+00059:  "checklist",
+00060:  "cta"
+00061:  ]
+00062: },
+00063: 
+00064: tutorial:{
+00065:  id:"tutorial",
+00066:  blocks:[
+00067:  "hero",
+00068:  "paragraph",
+00069:  "list",
+00070:  "tip",
+00071:  "cta"
+00072:  ]
+00073: }
+00074: 
+00075: };
+
+============================================================
+FILE: src\modules\blog\data\fallbackBlogArticles.ts
+============================================================
+00001: import type { BlogArticle } from "../types/blog";
+00002: 
+00003: export const FALLBACK_BLOG_ARTICLES:BlogArticle[]=[
+00004:   {
+00005:     id:"papel-coreano",template:"guide",slug:"tipos-papel-coreano",category:"productos",
+00006:     title:"Tipos de Papel Coreano y Cuándo Usarlo",
+00007:     excerpt:"Descubre diferencias, aplicaciones y cómo elevar márgenes usando papel coreano premium.",
+00008:     image:"https://dl.dropboxusercontent.com/scl/fi/cc1pwf1jhojfre093y1t9/AKT-RG600-2.jpg?rlkey=qb904aj554c13vl5b1mg3xvwz&st=3h9nm5j9&raw=1",
+00009:     readTime:6,published:"2026-05-24",
+00010:     relatedProducts:["PA1205CO","PA1206CO","6925100606157"],
+00011:     tags:["papel coreano","florería","b2b"],
+00012:     content:[
+00013:       {type:"paragraph",title:"La oportunidad comercial",body:"El papel coreano no solo mejora la presentación: aumenta el valor percibido del arreglo. Para florerías y emprendedores, esto significa vender productos con mejor margen sin depender únicamente de más flores."},
+00014:       {type:"list",title:"Cuándo usarlo",items:["Ramos buchones y arreglos voluminosos","Aniversarios, cumpleaños y campañas especiales","Presentaciones premium donde el empaque vende antes que el precio","Combos con cajas, cintas y flores artificiales"]},
+00015:       {type:"warning",title:"Error frecuente",body:"Comprar papel solo por color y no por calidad. Si el papel no tiene buena rigidez o acabado, el ramo pierde forma y se ve barato aunque uses buenos productos."},
+00016:       {type:"tip",title:"Tip Wooly",body:"Compra colores base de alta rotación: blanco, negro, rosado, rojo y tonos pastel. Luego complementa con colores tendencia por campaña. Así reduces inventario dormido y vendes con intención."}
+00017:     ],
+00018:     faq:[
+00019:       {q:"¿Qué papel coreano tiene más salida?",a:"Los colores neutros y tonos pastel suelen tener alta rotación porque sirven para múltiples campañas."},
+00020:       {q:"¿El papel coreano ayuda a vender más caro?",a:"Sí. Mejora la percepción visual y aumenta el valor percibido del arreglo."},
+00021:       {q:"¿Cuántos colores debería comprar para empezar?",a:"Empieza con colores base y luego complementa con tonos de campaña."}
+00022:     ]
+00023:   },
+00024:   {
+00025:     id:"cajas-premium",template:"guide",slug:"guia-cajas-premium",category:"productos",
+00026:     title:"Guía de Cajas Premium Para Arreglos",
+00027:     excerpt:"Estructuras, márgenes y presentación para elevar percepción premium.",
+00028:     image:"https://dl.dropboxusercontent.com/scl/fi/8edhbnvat51u90oxk00fo/PA1206CO.jpg?rlkey=tkf8z72gyjpt1tx79dra5uhbw&st=91ngavuy&raw=1&v=1",
+00029:     readTime:5,published:"2026-05-24",
+00030:     relatedProducts:["PA1206CO"],
+00031:     tags:["cajas","premium","regalos"],
+00032:     content:[
+00033:       {type:"paragraph",title:"La oportunidad comercial",body:"Las cajas premium convierten un producto simple en una experiencia de regalo. Son perfectas para arreglos corporativos, detalles VIP y ventas donde la presentación pesa tanto como el contenido."},
+00034:       {type:"list",title:"Qué evaluar antes de comprar",items:["Rigidez de la estructura","Color combinable con varias campañas","Acabado exterior limpio y elegante","Facilidad de transporte","Espacio interno para flores, dulces o complementos"]},
+00035:       {type:"warning",title:"Error frecuente",body:"Elegir una caja bonita pero débil. Si se deforma durante el transporte, destruye la percepción premium y te genera reclamos innecesarios."},
+00036:       {type:"tip",title:"Tip Wooly",body:"Trabaja cajas neutras como negro, blanco, nude y dorado. Son combinables, elegantes y funcionan para fechas románticas, corporativas y celebraciones."}
+00037:     ],
+00038:     faq:[
+00039:       {q:"¿Qué color de caja premium rota más?",a:"Negro, blanco y nude suelen funcionar muy bien porque combinan con varias campañas."},
+00040:       {q:"¿Caja rígida o flexible?",a:"Para percepción premium conviene usar cajas rígidas y estables."},
+00041:       {q:"¿Vale pagar más por mejor presentación?",a:"Sí. Una mejor presentación puede elevar el ticket promedio."}
+00042:     ]
+00043:   },
+00044:   {
+00045:     id:"ideas-negocio",template:"business",slug:"insumos-rentables",category:"ideas",
+00046:     title:"10 Insumos Rentables Para Emprender",
+00047:     excerpt:"Cómo iniciar negocio de regalos con inversión inteligente.",
+00048:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00049:     readTime:4,published:"2026-05-24",
+00050:     tags:["emprender","negocio","insumos"],
+00051:     content:[
+00052:       {type:"paragraph",title:"La oportunidad comercial",body:"Un negocio de regalos puede empezar con poco inventario si eliges productos de alta rotación. La clave está en comprar insumos combinables que sirvan para varias ocasiones."},
+00053:       {type:"list",title:"Insumos recomendados",items:["Papeles decorativos","Cintas satinadas","Cajas premium","Peluches pequeños","Globos decorativos","Tarjetas y bolsas premium","Flores artificiales","Complementos para arreglos"]},
+00054:       {type:"warning",title:"Error frecuente",body:"Comprar por emoción. Tener mucho stock bonito pero poco vendible es capital congelado con moño."},
+00055:       {type:"tip",title:"Tip Wooly",body:"Compra por rotación, margen y versatilidad. Si un insumo sirve para cumpleaños, amor, aniversario y corporativo, es candidato fuerte para tu primer stock."}
+00056:     ],
+00057:     faq:[
+00058:       {q:"¿Cuál es el mejor producto para empezar?",a:"Los productos versátiles y de alta rotación son mejores para iniciar."},
+00059:       {q:"¿Debo comprar mucho stock inicialmente?",a:"No. Primero valida rotación y luego escala."},
+00060:       {q:"¿Qué importa más: margen o precio bajo?",a:"Lo ideal es margen sostenible con rotación inteligente."}
+00061:     ]
+00062:   },
+00063:   {
+00064:     id:"productos-floreria-campana",
+00065:     template:"business",
+00066:     slug:"productos-floreria-campana",
+00067:     category:"ideas",
+00068:     title:"Los Productos Que Toda Florería Debería Tener Antes De Campaña",
+00069:     excerpt:"Los insumos correctos pueden hacer que vendas más rápido, mejores tu presentación y aumentes tu ticket promedio.",
+00070:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00071:     readTime:5,
+00072:     published:"2026-05-25",
+00073:     tags:["floreria","campaña","insumos","emprender","ventas"],
+00074:     content:[
+00075:       {
+00076:         type:"paragraph",
+00077:         title:"Prepararse antes vende más",
+00078:         body:"Las campañas fuertes no se ganan el mismo día. Las florerías que más venden suelen prepararse con productos versátiles, fáciles de combinar y con buena presentación visual."
+00079:       },
+00080:       {
+00081:         type:"list",
+00082:         title:"Productos clave para campaña",
+00083:         items:[
+00084:           "Papeles coreanos premium",
+00085:           "Cintas satinadas y decorativas",
+00086:           "Cajas para regalos y box sorpresa",
+00087:           "Peluches pequeños de alta rotación",
+00088:           "Globos decorativos",
+00089:           "Porta ramos y accesorios florales",
+00090:           "Tarjetas y bolsas premium",
+00091:           "Flores artificiales complementarias"
+00092:         ]
+00093:       },
+00094:       {
+00095:         type:"paragraph",
+00096:         title:"Lo que más impulsa las ventas",
+00097:         body:"Los productos visuales y combinables ayudan a crear arreglos más atractivos. Un cliente que ve opciones completas suele gastar más que uno que solo compra flores."
+00098:       },
+00099:       {
+00100:         type:"warning",
+00101:         title:"Error frecuente",
+00102:         body:"Esperar hasta última hora para comprar stock. En campañas, los productos más vendidos suelen agotarse primero y terminan subiendo de precio."
+00103:       },
+00104:       {
+00105:         type:"tip",
+00106:         title:"Tip Wooly",
+00107:         body:"Prioriza productos que funcionen para varias fechas y públicos. Mientras más usos tenga un producto, más rápido rota y menos riesgo tienes."
+00108:       }
+00109:     ],
+00110:     faq:[
+00111:       {
+00112:         q:"¿Qué productos se venden más rápido en campaña?",
+00113:         a:"Los empaques premium, peluches pequeños, cintas y accesorios para ramos suelen tener alta rotación."
+00114:       },
+00115:       {
+00116:         q:"¿Conviene comprar por cajón?",
+00117:         a:"Sí, especialmente en productos de alta salida y campañas fuertes donde la reposición se vuelve más difícil."
+00118:       },
+00119:       {
+00120:         q:"¿Cómo aumentar el ticket promedio en una florería?",
+00121:         a:"Agregando complementos visuales como cajas, peluches, globos y empaques premium al arreglo principal."
+00122:       }
+00123:     ]
+00124:   },
+00125:   {
+00126:     id:"empaques-premium-regalos",
+00127:     template:"business",
+00128:     slug:"empaques-premium-regalos",
+00129:     category:"tendencias",
+00130:     title:"10 Empaques Que Hacen Ver Más Caro Cualquier Detalle",
+00131:     excerpt:"La presentación correcta puede aumentar el valor percibido y hacer que un regalo simple se vea premium.",
+00132:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00133:     readTime:4,
+00134:     published:"2026-05-25",
+00135:     tags:["empaques","regalos","premium","floreria","tendencias"],
+00136:     content:[
+00137:       {
+00138:         type:"paragraph",
+00139:         title:"La presentación vende",
+00140:         body:"Muchos clientes toman la decisión de compra por cómo se ve un regalo. Un empaque bien trabajado puede elevar el valor percibido sin aumentar demasiado el costo."
+00141:       },
+00142:       {
+00143:         type:"list",
+00144:         title:"Empaques que más destacan",
+00145:         items:[
+00146:           "Papel coreano premium",
+00147:           "Cajas rígidas con tapa",
+00148:           "Cintas satinadas anchas",
+00149:           "Bolsas con vitrina transparente",
+00150:           "Papel waterproof decorativo",
+00151:           "Cajas tipo libro",
+00152:           "Envolturas matte minimalistas",
+00153:           "Porta ramos modernos",
+00154:           "Moños armados premium",
+00155:           "Cajas con ventana acrílica"
+00156:         ]
+00157:       },
+00158:       {
+00159:         type:"paragraph",
+00160:         title:"Por qué funcionan",
+00161:         body:"Los empaques premium generan sensación de exclusividad. Incluso productos económicos pueden verse más elegantes cuando tienen buena presentación."
+00162:       },
+00163:       {
+00164:         type:"warning",
+00165:         title:"Error frecuente",
+00166:         body:"Usar demasiados colores o materiales distintos en un solo arreglo. Lo visualmente limpio suele verse más caro y moderno."
+00167:       },
+00168:       {
+00169:         type:"tip",
+00170:         title:"Tip Wooly",
+00171:         body:"Combina máximo tres colores y usa texturas premium. El efecto aesthetic ayuda a vender más en redes sociales y campañas."
+00172:       }
+00173:     ],
+00174:     faq:[
+00175:       {
+00176:         q:"¿Qué empaque está más en tendencia?",
+00177:         a:"El papel coreano premium y las cajas minimalistas siguen siendo de los más pedidos."
+00178:       },
+00179:       {
+00180:         q:"¿La presentación realmente aumenta las ventas?",
+00181:         a:"Sí. Un producto bien presentado mejora la percepción de valor y facilita compras impulsivas."
+00182:       },
+00183:       {
+00184:         q:"¿Qué colores venden más?",
+00185:         a:"Tonos neutros, pasteles, negro matte y combinaciones minimalistas suelen verse más premium."
+00186:       }
+00187:     ]
+00188:   },
+00189:   {
+00190:     id:"activar-ventas-tienda-regalos",
+00191:     template:"business",
+00192:     slug:"activar-ventas-tienda-regalos",
+00193:     category:"ventas",
+00194:     title:"Cómo Activar Más Ventas En Tu Tienda De Regalos En 3 Pasos",
+00195:     excerpt:"Pequeños cambios en presentación, combos y exhibición pueden aumentar tus ventas más rápido de lo que imaginas.",
+00196:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00197:     readTime:4,
+00198:     published:"2026-05-25",
+00199:     tags:["ventas","tienda","regalos","floreria","marketing"],
+00200:     content:[
+00201:       {
+00202:         type:"paragraph",
+00203:         title:"Vender más no siempre requiere más inversión",
+00204:         body:"Muchas tiendas tienen buenos productos pero poca presentación estratégica. Ajustar cómo muestras y combinas tus productos puede cambiar completamente tus resultados."
+00205:       },
+00206:       {
+00207:         type:"list",
+00208:         title:"3 pasos para activar más ventas",
+00209:         items:[
+00210:           "Crea combos visuales con productos complementarios",
+00211:           "Usa empaques premium para elevar el valor percibido",
+00212:           "Exhibe productos pequeños cerca de cajas o pedidos"
+00213:         ]
+00214:       },
+00215:       {
+00216:         type:"paragraph",
+00217:         title:"La clave está en la experiencia visual",
+00218:         body:"Los clientes suelen comprar más cuando ven ideas completas. Un ramo acompañado de peluche, caja y cinta premium vende mejor que cada producto por separado."
+00219:       },
+00220:       {
+00221:         type:"warning",
+00222:         title:"Error frecuente",
+00223:         body:"Publicar productos individuales sin inspiración visual. Las personas compran más fácil cuando imaginan el regalo terminado."
+00224:       },
+00225:       {
+00226:         type:"tip",
+00227:         title:"Tip Wooly",
+00228:         body:"Los productos pequeños de compra impulsiva ayudan mucho a subir el ticket promedio. Ten siempre opciones fáciles de agregar."
+00229:       }
+00230:     ],
+00231:     faq:[
+00232:       {
+00233:         q:"¿Qué productos ayudan más a aumentar el ticket promedio?",
+00234:         a:"Peluches pequeños, globos, cajas premium y accesorios decorativos suelen funcionar muy bien."
+00235:       },
+00236:       {
+00237:         q:"¿Los combos realmente venden más?",
+00238:         a:"Sí. Facilitan la decisión de compra y hacen que el cliente perciba mayor valor."
+00239:       },
+00240:       {
+00241:         q:"¿Cómo hacer que una tienda se vea más moderna?",
+00242:         a:"Usando exhibiciones limpias, empaques aesthetic y productos visualmente combinables."
+00243:       }
+00244:     ]
+00245:   },
+00246:   {
+00247:     id:"insumos-rotacion-campana",
+00248:     template:"business",
+00249:     slug:"insumos-rotacion-campana",
+00250:     category:"campañas",
+00251:     title:"Los Insumos Que Más Rotan En Fechas Especiales",
+00252:     excerpt:"Hay productos que siempre vuelan en campaña. Detectarlos a tiempo puede ayudarte a vender más y reponer mejor.",
+00253:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00254:     readTime:4,
+00255:     published:"2026-05-25",
+00256:     tags:["campaña","rotacion","floreria","regalos","ventas"],
+00257:     content:[
+00258:       {
+00259:         type:"paragraph",
+00260:         title:"Los productos rápidos hacen crecer una tienda",
+00261:         body:"En campañas fuertes, la velocidad de rotación importa más que tener demasiada variedad. Los negocios que priorizan productos de salida rápida suelen recuperar capital más rápido."
+00262:       },
+00263:       {
+00264:         type:"list",
+00265:         title:"Productos con alta rotación",
+00266:         items:[
+00267:           "Papeles coreanos",
+00268:           "Cintas satinadas",
+00269:           "Peluches pequeños",
+00270:           "Globos decorativos",
+00271:           "Cajas para detalles",
+00272:           "Bolsas premium",
+00273:           "Tarjetas temáticas",
+00274:           "Porta ramos",
+00275:           "Moños armados",
+00276:           "Flores artificiales complementarias"
+00277:         ]
+00278:       },
+00279:       {
+00280:         type:"paragraph",
+00281:         title:"Por qué estos productos funcionan",
+00282:         body:"Son productos versátiles, económicos y fáciles de combinar con distintos tipos de regalos. Además ayudan a mejorar la presentación final."
+00283:       },
+00284:       {
+00285:         type:"warning",
+00286:         title:"Error frecuente",
+00287:         body:"Comprar demasiados productos de moda sin validar si realmente tienen salida en tu tipo de cliente."
+00288:       },
+00289:       {
+00290:         type:"tip",
+00291:         title:"Tip Wooly",
+00292:         body:"Observa qué productos se repiten en pedidos grandes. La repetición suele indicar rotación fuerte y oportunidad para comprar por volumen."
+00293:       }
+00294:     ],
+00295:     faq:[
+00296:       {
+00297:         q:"¿Qué producto suele agotarse primero?",
+00298:         a:"Los empaques premium y accesorios visuales suelen agotarse rápidamente en campañas."
+00299:       },
+00300:       {
+00301:         q:"¿Cómo saber si un producto tiene buena rotación?",
+00302:         a:"Si se vende constantemente, funciona en varias ocasiones y los clientes lo vuelven a pedir."
+00303:       },
+00304:       {
+00305:         q:"¿Conviene comprar productos de tendencia?",
+00306:         a:"Sí, pero combinándolos con productos clásicos de salida constante."
+00307:       }
+00308:     ]
+00309:   },
+00310:   {
+00311:     id:"productos-compra-impulsiva",
+00312:     template:"business",
+00313:     slug:"productos-compra-impulsiva",
+00314:     category:"ventas",
+00315:     title:"7 Productos Que Hacen Que Un Cliente Compre “Uno Más”",
+00316:     excerpt:"Los productos pequeños y visuales pueden aumentar el ticket promedio sin que el cliente lo piense demasiado.",
+00317:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00318:     readTime:4,
+00319:     published:"2026-05-25",
+00320:     tags:["ventas","ticket-promedio","regalos","floreria","productos"],
+00321:     content:[
+00322:       {
+00323:         type:"paragraph",
+00324:         title:"Las ventas pequeñas suman mucho",
+00325:         body:"Muchos negocios aumentan sus ganancias gracias a productos complementarios de compra rápida. Son artículos económicos que el cliente agrega fácilmente al pedido principal."
+00326:       },
+00327:       {
+00328:         type:"list",
+00329:         title:"Productos que impulsan compras extra",
+00330:         items:[
+00331:           "Peluches pequeños",
+00332:           "Globos decorativos",
+00333:           "Tarjetas premium",
+00334:           "Mini chocolates",
+00335:           "Moños armados",
+00336:           "Luces LED decorativas",
+00337:           "Bolsas y cajas pequeñas"
+00338:         ]
+00339:       },
+00340:       {
+00341:         type:"paragraph",
+00342:         title:"Por qué funcionan tan bien",
+00343:         body:"Estos productos generan sensación de regalo completo. Además son fáciles de ofrecer al final de la compra como complemento visual o emocional."
+00344:       },
+00345:       {
+00346:         type:"warning",
+00347:         title:"Error frecuente",
+00348:         body:"Tener productos complementarios escondidos o sin exhibición visual. Si el cliente no los ve, difícilmente los agregará."
+00349:       },
+00350:       {
+00351:         type:"tip",
+00352:         title:"Tip Wooly",
+00353:         body:"Ubica productos pequeños cerca de cajas, mostradores o publicaciones principales. La visibilidad aumenta muchísimo las compras impulsivas."
+00354:       }
+00355:     ],
+00356:   faq:[
+00357:       {
+00358:         q:"¿Qué producto complementario se vende más?",
+00359:         a:"Los peluches pequeños y globos decorativos suelen funcionar muy bien en casi todas las campañas."
+00360:       },
+00361:       {
+00362:         q:"¿Cómo aumentar el ticket promedio rápido?",
+00363:         a:"Ofreciendo productos complementarios fáciles de agregar al pedido principal."
+00364:       },
+00365:       {
+00366:         q:"¿Conviene tener productos económicos en tienda?",
+00367:         a:"Sí. Ayudan a generar ventas impulsivas y hacen más accesible la compra."
+00368:       }
+00369:     ]
+00370:   },
+00371:   {
+00372:     id:"tendencias-tiendas-regalos",
+00373:     template:"business",
+00374:     slug:"tendencias-tiendas-regalos",
+00375:     category:"tendencias",
+00376:     title:"Tendencias Que Están Moviendo Las Tiendas De Regalos Este Año",
+00377:     excerpt:"Los clientes ya no compran solo productos. Compran presentación, emoción y experiencias visuales compartibles.",
+00378:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00379:     readTime:5,
+00380:     published:"2026-05-25",
+00381:     tags:["tendencias","regalos","floreria","emprender","ventas"],
+00382:     content:[
+00383:       {
+00384:         type:"paragraph",
+00385:         title:"El mercado cambió",
+00386:         body:"Las tiendas de regalos que más crecen están apostando por productos visuales, empaques premium y experiencias que se ven bien en redes sociales."
+00387:       },
+00388:       {
+00389:         type:"list",
+00390:         title:"Tendencias que más destacan",
+00391:         items:[
+00392:           "Ramos coreanos minimalistas",
+00393:           "Peluches kawaii",
+00394:           "Box sorpresa personalizados",
+00395:           "Empaques aesthetic",
+00396:           "Globos con diseño premium",
+00397:           "Colores pastel y matte",
+00398:           "Detalles listos para TikTok e Instagram",
+00399:           "Combos armados para fechas especiales"
+00400:         ]
+00401:       },
+00402:       {
+00403:         type:"paragraph",
+00404:         title:"Lo visual vende más rápido",
+00405:         body:"Los clientes toman decisiones en segundos cuando ven un producto atractivo. Mientras más compartible sea un detalle en redes, mayor potencial de venta tiene."
+00406:       },
+00407:       {
+00408:         type:"warning",
+00409:         title:"Error frecuente",
+00410:         body:"Copiar tendencias demasiado tarde. Cuando todos venden lo mismo, el margen suele bajar rápidamente."
+00411:       },
+00412:       {
+00413:         type:"tip",
+00414:         title:"Tip Wooly",
+00415:         body:"Combina productos tendencia con insumos clásicos de alta rotación. Así mantienes ventas constantes sin depender solo de modas."
+00416:       }
+00417:     ],
+00418:     faq:[
+00419:       {
+00420:         q:"¿Qué tipo de regalos están más de moda?",
+00421:         a:"Los detalles aesthetic, personalizados y visualmente premium siguen liderando las ventas."
+00422:       },
+00423:       {
+00424:         q:"¿TikTok realmente influye en las ventas?",
+00425:         a:"Sí. Muchos productos se vuelven tendencia gracias a videos virales y contenido visual."
+00426:       },
+00427:       {
+00428:         q:"¿Conviene seguir todas las tendencias?",
+00429:         a:"No. Lo ideal es elegir las que encajen con tu público y tengan potencial de rotación."
+00430:       }
+00431:     ]
+00432:   },
+00433:   {
+00434:     id:"armar-combos-rentables",
+00435:     template:"business",
+00436:     slug:"armar-combos-rentables",
+00437:     category:"ventas",
+00438:     title:"Cómo Armar Combos Que Sí Se Venden En 3 Pasos",
+00439:     excerpt:"Los combos correctos ayudan a vender más rápido, aumentar el ticket promedio y facilitar la decisión del cliente.",
+00440:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00441:     readTime:4,
+00442:     published:"2026-05-25",
+00443:     tags:["combos","ventas","floreria","regalos","marketing"],
+00444:     content:[
+00445:       {
+00446:         type:"paragraph",
+00447:         title:"Los combos simplifican la compra",
+00448:         body:"Muchos clientes no saben exactamente qué elegir. Un combo bien armado reduce dudas y hace que el pedido se vea más completo y atractivo."
+00449:       },
+00450:       {
+00451:         type:"list",
+00452:         title:"3 pasos para crear combos ganadores",
+00453:         items:[
+00454:           "Combina un producto principal con complementos visuales",
+00455:           "Usa empaques premium para elevar el valor percibido",
+00456:           "Crea opciones por presupuesto para vender más fácil"
+00457:         ]
+00458:       },
+00459:       {
+00460:         type:"paragraph",
+00461:         title:"La percepción cambia todo",
+00462:         body:"Un ramo acompañado de caja, cinta y peluche se percibe mucho más especial que un producto individual, incluso si el costo adicional es pequeño."
+00463:       },
+00464:       {
+00465:         type:"warning",
+00466:         title:"Error frecuente",
+00467:         body:"Agregar demasiados productos al combo y hacer que el precio final se vea elevado o confuso."
+00468:       },
+00469:       {
+00470:         type:"tip",
+00471:         title:"Tip Wooly",
+00472:         body:"Los mejores combos suelen tener un producto protagonista y dos complementos visuales fáciles de agregar."
+00473:       }
+00474:     ],
+00475:     faq:[
+00476:       {
+00477:         q:"¿Qué productos funcionan mejor en combos?",
+00478:         a:"Peluches, globos, cajas premium y accesorios decorativos suelen complementar muy bien."
+00479:       },
+00480:       {
+00481:         q:"¿Conviene mostrar precios por separado?",
+00482:         a:"No siempre. Muchos negocios venden mejor mostrando el combo completo como experiencia."
+00483:       },
+00484:       {
+00485:         q:"¿Cómo hacer combos más atractivos?",
+00486:         a:"Usando buena presentación visual y opciones adaptadas a distintos presupuestos."
+00487:       }
+00488:     ]
+00489:   },
+00490:   {
+00491:     id:"productos-tendencia-ventas",
+00492:     template:"business",
+00493:     slug:"productos-tendencia-ventas",
+00494:     category:"tendencias",
+00495:     title:"10 Productos Tendencia Que Están Explotando Este Año",
+00496:     excerpt:"Los productos visuales, kawaii y fáciles de compartir en redes son los que más están moviendo ventas actualmente.",
+00497:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00498:     readTime:5,
+00499:     published:"2026-05-25",
+00500:     tags:["tendencias","productos","ventas","regalos","floreria"],
+00501:     content:[
+00502:       {
+00503:         type:"paragraph",
+00504:         title:"Las tendencias cambian rápido",
+00505:         body:"Los productos más vendidos actualmente tienen algo en común: son visuales, fáciles de regalar y generan contenido atractivo para redes sociales."
+00506:       },
+00507:       {
+00508:         type:"list",
+00509:         title:"Productos que están destacando",
+00510:         items:[
+00511:           "Peluches kawaii",
+00512:           "Ramos coreanos",
+00513:           "Box sorpresa aesthetic",
+00514:           "Globos premium personalizados",
+00515:           "Papeles coreanos decorativos",
+00516:           "Mini bouquets",
+00517:           "Cajas con ventana transparente",
+00518:           "Peluches gigantes",
+00519:           "Luces LED decorativas",
+00520:           "Combos listos para regalo"
+00521:         ]
+00522:       },
+00523:       {
+00524:         type:"paragraph",
+00525:         title:"Por qué tienen tanta salida",
+00526:         body:"Son productos emocionales y altamente visuales. Funcionan muy bien para fotos, videos cortos y campañas en TikTok o Instagram."
+00527:       },
+00528:       {
+00529:         type:"warning",
+00530:         title:"Error frecuente",
+00531:         body:"Comprar demasiada variedad de productos tendencia sin validar cuáles realmente conectan con tu público."
+00532:       },
+00533:       {
+00534:         type:"tip",
+00535:         title:"Tip Wooly",
+00536:         body:"Cuando un producto empieza a repetirse mucho en redes, suele ser señal de oportunidad temprana para vender antes que el mercado se sature."
+00537:       }
+00538:     ],
+00539:     faq:[
+00540:       {
+00541:         q:"¿Qué tipo de productos se vuelven virales más rápido?",
+00542:         a:"Los productos visuales, kawaii y con buena presentación suelen destacar más en redes sociales."
+00543:       },
+00544:       {
+00545:         q:"¿Conviene seguir tendencias temporales?",
+00546:         a:"Sí, siempre que se combinen con productos clásicos de rotación constante."
+00547:       },
+00548:       {
+00549:         q:"¿Qué red social mueve más ventas actualmente?",
+00550:         a:"TikTok e Instagram siguen siendo las plataformas más fuertes para productos visuales y regalos."
+00551:       }
+00552:     ]
+00553:   },
+00554:   {
+00555:     id:"productos-agotan-campana",
+00556:     template:"business",
+00557:     slug:"productos-agotan-campana",
+00558:     category:"campañas",
+00559:     title:"Los Productos Que Siempre Se Agotan Primero En Campaña",
+00560:     excerpt:"Hay productos que desaparecen rápido apenas empieza una campaña fuerte. Detectarlos antes puede darte ventaja.",
+00561:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00562:     readTime:4,
+00563:     published:"2026-05-25",
+00564:     tags:["campaña","ventas","stock","floreria","productos"],
+00565:     content:[
+00566:       {
+00567:         type:"paragraph",
+00568:         title:"Los primeros productos en volar",
+00569:         body:"En fechas especiales, algunos productos empiezan a escasear incluso antes del pico de ventas. Tenerlos listos puede marcar diferencia en tus resultados."
+00570:       },
+00571:       {
+00572:         type:"list",
+00573:         title:"Productos que suelen agotarse rápido",
+00574:         items:[
+00575:           "Papeles coreanos premium",
+00576:           "Peluches pequeños tendencia",
+00577:           "Globos temáticos",
+00578:           "Cintas satinadas",
+00579:           "Cajas premium",
+00580:           "Porta ramos",
+00581:           "Tarjetas decorativas",
+00582:           "Moños armados",
+00583:           "Luces LED para detalles",
+00584:           "Peluches gigantes"
+00585:         ]
+00586:       },
+00587:       {
+00588:         type:"paragraph",
+00589:         title:"Por qué pasa esto",
+00590:         body:"Son productos fáciles de combinar, visualmente atractivos y muy usados para complementar regalos. Además muchos negocios compran el mismo tipo de stock al mismo tiempo."
+00591:       },
+00592:       {
+00593:         type:"warning",
+00594:         title:"Error frecuente",
+00595:         body:"Esperar a que la campaña ya esté activa para recién abastecerse. En ese momento suele haber menos variedad y precios más altos."
+00596:       },
+00597:       {
+00598:         type:"tip",
+00599:         title:"Tip Wooly",
+00600:         body:"Revisa qué productos aumentan movimiento semanas antes de campaña. Ahí suelen aparecer las primeras señales de alta demanda."
+00601:       }
+00602:     ],
+00603:     faq:[
+00604:       {
+00605:         q:"¿Cuándo conviene abastecerse para campaña?",
+00606:         a:"Lo ideal es comprar con anticipación para asegurar stock y mejores precios."
+00607:       },
+00608:       {
+00609:         q:"¿Qué productos conviene comprar por volumen?",
+00610:         a:"Los productos de alta rotación y uso constante en arreglos y detalles."
+00611:       },
+00612:       {
+00613:         q:"¿Cómo evitar quedarme sin stock?",
+00614:         a:"Analizando campañas anteriores y observando qué productos empiezan a rotar más rápido."
+00615:       }
+00616:     ]
+00617:   },
+00618:   {
+00619:     id:"herramientas-ia-floreria",
+00620:     template:"business",
+00621:     slug:"herramientas-ia-floreria",
+00622:     category:"ia",
+00623:     title:"5 Herramientas IA Que Toda Florería Moderna Debería Probar",
+00624:     excerpt:"La inteligencia artificial puede ayudarte a crear contenido más rápido, mejorar tus fotos y atraer más clientes.",
+00625:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00626:     readTime:5,
+00627:     published:"2026-05-25",
+00628:     tags:["ia","floreria","marketing","contenido","ventas"],
+00629:     content:[
+00630:       {
+00631:         type:"paragraph",
+00632:         title:"La IA ya llegó a los negocios visuales",
+00633:         body:"Las florerías y tiendas de detalles pueden usar inteligencia artificial para crear contenido, mejorar imágenes y ahorrar tiempo en tareas repetitivas."
+00634:       },
+00635:       {
+00636:         type:"list",
+00637:         title:"Herramientas IA recomendadas",
+00638:         items:[
+00639:           "ChatGPT para crear copies y descripciones",
+00640:           "Canva IA para diseños rápidos",
+00641:           "CapCut IA para editar videos y reels",
+00642:           "Remove Background para quitar fondos",
+00643:           "Leonardo AI para generar ideas visuales"
+00644:         ]
+00645:       },
+00646:       {
+00647:         type:"paragraph",
+00648:         title:"Por qué vale la pena usarlas",
+00649:         body:"Estas herramientas ayudan a publicar más rápido, mejorar la presentación visual y mantener activas las redes sociales sin depender siempre de un diseñador."
+00650:       },
+00651:       {
+00652:         type:"warning",
+00653:         title:"Error frecuente",
+00654:         body:"Usar IA sin personalidad visual. La herramienta ayuda, pero el estilo de tu marca sigue siendo importante."
+00655:       },
+00656:       {
+00657:         type:"tip",
+00658:         title:"Tip Wooly",
+00659:         body:"Las tiendas que publican contenido constante suelen vender más. La IA puede ayudarte a mantener ritmo sin perder tiempo."
+00660:       }
+00661:     ],
+00662:     faq:[
+00663:       {
+00664:         q:"¿Necesito saber diseño para usar IA?",
+00665:         a:"No. Muchas herramientas están hechas para principiantes y funcionan con instrucciones simples."
+00666:       },
+00667:       {
+00668:         q:"¿La IA puede ayudarme a vender más?",
+00669:         a:"Sí. Mejora la velocidad de creación de contenido y la presentación visual de productos."
+00670:       },
+00671:       {
+00672:         q:"¿Qué herramienta es mejor para empezar?",
+00673:         a:"ChatGPT y Canva IA suelen ser de las más fáciles y útiles para negocios de regalos."
+00674:       }
+00675:     ]
+00676:   },
+00677:   {
+00678:     id:"ideas-contenido-ia-floreria",
+00679:     template:"business",
+00680:     slug:"ideas-contenido-ia-floreria",
+00681:     category:"ia",
+00682:     title:"Ideas De Contenido Con IA Para Atraer Clientes A Tu Florería",
+00683:     excerpt:"La inteligencia artificial puede ayudarte a crear publicaciones más rápidas, visuales y pensadas para vender.",
+00684:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00685:     readTime:4,
+00686:     published:"2026-05-25",
+00687:     tags:["ia","contenido","floreria","marketing","redes-sociales"],
+00688:     content:[
+00689:       {
+00690:         type:"paragraph",
+00691:         title:"Las redes necesitan contenido constante",
+00692:         body:"Muchas tiendas dejan de publicar por falta de tiempo o ideas. La IA puede ayudarte a generar contenido más rápido y mantener activas tus redes."
+00693:       },
+00694:       {
+00695:         type:"list",
+00696:         title:"Ideas de contenido que puedes crear con IA",
+00697:         items:[
+00698:           "Antes y después de arreglos florales",
+00699:           "Ideas de regalos para fechas especiales",
+00700:           "Frases para reels y TikTok",
+00701:           "Promociones visuales para campañas",
+00702:           "Mockups de productos premium",
+00703:           "Historias con productos tendencia",
+00704:           "Combos listos para regalar",
+00705:           "Videos rápidos mostrando empaques"
+00706:         ]
+00707:       },
+00708:       {
+00709:         type:"paragraph",
+00710:         title:"El contenido visual vende más",
+00711:         body:"Las publicaciones que muestran emoción, presentación y detalles visuales suelen captar más atención y generar más mensajes de clientes."
+00712:       },
+00713:       {
+00714:         type:"warning",
+00715:         title:"Error frecuente",
+00716:         body:"Publicar solo fotos de productos sin contexto ni presentación atractiva."
+00717:       },
+00718:       {
+00719:         type:"tip",
+00720:         title:"Tip Wooly",
+00721:         body:"Transforma un solo producto en varios contenidos distintos usando IA para textos, fondos, ideas visuales y formatos."
+00722:       }
+00723:     ],
+00724:     faq:[
+00725:       {
+00726:         q:"¿Qué tipo de contenido funciona mejor?",
+00727:         a:"Los videos cortos, ideas de regalo y contenido visual suelen tener mejor alcance."
+00728:       },
+00729:       {
+00730:         q:"¿La IA reemplaza a un diseñador?",
+00731:         a:"No completamente, pero sí ayuda muchísimo a crear contenido rápido y práctico."
+00732:       },
+00733:       {
+00734:         q:"¿Conviene usar IA para TikTok e Instagram?",
+00735:         a:"Sí. Ayuda a mantener publicaciones constantes y adaptadas a tendencias actuales."
+00736:       }
+00737:     ]
+00738:   },
+00739:   {
+00740:     id:"catalogos-profesionales-ia",
+00741:     template:"business",
+00742:     slug:"catalogos-profesionales-ia",
+00743:     category:"ia",
+00744:     title:"Cómo Crear Catálogos Más Profesionales Para Tu Tienda Usando IA",
+00745:     excerpt:"La inteligencia artificial puede ayudarte a mejorar imágenes, organizar productos y crear catálogos más atractivos para vender.",
+00746:     image:"https://dl.dropboxusercontent.com/scl/fi/yjya4ehrdsxg29fylw0hc/20260228_173240.jpg?rlkey=kuuumwac2avn2fbdepcvbiq2h&st=myjkiad1&raw=1&v=1",
+00747:     readTime:5,
+00748:     published:"2026-05-25",
+00749:     tags:["ia","catalogo","floreria","ventas","contenido"],
+00750:     content:[
+00751:       {
+00752:         type:"paragraph",
+00753:         title:"La presentación cambia la percepción",
+00754:         body:"Un catálogo limpio y visualmente ordenado puede hacer que tus productos se vean más premium y generar más confianza en clientes nuevos."
+00755:       },
+00756:       {
+00757:         type:"list",
+00758:         title:"Cómo mejorar tus catálogos con IA",
+00759:         items:[
+00760:           "Eliminar fondos automáticamente",
+00761:           "Mejorar iluminación y calidad de fotos",
+00762:           "Crear portadas más modernas",
+00763:           "Generar descripciones rápidas de productos",
+00764:           "Ordenar productos por categorías",
+00765:           "Crear diseños visuales para WhatsApp",
+00766:           "Adaptar formatos para Instagram y TikTok",
+00767:           "Generar ideas de combos y promociones"
+00768:         ]
+00769:       },
+00770:       {
+00771:         type:"paragraph",
+00772:         title:"Lo visual ayuda a vender más",
+00773:         body:"Los clientes suelen confiar más en tiendas que muestran productos ordenados, bien iluminados y con una imagen profesional."
+00774:       },
+00775:       {
+00776:         type:"warning",
+00777:         title:"Error frecuente",
+00778:         body:"Usar demasiados estilos, colores o tipografías distintas dentro del mismo catálogo."
+00779:       },
+00780:       {
+00781:         type:"tip",
+00782:         title:"Tip Wooly",
+00783:         body:"Mantén una línea visual simple y repetible. Un catálogo claro facilita que el cliente pregunte y compre más rápido."
+00784:       }
+00785:     ],
+00786:     faq:[
+00787:       {
+00788:         q:"¿Necesito diseñador para hacer un catálogo profesional?",
+00789:         a:"No necesariamente. Hoy existen herramientas IA que simplifican mucho el proceso."
+00790:       },
+00791:       {
+00792:         q:"¿Qué mejora más un catálogo?",
+00793:         a:"Las fotos limpias, buena organización visual y descripciones claras."
+00794:       },
+00795:       {
+00796:         q:"¿Conviene adaptar el catálogo para WhatsApp?",
+00797:         a:"Sí. Muchos clientes compran directamente desde catálogos enviados por chat."
+00798:       }
+00799:     ]
+00800:   }
+00801: 
+00802: ];
+00803: 
+00804: 
+00805: 
+
+============================================================
+FILE: src\modules\blog\data\fallbackBusinessTools.ts
+============================================================
+00001: export interface BusinessTool {
+00002:   id: string;
+00003:   icon: string;
+00004:   title: string;
+00005:   description: string;
+00006:   status: "Activo" | "Próximamente";
+00007:   href: string;
+00008: }
+00009: 
+00010: export const FALLBACK_BUSINESS_TOOLS: BusinessTool[] = [
+00011:   {
+00012:     id: "margin",
+00013:     icon: "🧮",
+00014:     title: "Calculadora margen",
+00015:     description: "Descubre cuánto debes cobrar para proteger tu utilidad.",
+00016:     status: "Próximamente",
+00017:     href: "/blog/herramientas/calculadora-margen",
+00018:   },
+00019:   {
+00020:     id: "price",
+00021:     icon: "💰",
+00022:     title: "Precio sugerido",
+00023:     description: "Define precios según costo, margen y valor percibido.",
+00024:     status: "Próximamente",
+00025:     href: "/blog/herramientas/precio-sugerido",
+00026:   },
+00027:   {
+00028:     id: "campaign",
+00029:     icon: "📅",
+00030:     title: "Checklist campaña",
+00031:     description: "Organiza productos, tiempos y acciones antes de vender.",
+00032:     status: "Activo",
+00033:     href: "/blog/herramientas/checklist-campana",
+00034:   },
+00035:   {
+00036:     id: "inventory",
+00037:     icon: "📦",
+00038:     title: "Kit inventario inicial",
+00039:     description: "Elige qué comprar primero para empezar con menos riesgo.",
+00040:     status: "Activo",
+00041:     href: "/blog/herramientas/kit-inventario",
+00042:   },
+00043: ];
+
+============================================================
+FILE: src\modules\blog\data\fallbackCampaigns.ts
+============================================================
+00001: export interface HubCampaign {
+00002:   id: string;
+00003:   emoji: string;
+00004:   title: string;
+00005:   season: string;
+00006:   description: string;
+00007:   checklist: string[];
+00008:   href: string;
+00009:   priority: number;
+00010:   featured: boolean;
+00011: }
+00012: 
+00013: export const FALLBACK_CAMPAIGNS: HubCampaign[] = [
+00014:   {
+00015:     id: "san-valentin",
+00016:     emoji: "❤️",
+00017:     title: "San Valentín",
+00018:     season: "Campaña principal",
+00019:     description:
+00020:       "La campaña más rentable para flores, peluches, papel coreano, cajas premium y regalos emocionales.",
+00021:     checklist: [
+00022:       "Flores",
+00023:       "Peluches",
+00024:       "Papel coreano",
+00025:       "Cajas premium",
+00026:       "Cintas",
+00027:     ],
+00028:     href: "/blog/campanas/san-valentin",
+00029:     priority: 1,
+00030:     featured: true,
+00031:   },
+00032:   {
+00033:     id: "dia-madre",
+00034:     emoji: "🌷",
+00035:     title: "Día de la Madre",
+00036:     season: "Alta demanda emocional",
+00037:     description:
+00038:       "Temporada clave para arreglos, detalles personalizados, regalos familiares y preventa por stock.",
+00039:     checklist: [
+00040:       "Flores",
+00041:       "Peluches premium",
+00042:       "Papel elegante",
+00043:       "Globos",
+00044:       "Cajas grandes",
+00045:     ],
+00046:     href: "/blog/campanas/dia-madre",
+00047:     priority: 2,
+00048:     featured: false,
+00049:   },
+00050:   {
+00051:     id: "hot-wheels",
+00052:     emoji: "🏎️",
+00053:     title: "Hot Wheels",
+00054:     season: "Nicho coleccionable",
+00055:     description:
+00056:       "Unidad de negocio con compra impulsiva, colecciones, packs, mystery box y venta recurrente.",
+00057:     checklist: [
+00058:       "Hot Wheels",
+00059:       "Packs",
+00060:       "Cajas regalo",
+00061:       "Protectores",
+00062:       "Colecciones",
+00063:     ],
+00064:     href: "/blog/campanas/hot-wheels",
+00065:     priority: 3,
+00066:     featured: false,
+00067:   },
+00068: ];
+
+============================================================
+FILE: src\modules\blog\data\fallbackIdeas.ts
+============================================================
+00001: export interface HubIdea {
+00002:   id: string;
+00003:   emoji: string;
+00004:   title: string;
+00005:   label: string;
+00006:   labelType: "ticket" | "margin" | "start";
+00007:   description: string;
+00008:   products: string[];
+00009:   href: string;
+00010: }
+00011: 
+00012: export const FALLBACK_IDEAS: HubIdea[] = [
+00013:   {
+00014:     id: "ramos-premium",
+00015:     emoji: "🌹",
+00016:     title: "Ramos premium",
+00017:     label: "Mayor ticket",
+00018:     labelType: "ticket",
+00019:     description:
+00020:       "Combina papel coreano, cajas y detalles para crear arreglos con mayor valor percibido.",
+00021:     products: ["Papel coreano", "Cajas premium", "Cintas"],
+00022:     href: "/blog/tipos-papel-coreano",
+00023:   },
+00024: 
+00025:   {
+00026:     id: "regalos-corporativos",
+00027:     emoji: "🎁",
+00028:     title: "Regalos corporativos",
+00029:     label: "Alto margen",
+00030:     labelType: "margin",
+00031:     description:
+00032:       "Ideas elegantes para empresas, fechas institucionales y clientes que buscan presentación profesional.",
+00033:     products: ["Cajas", "Tarjetas", "Complementos"],
+00034:     href: "/blog/guia-cajas-premium",
+00035:   },
+00036: 
+00037:   {
+00038:     id: "kit-emprendedor",
+00039:     emoji: "🚀",
+00040:     title: "Kit emprendedor",
+00041:     label: "Inicio rápido",
+00042:     labelType: "start",
+00043:     description:
+00044:       "Una combinación base para empezar a vender regalos con bajo inventario y buena rotación.",
+00045:     products: ["Papeles", "Cintas", "Peluches"],
+00046:     href: "/blog/insumos-rentables",
+00047:   },
+00048: ];
+
+============================================================
+FILE: src\modules\blog\data\fallbackOpportunities.ts
+============================================================
+00001: export interface HubOpportunity {
+00002:   id: string;
+00003:   emoji: string;
+00004:   title: string;
+00005:   subtitle: string;
+00006:   action: string;
+00007:   href: string;
+00008:   metrics: { label: string; score: number }[];
+00009: }
+00010: 
+00011: export const FALLBACK_OPPORTUNITIES: HubOpportunity[] = [
+00012:   {
+00013:     id: "san-valentin-combos",
+00014:     emoji: "❤️",
+00015:     title: "Combos para San Valentín",
+00016:     subtitle:
+00017:       "La oportunidad está en vender presentaciones completas, no productos sueltos.",
+00018:     action:
+00019:       "Arma 3 niveles de combo: detalle rápido, regalo premium y sorpresa completa.",
+00020:     href: "/blog/campanas/san-valentin",
+00021:     metrics: [
+00022:       { label: "Papel coreano", score: 92 },
+00023:       { label: "Peluches", score: 88 },
+00024:       { label: "Cajas premium", score: 84 },
+00025:     ],
+00026:   },
+00027:   {
+00028:     id: "dia-madre-preventa",
+00029:     emoji: "🌷",
+00030:     title: "Preventa Día de la Madre",
+00031:     subtitle:
+00032:       "Alta demanda para arreglos, cajas grandes y regalos emocionales con planificación previa.",
+00033:     action: "Crea preventa con cupos, fechas límite y combos por presupuesto.",
+00034:     href: "/blog/campanas/dia-madre",
+00035:     metrics: [
+00036:       { label: "Flores premium", score: 90 },
+00037:       { label: "Cajas grandes", score: 82 },
+00038:       { label: "Papel elegante", score: 76 },
+00039:     ],
+00040:   },
+00041:   {
+00042:     id: "hotwheels-packs",
+00043:     emoji: "🏎️",
+00044:     title: "Packs Hot Wheels",
+00045:     subtitle:
+00046:       "Nicho ideal para compra recurrente, coleccionismo y regalos temáticos.",
+00047:     action:
+00048:       "Agrupa por modelo, color, categoría o misterio para aumentar ticket promedio.",
+00049:     href: "/blog/campanas/hot-wheels",
+00050:     metrics: [
+00051:       { label: "Coleccionables", score: 86 },
+00052:       { label: "Packs", score: 72 },
+00053:       { label: "Mystery box", score: 64 },
+00054:     ],
+00055:   },
+00056: ];
+
+============================================================
+FILE: src\modules\blog\data\fallbackTrends.ts
+============================================================
+00001: export interface HubTrend {
+00002:   id: string;
+00003:   emoji: string;
+00004:   title: string;
+00005:   label: string;
+00006:   metric: string;
+00007:   description: string;
+00008:   href: string;
+00009: }
+00010: 
+00011: export const FALLBACK_TRENDS: HubTrend[] = [
+00012:   {
+00013:     id: "papel-coreano",
+00014:     emoji: "🔥",
+00015:     title: "Papel coreano premium",
+00016:     label: "Alta rotación",
+00017:     metric: "+25 variantes",
+00018:     description:
+00019:       "Ideal para ramos, bouquets y campañas románticas con mayor valor visual.",
+00020:     href: "/blog/tipos-papel-coreano",
+00021:   },
+00022:   {
+00023:     id: "cajas-premium",
+00024:     emoji: "📦",
+00025:     title: "Cajas premium para regalos",
+00026:     label: "Mayor ticket",
+00027:     metric: "Percepción alta",
+00028:     description:
+00029:       "Elevan la presentación, permiten combos más completos y ayudan a vender más caro.",
+00030:     href: "/blog/guia-cajas-premium",
+00031:   },
+00032:   {
+00033:     id: "peluches",
+00034:     emoji: "🧸",
+00035:     title: "Peluches como complemento",
+00036:     label: "Compra emocional",
+00037:     metric: "+ ticket promedio",
+00038:     description:
+00039:       "Funcionan para armar packs, regalos sorpresa y detalles de alto impulso.",
+00040:     href: "/catalogo",
+00041:   },
+00042: ];
+
+============================================================
+FILE: src\modules\blog\types\blog.ts
+============================================================
+00001: export type BlogBlockType = "paragraph" | "list" | "tip" | "warning";
+00002: export type BlogTemplate =
+00003:   | "guide"
+00004:   | "business"
+00005:   | "strategy"
+00006:   | "campaign"
+00007:   | "tutorial";
+00008: export type BlogLevel = "inicio" | "intermedio" | "avanzado";
+00009: export type BlogIntent =
+00010:   | "informacional"
+00011:   | "comercial"
+00012:   | "transaccional"
+00013:   | "comparativo";
+00014: 
+00015: export interface BlogSeo {
+00016:   metaTitle: string;
+00017:   metaDescription: string;
+00018:   canonical: string;
+00019:   ogTitle: string;
+00020:   ogDescription: string;
+00021:   ogImage: string;
+00022:   keywords: string[];
+00023: }
+00024: 
+00025: export interface BlogSection {
+00026:   type?: BlogBlockType;
+00027:   title: string;
+00028:   body?: string;
+00029:   items?: string[];
+00030: }
+00031: 
+00032: export interface BlogArticle {
+00033:   id: string;
+00034:   slug: string;
+00035:   category: string;
+00036:   title: string;
+00037:   excerpt: string;
+00038:   image: string;
+00039: 
+00040:   seo?: BlogSeo;
+00041: 
+00042:   readTime: number;
+00043:   published: string;
+00044:   updatedAt?: string;
+00045: 
+00046:   author?: string;
+00047:   level?: BlogLevel;
+00048:   intent?: BlogIntent;
+00049: 
+00050:   featured?: boolean;
+00051:   popular?: boolean;
+00052:   priority?: number;
+00053: 
+00054:   relatedProducts?: string[];
+00055:   relatedCategories?: string[];
+00056:   relatedCampaigns?: string[];
+00057:   relatedArticles?: string[];
+00058: 
+00059:   tags?: string[];
+00060:   searchTerms?: string[];
+00061: 
+00062:   template: BlogTemplate;
+00063:   content: BlogSection[];
+00064:   faq?: { q: string; a: string }[];
+00065: }
+
+============================================================
+FILE: src\modules\cart\components\AddToCartModalInfo.tsx
+============================================================
+00001: import { Product } from "@/shared/types/product";
+00002: 
+00003: interface Props{
+00004:   product:Product;
+00005:   currentQty:number;
+00006:   pulse:boolean;
+00007:   nextTier:any;
+00008: }
+00009: 
+00010: export function AddToCartModalInfo({product,currentQty,pulse,nextTier}:Props){
+00011:   const tiers=[
+00012:   {qty:1,price:product.price_1},
+00013:   {qty:3,price:product.price_3},
+00014:   {qty:12,price:product.price_12},
+00015:   {qty:50,price:product.price_50},
+00016:   {qty:100,price:product.price_100},
+00017:   ].filter(t=>typeof t.price==="number"&&Number.isFinite(t.price)&&t.price>0)
+00018: 
+00019:   const currentTierClass=
+00020:   currentQty>=100?"active-100":
+00021:   currentQty>=50?"active-50":
+00022:   currentQty>=12?"active-12":
+00023:   currentQty>=3?"active-3":
+00024:   "active-1";
+00025: 
+00026:   const bestTarget=tiers.at(-1)?.qty??1;
+00027:   const targetQty=nextTier?.targetQty??nextTier?.qty??bestTarget;
+00028:   const unitPrice=nextTier?.unitPrice??nextTier?.price??product.price_1;
+00029:   const missingQty=Math.max(targetQty-currentQty,0);
+00030:   const activeTiers=tiers.map(t=>t.qty);
+00031:   const currentTierIndex=activeTiers.reduce((acc,qty,i)=>currentQty>=qty?i:acc,0);
+00032:   const nextTierIndex=activeTiers.findIndex(qty=>currentQty<qty);
+00033:   const nextIndex=nextTierIndex===-1?activeTiers.length-1:nextTierIndex;
+00034:   const prevQty=activeTiers[currentTierIndex]??1;
+00035:   const nextQty=activeTiers[nextIndex]??prevQty;
+00036:   const segmentBase=activeTiers.length>1?100/(activeTiers.length-1):100;
+00037:   const segmentProgress=nextQty>prevQty?((currentQty-prevQty)/(nextQty-prevQty))*segmentBase:0;
+00038:   const rawProgress=Math.min((currentTierIndex*segmentBase)+segmentProgress,100);
+00039:   const progress=currentQty>0?Math.max(rawProgress,10):0;
+00040:   const unlocked=currentQty>=bestTarget;
+00041: 
+00042:   return(
+00043:     <div className={["mt-3 rounded-2xl border border-slate-200 bg-[#f8fafc] p-2.5 transition-transform",pulse?"scale-[1.02]":""].join(" ")}>
+00044:       <div className="relative mb-2">
+00045:         <img src={product.img||"/placeholder.svg"} alt={product.title} className="h-[320px] md:h-[420px] w-full rounded-2xl border border-slate-200 bg-white object-cover"/>
+00046: 
+00047:         <div className={`absolute left-1/2 bottom-3 grid h-12 min-w-[50px] -translate-x-1/2 place-items-center rounded-full px-3 text-[13px] font-black text-white shadow-lg animate-pulse ${currentTierClass}`}>
+00048:           +{currentQty}
+00049:         </div>
+00050:     </div>
+00051:       <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5">
+00052:         <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[10px] font-black uppercase text-slate-500">Código: {product.id}</span>
+00053:         <span className="rounded-full bg-[#e6f6f8] px-2 py-[3px] text-[10px] font-black capitalize text-[#1d8299]">{product.category}</span>
+00054:       </div>
+00055: 
+00056:       <div className="mt-3 rounded-xl bg-white p-3 shadow-sm">
+00057:         <div className="mb-2 flex items-center justify-between text-[12px] md:text-[14px] font-black">
+00058:           <span className="text-slate-600">Ya tienes {currentQty} productos</span>
+00059:           <span className={unlocked?"text-emerald-600":"text-orange-500"}>{currentQty}/{bestTarget}</span>
+00060:         </div>
+00061: 
+00062:         <div className="h-3 overflow-hidden rounded-full bg-slate-200">
+00063:           <div className={["h-full rounded-full transition-all duration-500",unlocked?"bg-gradient-to-r from-emerald-500 to-green-600":"bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-500"].join(" ")} style={{width:`${progress}%`}}/>
+00064:         </div>
+00065: 
+00066:         {tiers.length>0&&(
+00067:           <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+00068:             {tiers.map(t=>{
+00069:               const active=currentQty>=t.qty;
+00070:               const cls=`active-${t.qty}`;
+00071: 
+00072:               return(
+00073:                 <button
+00074:                   key={t.qty}
+00075:                   disabled
+00076:                   className={[
+00077:                     "rounded-full px-2.5 py-1 text-[12px] md:text-[13px] font-black transition-all flex items-center justify-center gap-2",
+00078:                     active?cls:"cart-tier-btn-muted"
+00079:                   ].join(" ")}
+00080:                 >
+00081:                   <span>{t.qty}+</span>
+00082:                   <span>S/{t.price!.toFixed(1)}</span>
+00083:                 </button>
+00084:               );
+00085:             })}
+00086:           </div>
+00087:         )}
+00088: 
+00089:         <p className="mt-2 text-center text-[13px] md:text-[16px] font-bold leading-snug text-slate-700">
+00090:           {unlocked?(<>🎉 Mejor precio desbloqueado</>):nextTier?(<>🚀 Agrega <span className="text-[#1d8299]">{missingQty}</span> más y paga <span className="text-[#1d8299]">S/{unitPrice.toFixed(1)}</span> c/u</>):(<>✅ Ya tienes el mejor precio disponible</>)}
+00091:         </p>
+00092:       </div>
+00093:     </div>
+00094:   );
+00095: }
+
+============================================================
+FILE: src\modules\cart\store\index.ts
+============================================================
+00001: export * from "./cart.context";
+00002: export * from "./cart.store";
+00003: export * from "./cart.actions";
+00004: export * from "./cart.selectors";
+00005: export * from "./cart.persistence";
+
+============================================================
+FILE: src\modules\catalog\providers\CatalogProvider.ts
+============================================================
+00001: import type { Campaign, Product } from "@/shared/types/product";
+00002: 
+00003: /* =========================================================
+00004:    TIPOS DEL PROVIDER
+00005:    ========================================================= */
+00006: 
+00007: export type CatalogCategoryId = NonNullable<Product["category"]>;
+00008: 
+00009: /* =========================================================
+00010:    CONTRATO DEL CATÁLOGO
+00011:    ========================================================= */
+00012: 
+00013: export interface CatalogProvider {
+00014:   getCategories(): readonly CatalogCategoryId[];
+00015: 
+00016:   loadCampaigns(): Promise<Campaign[]>;
+00017: 
+00018:   loadCategoryProducts(
+00019:     category: CatalogCategoryId,
+00020:     campaigns: readonly Campaign[],
+00021:   ): Promise<Product[]>;
+00022: }
+
+============================================================
+FILE: src\modules\catalog\services\fetchProducts.ts
+============================================================
+00001: export * from "./productService";
+
+============================================================
+FILE: src\modules\catalog\services\productService.ts
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: 
+00003: import type { CatalogCategoryId } from "@/modules/catalog/providers/CatalogProvider";
+00004: import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
+00005: 
+00006: import { loadCatalogCampaigns } from "./campaignService";
+00007: 
+00008: /* =========================================================
+00009:    TIPOS INTERNOS
+00010:    ========================================================= */
+00011: 
+00012: type CategoryCacheEntry = {
+00013:   savedAt: number;
+00014:   items: Product[];
+00015: };
+00016: 
+00017: export type CatalogCategory = CatalogCategoryId | "todas";
+00018: 
+00019: /* =========================================================
+00020:    CONFIGURACIÓN
+00021:    ========================================================= */
+00022: 
+00023: const CACHE_TTL = 1000 * 60 * 5;
+00024: 
+00025: /* =========================================================
+00026:    CACHE EN MEMORIA
+00027:    ========================================================= */
+00028: 
+00029: const memoryCache = new Map<CatalogCategoryId, CategoryCacheEntry>();
+00030: 
+00031: const pendingRequests = new Map<CatalogCategoryId, Promise<Product[]>>();
+00032: 
+00033: /* =========================================================
+00034:    HELPERS
+00035:    ========================================================= */
+00036: 
+00037: const productKey = (category: string) => `jung_catalog_v3_${category}`;
+00038: 
+00039: const now = () => Date.now();
+00040: 
+00041: const isFresh = (savedAt: number) => now() - savedAt <= CACHE_TTL;
+00042: 
+00043: export const getCatalogCategories = (): CatalogCategoryId[] => [
+00044:   ...catalogProvider.getCategories(),
+00045: ];
+00046: 
+00047: const sortProducts = (items: Product[]) =>
+00048:   [...items].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+00049: 
+00050: const flattenByCategory = (
+00051:   byCategory: Partial<Record<CatalogCategoryId, Product[]>>,
+00052: ) => sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
+00053: 
+00054: /* =========================================================
+00055:    CACHE LOCAL DE PRODUCTOS
+00056:    ========================================================= */
+00057: 
+00058: function readStorageCache(category: CatalogCategoryId): Product[] | null {
+00059:   if (typeof window === "undefined") {
+00060:     return null;
+00061:   }
+00062: 
+00063:   try {
+00064:     const raw = localStorage.getItem(productKey(category));
+00065: 
+00066:     if (!raw) {
+00067:       return null;
+00068:     }
+00069: 
+00070:     const parsed = JSON.parse(raw) as CategoryCacheEntry;
+00071: 
+00072:     if (!parsed?.savedAt || !isFresh(parsed.savedAt)) {
+00073:       return null;
+00074:     }
+00075: 
+00076:     if (!Array.isArray(parsed.items)) {
+00077:       return null;
+00078:     }
+00079: 
+00080:     memoryCache.set(category, {
+00081:       savedAt: parsed.savedAt,
+00082:       items: parsed.items,
+00083:     });
+00084: 
+00085:     return parsed.items;
+00086:   } catch {
+00087:     return null;
+00088:   }
+00089: }
+00090: 
+00091: export function readCachedCategoryProducts(
+00092:   category: CatalogCategoryId,
+00093: ): Product[] | null {
+00094:   const memoryEntry = memoryCache.get(category);
+00095: 
+00096:   if (memoryEntry && isFresh(memoryEntry.savedAt)) {
+00097:     return sortProducts(memoryEntry.items);
+00098:   }
+00099: 
+00100:   if (memoryEntry && !isFresh(memoryEntry.savedAt)) {
+00101:     memoryCache.delete(category);
+00102:   }
+00103: 
+00104:   const storageItems = readStorageCache(category);
+00105: 
+00106:   return storageItems ? sortProducts(storageItems) : null;
+00107: }
+00108: 
+00109: function writeCache(category: CatalogCategoryId, items: Product[]): void {
+00110:   const entry: CategoryCacheEntry = {
+00111:     savedAt: now(),
+00112:     items,
+00113:   };
+00114: 
+00115:   memoryCache.set(category, entry);
+00116: 
+00117:   if (typeof window === "undefined") {
+00118:     return;
+00119:   }
+00120: 
+00121:   try {
+00122:     localStorage.setItem(productKey(category), JSON.stringify(entry));
+00123:   } catch {
+00124:     // Si localStorage falla, se conserva el cache en memoria.
+00125:   }
+00126: }
+00127: 
+00128: /* =========================================================
+00129:    SNAPSHOT DEL CATÁLOGO
+00130:    ========================================================= */
+00131: 
+00132: export function getCachedCatalogSnapshot() {
+00133:   const categories = getCatalogCategories();
+00134: 
+00135:   const byCategory: Partial<Record<CatalogCategoryId, Product[]>> = {};
+00136: 
+00137:   categories.forEach((category) => {
+00138:     const cached = readCachedCategoryProducts(category);
+00139: 
+00140:     if (cached) {
+00141:       byCategory[category] = cached;
+00142:     }
+00143:   });
+00144: 
+00145:   const loadedCategories = categories.filter(
+00146:     (category) => byCategory[category],
+00147:   );
+00148: 
+00149:   const isFullCatalogLoaded = loadedCategories.length === categories.length;
+00150: 
+00151:   return {
+00152:     byCategory,
+00153:     products: flattenByCategory(byCategory),
+00154:     loadedCategories,
+00155:     isFullCatalogLoaded,
+00156:   };
+00157: }
+00158: 
+00159: /* =========================================================
+00160:    CARGA DESDE EL PROVIDER
+00161:    ========================================================= */
+00162: 
+00163: async function fetchCategoryProducts(
+00164:   category: CatalogCategoryId,
+00165: ): Promise<Product[]> {
+00166:   const campaigns =
+00167:     await loadCatalogCampaigns({
+00168:       includeInactive: true,
+00169:     });
+00170: 
+00171:   const products =
+00172:     await catalogProvider.loadCategoryProducts(
+00173:       category,
+00174:       campaigns,
+00175:     );
+00176: 
+00177:   const sortedProducts =
+00178:     sortProducts(products);
+00179: 
+00180:   writeCache(
+00181:     category,
+00182:     sortedProducts,
+00183:   );
+00184: 
+00185:   return sortedProducts;
+00186: }
+00187: /* =========================================================
+00188:    API DE CARGA POR CATEGORÍA
+00189:    ========================================================= */
+00190: 
+00191: export async function loadCategoryProducts(
+00192:   category: CatalogCategoryId,
+00193:   options: { forceRefresh?: boolean } = {},
+00194: ): Promise<Product[]> {
+00195:   if (!options.forceRefresh) {
+00196:     const cached = readCachedCategoryProducts(category);
+00197: 
+00198:     if (cached) {
+00199:       return cached;
+00200:     }
+00201:   }
+00202: 
+00203:   const pendingRequest = pendingRequests.get(category);
+00204: 
+00205:   if (pendingRequest) {
+00206:     return pendingRequest;
+00207:   }
+00208: 
+00209:   const request = fetchCategoryProducts(category).finally(() => {
+00210:     pendingRequests.delete(category);
+00211:   });
+00212: 
+00213:   pendingRequests.set(category, request);
+00214: 
+00215:   return request;
+00216: }
+00217: 
+00218: export async function loadAllProducts(): Promise<Product[]> {
+00219:   const categories = getCatalogCategories();
+00220: 
+00221:   const results = await Promise.all(
+00222:     categories.map((category) =>
+00223:       loadCategoryProducts(category).catch((error: unknown) => {
+00224:         console.error(`Error en categoría "${category}":`, error);
+00225: 
+00226:         return [];
+00227:       }),
+00228:     ),
+00229:   );
+00230: 
+00231:   return sortProducts(results.flat());
+00232: }
+00233: 
+00234: /* =========================================================
+00235:    CARGA PROGRESIVA
+00236:    ========================================================= */
+00237: 
+00238: export async function loadCatalogProgressive(
+00239:   activeCategory: CatalogCategory,
+00240:   onUpdate: (products: Product[], isFullCatalogLoaded: boolean) => void,
+00241: ): Promise<void> {
+00242:   const categories = getCatalogCategories();
+00243: 
+00244:   const preferredCategory = activeCategory !== "todas" ? activeCategory : null;
+00245: 
+00246:   const categoryOrder = preferredCategory
+00247:     ? [
+00248:         preferredCategory,
+00249:         ...categories.filter((category) => category !== preferredCategory),
+00250:       ]
+00251:     : categories;
+00252: 
+00253:   const byCategory = getCachedCatalogSnapshot().byCategory;
+00254: 
+00255:   onUpdate(
+00256:     flattenByCategory(byCategory),
+00257:     Object.keys(byCategory).length === categories.length,
+00258:   );
+00259: 
+00260:   for (const category of categoryOrder) {
+00261:     if (byCategory[category]) {
+00262:       continue;
+00263:     }
+00264: 
+00265:     try {
+00266:       byCategory[category] = await loadCategoryProducts(category);
+00267:     } catch (error: unknown) {
+00268:       console.error(`Error cargando "${category}":`, error);
+00269: 
+00270:       byCategory[category] = [];
+00271:     }
+00272: 
+00273:     onUpdate(
+00274:       flattenByCategory(byCategory),
+00275:       Object.keys(byCategory).length === categories.length,
+00276:     );
+00277:   }
+00278: }
+00279: 
+00280: 
+00281: 
+
+============================================================
+FILE: src\modules\catalog\utils\products.ts
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: import { loadAllProducts } from "@/modules/catalog/services/fetchProducts";
+00003: 
+00004: const CACHE_KEY = "wooly_products_cache";
+00005: const CACHE_DURATION = 10 * 1000;
+00006: 
+00007: interface CacheEntry {
+00008:   data: Product[];
+00009:   timestamp: number;
+00010:   source: "sheets" | "fallback";
+00011: }
+00012: 
+00013: function getCached(): Product[] | null {
+00014:   try {
+00015:     const raw = sessionStorage.getItem(CACHE_KEY);
+00016:     if (!raw) return null;
+00017: 
+00018:     const entry: CacheEntry = JSON.parse(raw);
+00019: 
+00020:     if (Date.now() - entry.timestamp > CACHE_DURATION) {
+00021:       sessionStorage.removeItem(CACHE_KEY);
+00022:       return null;
+00023:     }
+00024: 
+00025:     return entry.data;
+00026:   } catch {
+00027:     return null;
+00028:   }
+00029: }
+00030: 
+00031: function setCache(data: Product[], source: CacheEntry["source"]) {
+00032:   try {
+00033:     sessionStorage.setItem(
+00034:       CACHE_KEY,
+00035:       JSON.stringify({
+00036:         data,
+00037:         timestamp: Date.now(),
+00038:         source,
+00039:       }),
+00040:     );
+00041:   } catch {
+00042:     // Ignorar errores de storage.
+00043:   }
+00044: }
+00045: 
+00046: async function loadFallbackProducts(): Promise<Product[]> {
+00047:   const { FALLBACK_PRODUCTS } =
+00048:     await import("@/modules/catalog/data/fallback-products");
+00049: 
+00050:   return FALLBACK_PRODUCTS;
+00051: }
+00052: 
+00053: export async function fetchProducts(): Promise<Product[]> {
+00054:   const cached = getCached();
+00055:   if (cached) return cached;
+00056: 
+00057:   try {
+00058:     const products = await loadAllProducts();
+00059: 
+00060:     if (products?.length) {
+00061:       setCache(products, "sheets");
+00062:       return products;
+00063:     }
+00064: 
+00065:     console.warn(
+00066:       "Sheets vacío o sin productos publicados. Usando fallback local.",
+00067:     );
+00068: 
+00069:     const fallbackProducts = await loadFallbackProducts();
+00070:     setCache(fallbackProducts, "fallback");
+00071: 
+00072:     return fallbackProducts;
+00073:   } catch (error) {
+00074:     console.error("Error cargando catálogo desde Sheets:", error);
+00075: 
+00076:     const fallbackProducts = await loadFallbackProducts();
+00077:     setCache(fallbackProducts, "fallback");
+00078: 
+00079:     return fallbackProducts;
+00080:   }
+00081: }
+00082: 
+00083: export function clearProductsCache() {
+00084:   try {
+00085:     sessionStorage.removeItem(CACHE_KEY);
+00086:   } catch {
+00087:     // Ignorar errores de storage.
+00088:   }
+00089: }
+00090: 
+00091: export function getEffectivePrice(item: {
+00092:   price_1: number;
+00093:   price_3: number | null;
+00094:   price_12: number | null;
+00095:   price_50: number | null;
+00096:   price_100: number | null;
+00097:   qty: number;
+00098: }): number {
+00099:   if (item.price_100 && item.qty >= 100) return item.price_100;
+00100:   if (item.price_50 && item.qty >= 50) return item.price_50;
+00101:   if (item.price_12 && item.qty >= 12) return item.price_12;
+00102:   if (item.price_3 && item.qty >= 3) return item.price_3;
+00103: 
+00104:   return item.price_1;
+00105: }
+00106: 
+00107: export function getMinPrice(product: Product): number {
+00108:   return (
+00109:     product.price_100 ||
+00110:     product.price_50 ||
+00111:     product.price_12 ||
+00112:     product.price_3 ||
+00113:     product.price_1 ||
+00114:     0
+00115:   );
+00116: }
+00117: 
+00118: export function isProductAvailable(product: Product): boolean {
+00119:   if (!product.price_1 || product.price_1 <= 0) return false;
+00120:   if (product.stock === 0) return false;
+00121:   if (product.stock === null || product.stock === undefined) return false;
+00122: 
+00123:   return true;
+00124: }
+
+============================================================
+FILE: src\modules\integrations\types\feed.ts
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: 
+00003: export type FeedProduct = Product;
+00004: 
+00005: export type MetaFeedItem = {
+00006:   id: string;
+00007:   title: string;
+00008:   description: string;
+00009:   availability: string;
+00010:   condition: string;
+00011:   price: string;
+00012:   link: string;
+00013:   image_link: string;
+00014:   brand: string;
+00015:   google_product_category: string;
+00016: };
+
+============================================================
+FILE: src\shared\components\media\ImageZoomModal.tsx
+============================================================
+00001: import { useState, useRef, useEffect, useCallback } from "react";
+00002: import { X, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
+00003: import type { ProductMedia } from "@/shared/lib/productMedia";
+00004: 
+00005: interface ImageZoomModalProps {
+00006:   media?: ProductMedia[];
+00007:   initialIndex?: number;
+00008:   open?: boolean;
+00009:   src?: string | null;
+00010:   title: string;
+00011:   onClose: () => void;
+00012: }
+00013: 
+00014: const clamp = (value: number, min: number, max: number) =>
+00015:   Math.max(min, Math.min(value, max));
+00016: 
+00017: const getTouchDistance = (touches: React.TouchList) => {
+00018:   const a = touches[0];
+00019:   const b = touches[1];
+00020:   return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+00021: };
+00022: 
+00023: export function ImageZoomModal({
+00024:   media = [],
+00025:   initialIndex = 0,
+00026:   open,
+00027:   src,
+00028:   title,
+00029:   onClose,
+00030: }: ImageZoomModalProps) {
+00031:   const normalizedMedia =
+00032:     media.length > 0
+00033:       ? media
+00034:       : src
+00035:         ? [
+00036:             {
+00037:               id: "legacy-image",
+00038:               type: "image" as const,
+00039:               src,
+00040:               thumb: src,
+00041:               alt: title,
+00042:               order: 1,
+00043:             },
+00044:           ]
+00045:         : [];
+00046: 
+00047:   const isOpen = open ?? !!src;
+00048: 
+00049:   const [activeIndex, setActiveIndex] = useState(initialIndex);
+00050:   const [imageLoaded, setImageLoaded] = useState(false);
+00051: 
+00052:   const [scale, setScale] = useState(1);
+00053:   const [pos, setPos] = useState({ x: 0, y: 0 });
+00054: 
+00055:   const activeMedia = normalizedMedia[activeIndex] ?? normalizedMedia[0];
+00056:   const hasMany = normalizedMedia.length > 1;
+00057: 
+00058:   const mouseRef = useRef({ panning: false, startX: 0, startY: 0 });
+00059:   const touchRef = useRef({
+00060:     panning: false,
+00061:     pinching: false,
+00062:     swiping: false,
+00063:     startX: 0,
+00064:     startY: 0,
+00065:     startDistance: 0,
+00066:     startScale: 1,
+00067:   });
+00068:   const containerRef = useRef<HTMLDivElement>(null);
+00069:   const historyPushedRef = useRef(false);
+00070:   const closingFromPopStateRef = useRef(false);
+00071: 
+00072:   const reset = useCallback(() => {
+00073:     setScale(1);
+00074:     setPos({ x: 0, y: 0 });
+00075:   }, []);
+00076: 
+00077:   const goPrev = useCallback(() => {
+00078:     setActiveIndex((index) =>
+00079:       index === 0 ? normalizedMedia.length - 1 : index - 1,
+00080:     );
+00081:     reset();
+00082:   }, [normalizedMedia.length, reset]);
+00083: 
+00084:   const goNext = useCallback(() => {
+00085:     setActiveIndex((index) =>
+00086:       index === normalizedMedia.length - 1 ? 0 : index + 1,
+00087:     );
+00088:     reset();
+00089:   }, [normalizedMedia.length, reset]);
+00090: 
+00091:   const closeModal = useCallback(() => {
+00092:     if (historyPushedRef.current && !closingFromPopStateRef.current) {
+00093:       historyPushedRef.current = false;
+00094:       window.history.back();
+00095:       return;
+00096:     }
+00097: 
+00098:     onClose();
+00099:   }, [onClose]);
+00100: 
+00101:   useEffect(() => {
+00102:     if (!open) return;
+00103:     setActiveIndex(initialIndex);
+00104:     reset();
+00105:   }, [open, initialIndex, reset]);
+00106: 
+00107:   useEffect(() => {
+00108:     setImageLoaded(false);
+00109:   }, [activeIndex]);
+00110: 
+00111:   useEffect(() => {
+00112:     if (!open) return;
+00113: 
+00114:     window.history.pushState({ imageZoom: true }, "");
+00115:     historyPushedRef.current = true;
+00116:     closingFromPopStateRef.current = false;
+00117: 
+00118:     const handlePopState = () => {
+00119:       closingFromPopStateRef.current = true;
+00120:       historyPushedRef.current = false;
+00121:       onClose();
+00122:     };
+00123: 
+00124:     window.addEventListener("popstate", handlePopState);
+00125: 
+00126:     return () => {
+00127:       window.removeEventListener("popstate", handlePopState);
+00128:     };
+00129:   }, [open, onClose]);
+00130: 
+00131:   useEffect(() => {
+00132:     if (!open) return;
+00133: 
+00134:     const handleKeyDown = (e: KeyboardEvent) => {
+00135:       if (e.key === "Escape") closeModal();
+00136: 
+00137:       if (hasMany && scale <= 1) {
+00138:         if (e.key === "ArrowLeft") goPrev();
+00139:         if (e.key === "ArrowRight") goNext();
+00140:       }
+00141:     };
+00142: 
+00143:     window.addEventListener("keydown", handleKeyDown);
+00144: 
+00145:     return () => {
+00146:       window.removeEventListener("keydown", handleKeyDown);
+00147:     };
+00148:   }, [open, closeModal, hasMany, scale, goPrev, goNext]);
+00149: 
+00150:   useEffect(() => {
+00151:     const el = containerRef.current;
+00152:     if (!el || !open) return;
+00153: 
+00154:     const handler = (e: WheelEvent) => {
+00155:       e.preventDefault();
+00156: 
+00157:       setScale((current) => {
+00158:         const next = e.deltaY < 0 ? current * 1.12 : current / 1.12;
+00159:         const clamped = clamp(next, 1, 5);
+00160: 
+00161:         if (clamped === 1) setPos({ x: 0, y: 0 });
+00162: 
+00163:         return clamped;
+00164:       });
+00165:     };
+00166: 
+00167:     el.addEventListener("wheel", handler, { passive: false });
+00168: 
+00169:     return () => {
+00170:       el.removeEventListener("wheel", handler);
+00171:     };
+00172:   }, [open]);
+00173: 
+00174:   if (!isOpen || !activeMedia) return null;
+00175: 
+00176:   const handleMouseDown = (e: React.MouseEvent) => {
+00177:     if (scale <= 1) return;
+00178: 
+00179:     e.preventDefault();
+00180: 
+00181:     mouseRef.current = {
+00182:       panning: true,
+00183:       startX: e.clientX - pos.x,
+00184:       startY: e.clientY - pos.y,
+00185:     };
+00186:   };
+00187: 
+00188:   const handleMouseMove = (e: React.MouseEvent) => {
+00189:     if (!mouseRef.current.panning) return;
+00190: 
+00191:     setPos({
+00192:       x: e.clientX - mouseRef.current.startX,
+00193:       y: e.clientY - mouseRef.current.startY,
+00194:     });
+00195:   };
+00196: 
+00197:   const handleMouseUp = () => {
+00198:     mouseRef.current.panning = false;
+00199:   };
+00200: 
+00201:   const handleDoubleClick = () => {
+00202:     if (scale > 1) {
+00203:       reset();
+00204:       return;
+00205:     }
+00206: 
+00207:     setScale(2.4);
+00208:   };
+00209: 
+00210:   const handleTouchStart = (e: React.TouchEvent) => {
+00211:     if (e.touches.length === 2) {
+00212:       touchRef.current = {
+00213:         ...touchRef.current,
+00214:         pinching: true,
+00215:         panning: false,
+00216:         swiping: false,
+00217:         startDistance: getTouchDistance(e.touches),
+00218:         startScale: scale,
+00219:       };
+00220:       return;
+00221:     }
+00222: 
+00223:     if (e.touches.length === 1) {
+00224:       const touch = e.touches[0];
+00225: 
+00226:       touchRef.current = {
+00227:         ...touchRef.current,
+00228:         pinching: false,
+00229:         panning: scale > 1,
+00230:         swiping: scale <= 1,
+00231:         startX: scale > 1 ? touch.clientX - pos.x : touch.clientX,
+00232:         startY: scale > 1 ? touch.clientY - pos.y : touch.clientY,
+00233:       };
+00234:     }
+00235:   };
+00236: 
+00237:   const handleTouchMove = (e: React.TouchEvent) => {
+00238:     if (e.touches.length === 2 && touchRef.current.pinching) {
+00239:       e.preventDefault();
+00240: 
+00241:       const distance = getTouchDistance(e.touches);
+00242:       const nextScale = clamp(
+00243:         (distance / touchRef.current.startDistance) *
+00244:           touchRef.current.startScale,
+00245:         1,
+00246:         5,
+00247:       );
+00248: 
+00249:       setScale(nextScale);
+00250: 
+00251:       if (nextScale === 1) setPos({ x: 0, y: 0 });
+00252: 
+00253:       return;
+00254:     }
+00255: 
+00256:     if (e.touches.length === 1 && touchRef.current.panning && scale > 1) {
+00257:       e.preventDefault();
+00258: 
+00259:       const touch = e.touches[0];
+00260: 
+00261:       setPos({
+00262:         x: touch.clientX - touchRef.current.startX,
+00263:         y: touch.clientY - touchRef.current.startY,
+00264:       });
+00265:     }
+00266:   };
+00267: 
+00268:   const handleTouchEnd = (e: React.TouchEvent) => {
+00269:     if (hasMany && touchRef.current.swiping && scale <= 1) {
+00270:       const endX = e.changedTouches[0]?.clientX ?? touchRef.current.startX;
+00271:       const diff = touchRef.current.startX - endX;
+00272: 
+00273:       if (Math.abs(diff) > 45) {
+00274:         diff > 0 ? goNext() : goPrev();
+00275:       }
+00276:     }
+00277: 
+00278:     touchRef.current.panning = false;
+00279:     touchRef.current.pinching = false;
+00280:     touchRef.current.swiping = false;
+00281: 
+00282:     if (scale <= 1.03) reset();
+00283:   };
+00284: 
+00285:   return (
+00286:     <div
+00287:       className="fixed inset-0 z-[2500] flex items-center justify-center bg-slate-950/95 p-2 backdrop-blur-md transition-opacity duration-300 md:p-4"
+00288:       onClick={(e) => {
+00289:         if (e.target === e.currentTarget) closeModal();
+00290:       }}
+00291:       onMouseMove={handleMouseMove}
+00292:       onMouseUp={handleMouseUp}
+00293:       onMouseLeave={handleMouseUp}
+00294:     >
+00295:       <div
+00296:         ref={containerRef}
+00297:         className="relative flex aspect-[3/4] h-auto max-h-[92vh] w-[94vw] max-w-[430px] touch-none select-none items-center justify-center overflow-hidden rounded-3xl bg-slate-900 shadow-2xl ring-1 ring-white/10 md:h-[78vh] md:w-full md:max-w-5xl md:aspect-auto"
+00298:         onDoubleClick={handleDoubleClick}
+00299:         onTouchStart={handleTouchStart}
+00300:         onTouchMove={handleTouchMove}
+00301:         onTouchEnd={handleTouchEnd}
+00302:       >
+00303:         <div className="absolute left-0 top-0 z-30 flex min-h-16 w-full items-center justify-between gap-3 bg-gradient-to-b from-black/75 via-black/45 to-transparent px-4 py-3 md:min-h-20 md:px-5">
+00304:           <h2 className="line-clamp-2 max-w-[68%] text-sm font-black leading-tight text-white md:max-w-[75%] md:text-lg">
+00305:             {title}
+00306:           </h2>
+00307: 
+00308:           <div className="flex shrink-0 gap-2">
+00309:             {scale > 1 && (
+00310:               <button
+00311:                 onClick={(e) => {
+00312:                   e.stopPropagation();
+00313:                   reset();
+00314:                 }}
+00315:                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-800 shadow-lg transition-all hover:scale-105"
+00316:                 aria-label="Restablecer zoom"
+00317:               >
+00318:                 <RotateCcw className="h-5 w-5" />
+00319:               </button>
+00320:             )}
+00321: 
+00322:             <button
+00323:               onClick={(e) => {
+00324:                 e.stopPropagation();
+00325:                 closeModal();
+00326:               }}
+00327:               className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-800 shadow-lg transition-all hover:scale-105 hover:text-red-600"
+00328:               aria-label="Cerrar imagen"
+00329:             >
+00330:               <X className="h-5 w-5" />
+00331:             </button>
+00332:           </div>
+00333:         </div>
+00334:         {normalizedMedia.length > 1 && (
+00335:           <div className="absolute bottom-14 left-1/2 z-40 flex max-w-[88vw] -translate-x-1/2 gap-2 overflow-x-auto rounded-2xl bg-black/25 p-2 backdrop-blur-md lg:bottom-6 lg:left-4 lg:top-20 lg:max-w-none lg:translate-x-0 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden">
+00336:             {normalizedMedia.map((item, index) => (
+00337:               <button
+00338:                 key={item.id}
+00339:                 type="button"
+00340:                 onMouseEnter={() => {
+00341:                   if (activeIndex !== index) {
+00342:                     setActiveIndex(index);
+00343:                     reset();
+00344:                   }
+00345:                 }}
+00346:                 onClick={() => {
+00347:                   setActiveIndex(index);
+00348:                   reset();
+00349:                 }}
+00350:                 className={[
+00351:                   "overflow-hidden rounded-xl border transition-all h-10 w-10 md:h-12 md:w-12 lg:h-20 lg:w-20",
+00352:                   activeIndex === index
+00353:                     ? "border-cyan-400 ring-2 ring-cyan-400/30 scale-105"
+00354:                     : "border-white/10 opacity-70 hover:opacity-100",
+00355:                 ].join(" ")}
+00356:               >
+00357:                 <img
+00358:                   src={item.thumb || item.src}
+00359:                   alt={item.alt}
+00360:                   className="h-10 w-10 rounded-xl object-cover md:h-12 md:w-12 lg:h-20 lg:w-20"
+00361:                 />
+00362:               </button>
+00363:             ))}
+00364:           </div>
+00365:         )}
+00366: 
+00367:         {hasMany && scale <= 1 && (
+00368:           <>
+00369:             <button
+00370:               type="button"
+00371:               onClick={(e) => {
+00372:                 e.stopPropagation();
+00373:                 goPrev();
+00374:               }}
+00375:               className="absolute left-3 top-1/2 z-40 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 text-white shadow-xl backdrop-blur-md transition-all hover:scale-105 hover:bg-black/55 md:flex"
+00376:               aria-label="Imagen anterior"
+00377:             >
+00378:               <ChevronLeft className="h-6 w-6" />
+00379:             </button>
+00380: 
+00381:             <button
+00382:               type="button"
+00383:               onClick={(e) => {
+00384:                 e.stopPropagation();
+00385:                 goNext();
+00386:               }}
+00387:               className="absolute right-3 top-1/2 z-40 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 text-white shadow-xl backdrop-blur-md transition-all hover:scale-105 hover:bg-black/55 md:flex"
+00388:               aria-label="Imagen siguiente"
+00389:             >
+00390:               <ChevronRight className="h-6 w-6" />
+00391:             </button>
+00392: 
+00393:             <div className="absolute bottom-4 left-1/2 z-40 -translate-x-1/2 rounded-full bg-black/40 px-3 py-1.5 text-xs font-black text-white backdrop-blur-md">
+00394:               {activeIndex + 1} / {normalizedMedia.length}
+00395:             </div>
+00396:           </>
+00397:         )}
+00398: 
+00399:         <div className="relative flex h-full w-full items-center justify-center lg:pl-24">
+00400:           <img
+00401:             src={activeMedia.src}
+00402:             alt={activeMedia.alt || title}
+00403:             className={[
+00404:               "max-h-full max-w-full object-contain drop-shadow-2xl transition-transform duration-75 origin-center",
+00405:               scale > 1
+00406:                 ? "cursor-grab active:cursor-grabbing"
+00407:                 : "cursor-zoom-in",
+00408:             ].join(" ")}
+00409:             style={{
+00410:               transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
+00411:             }}
+00412:             onMouseDown={handleMouseDown}
+00413:             draggable={false}
+00414:           />
+00415:         </div>
+00416:       </div>
+00417:     </div>
+00418:   );
+00419: }
+
+============================================================
+FILE: src\shared\components\ui\toast.tsx
+============================================================
+00001: import * as React from "react";
+00002: import * as ToastPrimitives from "@radix-ui/react-toast";
+00003: import { cva, type VariantProps } from "class-variance-authority";
+00004: import { X } from "lucide-react";
+00005: 
+00006: import { cn } from "@/shared/lib/utils";
+00007: 
+00008: const ToastProvider = ToastPrimitives.Provider;
+00009: 
+00010: const ToastViewport = React.forwardRef<
+00011:   React.ElementRef<typeof ToastPrimitives.Viewport>,
+00012:   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
+00013: >(({ className, ...props }, ref) => (
+00014:   <ToastPrimitives.Viewport
+00015:     ref={ref}
+00016:     className={cn(
+00017:       "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+00018:       className,
+00019:     )}
+00020:     {...props}
+00021:   />
+00022: ));
+00023: ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
+00024: 
+00025: const toastVariants = cva(
+00026:   "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+00027:   {
+00028:     variants: {
+00029:       variant: {
+00030:         default: "border bg-background text-foreground",
+00031:         destructive: "destructive group border-destructive bg-destructive text-destructive-foreground",
+00032:       },
+00033:     },
+00034:     defaultVariants: {
+00035:       variant: "default",
+00036:     },
+00037:   },
+00038: );
+00039: 
+00040: const Toast = React.forwardRef<
+00041:   React.ElementRef<typeof ToastPrimitives.Root>,
+00042:   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
+00043: >(({ className, variant, ...props }, ref) => {
+00044:   return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />;
+00045: });
+00046: Toast.displayName = ToastPrimitives.Root.displayName;
+00047: 
+00048: const ToastAction = React.forwardRef<
+00049:   React.ElementRef<typeof ToastPrimitives.Action>,
+00050:   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
+00051: >(({ className, ...props }, ref) => (
+00052:   <ToastPrimitives.Action
+00053:     ref={ref}
+00054:     className={cn(
+00055:       "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors group-[.destructive]:border-muted/40 hover:bg-secondary group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 group-[.destructive]:focus:ring-destructive disabled:pointer-events-none disabled:opacity-50",
+00056:       className,
+00057:     )}
+00058:     {...props}
+00059:   />
+00060: ));
+00061: ToastAction.displayName = ToastPrimitives.Action.displayName;
+00062: 
+00063: const ToastClose = React.forwardRef<
+00064:   React.ElementRef<typeof ToastPrimitives.Close>,
+00065:   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
+00066: >(({ className, ...props }, ref) => (
+00067:   <ToastPrimitives.Close
+00068:     ref={ref}
+00069:     className={cn(
+00070:       "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
+00071:       className,
+00072:     )}
+00073:     toast-close=""
+00074:     {...props}
+00075:   >
+00076:     <X className="h-4 w-4" />
+00077:   </ToastPrimitives.Close>
+00078: ));
+00079: ToastClose.displayName = ToastPrimitives.Close.displayName;
+00080: 
+00081: const ToastTitle = React.forwardRef<
+00082:   React.ElementRef<typeof ToastPrimitives.Title>,
+00083:   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
+00084: >(({ className, ...props }, ref) => (
+00085:   <ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
+00086: ));
+00087: ToastTitle.displayName = ToastPrimitives.Title.displayName;
+00088: 
+00089: const ToastDescription = React.forwardRef<
+00090:   React.ElementRef<typeof ToastPrimitives.Description>,
+00091:   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
+00092: >(({ className, ...props }, ref) => (
+00093:   <ToastPrimitives.Description ref={ref} className={cn("text-sm opacity-90", className)} {...props} />
+00094: ));
+00095: ToastDescription.displayName = ToastPrimitives.Description.displayName;
+00096: 
+00097: type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
+00098: 
+00099: type ToastActionElement = React.ReactElement<typeof ToastAction>;
+00100: 
+00101: export {
+00102:   type ToastProps,
+00103:   type ToastActionElement,
+00104:   ToastProvider,
+00105:   ToastViewport,
+00106:   Toast,
+00107:   ToastTitle,
+00108:   ToastDescription,
+00109:   ToastClose,
+00110:   ToastAction,
+00111: };
+
+============================================================
+FILE: src\shared\config\cartTiers.ts
+============================================================
+00001: export const CART_TIERS = [
+00002:   { qty: 1, key: "price_1" as const, cls: "active-1", label: "1u" },
+00003:   { qty: 3, key: "price_3" as const, cls: "active-3", label: "3u" },
+00004:   { qty: 12, key: "price_12" as const, cls: "active-12", label: "12u" },
+00005:   { qty: 50, key: "price_50" as const, cls: "active-50", label: "50u" },
+00006:   { qty: 100, key: "price_100" as const, cls: "active-100", label: "100u" },
+00007: ];
+00008: 
+00009: export const TIER_COLORS = {
+00010:   "active-1": "active-1",
+00011:   "active-3": "active-3",
+00012:   "active-12": "active-12",
+00013:   "active-50": "active-50",
+00014:   "active-100": "active-100",
+00015: };
+
+============================================================
+FILE: src\shared\config\priceTiers.ts
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: 
+00003: export const PRICE_TIERS = [
+00004:   {
+00005:     qty: 1,
+00006:     key: "price_1" as const,
+00007:     label: "1u",
+00008:     className: "price-tier-1",
+00009:   },
+00010:   {
+00011:     qty: 3,
+00012:     key: "price_3" as const,
+00013:     label: "3u",
+00014:     className: "price-tier-3",
+00015:   },
+00016:   {
+00017:     qty: 12,
+00018:     key: "price_12" as const,
+00019:     label: "12u",
+00020:     className: "price-tier-12",
+00021:   },
+00022:   {
+00023:     qty: 50,
+00024:     key: "price_50" as const,
+00025:     label: "50u",
+00026:     className: "price-tier-50",
+00027:   },
+00028:   {
+00029:     qty: 100,
+00030:     key: "price_100" as const,
+00031:     label: "100u",
+00032:     className: "price-tier-100",
+00033:   },
+00034: ] as const;
+00035: 
+00036: export const VOLUME_PRICE_TIERS = PRICE_TIERS.filter(
+00037:   (tier) => tier.key !== "price_1",
+00038: );
+00039: 
+00040: export function getAvailablePriceTiers(product: Product) {
+00041:   return VOLUME_PRICE_TIERS.filter((tier) => {
+00042:     const value = product[tier.key];
+00043:     return typeof value === "number" && Number.isFinite(value) && value > 0;
+00044:   });
+00045: }
+00046: 
+00047: export function getUnitPriceByQty(product: Product, qty: number): number {
+00048:   if (qty >= 100 && product.price_100) return product.price_100;
+00049:   if (qty >= 50 && product.price_50) return product.price_50;
+00050:   if (qty >= 12 && product.price_12) return product.price_12;
+00051:   if (qty >= 3 && product.price_3) return product.price_3;
+00052:   return product.price_1 || 0;
+00053: }
+00054: 
+00055: export function getNextTier(product: Product, qty: number) {
+00056:   if (qty < 3 && product.price_3) return { qty: 3, price: product.price_3 };
+00057:   if (qty < 12 && product.price_12) return { qty: 12, price: product.price_12 };
+00058:   if (qty < 50 && product.price_50) return { qty: 50, price: product.price_50 };
+00059:   if (qty < 100 && product.price_100)
+00060:     return { qty: 100, price: product.price_100 };
+00061:   return null;
+00062: }
+
+============================================================
+FILE: src\shared\hooks\use-toast.ts
+============================================================
+00001: type Toast = {
+00002:   id: string;
+00003:   title?: string;
+00004:   description?: string;
+00005: };
+00006: 
+00007: const toasts: Toast[] = [];
+00008: 
+00009: export function toast(data: Omit<Toast, "id">) {
+00010:   toasts.push({
+00011:     id: crypto.randomUUID(),
+00012:     ...data,
+00013:   });
+00014: }
+00015: 
+00016: export function useToast() {
+00017:   return {
+00018:     toasts,
+00019:     toast,
+00020:     dismiss: () => {},
+00021:   };
+00022: }
+
+============================================================
+FILE: src\shared\lib\product\index.ts
+============================================================
+00001: export * from "./getNextTier";
+00002: export * from "./getUnitPrice";
+00003: export * from "./getStockPresentation";
+00004: export * from "./getBestProductTier";
+
+============================================================
+FILE: src\shared\types\product.ts
+============================================================
+00001: export interface Category {
+00002:   id: string;
+00003:   name: string;
+00004:   icon: string;
+00005: }
+00006: 
+00007: export type CampaignComputedStatus =
+00008:   | "activa"
+00009:   | "programada"
+00010:   | "finalizada"
+00011:   | "borrador"
+00012:   | "oculta";
+00013: 
+00014: export interface Campaign {
+00015:   id: string;
+00016:   name: string;
+00017:   icon: string;
+00018: 
+00019:   color?: string;
+00020:   colorClass: string;
+00021: 
+00022:   startDate: string;
+00023:   endDate: string;
+00024:   priority: number;
+00025: 
+00026:   publicationStatus: string;
+00027:   computedStatus: CampaignComputedStatus;
+00028: }
+00029: 
+00030: export interface Product {
+00031:   id: string;
+00032: 
+00033:   title: string;
+00034:   description: string;
+00035: 
+00036:   category: string;
+00037: 
+00038:   price_1: number;
+00039:   price_3?: number | null;
+00040:   price_12?: number | null;
+00041:   price_50?: number | null;
+00042:   price_100?: number | null;
+00043: 
+00044:   price_offer?: number | null;
+00045: 
+00046:   stock?: number | null;
+00047:   img: string;
+00048:   gallery?: string;
+00049: 
+00050:   status?: string;
+00051:   badges?: string[];
+00052:   campaigns?: string[];
+00053: 
+00054:   priority?: number;
+00055: }
+
+============================================================
+GLOBAL LOCATION SEARCHES
+============================================================
+
+SEARCH: interface BlogArticle
+src\modules\blog\types\blog.ts:32: export interface BlogArticle {
+
+SEARCH: type BlogArticle
+[NO MATCHES]
+
+SEARCH: ARTICLES_DB
+src\modules\home\data\blogdata.ts:2: const ARTICLES_DB = [
+src\modules\home\data\blogdata.ts:74: const ARTICLES_DB = [
+
+SEARCH: generateMetaFeedFromProducts
+src\app\pages\MetaFeedPage.tsx:2: import { generateMetaFeedFromProducts } from "@/modules/integrations/services/generateMetaFeed";
+src\app\pages\MetaFeedPage.tsx:8: generateMetaFeedFromProducts().then(setCsv).catch((err) => setCsv(String(err)));
+
+SEARCH: function useIsMobile
+[NO MATCHES]
+
+SEARCH: const useIsMobile
+[NO MATCHES]
+
+SEARCH: export.*useIsMobile
+[NO MATCHES]
+
+SEARCH: interface CartItem
+[NO MATCHES]
+
+SEARCH: type CartItem
+[NO MATCHES]

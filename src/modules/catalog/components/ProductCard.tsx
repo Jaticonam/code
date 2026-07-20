@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { MessageCircle, PlusCircle } from "lucide-react";
 
-import { CartItem, Product } from "@/shared/types/product";
+import type { Product } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
 import { getCategoryColor } from "@/shared/config/categoryColors";
 import { ProductCardBadges } from "@/modules/catalog/components/ProductCardBadges";
 import { ProductCardPrice } from "@/modules/catalog/components/ProductCardPrice";

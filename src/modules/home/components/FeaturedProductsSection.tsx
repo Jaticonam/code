@@ -133,7 +133,12 @@ export default function FeaturedProductsSection() {
                 product={product}
                 cart={cart}
                 onAddToCart={handleAddToCart}
-                onImageClick={(src, title) => setZoomImage({ src, title })}
+                onImageClick={(product) =>
+                  setZoomImage({
+                    src: product.img || "/placeholder.svg",
+                    title: product.title,
+                  })
+                }
               />
             </div>
           ))}

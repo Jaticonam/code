@@ -1,0 +1,1402 @@
+
+============================================================
+FILE: src\shared\types\product.ts
+============================================================
+
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+export type CampaignComputedStatus =
+  | "activa"
+  | "programada"
+  | "finalizada"
+  | "borrador"
+  | "oculta";
+
+export interface Campaign {
+  id: string;
+  name: string;
+  icon: string;
+
+  color?: string;
+  colorClass: string;
+
+  startDate: string;
+  endDate: string;
+  priority: number;
+
+  publicationStatus: string;
+  computedStatus: CampaignComputedStatus;
+}
+
+export interface Product {
+  id: string;
+
+  title: string;
+  description: string;
+
+  category: string;
+
+  price_1: number;
+  price_3?: number | null;
+  price_12?: number | null;
+  price_50?: number | null;
+  price_100?: number | null;
+
+  price_offer?: number | null;
+
+  stock?: number | null;
+  img: string;
+  gallery?: string;
+
+  status?: string;
+  badges?: string[];
+  campaigns?: string[];
+
+  priority?: number;
+}
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\normalizeProduct.ts
+============================================================
+
+import type { Product } from "@/shared/types/product";
+import type { CatalogCategoryId } from "./sheetsConfig";
+import type { CsvRow } from "./fetchSheets";
+
+export interface SheetProduct extends Product {
+  badges: string[];
+  campaigns: string[];
+  priority: number;
+  status: string;
+  updated_at: string;
+}
+
+export type CampaignNameToIdMap = Record<string, string>;
+
+function cleanText(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+function parseNumber(value: unknown): number | null {
+  let cleaned = cleanText(value)
+    .replace(/S\/\.?/gi, "")
+    .replace(/\s/g, "");
+
+  if (!cleaned) return null;
+
+  if (cleaned.includes(",") && cleaned.includes(".")) {
+    cleaned = cleaned.replace(/,/g, "");
+  } else {
+    cleaned = cleaned.replace(",", ".");
+  }
+
+  const num = Number(cleaned);
+  return Number.isFinite(num) ? num : null;
+}
+
+function parseRequiredNumber(value: unknown): number {
+  return parseNumber(value) ?? 0;
+}
+
+function parsePipeArray(value: unknown): string[] {
+  return cleanText(value)
+    .split("|")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseCampaigns(
+  value: unknown,
+  campaignNameToIdMap: CampaignNameToIdMap,
+): string[] {
+  return parsePipeArray(value)
+    .map((campaignName) => campaignNameToIdMap[campaignName])
+    .filter(Boolean);
+}
+
+export function normalizeProduct(
+  row: CsvRow,
+  categoryFromConfig: CatalogCategoryId,
+  campaignNameToIdMap: CampaignNameToIdMap = {},
+): SheetProduct {
+  return {
+    id: cleanText(row.id),
+    title: cleanText(row.title),
+    description: cleanText(row.description),
+
+    category: categoryFromConfig,
+
+    price_1: parseRequiredNumber(row.price_1),
+    price_3: parseNumber(row.price_3),
+    price_12: parseNumber(row.price_12),
+    price_50: parseNumber(row.price_50),
+    price_100: parseNumber(row.price_100),
+
+    price_offer: parseNumber(row.price_offer),
+
+    stock: parseNumber(row.stock),
+
+    img: cleanText(row.cover || row.img),
+    gallery: cleanText(row.gallery || row.images),
+
+    badges: parsePipeArray(row.badge),
+    campaigns: parseCampaigns(row.campaigns, campaignNameToIdMap),
+
+    priority: parseRequiredNumber(row.priority),
+    status: cleanText(row.status),
+    updated_at: cleanText(row.updated_at),
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\fetchSheets.ts
+============================================================
+
+export type CsvRow = Record<string, string>;
+
+export interface GoogleSheetSource {
+  docId: string;
+  gid: string;
+  name?: string;
+  category?: string;
+}
+
+function parseCSVLine(line: string) {
+  const result: string[] = [];
+  let current = "";
+  let insideQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    const nextChar = line[i + 1];
+
+    if (char === '"' && insideQuotes && nextChar === '"') {
+      current += '"';
+      i++;
+      continue;
+    }
+
+    if (char === '"') {
+      insideQuotes = !insideQuotes;
+      continue;
+    }
+
+    if (char === "," && !insideQuotes) {
+      result.push(current);
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  result.push(current);
+  return result;
+}
+
+export function parseCSV(text: string): { headers: string[]; rows: CsvRow[] } {
+  const lines = text
+    .replace(/\r/g, "")
+    .split("\n")
+    .filter((line) => line.trim() !== "");
+
+  if (!lines.length) return { headers: [], rows: [] };
+
+  const headers = parseCSVLine(lines[0]).map((header) =>
+    header.trim().toLowerCase(),
+  );
+
+  const rows = lines.slice(1).map((line) => {
+    const values = parseCSVLine(line);
+    const row: CsvRow = {};
+
+    headers.forEach((header, index) => {
+      row[header] = (values[index] ?? "").trim();
+    });
+
+    return row;
+  });
+
+  return { headers, rows };
+}
+
+export function validateSheetHeaders(
+  headers: string[],
+  requiredHeaders: readonly string[],
+  source: GoogleSheetSource,
+) {
+  const normalizedHeaders = headers.map((header) =>
+    header.trim().toLowerCase(),
+  );
+
+  const missing = requiredHeaders.filter(
+    (required) => !normalizedHeaders.includes(required.toLowerCase()),
+  );
+
+  if (!missing.length) return;
+
+  const label = source.category || source.name || "Google Sheet";
+
+  throw new Error(
+    `La hoja "${label}" docId="${source.docId}" gid="${source.gid}" no cumple el schema. Faltan columnas: ${missing.join(", ")}`,
+  );
+}
+
+export async function fetchSheetRows(
+  source: GoogleSheetSource,
+  requiredHeaders: readonly string[],
+): Promise<CsvRow[]> {
+  const url = `https://docs.google.com/spreadsheets/d/${source.docId}/export?format=csv&gid=${source.gid}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const label = source.category || source.name || "Google Sheet";
+
+    throw new Error(
+      `Error cargando "${label}" docId="${source.docId}" gid="${source.gid}": HTTP ${response.status}`,
+    );
+  }
+
+  const csvText = await response.text();
+  const { headers, rows } = parseCSV(csvText);
+
+  validateSheetHeaders(headers, requiredHeaders, source);
+
+  return rows.filter((row) =>
+    Object.values(row).some((value) => (value ?? "").trim() !== ""),
+  );
+}
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\sheetsConfig.ts
+============================================================
+
+export const PRODUCT_SHEETS_CONFIG = [
+  {
+    category: "flores",
+    docId: "14HvNWxOltXtr3NUKXUpbK0ah5DG-atKz7UqTkq-p5lk",
+    gid: "999826345",
+  },
+  {
+    category: "peluches",
+    docId: "1-LdkBcXRDBIAkVOjQ2QLusgqKmGjAOAZeyO7C8_TIow",
+    gid: "849795903",
+  },
+  {
+    category: "papeles",
+    docId: "1Y19zwLoqf2x6FFyrQJSYZFfldFWNOpZe0EdrLl6tsuM",
+    gid: "1583553647",
+  },
+  {
+    category: "cajas",
+    docId: "1g0ZKFSPYi30P9DFfwPSvTIFtt-5kM1ZuOUqvxbyKfcM",
+    gid: "1169240357",
+  },
+  {
+    category: "cintas",
+    docId: "1RxaXXw8jRmwmMvky_nJP8IbgdmqezkXInS2WcnNKlVk",
+    gid: "1583553647",
+  },
+  {
+    category: "globos",
+    docId: "17-KL3wegV3DQolFBukLiFen5Co0_Q7lgAHXwE0U5dNI",
+    gid: "1169240357",
+  },
+  {
+    category: "accesorios",
+    docId: "1WDA6BzHWzeD57YJWKGD0SGzXDDcKvRXLU1lrXOJU-JE",
+    gid: "1381335916",
+  },
+  {
+    category: "llaveros",
+    docId: "1CI5Waxa4AnyEPFK5okCVKJhqEZhsonqAUynl54mf_xg",
+    gid: "849795903",
+  },
+  {
+    category: "hotwheels",
+    docId: "1maHH-C8kYc5GyKeg4O0kxKWtxFLb6Pz5GbxkV6w-E_8",
+    gid: "465428229",
+  },
+] as const;
+
+export const CAMPAIGNS_SHEET_CONFIG = {
+  name: "Campaigns",
+  docId: "1B_s6fXN6FLLeu0F6KBB2fFCNPMIvXBvNEDG1Mubk7qk",
+  gid: "1364232111",
+} as const;
+
+export const SHEETS_CONFIG = PRODUCT_SHEETS_CONFIG;
+
+export type SheetSource = (typeof PRODUCT_SHEETS_CONFIG)[number];
+export type CatalogCategoryId = SheetSource["category"];
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\validateProducts.ts
+============================================================
+
+import type { SheetProduct } from "./normalizeProduct";
+
+const PUBLIC_STATUSES = new Set([
+  "",
+  "publicado",
+  "publicada",
+  "published",
+  "activo",
+  "activa",
+  "active",
+  "preventa",
+]);
+
+function normalizeStatus(status: string | undefined) {
+  return String(status ?? "")
+    .trim()
+    .toLowerCase();
+}
+
+export function validateProducts(products: SheetProduct[]) {
+  return products.filter((product) => {
+    if (!product.id) return false;
+    if (!product.title) return false;
+    if (!product.img) return false;
+
+    const status = normalizeStatus(product.status);
+
+    return PUBLIC_STATUSES.has(status);
+  });
+}
+
+============================================================
+FILE: src\modules\catalog\services\normalizeProduct.ts
+============================================================
+
+export * from "@/modules/catalog/integrations/googleSheets/normalizeProduct";
+
+============================================================
+FILE: src\modules\catalog\services\fetchProducts.ts
+============================================================
+
+export * from "./productService";
+
+============================================================
+FILE: src\modules\catalog\services\productsConfig.ts
+============================================================
+
+export {
+  PRODUCT_SHEETS_CONFIG as SHEETS_CONFIG,
+  SHEETS_CONFIG as LEGACY_SHEETS_CONFIG,
+} from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
+
+export type {
+  SheetSource,
+  CatalogCategoryId,
+} from "@/modules/catalog/integrations/googleSheets/sheetsConfig";
+
+============================================================
+FILE: src\modules\catalog\services\productService.ts
+============================================================
+
+import type { Product } from "@/shared/types/product";
+
+import type { CatalogCategoryId } from "@/modules/catalog/providers/CatalogProvider";
+import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
+
+import { loadCatalogCampaigns } from "./campaignService";
+
+/* =========================================================
+   TIPOS INTERNOS
+   ========================================================= */
+
+type CategoryCacheEntry = {
+  savedAt: number;
+  items: Product[];
+};
+
+export type CatalogCategory = CatalogCategoryId | "todas";
+
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+
+const CACHE_TTL = 1000 * 60 * 5;
+
+/* =========================================================
+   CACHE EN MEMORIA
+   ========================================================= */
+
+const memoryCache = new Map<CatalogCategoryId, CategoryCacheEntry>();
+
+const pendingRequests = new Map<CatalogCategoryId, Promise<Product[]>>();
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+const productKey = (category: string) => `jung_catalog_v3_${category}`;
+
+const now = () => Date.now();
+
+const isFresh = (savedAt: number) => now() - savedAt <= CACHE_TTL;
+
+export const getCatalogCategories = (): CatalogCategoryId[] => [
+  ...catalogProvider.getCategories(),
+];
+
+const sortProducts = (items: Product[]) =>
+  [...items].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+
+const flattenByCategory = (
+  byCategory: Partial<Record<CatalogCategoryId, Product[]>>,
+) => sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
+
+/* =========================================================
+   CACHE LOCAL DE PRODUCTOS
+   ========================================================= */
+
+function readStorageCache(category: CatalogCategoryId): Product[] | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const raw = localStorage.getItem(productKey(category));
+
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw) as CategoryCacheEntry;
+
+    if (!parsed?.savedAt || !isFresh(parsed.savedAt)) {
+      return null;
+    }
+
+    if (!Array.isArray(parsed.items)) {
+      return null;
+    }
+
+    memoryCache.set(category, {
+      savedAt: parsed.savedAt,
+      items: parsed.items,
+    });
+
+    return parsed.items;
+  } catch {
+    return null;
+  }
+}
+
+export function readCachedCategoryProducts(
+  category: CatalogCategoryId,
+): Product[] | null {
+  const memoryEntry = memoryCache.get(category);
+
+  if (memoryEntry && isFresh(memoryEntry.savedAt)) {
+    return sortProducts(memoryEntry.items);
+  }
+
+  if (memoryEntry && !isFresh(memoryEntry.savedAt)) {
+    memoryCache.delete(category);
+  }
+
+  const storageItems = readStorageCache(category);
+
+  return storageItems ? sortProducts(storageItems) : null;
+}
+
+function writeCache(category: CatalogCategoryId, items: Product[]): void {
+  const entry: CategoryCacheEntry = {
+    savedAt: now(),
+    items,
+  };
+
+  memoryCache.set(category, entry);
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    localStorage.setItem(productKey(category), JSON.stringify(entry));
+  } catch {
+    // Si localStorage falla, se conserva el cache en memoria.
+  }
+}
+
+/* =========================================================
+   SNAPSHOT DEL CATÁLOGO
+   ========================================================= */
+
+export function getCachedCatalogSnapshot() {
+  const categories = getCatalogCategories();
+
+  const byCategory: Partial<Record<CatalogCategoryId, Product[]>> = {};
+
+  categories.forEach((category) => {
+    const cached = readCachedCategoryProducts(category);
+
+    if (cached) {
+      byCategory[category] = cached;
+    }
+  });
+
+  const loadedCategories = categories.filter(
+    (category) => byCategory[category],
+  );
+
+  const isFullCatalogLoaded = loadedCategories.length === categories.length;
+
+  return {
+    byCategory,
+    products: flattenByCategory(byCategory),
+    loadedCategories,
+    isFullCatalogLoaded,
+  };
+}
+
+/* =========================================================
+   CARGA DESDE EL PROVIDER
+   ========================================================= */
+
+async function fetchCategoryProducts(
+  category: CatalogCategoryId,
+): Promise<Product[]> {
+  const campaigns =
+    await loadCatalogCampaigns({
+      includeInactive: true,
+    });
+
+  const products =
+    await catalogProvider.loadCategoryProducts(
+      category,
+      campaigns,
+    );
+
+  const sortedProducts =
+    sortProducts(products);
+
+  writeCache(
+    category,
+    sortedProducts,
+  );
+
+  return sortedProducts;
+}
+/* =========================================================
+   API DE CARGA POR CATEGORÍA
+   ========================================================= */
+
+export async function loadCategoryProducts(
+  category: CatalogCategoryId,
+  options: { forceRefresh?: boolean } = {},
+): Promise<Product[]> {
+  if (!options.forceRefresh) {
+    const cached = readCachedCategoryProducts(category);
+
+    if (cached) {
+      return cached;
+    }
+  }
+
+  const pendingRequest = pendingRequests.get(category);
+
+  if (pendingRequest) {
+    return pendingRequest;
+  }
+
+  const request = fetchCategoryProducts(category).finally(() => {
+    pendingRequests.delete(category);
+  });
+
+  pendingRequests.set(category, request);
+
+  return request;
+}
+
+export async function loadAllProducts(): Promise<Product[]> {
+  const categories = getCatalogCategories();
+
+  const results = await Promise.all(
+    categories.map((category) =>
+      loadCategoryProducts(category).catch((error: unknown) => {
+        console.error(`Error en categoría "${category}":`, error);
+
+        return [];
+      }),
+    ),
+  );
+
+  return sortProducts(results.flat());
+}
+
+/* =========================================================
+   CARGA PROGRESIVA
+   ========================================================= */
+
+export async function loadCatalogProgressive(
+  activeCategory: CatalogCategory,
+  onUpdate: (products: Product[], isFullCatalogLoaded: boolean) => void,
+): Promise<void> {
+  const categories = getCatalogCategories();
+
+  const preferredCategory = activeCategory !== "todas" ? activeCategory : null;
+
+  const categoryOrder = preferredCategory
+    ? [
+        preferredCategory,
+        ...categories.filter((category) => category !== preferredCategory),
+      ]
+    : categories;
+
+  const byCategory = getCachedCatalogSnapshot().byCategory;
+
+  onUpdate(
+    flattenByCategory(byCategory),
+    Object.keys(byCategory).length === categories.length,
+  );
+
+  for (const category of categoryOrder) {
+    if (byCategory[category]) {
+      continue;
+    }
+
+    try {
+      byCategory[category] = await loadCategoryProducts(category);
+    } catch (error: unknown) {
+      console.error(`Error cargando "${category}":`, error);
+
+      byCategory[category] = [];
+    }
+
+    onUpdate(
+      flattenByCategory(byCategory),
+      Object.keys(byCategory).length === categories.length,
+    );
+  }
+}
+
+
+
+
+============================================================
+FILE: src\modules\catalog\services\validateProducts.ts
+============================================================
+
+export * from "@/modules/catalog/integrations/googleSheets/validateProducts";
+
+============================================================
+FILE: src\modules\catalog\hooks\useProducts.ts
+============================================================
+
+import { useEffect, useRef, useState } from "react";
+import type { Product } from "@/shared/types/product";
+import {
+  getCachedCatalogSnapshot,
+  loadCatalogProgressive,
+  type CatalogCategory,
+} from "@/modules/catalog/services/fetchProducts";
+
+export function useProducts(activeCategory: CatalogCategory = "todas") {
+  const initialSnapshot = getCachedCatalogSnapshot();
+
+  const [data, setData] = useState<Product[]>(() => initialSnapshot.products);
+  const [isLoading, setIsLoading] = useState(
+    () => initialSnapshot.products.length === 0,
+  );
+  const [isFullCatalogLoaded, setIsFullCatalogLoaded] = useState(
+    () => initialSnapshot.isFullCatalogLoaded,
+  );
+
+  const dataRef = useRef(data);
+
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const hasPreviousProducts = dataRef.current.length > 0;
+
+    /*
+      Regla UX:
+      - Skeleton solo en primera carga real.
+      - Si ya existe data, mantenemos pantalla mientras se actualiza.
+    */
+    setIsLoading(!hasPreviousProducts);
+
+    loadCatalogProgressive(activeCategory, (products, fullLoaded) => {
+      if (cancelled) return;
+
+      const hasIncomingProducts = products.length > 0;
+
+      if (hasIncomingProducts) {
+        setData(products);
+      }
+
+      setIsLoading(false);
+
+      setIsFullCatalogLoaded((current) => current || fullLoaded);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCategory]);
+
+  return {
+    data,
+    isLoading,
+    isFullCatalogLoaded,
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\hooks\useCatalogData.ts
+============================================================
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Product } from "@/shared/types/product";
+import type { CatalogCategoryId } from "@/modules/catalog/services/productsConfig";
+import {
+  getCachedCatalogSnapshot,
+  getCatalogCategories,
+  loadCategoryProducts,
+  type CatalogCategory,
+} from "@/modules/catalog/services/fetchProducts";
+
+type CategoryLoadStatus = "idle" | "loading" | "loaded" | "error";
+
+type ProductsByCategory = Partial<Record<CatalogCategoryId, Product[]>>;
+type StatusByCategory = Record<CatalogCategoryId, CategoryLoadStatus>;
+
+const CATALOG_CATEGORIES = getCatalogCategories();
+
+const sortProducts = (items: Product[]) =>
+  [...items].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+
+const flattenByCategory = (byCategory: ProductsByCategory) =>
+  sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
+
+const createInitialStatus = (
+  loadedCategories: CatalogCategoryId[],
+): StatusByCategory => {
+  const loaded = new Set<CatalogCategoryId>(loadedCategories);
+
+  return CATALOG_CATEGORIES.reduce((acc, category) => {
+    acc[category] = loaded.has(category) ? "loaded" : "idle";
+    return acc;
+  }, {} as StatusByCategory);
+};
+
+export function useCatalogData(activeCategory: CatalogCategory = "todas") {
+  const initialSnapshotRef = useRef(getCachedCatalogSnapshot());
+
+  const [productsByCategory, setProductsByCategory] =
+    useState<ProductsByCategory>(() => initialSnapshotRef.current.byCategory);
+
+  const [statusByCategory, setStatusByCategory] = useState<StatusByCategory>(
+    () => createInitialStatus(initialSnapshotRef.current.loadedCategories),
+  );
+
+  const [isBootstrapping, setIsBootstrapping] = useState(
+    () => initialSnapshotRef.current.products.length === 0,
+  );
+
+  const mountedRef = useRef(false);
+  const productsByCategoryRef = useRef(productsByCategory);
+  const statusByCategoryRef = useRef(statusByCategory);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const syncProductsByCategory = useCallback((next: ProductsByCategory) => {
+    productsByCategoryRef.current = next;
+    setProductsByCategory(next);
+  }, []);
+
+  const syncStatusByCategory = useCallback((next: StatusByCategory) => {
+    statusByCategoryRef.current = next;
+    setStatusByCategory(next);
+  }, []);
+
+  const setCategoryStatus = useCallback(
+    (category: CatalogCategoryId, status: CategoryLoadStatus) => {
+      const next = {
+        ...statusByCategoryRef.current,
+        [category]: status,
+      };
+
+      syncStatusByCategory(next);
+    },
+    [syncStatusByCategory],
+  );
+
+  const setCategoryProducts = useCallback(
+    (category: CatalogCategoryId, products: Product[]) => {
+      const next = {
+        ...productsByCategoryRef.current,
+        [category]: products,
+      };
+
+      syncProductsByCategory(next);
+    },
+    [syncProductsByCategory],
+  );
+
+  const ensureCategoryLoaded = useCallback(
+    async (category: CatalogCategoryId) => {
+      const currentStatus = statusByCategoryRef.current[category];
+
+      if (currentStatus === "loaded" || currentStatus === "loading") {
+        return;
+      }
+
+      setCategoryStatus(category, "loading");
+
+      try {
+        const products = await loadCategoryProducts(category);
+
+        if (!mountedRef.current) return;
+
+        setCategoryProducts(category, products);
+        setCategoryStatus(category, "loaded");
+      } catch (error) {
+        console.error(`Error cargando categoría "${category}":`, error);
+
+        if (!mountedRef.current) return;
+
+        setCategoryProducts(category, []);
+        setCategoryStatus(category, "error");
+      } finally {
+        if (mountedRef.current) {
+          setIsBootstrapping(false);
+        }
+      }
+    },
+    [setCategoryProducts, setCategoryStatus],
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      const preferredCategory =
+        activeCategory !== "todas" ? activeCategory : CATALOG_CATEGORIES[0];
+
+      if (preferredCategory) {
+        await ensureCategoryLoaded(preferredCategory);
+      }
+
+      if (cancelled) return;
+
+      /*
+        Precarga suave:
+        carga el resto de categorías una por una.
+        No depende de campañas ni de búsqueda.
+      */
+      for (const category of CATALOG_CATEGORIES) {
+        if (cancelled) break;
+        await ensureCategoryLoaded(category);
+      }
+
+      if (!cancelled && mountedRef.current) {
+        setIsBootstrapping(false);
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCategory, ensureCategoryLoaded]);
+
+  const data = useMemo(
+    () => flattenByCategory(productsByCategory),
+    [productsByCategory],
+  );
+
+  const loadedCount = useMemo(
+    () =>
+      CATALOG_CATEGORIES.filter(
+        (category) => statusByCategory[category] === "loaded",
+      ).length,
+    [statusByCategory],
+  );
+
+  const isFullCatalogLoaded = loadedCount === CATALOG_CATEGORIES.length;
+
+  const activeCategoryStatus =
+    activeCategory === "todas" ? "loaded" : statusByCategory[activeCategory];
+
+  const isCategoryLoading =
+    activeCategory !== "todas" && activeCategoryStatus === "loading";
+
+  const isLoading = isBootstrapping && data.length === 0;
+
+  return {
+    data,
+    productsByCategory,
+    statusByCategory,
+    activeCategoryStatus,
+    isCategoryLoading,
+    isLoading,
+    isFullCatalogLoaded,
+  };
+}
+
+============================================================
+FILE: src\modules\catalog\components\ProductCard.tsx
+============================================================
+
+import { useNavigate } from "react-router-dom";
+import { MessageCircle, PlusCircle } from "lucide-react";
+
+import { CartItem, Product } from "@/shared/types/product";
+import { getCategoryColor } from "@/shared/config/categoryColors";
+import { ProductCardBadges } from "@/modules/catalog/components/ProductCardBadges";
+import { ProductCardPrice } from "@/modules/catalog/components/ProductCardPrice";
+import { ProductCardStock } from "@/modules/catalog/components/ProductCardStock";
+import { ProductCardTierBadges } from "@/modules/catalog/components/ProductCardTierBadges";
+import { useProductCard } from "@/modules/product-detail/hooks/useProductCard";
+
+interface Props {
+  product: Product;
+  cart?: CartItem[];
+  onAddToCart: (product: Product) => void;
+  onImageClick?: (product: Product) => void;
+}
+
+export function ProductCard({
+  product: p,
+  cart = [],
+  onAddToCart,
+  onImageClick,
+}: Props) {
+  const navigate = useNavigate();
+
+  const {
+    available,
+    isPreventa,
+    isAgotado,
+    showWhatsAppButton,
+    isInCart,
+    qtyInCart,
+    handleAdd,
+    handleWhatsApp,
+  } = useProductCard(p, cart, onAddToCart);
+
+  const goToDetail = () =>
+    navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const selectedText = window.getSelection()?.toString().trim();
+    if (selectedText) return;
+
+    const target = e.target as HTMLElement;
+    if (target.closest("[data-no-card-click],button,a,input,textarea,select"))
+      return;
+
+    goToDetail();
+  };
+
+  const buttonLabel = isAgotado
+    ? "Consultar reposición"
+    : showWhatsAppButton
+      ? "Consultar"
+      : isInCart
+        ? `Sumar (${qtyInCart})`
+        : "Agregar";
+
+  return (
+    <div
+      onClick={handleCardClick}
+      className="card-product group flex flex-col p-2 text-center md:p-2.5"
+    >
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          onImageClick?.(p);
+        }}
+        className="card-product-image relative mb-2 h-[140px] cursor-zoom-in overflow-hidden rounded-[18px] sm:h-[160px] md:h-[250px] xl:h-[220px]"
+      >
+        <ProductCardBadges product={p} />
+
+        {isInCart && (
+          <div className="absolute right-2 top-2 z-20 rounded-full bg-[#1d8299] px-2.5 py-1 text-[10px] font-black leading-none text-white shadow-[0_6px_16px_rgba(29,130,153,.25)]">
+            +{qtyInCart}
+          </div>
+        )}
+
+        {isAgotado && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
+            <span className="rounded-full border-2 border-white bg-orange-500 px-5 py-2 text-[12px] font-black uppercase tracking-wide text-white shadow-xl">
+              Agotado
+            </span>
+          </div>
+        )}
+
+        <img
+          src={p.img || "/placeholder.svg"}
+          alt={p.title}
+          className={[
+            "h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]",
+            isAgotado ? "opacity-90 saturate-[.9]" : "",
+          ].join(" ")}
+          loading="lazy"
+        />
+      </div>
+
+      <div className="flex flex-1 flex-col justify-between px-1">
+        <div>
+          <div
+            data-no-card-click
+            className="mb-1.5 flex flex-wrap items-center justify-center gap-0.5"
+          >
+            <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[9px] font-black uppercase text-slate-500">
+              {p.id}
+            </span>
+
+            <span
+              className={`rounded-full px-2 py-[3px] text-[9px] font-black uppercase ${getCategoryColor(p.category)}`}
+            >
+              {p.category}
+            </span>
+          </div>
+
+          <h3
+            data-no-card-click
+            className="mb-0.3 card-product-title line-clamp-2"
+          >
+            {p.title}
+          </h3>
+        </div>
+
+        <ProductCardPrice product={p} />
+
+        <ProductCardStock stock={p.stock} price={p.price_1} status={p.status} />
+
+        <ProductCardTierBadges
+          product={p}
+          available={available}
+          isPreventa={isPreventa}
+        />
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+
+            if (isAgotado) return;
+
+            if (showWhatsAppButton) {
+              handleWhatsApp();
+              return;
+            }
+
+            handleAdd();
+          }}
+          disabled={!showWhatsAppButton && !available}
+          className={[
+            "card-product-button mt-2.5 w-full min-h-[36px] rounded-2xl px-2.5 py-2 text-[12px] font-black text-white shadow-md transition-all active:scale-[.98] md:min-h-[38px] md:text-[13px]",
+            isAgotado
+              ? "bg-orange-500 hover:bg-orange-600 hover:scale-[1.01] hover:shadow-lg"
+              : showWhatsAppButton
+                ? "bg-green-600 hover:bg-green-700"
+                : isInCart
+                  ? "bg-gradient-to-r from-[#156f84] to-[#1d8299] hover:shadow-lg"
+                  : "bg-gradient-to-r from-[#1d8299] to-[#156f84] hover:scale-[1.01] hover:shadow-lg",
+            !isAgotado && !available && !showWhatsAppButton
+              ? "cursor-not-allowed opacity-50 shadow-none"
+              : "",
+          ].join(" ")}
+        >
+          <span className="flex items-center justify-center gap-1.5">
+            {showWhatsAppButton ? (
+              <MessageCircle className="h-4 w-4" />
+            ) : (
+              <PlusCircle className="h-4 w-4" />
+            )}
+
+            {buttonLabel}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+============================================================
+FILE: src\shared\config\priceTiers.ts
+============================================================
+
+import type { Product } from "@/shared/types/product";
+
+export const PRICE_TIERS = [
+  {
+    qty: 1,
+    key: "price_1" as const,
+    label: "1u",
+    className: "price-tier-1",
+  },
+  {
+    qty: 3,
+    key: "price_3" as const,
+    label: "3u",
+    className: "price-tier-3",
+  },
+  {
+    qty: 12,
+    key: "price_12" as const,
+    label: "12u",
+    className: "price-tier-12",
+  },
+  {
+    qty: 50,
+    key: "price_50" as const,
+    label: "50u",
+    className: "price-tier-50",
+  },
+  {
+    qty: 100,
+    key: "price_100" as const,
+    label: "100u",
+    className: "price-tier-100",
+  },
+] as const;
+
+export const VOLUME_PRICE_TIERS = PRICE_TIERS.filter(
+  (tier) => tier.key !== "price_1",
+);
+
+export function getAvailablePriceTiers(product: Product) {
+  return VOLUME_PRICE_TIERS.filter((tier) => {
+    const value = product[tier.key];
+    return typeof value === "number" && Number.isFinite(value) && value > 0;
+  });
+}
+
+export function getUnitPriceByQty(product: Product, qty: number): number {
+  if (qty >= 100 && product.price_100) return product.price_100;
+  if (qty >= 50 && product.price_50) return product.price_50;
+  if (qty >= 12 && product.price_12) return product.price_12;
+  if (qty >= 3 && product.price_3) return product.price_3;
+  return product.price_1 || 0;
+}
+
+export function getNextTier(product: Product, qty: number) {
+  if (qty < 3 && product.price_3) return { qty: 3, price: product.price_3 };
+  if (qty < 12 && product.price_12) return { qty: 12, price: product.price_12 };
+  if (qty < 50 && product.price_50) return { qty: 50, price: product.price_50 };
+  if (qty < 100 && product.price_100)
+    return { qty: 100, price: product.price_100 };
+  return null;
+}
+
+============================================================
+FILE: src\shared\lib\product\getBestProductTier.ts
+============================================================
+
+import type { Product } from "@/shared/types/product";
+
+export function getBestProductTier(product: Product) {
+  const tiers = [
+    { qty: 1, price: Number(product.price_1) },
+    { qty: 3, price: Number(product.price_3) },
+    { qty: 12, price: Number(product.price_12) },
+    { qty: 50, price: Number(product.price_50) },
+    { qty: 100, price: Number(product.price_100) },
+  ].filter((tier) => tier.price > 0);
+
+  if (!tiers.length) return null;
+
+  return [...tiers].sort((a, b) => a.price - b.price || a.qty - b.qty)[0];
+}
+
+============================================================
+FILE: src\shared\lib\product\getUnitPrice.ts
+============================================================
+
+import type { Product } from "@/shared/types/product";
+
+export function getUnitPrice(
+  qty:number,
+  product:Product
+){
+
+  const basePrice=
+
+    product.price_offer
+    &&
+    product.price_offer>0
+    &&
+    product.price_offer<product.price_1
+
+      ? product.price_offer
+
+      : product.price_1;
+
+  if(
+    qty>=100
+    &&
+    product.price_100
+  ){
+    return product.price_100;
+  }
+
+  if(
+    qty>=50
+    &&
+    product.price_50
+  ){
+    return product.price_50;
+  }
+
+  if(
+    qty>=12
+    &&
+    product.price_12
+  ){
+    return product.price_12;
+  }
+
+  if(
+    qty>=3
+    &&
+    product.price_3
+  ){
+    return product.price_3;
+  }
+
+  return basePrice||0;
+
+}
+
+============================================================
+FILE: src\shared\lib\product\getStockPresentation.ts
+============================================================
+
+import{
+ CheckCircle,
+ AlertTriangle,
+ Clock,
+ XCircle
+}
+from"lucide-react";
+
+export function
+getStockPresentation(
+
+ product:any,
+ isPreventa:boolean,
+
+){
+
+ if(
+ isPreventa
+ ){
+
+ return{
+
+ text:"Preventa",
+ icon:Clock,
+ className:
+ "bg-green-50 text-green-700"
+
+ };
+
+ }
+
+ if(
+ !product?.price_1
+ ||
+ product.stock===null
+ ){
+
+ return{
+
+ text:"Próximo",
+ icon:Clock,
+ className:
+ "bg-slate-100 text-slate-600"
+
+ };
+
+ }
+
+ if(
+ product.stock===0
+ ){
+
+ return{
+
+ text:"Agotado",
+ icon:XCircle,
+ className:
+ "bg-red-50 text-red-600"
+
+ };
+
+ }
+
+ if(
+ product.stock<=12
+ ){
+
+ return{
+
+ text:
+ `Últimas:${product.stock}`,
+
+ icon:
+ AlertTriangle,
+
+ className:
+ "bg-red-50 text-red-600"
+
+ };
+
+ }
+
+ if(
+ product.stock<=36
+ ){
+
+ return{
+
+ text:
+ "Stock limitado",
+
+ icon:
+ AlertTriangle,
+
+ className:
+ "bg-orange-50 text-orange-600"
+
+ };
+
+ }
+
+ return{
+
+ text:
+ "Disponible",
+
+ icon:
+ CheckCircle,
+
+ className:
+ "bg-green-50 text-green-700"
+
+ };
+
+}

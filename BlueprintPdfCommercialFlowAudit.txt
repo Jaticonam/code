@@ -1,0 +1,4391 @@
+BLUEPRINT PDF COMMERCIAL FLOW AUDIT
+GeneratedAt: 2026-07-20 04:48:00
+Root: D:\JUNG\code\wooly\wooly-web
+
+============================================================
+GIT STATE
+============================================================
+?? BlueprintBaselineBuild.txt
+?? BlueprintCommerceContractsAudit.txt
+?? BlueprintPdfCartBaselineAudit.txt
+?? BlueprintPdfCartBaselineAuditFixed.txt
+?? ProductAudit.txt
+
+============================================================
+MISSING FILES
+============================================================
+[NONE]
+
+============================================================
+EXACT CARTITEM DECLARATION SEARCH
+============================================================
+
+============================================================
+FILE: package.json
+============================================================
+
+00001: {
+00002:   "name": "vite_react_shadcn_ts",
+00003:   "private": true,
+00004:   "version": "0.0.0",
+00005:   "type": "module",
+00006:   "scripts": {
+00007:     "dev": "vite",
+00008:     "build": "vite build",
+00009:     "build:dev": "vite build --mode development",
+00010:     "lint": "eslint .",
+00011:     "preview": "vite preview",
+00012:     "test": "vitest run",
+00013:     "test:watch": "vitest",
+00014:     "feed:meta": "tsx scripts/feeds/generate-meta-feed.ts",
+00015:     "prepare:integrations": "tsx scripts/prepare-integrations.ts",
+00016:     "prepare": "tsx scripts/prepare.ts",
+00017:     "publish": "tsx scripts/publish.ts",
+00018:     "quality:catalog": "tsx scripts/quality-report.ts",
+00019:     "publication:preview": "tsx scripts/publication-preview.ts",
+00020:     "workflow:test": "tsx scripts/workflow-test.ts",
+00021:     "commercial:dashboard": "tsx scripts/dashboard.ts",
+00022:     "dashboard": "npm run commercial:dashboard",
+00023:     "images:pdf": "tsx scripts/catalog/OptimizePdfImages.ts"
+00024:   },
+00025:   "dependencies": {
+00026:     "@hookform/resolvers": "^3.10.0",
+00027:     "@radix-ui/react-accordion": "^1.2.11",
+00028:     "@radix-ui/react-alert-dialog": "^1.1.14",
+00029:     "@radix-ui/react-aspect-ratio": "^1.1.7",
+00030:     "@radix-ui/react-avatar": "^1.1.10",
+00031:     "@radix-ui/react-checkbox": "^1.3.2",
+00032:     "@radix-ui/react-collapsible": "^1.1.11",
+00033:     "@radix-ui/react-context-menu": "^2.2.15",
+00034:     "@radix-ui/react-dialog": "^1.1.14",
+00035:     "@radix-ui/react-dropdown-menu": "^2.1.15",
+00036:     "@radix-ui/react-hover-card": "^1.1.14",
+00037:     "@radix-ui/react-label": "^2.1.7",
+00038:     "@radix-ui/react-menubar": "^1.1.15",
+00039:     "@radix-ui/react-navigation-menu": "^1.2.13",
+00040:     "@radix-ui/react-popover": "^1.1.14",
+00041:     "@radix-ui/react-progress": "^1.1.7",
+00042:     "@radix-ui/react-radio-group": "^1.3.7",
+00043:     "@radix-ui/react-scroll-area": "^1.2.9",
+00044:     "@radix-ui/react-select": "^2.2.5",
+00045:     "@radix-ui/react-separator": "^1.1.7",
+00046:     "@radix-ui/react-slider": "^1.3.5",
+00047:     "@radix-ui/react-slot": "^1.2.3",
+00048:     "@radix-ui/react-switch": "^1.2.5",
+00049:     "@radix-ui/react-tabs": "^1.1.12",
+00050:     "@radix-ui/react-toast": "^1.2.14",
+00051:     "@radix-ui/react-toggle": "^1.1.9",
+00052:     "@radix-ui/react-toggle-group": "^1.1.10",
+00053:     "@radix-ui/react-tooltip": "^1.2.7",
+00054:     "@tanstack/react-query": "^5.83.0",
+00055:     "aos": "^2.3.4",
+00056:     "class-variance-authority": "^0.7.1",
+00057:     "clsx": "^2.1.1",
+00058:     "cmdk": "^1.1.1",
+00059:     "date-fns": "^3.6.0",
+00060:     "embla-carousel-react": "^8.6.0",
+00061:     "input-otp": "^1.4.2",
+00062:     "lucide-react": "^1.7.0",
+00063:     "next-themes": "^0.3.0",
+00064:     "react": "^18.3.1",
+00065:     "react-day-picker": "^8.10.1",
+00066:     "react-dom": "^18.3.1",
+00067:     "react-helmet-async": "^3.0.0",
+00068:     "react-hook-form": "^7.61.1",
+00069:     "react-resizable-panels": "^2.1.9",
+00070:     "react-router-dom": "^6.30.1",
+00071:     "recharts": "^2.15.4",
+00072:     "sonner": "^1.7.4",
+00073:     "tailwind-merge": "^2.6.0",
+00074:     "tailwindcss-animate": "^1.0.7",
+00075:     "vaul": "^0.9.9",
+00076:     "zod": "^3.25.76"
+00077:   },
+00078:   "devDependencies": {
+00079:     "@eslint/js": "^9.32.0",
+00080:     "@playwright/test": "^1.57.0",
+00081:     "@tailwindcss/typography": "^0.5.16",
+00082:     "@testing-library/jest-dom": "^6.6.0",
+00083:     "@testing-library/react": "^16.0.0",
+00084:     "@types/aos": "^3.0.8",
+00085:     "@types/node": "^22.16.5",
+00086:     "@types/react": "^18.3.23",
+00087:     "@types/react-dom": "^18.3.7",
+00088:     "@vitejs/plugin-react-swc": "^3.11.0",
+00089:     "autoprefixer": "^10.4.21",
+00090:     "eslint": "^9.32.0",
+00091:     "eslint-plugin-react-hooks": "^5.2.0",
+00092:     "eslint-plugin-react-refresh": "^0.4.20",
+00093:     "globals": "^15.15.0",
+00094:     "jsdom": "^20.0.3",
+00095:     "lovable-tagger": "^1.1.13",
+00096:     "postcss": "^8.5.6",
+00097:     "sharp": "^0.35.3",
+00098:     "tailwindcss": "^3.4.17",
+00099:     "tsx": "^4.22.4",
+00100:     "typescript": "^5.8.3",
+00101:     "typescript-eslint": "^8.38.0",
+00102:     "vite": "^5.4.19",
+00103:     "vite-bundle-visualizer": "^1.2.1",
+00104:     "vitest": "^3.2.4"
+00105:   }
+00106: }
+
+============================================================
+FILE: scripts\catalog\OptimizePdfImages.ts
+============================================================
+
+00001: import { createHash } from "node:crypto";
+00002: import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+00003: import path from "node:path";
+00004: 
+00005: import sharp from "sharp";
+00006: 
+00007: import { fetchSheetRows } from "../../src/modules/catalog/integrations/googleSheets/fetchSheets";
+00008: import { PRODUCT_SHEETS_CONFIG } from "../../src/modules/catalog/integrations/googleSheets/sheetsConfig";
+00009: 
+00010: type ScriptOptions = {
+00011:   category?: string;
+00012:   limit?: number;
+00013:   force: boolean;
+00014: };
+00015: 
+00016: type PdfImageManifest = Record<string, string>;
+00017: 
+00018: type PdfImageReportStatus =
+00019:   | "generated"
+00020:   | "regenerated"
+00021:   | "skipped"
+00022:   | "missing-image"
+00023:   | "error";
+00024: 
+00025: type PdfImageReportEntry = {
+00026:   productId: string;
+00027:   category: string;
+00028:   sourceHash: string;
+00029:   pdf: string;
+00030:   sizeKb: number;
+00031:   status: PdfImageReportStatus;
+00032:   message?: string;
+00033:   updatedAt: string;
+00034: };
+00035: 
+00036: type PdfImageReport = Record<string, PdfImageReportEntry>;
+00037: 
+00038: const REQUIRED_HEADERS = ["id", "img", "status"] as const;
+00039: 
+00040: const OUTPUT_DIR = path.resolve("public/catalog/pdf-images");
+00041: 
+00042: const MANIFEST_PATH = path.resolve(
+00043:   "src/modules/catalog-export/data/PdfImageManifest.ts",
+00044: );
+00045: 
+00046: const REPORT_PATH = path.resolve(
+00047:   "reports/catalog/pdf-images-report.json",
+00048: );
+00049: 
+00050: const PDF_IMAGE_WIDTH = 900;
+00051: const PDF_IMAGE_HEIGHT = 1200;
+00052: const PDF_IMAGE_QUALITY = 74;
+00053: 
+00054: const cleanText = (value: unknown) =>
+00055:   String(value ?? "").replace(/\s+/g, " ").trim();
+00056: 
+00057: const normalizeStatus = (value: unknown) =>
+00058:   cleanText(value).toLowerCase();
+00059: 
+00060: const isVisibleProduct = (status: unknown) => {
+00061:   const normalizedStatus = normalizeStatus(status);
+00062: 
+00063:   return normalizedStatus !== "oculto";
+00064: };
+00065: 
+00066: const sanitizeFileName = (value: string) =>
+00067:   value
+00068:     .trim()
+00069:     .replace(/[^\w.-]+/g, "-")
+00070:     .replace(/-+/g, "-")
+00071:     .replace(/^-|-$/g, "");
+00072: 
+00073: const normalizeDropboxUrl = (url: string) => {
+00074:   if (!url.includes("dropbox.com")) {
+00075:     return url;
+00076:   }
+00077: 
+00078:   return url
+00079:     .replace("www.dropbox.com", "dl.dropboxusercontent.com")
+00080:     .replace("?dl=0", "?raw=1")
+00081:     .replace("&dl=0", "&raw=1");
+00082: };
+00083: 
+00084: const normalizeImageUrl = (url: string) =>
+00085:   normalizeDropboxUrl(cleanText(url));
+00086: 
+00087: const createSourceHash = (url: string) =>
+00088:   createHash("sha1").update(normalizeImageUrl(url)).digest("hex");
+00089: 
+00090: const getReportKey = (category: string, productId: string) =>
+00091:   `${category}/${productId}`;
+00092: 
+00093: const parseOptions = (): ScriptOptions => {
+00094:   const args = process.argv.slice(2);
+00095: 
+00096:   const options: ScriptOptions = {
+00097:     force: false,
+00098:   };
+00099: 
+00100:   for (const arg of args) {
+00101:     if (arg === "--force") {
+00102:       options.force = true;
+00103:       continue;
+00104:     }
+00105: 
+00106:     if (arg.startsWith("--category=")) {
+00107:       options.category = arg.replace("--category=", "").trim();
+00108:       continue;
+00109:     }
+00110: 
+00111:     if (arg.startsWith("--limit=")) {
+00112:       const limit = Number(arg.replace("--limit=", "").trim());
+00113: 
+00114:       if (Number.isFinite(limit) && limit > 0) {
+00115:         options.limit = limit;
+00116:       }
+00117:     }
+00118:   }
+00119: 
+00120:   return options;
+00121: };
+00122: 
+00123: const fileExists = async (filePath: string) => {
+00124:   try {
+00125:     await stat(filePath);
+00126:     return true;
+00127:   } catch {
+00128:     return false;
+00129:   }
+00130: };
+00131: 
+00132: const getFileSizeKb = async (filePath: string) => {
+00133:   const fileStat = await stat(filePath);
+00134: 
+00135:   return Math.round((fileStat.size / 1024) * 100) / 100;
+00136: };
+00137: 
+00138: const downloadImage = async (url: string) => {
+00139:   const normalizedUrl = normalizeImageUrl(url);
+00140:   const response = await fetch(normalizedUrl);
+00141: 
+00142:   if (!response.ok) {
+00143:     throw new Error(
+00144:       `No se pudo descargar imagen: ${response.status} ${response.statusText}`,
+00145:     );
+00146:   }
+00147: 
+00148:   const arrayBuffer = await response.arrayBuffer();
+00149: 
+00150:   return Buffer.from(arrayBuffer);
+00151: };
+00152: 
+00153: const getOutputPath = (category: string, productId: string) => {
+00154:   const safeCategory = sanitizeFileName(category || "catalogo");
+00155:   const safeProductId = sanitizeFileName(productId);
+00156: 
+00157:   return path.join(
+00158:     OUTPUT_DIR,
+00159:     safeCategory,
+00160:     `${safeProductId}.jpg`,
+00161:   );
+00162: };
+00163: 
+00164: const getPublicPath = (category: string, productId: string) => {
+00165:   const safeCategory = sanitizeFileName(category || "catalogo");
+00166:   const safeProductId = sanitizeFileName(productId);
+00167: 
+00168:   return `/catalog/pdf-images/${safeCategory}/${safeProductId}.jpg`;
+00169: };
+00170: 
+00171: const readPreviousReport = async (): Promise<PdfImageReport> => {
+00172:   try {
+00173:     const content = await readFile(REPORT_PATH, "utf8");
+00174:     return JSON.parse(content) as PdfImageReport;
+00175:   } catch {
+00176:     return {};
+00177:   }
+00178: };
+00179: 
+00180: const writeReport = async (report: PdfImageReport) => {
+00181:   const sortedReport = Object.fromEntries(
+00182:     Object.entries(report).sort(([a], [b]) => a.localeCompare(b)),
+00183:   );
+00184: 
+00185:   await mkdir(path.dirname(REPORT_PATH), {
+00186:     recursive: true,
+00187:   });
+00188: 
+00189:   await writeFile(
+00190:     REPORT_PATH,
+00191:     `${JSON.stringify(sortedReport, null, 2)}\n`,
+00192:     "utf8",
+00193:   );
+00194: };
+00195: 
+00196: const optimizeImage = async ({
+00197:   sourceUrl,
+00198:   outputPath,
+00199: }: {
+00200:   sourceUrl: string;
+00201:   outputPath: string;
+00202: }) => {
+00203:   const inputBuffer = await downloadImage(sourceUrl);
+00204: 
+00205:   await mkdir(path.dirname(outputPath), {
+00206:     recursive: true,
+00207:   });
+00208: 
+00209:   const result = await sharp(inputBuffer, {
+00210:     failOn: "none",
+00211:   })
+00212:     .rotate()
+00213:     .resize({
+00214:       width: PDF_IMAGE_WIDTH,
+00215:       height: PDF_IMAGE_HEIGHT,
+00216:       fit: "cover",
+00217:       position: "centre",
+00218:       withoutEnlargement: true,
+00219:     })
+00220:     .flatten({
+00221:       background: "#ffffff",
+00222:     })
+00223:     .jpeg({
+00224:       quality: PDF_IMAGE_QUALITY,
+00225:       progressive: true,
+00226:       mozjpeg: true,
+00227:     })
+00228:     .toFile(outputPath);
+00229: 
+00230:   return {
+00231:     width: result.width,
+00232:     height: result.height,
+00233:     sizeKb: await getFileSizeKb(outputPath),
+00234:   };
+00235: };
+00236: 
+00237: const writeManifest = async (manifest: PdfImageManifest) => {
+00238:   const sortedEntries = Object.entries(manifest).sort(([a], [b]) =>
+00239:     a.localeCompare(b),
+00240:   );
+00241: 
+00242:   const manifestBody = sortedEntries
+00243:     .map(([productId, pdfPath]) => {
+00244:       return `  ${JSON.stringify(productId)}: ${JSON.stringify(pdfPath)},`;
+00245:     })
+00246:     .join("\n");
+00247: 
+00248:   const content = `/**
+00249:  * Manifest generado por scripts/catalog/OptimizePdfImages.ts
+00250:  *
+00251:  * Regla:
+00252:  * - La imagen original vive en Google Sheets como img.
+00253:  * - Este manifest contiene solo derivados optimizados para PDF.
+00254:  * - No se edita manualmente.
+00255:  */
+00256: export const PDF_IMAGE_MANIFEST: Record<string, string> = {
+00257: ${manifestBody}
+00258: };
+00259: `;
+00260: 
+00261:   await mkdir(path.dirname(MANIFEST_PATH), {
+00262:     recursive: true,
+00263:   });
+00264: 
+00265:   await writeFile(MANIFEST_PATH, content, "utf8");
+00266: };
+00267: 
+00268: const run = async () => {
+00269:   const options = parseOptions();
+00270:   const previousReport = await readPreviousReport();
+00271:   const nextReport: PdfImageReport = {};
+00272:   const manifest: PdfImageManifest = {};
+00273: 
+00274:   let visitedCount = 0;
+00275:   let generatedCount = 0;
+00276:   let regeneratedCount = 0;
+00277:   let skippedCount = 0;
+00278:   let missingImageCount = 0;
+00279:   let errorCount = 0;
+00280: 
+00281:   console.log("🧵 Wooly PDF Image Optimizer v0.2");
+00282:   console.log("Categoría:", options.category || "todas");
+00283:   console.log("Límite:", options.limit || "sin límite");
+00284:   console.log("Forzar:", options.force ? "sí" : "no");
+00285:   console.log("");
+00286: 
+00287:   const sources = PRODUCT_SHEETS_CONFIG.filter((source) => {
+00288:     if (!options.category) {
+00289:       return true;
+00290:     }
+00291: 
+00292:     return source.category === options.category;
+00293:   });
+00294: 
+00295:   if (sources.length === 0) {
+00296:     throw new Error(
+00297:       `No se encontró la categoría: ${options.category}`,
+00298:     );
+00299:   }
+00300: 
+00301:   for (const source of sources) {
+00302:     console.log(`📦 Categoría: ${source.category}`);
+00303: 
+00304:     const rows = await fetchSheetRows(
+00305:       source,
+00306:       REQUIRED_HEADERS,
+00307:     );
+00308: 
+00309:     for (const row of rows) {
+00310:       if (options.limit && visitedCount >= options.limit) {
+00311:         break;
+00312:       }
+00313: 
+00314:       if (!isVisibleProduct(row.status)) {
+00315:         continue;
+00316:       }
+00317: 
+00318:       visitedCount += 1;
+00319: 
+00320:       const productId = cleanText(row.id);
+00321:       const imageUrl = cleanText(row.img);
+00322:       const reportKey = getReportKey(source.category, productId);
+00323:       const now = new Date().toISOString();
+00324: 
+00325:       if (!productId) {
+00326:         continue;
+00327:       }
+00328: 
+00329:       const outputPath = getOutputPath(
+00330:         source.category,
+00331:         productId,
+00332:       );
+00333: 
+00334:       const publicPath = getPublicPath(
+00335:         source.category,
+00336:         productId,
+00337:       );
+00338: 
+00339:       if (!imageUrl) {
+00340:         missingImageCount += 1;
+00341: 
+00342:         nextReport[reportKey] = {
+00343:           productId,
+00344:           category: source.category,
+00345:           sourceHash: "",
+00346:           pdf: "",
+00347:           sizeKb: 0,
+00348:           status: "missing-image",
+00349:           message: "Producto sin imagen en la columna img.",
+00350:           updatedAt: now,
+00351:         };
+00352: 
+00353:         console.warn(`⚠️ ${productId}: sin imagen`);
+00354: 
+00355:         continue;
+00356:       }
+00357: 
+00358:       const normalizedImageUrl = normalizeImageUrl(imageUrl);
+00359:       const sourceHash = createSourceHash(normalizedImageUrl);
+00360:       const previousEntry = previousReport[reportKey];
+00361:       const alreadyExists = await fileExists(outputPath);
+00362:       const sourceChanged =
+00363:         previousEntry?.sourceHash &&
+00364:         previousEntry.sourceHash !== sourceHash;
+00365: 
+00366:       try {
+00367:         if (
+00368:           alreadyExists &&
+00369:           previousEntry?.sourceHash === sourceHash &&
+00370:           !options.force
+00371:         ) {
+00372:           const existingSizeKb = await getFileSizeKb(outputPath);
+00373: 
+00374:           manifest[productId] = publicPath;
+00375: 
+00376:           nextReport[reportKey] = {
+00377:             productId,
+00378:             category: source.category,
+00379:             sourceHash,
+00380:             pdf: publicPath,
+00381:             sizeKb: existingSizeKb,
+00382:             status: "skipped",
+00383:             updatedAt: now,
+00384:           };
+00385: 
+00386:           skippedCount += 1;
+00387: 
+00388:           console.log(
+00389:             `↩️  ${productId} sin cambios → ${existingSizeKb} KB`,
+00390:           );
+00391: 
+00392:           continue;
+00393:         }
+00394: 
+00395:         const result = await optimizeImage({
+00396:           sourceUrl: normalizedImageUrl,
+00397:           outputPath,
+00398:         });
+00399: 
+00400:         manifest[productId] = publicPath;
+00401: 
+00402:         const status: PdfImageReportStatus =
+00403:           alreadyExists || sourceChanged || options.force
+00404:             ? "regenerated"
+00405:             : "generated";
+00406: 
+00407:         nextReport[reportKey] = {
+00408:           productId,
+00409:           category: source.category,
+00410:           sourceHash,
+00411:           pdf: publicPath,
+00412:           sizeKb: result.sizeKb,
+00413:           status,
+00414:           updatedAt: now,
+00415:         };
+00416: 
+00417:         if (status === "regenerated") {
+00418:           regeneratedCount += 1;
+00419:         } else {
+00420:           generatedCount += 1;
+00421:         }
+00422: 
+00423:         console.log(
+00424:           `✅ ${productId} ${status} → ${result.width}x${result.height} · ${result.sizeKb} KB`,
+00425:         );
+00426:       } catch (error) {
+00427:         errorCount += 1;
+00428: 
+00429:         const message =
+00430:           error instanceof Error
+00431:             ? error.message
+00432:             : "Error desconocido";
+00433: 
+00434:         const hasFallbackFile = await fileExists(outputPath);
+00435: 
+00436:         if (hasFallbackFile) {
+00437:           const existingSizeKb = await getFileSizeKb(outputPath);
+00438:           manifest[productId] = publicPath;
+00439: 
+00440:           nextReport[reportKey] = {
+00441:             productId,
+00442:             category: source.category,
+00443:             sourceHash,
+00444:             pdf: publicPath,
+00445:             sizeKb: existingSizeKb,
+00446:             status: "error",
+00447:             message: `${message}. Se conserva imagen optimizada anterior.`,
+00448:             updatedAt: now,
+00449:           };
+00450:         } else {
+00451:           nextReport[reportKey] = {
+00452:             productId,
+00453:             category: source.category,
+00454:             sourceHash,
+00455:             pdf: "",
+00456:             sizeKb: 0,
+00457:             status: "error",
+00458:             message,
+00459:             updatedAt: now,
+00460:           };
+00461:         }
+00462: 
+00463:         console.warn(`⚠️ ${productId}: ${message}`);
+00464:       }
+00465:     }
+00466:   }
+00467: 
+00468:   await writeManifest(manifest);
+00469:   await writeReport(nextReport);
+00470: 
+00471:   console.log("");
+00472:   console.log("✅ Manifest liviano generado:");
+00473:   console.log(MANIFEST_PATH);
+00474:   console.log("");
+00475:   console.log("✅ Reporte técnico generado:");
+00476:   console.log(REPORT_PATH);
+00477:   console.log("");
+00478:   console.log("Resumen:");
+00479:   console.log(`- Visitadas: ${visitedCount}`);
+00480:   console.log(`- Generadas: ${generatedCount}`);
+00481:   console.log(`- Regeneradas: ${regeneratedCount}`);
+00482:   console.log(`- Omitidas sin cambios: ${skippedCount}`);
+00483:   console.log(`- Sin imagen: ${missingImageCount}`);
+00484:   console.log(`- Errores: ${errorCount}`);
+00485: };
+00486: 
+00487: run().catch((error) => {
+00488:   console.error("❌ Error generando imágenes PDF");
+00489:   console.error(error);
+00490:   process.exit(1);
+00491: });
+
+============================================================
+FILE: src\app\App.tsx
+============================================================
+
+00001: import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+00002: import { BrowserRouter, Route, Routes } from "react-router-dom";
+00003: import { HelmetProvider } from "react-helmet-async";
+00004: 
+00005: import { Toaster } from "@/shared/components/ui/toaster";
+00006: import { Toaster as Sonner } from "@/shared/components/ui/sonner";
+00007: import { TooltipProvider } from "@/shared/components/ui/tooltip";
+00008: 
+00009: import HomePage from "@/app/pages/HomePage";
+00010: import CatalogPage from "@/app/pages/CatalogPage";
+00011: import CatalogPdfPage from "@/app/pages/CatalogPdfPage";
+00012: import SalesCatalogToolsPage from "@/app/pages/SalesCatalogToolsPage";
+00013: import ProductDetailPage from "@/app/pages/ProductDetailPage";
+00014: import CategoryPage from "@/app/pages/CategoryPage";
+00015: import BlogPage from "@/app/pages/BlogPage";
+00016: import BlogArticlePage from "@/app/pages/BlogArticlePage";
+00017: import BlogSectionPage from "@/app/pages/BlogSectionPage";
+00018: import NotFound from "@/app/pages/NotFound";
+00019: import IntegrationsPage from "@/modules/integrations/pages/IntegrationsPage";
+00020: import CommercialCenter from "@/modules/commercial/pages/CommercialCenter";
+00021: 
+00022: const queryClient = new QueryClient();
+00023: 
+00024: export default function App() {
+00025:   return (
+00026:     <QueryClientProvider client={queryClient}>
+00027:       <HelmetProvider>
+00028:         <TooltipProvider>
+00029:           <Toaster />
+00030:           <Sonner />
+00031: 
+00032:           <BrowserRouter future={{ v7_relativeSplatPath: true }}>
+00033:             <Routes>
+00034:               {/* HOME */}
+00035:               <Route path="/" element={<HomePage />} />
+00036: 
+00037:               {/* BLOG */}
+00038:               <Route path="/blog" element={<BlogPage />} />
+00039:               <Route path="/blog/laboratorio" element={<BlogSectionPage />} />
+00040:               <Route path="/blog/tendencias" element={<BlogSectionPage />} />
+00041:               <Route path="/blog/oportunidades" element={<BlogSectionPage />} />
+00042:               <Route path="/blog/herramientas" element={<BlogSectionPage />} />
+00043:               <Route
+00044:                 path="/blog/herramientas/:tool"
+00045:                 element={<BlogSectionPage />}
+00046:               />
+00047:               <Route path="/blog/campanas" element={<BlogSectionPage />} />
+00048:               <Route
+00049:                 path="/blog/campanas/:campaign"
+00050:                 element={<BlogSectionPage />}
+00051:               />
+00052:               <Route path="/blog/catalogo" element={<BlogSectionPage />} />
+00053:               <Route path="/blog/guias" element={<BlogSectionPage />} />
+00054:               <Route path="/blog/:slug" element={<BlogArticlePage />} />
+00055: 
+00056:               {/* CATALOGO */}
+00057:               <Route path="/catalogo" element={<CatalogPage />} />
+00058:               <Route path="/catalogo/pdf" element={<CatalogPdfPage />} />
+00059:               <Route path="/ventas/catalogos" element={<SalesCatalogToolsPage />} />
+00060:               <Route
+00061:                 path="/catalogo/producto.html"
+00062:                 element={<ProductDetailPage />}
+00063:               />
+00064:               <Route
+00065:                 path="/catalogo/categoria.html"
+00066:                 element={<CategoryPage />}
+00067:               />
+00068: 
+00069:               {/* COMMERCIAL CENTER */}
+00070:               <Route path="/admin/commercial" element={<CommercialCenter />} />
+00071: 
+00072:               {/* WOOLY CONNECT */}
+00073:               <Route
+00074:                 path="/admin/integrations"
+00075:                 element={<IntegrationsPage />}
+00076:               />
+00077: 
+00078:               {/* LEGACY */}
+00079:               <Route path="/producto/:id" element={<ProductDetailPage />} />
+00080:               <Route path="/categoria/:id" element={<CategoryPage />} />
+00081: 
+00082:               {/* 404 */}
+00083:               <Route path="*" element={<NotFound />} />
+00084:             </Routes>
+00085:           </BrowserRouter>
+00086:         </TooltipProvider>
+00087:       </HelmetProvider>
+00088:     </QueryClientProvider>
+00089:   );
+00090: }
+00091: 
+00092: 
+
+============================================================
+FILE: src\app\pages\CatalogPdfPage.tsx
+============================================================
+
+00001: import CatalogPdfPageView from "@/modules/catalog-export/components/CatalogPdfPage/CatalogPdfPage";
+00002: 
+00003: export default function CatalogPdfPage() {
+00004:   return <CatalogPdfPageView />;
+00005: }
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css
+============================================================
+
+00001: /* =========================================================
+00002:    Catalog PDF Card
+00003:    Fase 2.2G: precios mayoristas grandes, compactos y a la izquierda
+00004:    ========================================================= */
+00005: 
+00006: /* ===== BASE ===== */
+00007: 
+00008: .catalog-pdf-card {
+00009:   display: flex;
+00010:   flex-direction: column;
+00011:   gap: 6px;
+00012:   padding: 7px;
+00013:   border: 1px solid rgba(226, 232, 240, 0.92);
+00014:   border-radius: 17px;
+00015:   background: #ffffff;
+00016:   box-shadow:
+00017:     0 8px 24px rgba(15, 23, 42, 0.035),
+00018:     0 14px 34px rgba(15, 23, 42, 0.035);
+00019:   break-inside: avoid;
+00020:   page-break-inside: avoid;
+00021: }
+00022: 
+00023: /* ===== MEDIA ===== */
+00024: 
+00025: .catalog-pdf-card__media {
+00026:   position: relative;
+00027:   overflow: hidden;
+00028:   width: 100%;
+00029:   aspect-ratio: 10 / 10;
+00030:   border-radius: 13px;
+00031:   background: #f8f9fa;
+00032: }
+00033: 
+00034: .catalog-pdf-card__image {
+00035:   display: block;
+00036:   width: 100%;
+00037:   height: 100%;
+00038:   object-fit: cover;
+00039:   object-position: center;
+00040: }
+00041: 
+00042: .catalog-pdf-card__offerBadge {
+00043:   position: absolute;
+00044:   top: 7px;
+00045:   left: 7px;
+00046:   padding: 5px 8px;
+00047:   border-radius: 999px;
+00048:   background: linear-gradient(135deg, #f286be, #ffb7d5);
+00049:   color: #ffffff;
+00050:   font-size: 0.56rem;
+00051:   font-weight: 950;
+00052:   line-height: 1;
+00053:   letter-spacing: 0.08em;
+00054:   text-transform: uppercase;
+00055: }
+00056: 
+00057: /* ===== CONTENT ===== */
+00058: 
+00059: .catalog-pdf-card__content {
+00060:   display: flex;
+00061:   min-width: 0;
+00062:   flex-direction: column;
+00063:   gap: 5px;
+00064:   padding: 0 1px 1px;
+00065: }
+00066: 
+00067: /* ===== META ===== */
+00068: 
+00069: .catalog-pdf-card__meta {
+00070:   display: grid;
+00071:   grid-template-columns: auto auto minmax(0, 1fr);
+00072:   gap: 4px;
+00073:   align-items: center;
+00074: }
+00075: 
+00076: .catalog-pdf-card__code,
+00077: .catalog-pdf-card__category,
+00078: .catalog-pdf-card__stock {
+00079:   display: inline-flex;
+00080:   min-height: 18px;
+00081:   align-items: center;
+00082:   justify-content: center;
+00083:   border-radius: 999px;
+00084:   padding: 0 6px;
+00085:   font-size: 0.47rem;
+00086:   font-weight: 950;
+00087:   line-height: 1;
+00088:   text-transform: uppercase;
+00089:   white-space: nowrap;
+00090: }
+00091: 
+00092: .catalog-pdf-card__code {
+00093:   background: #f1f3f4;
+00094:   color: #5f6368;
+00095:   letter-spacing: 0.04em;
+00096: }
+00097: 
+00098: .catalog-pdf-card__category {
+00099:   background: linear-gradient(
+00100:     135deg,
+00101:     var(--w-primary, #1d8299),
+00102:     var(--w-primary-dark, #156f84)
+00103:   );
+00104:   color: #ffffff;
+00105: }
+00106: 
+00107: .catalog-pdf-card__stock {
+00108:   overflow: hidden;
+00109:   justify-self: end;
+00110:   max-width: 100%;
+00111:   border: 1px solid #bbf7d0;
+00112:   background: #e6f4ea;
+00113:   color: #137333;
+00114:   text-overflow: ellipsis;
+00115: }
+00116: 
+00117: /* ===== TITLE ===== */
+00118: 
+00119: .catalog-pdf-card__title {
+00120:   display: -webkit-box;
+00121:   overflow: hidden;
+00122:   margin: 0;
+00123:   color: #202124;
+00124:   font-size: 0.98rem;
+00125:   font-weight: 950;
+00126:   line-height: 1.08;
+00127:   letter-spacing: -0.03em;
+00128:   -webkit-box-orient: vertical;
+00129:   -webkit-line-clamp: 2;
+00130: }
+00131: 
+00132: /* ===== UNIT / OFFER PRICE ===== */
+00133: 
+00134: .catalog-pdf-card__priceSummary {
+00135:   display: grid;
+00136:   grid-template-columns: repeat(2, minmax(0, 1fr));
+00137:   gap: 4px;
+00138: }
+00139: 
+00140: .catalog-pdf-card__priceSummary--single {
+00141:   grid-template-columns: 1fr;
+00142: }
+00143: 
+00144: .catalog-pdf-card__priceBox {
+00145:   display: flex;
+00146:   min-height: 28px;
+00147:   align-items: center;
+00148:   justify-content: center;
+00149:   flex-direction: column;
+00150:   gap: 2px;
+00151:   border: 1px solid;
+00152:   border-radius: 9px;
+00153:   padding: 4px 7px;
+00154:   line-height: 1;
+00155:   text-align: center;
+00156: }
+00157: 
+00158: .catalog-pdf-card__priceBox span,
+00159: .catalog-pdf-card__priceBox strong {
+00160:   display: block;
+00161:   width: 100%;
+00162:   text-align: center;
+00163: }
+00164: 
+00165: .catalog-pdf-card__priceBox span {
+00166:   overflow: hidden;
+00167:   font-size: 0.48rem;
+00168:   font-weight: 950;
+00169: }
+00170: 
+00171: .catalog-pdf-card__priceBox strong {
+00172:   font-size: 0.78rem;
+00173:   font-weight: 1000;
+00174:   letter-spacing: -0.03em;
+00175: }
+00176: 
+00177: .catalog-pdf-card__priceBox--unit {
+00178:   border-color: rgba(29, 130, 153, 0.25);
+00179:   background: rgba(29, 130, 153, 0.055);
+00180:   color: var(--w-primary, #1d8299);
+00181: }
+00182: 
+00183: .catalog-pdf-card__priceBox--unit span {
+00184:   color: #475569;
+00185: }
+00186: 
+00187: .catalog-pdf-card__priceBox--offer {
+00188:   border-color: #f286be;
+00189:   background: #fff0f5;
+00190:   color: #9d174d;
+00191: }
+00192: 
+00193: /* ===== WHOLESALE ===== */
+00194: 
+00195: .catalog-pdf-card__wholesaleSection {
+00196:   display: flex;
+00197:   flex-direction: column;
+00198:   gap: 4px;
+00199: }
+00200: 
+00201: .catalog-pdf-card__sectionLabel {
+00202:   display: block;
+00203:   color: #334155;
+00204:   font-size: 0.54rem;
+00205:   font-weight: 1000;
+00206:   line-height: 1;
+00207:   letter-spacing: 0.1em;
+00208:   text-align: center;
+00209:   text-transform: uppercase;
+00210: }
+00211: 
+00212: .catalog-pdf-card__tiers {
+00213:   display: grid;
+00214:   grid-template-columns: repeat(2, minmax(0, 1fr));
+00215:   gap: 5px;
+00216: }
+00217: 
+00218: .catalog-pdf-card__tier {
+00219:   display: flex;
+00220:   min-height: 47px;
+00221:   align-items: flex-start;
+00222:   justify-content: center;
+00223:   flex-direction: column;
+00224:   gap: 3px;
+00225:   border: 1px solid;
+00226:   border-radius: 12px;
+00227:   padding: 6px 8px;
+00228:   text-align: center;
+00229: }
+00230: 
+00231: .catalog-pdf-card__tierLabel {
+00232:   overflow: hidden;
+00233:   width: 100%;
+00234:   font-size: 0.54rem;
+00235:   font-weight: 1000;
+00236:   line-height: 1.05;
+00237:   text-overflow: ellipsis;
+00238:   white-space: nowrap;
+00239: }
+00240: 
+00241: .catalog-pdf-card__tierPrice {
+00242:   display: block;
+00243:   width: 100%;
+00244:   font-size: 1.08rem;
+00245:   font-weight: 1000;
+00246:   line-height: 0.95;
+00247:   letter-spacing: -0.04em;
+00248:   text-align: center;
+00249:   white-space: nowrap;
+00250: }
+00251: 
+00252: /* ===== TIER COLORS ===== */
+00253: 
+00254: .catalog-pdf-card__tier--price3 {
+00255:   min-height: 53px;
+00256:   border-color: #f5b025;
+00257:   background: #fffbef;
+00258:   color: #92400e;
+00259:   box-shadow: inset 0 0 0 1px rgba(245, 176, 37, 0.18);
+00260: }
+00261: 
+00262: .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierLabel {
+00263:   font-size: 0.58rem;
+00264: }
+00265: 
+00266: .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierPrice {
+00267:   font-size: 1.28rem;
+00268: }
+00269: 
+00270: .catalog-pdf-card__tier--price12 {
+00271:   border-color: #f286be;
+00272:   background: #fff0f5;
+00273:   color: #9d174d;
+00274: }
+00275: 
+00276: .catalog-pdf-card__tier--price50 {
+00277:   border-color: #c4b5fd;
+00278:   background: #f5f3ff;
+00279:   color: #5b21b6;
+00280: }
+00281: 
+00282: .catalog-pdf-card__tier--price100 {
+00283:   border-color: #86efac;
+00284:   background: #f0fdf4;
+00285:   color: #15803d;
+00286: }
+00287: 
+00288: .catalog-pdf-card__noTiers {
+00289:   margin: 0;
+00290:   border-radius: 999px;
+00291:   padding: 7px 9px;
+00292:   background: #f8f9fa;
+00293:   color: #5f6368;
+00294:   font-size: 0.58rem;
+00295:   font-weight: 900;
+00296:   line-height: 1.2;
+00297:   text-align: center;
+00298: }
+00299: 
+00300: /* ===== DESCRIPTION ===== */
+00301: 
+00302: .catalog-pdf-card__description {
+00303:   display: -webkit-box;
+00304:   overflow: hidden;
+00305:   margin: 0;
+00306:   color: #5f6368;
+00307:   font-size: 0.52rem;
+00308:   font-weight: 650;
+00309:   line-height: 1.14;
+00310:   -webkit-box-orient: vertical;
+00311:   -webkit-line-clamp: 2;
+00312: }
+00313: 
+00314: .catalog-pdf-card__description span {
+00315:   color: #334155;
+00316:   font-weight: 950;
+00317: }
+00318: 
+00319: /* ===== PRINT ===== */
+00320: 
+00321: @media print {
+00322:   /* Mantiene colores y fondos en la impresión/PDF */
+00323:   *,
+00324:   *::before,
+00325:   *::after {
+00326:     -webkit-print-color-adjust: exact !important;
+00327:     print-color-adjust: exact !important;
+00328:     box-sizing: border-box;
+00329:   }
+00330: 
+00331:   .catalog-pdf-card {
+00332:     display: flex;
+00333:     flex-direction: column;
+00334:     gap: 5px;
+00335: 
+00336:     padding: 7px;
+00337:     border-radius: 14px;
+00338:     box-shadow: none;
+00339: 
+00340:     /* Evita que una tarjeta se divida entre dos páginas */
+00341:     break-inside: avoid;
+00342:     page-break-inside: avoid;
+00343: 
+00344:     overflow: hidden;
+00345:   }
+00346: 
+00347:   /* ===== IMAGE ===== */
+00348: 
+00349:   .catalog-pdf-card__media {
+00350:     width: 100%;
+00351:     aspect-ratio: 1 / 1;
+00352:     border-radius: 11px;
+00353:     overflow: hidden;
+00354: 
+00355:     break-inside: avoid;
+00356:     page-break-inside: avoid;
+00357:   }
+00358: 
+00359:   .catalog-pdf-card__media img {
+00360:     display: block;
+00361:     width: 100%;
+00362:     height: 100%;
+00363:     object-fit: cover;
+00364:     object-position: center;
+00365:   }
+00366: 
+00367:   /* ===== TITLE ===== */
+00368: 
+00369:   .catalog-pdf-card__title {
+00370:     margin: 0;
+00371:     font-size: 0.98rem;
+00372:     line-height: 1.15;
+00373:     text-align: center;
+00374: 
+00375:     overflow-wrap: anywhere;
+00376:     hyphens: auto;
+00377:   }
+00378: 
+00379:   /* ===== UNIT / OFFER PRICE ===== */
+00380: 
+00381:   .catalog-pdf-card__priceSummary {
+00382:     gap: 4px;
+00383:     break-inside: avoid;
+00384:     page-break-inside: avoid;
+00385:   }
+00386: 
+00387:   .catalog-pdf-card__priceBox {
+00388:     min-height: 28px;
+00389:     padding: 4px 6px;
+00390: 
+00391:     align-items: center;
+00392:     justify-content: center;
+00393: 
+00394:     border-radius: 8px;
+00395:     text-align: center;
+00396:   }
+00397: 
+00398:   .catalog-pdf-card__priceBox span,
+00399:   .catalog-pdf-card__priceBox strong {
+00400:     display: block;
+00401:     width: 100%;
+00402:     margin: 0;
+00403:     text-align: center;
+00404:   }
+00405: 
+00406:   .catalog-pdf-card__priceBox span {
+00407:     font-size: 0.46rem;
+00408:     line-height: 1.05;
+00409:   }
+00410: 
+00411:   .catalog-pdf-card__priceBox strong {
+00412:     font-size: 0.76rem;
+00413:     line-height: 1;
+00414:     white-space: nowrap;
+00415:   }
+00416: 
+00417:   /* ===== SECTION LABEL ===== */
+00418: 
+00419:   .catalog-pdf-card__sectionLabel {
+00420:     margin: 0;
+00421:     font-size: 0.52rem;
+00422:     line-height: 1.1;
+00423:     text-align: center;
+00424:   }
+00425: 
+00426:   /* ===== TIERS ===== */
+00427: 
+00428:   .catalog-pdf-card__tier {
+00429:     display: flex;
+00430:     min-height: 45px;
+00431:     align-items: center;
+00432:     justify-content: center;
+00433:     flex-direction: column;
+00434: 
+00435:     padding: 6px 7px;
+00436:     border-radius: 9px;
+00437:     text-align: center;
+00438: 
+00439:     break-inside: avoid;
+00440:     page-break-inside: avoid;
+00441:   }
+00442: 
+00443:   .catalog-pdf-card__tierLabel,
+00444:   .catalog-pdf-card__tierPrice {
+00445:     display: block;
+00446:     width: 100%;
+00447:     margin: 0;
+00448:     text-align: center;
+00449:   }
+00450: 
+00451:   .catalog-pdf-card__tierLabel {
+00452:     font-size: 0.52rem;
+00453:     line-height: 1.05;
+00454:   }
+00455: 
+00456:   .catalog-pdf-card__tierPrice {
+00457:     font-size: 1.04rem;
+00458:     line-height: 1;
+00459:     white-space: nowrap;
+00460:   }
+00461: 
+00462:   /* Precio principal destacado */
+00463:   .catalog-pdf-card__tier--price3 {
+00464:     min-height: 51px;
+00465:   }
+00466: 
+00467:   .catalog-pdf-card__tier--price3
+00468:     .catalog-pdf-card__tierLabel {
+00469:     font-size: 0.56rem;
+00470:   }
+00471: 
+00472:   .catalog-pdf-card__tier--price3
+00473:     .catalog-pdf-card__tierPrice {
+00474:     font-size: 1.22rem;
+00475:   }
+00476: 
+00477:   /* ===== DESCRIPTION ===== */
+00478: 
+00479:   .catalog-pdf-card__description {
+00480:     margin: 0;
+00481:     font-size: 0.5rem;
+00482:     line-height: 1.25;
+00483:     text-align: center;
+00484: 
+00485:     overflow-wrap: anywhere;
+00486:     hyphens: auto;
+00487: 
+00488:     /* Evita líneas sueltas al cambiar de página */
+00489:     orphans: 2;
+00490:     widows: 2;
+00491:   }
+00492: }
+00493: 
+00494: /* ===== MOBILE PREVIEW ===== */
+00495: 
+00496: @media (max-width: 640px) {
+00497:   .catalog-pdf-card {
+00498:     gap: 5px;
+00499:     padding: 6px;
+00500:     border-radius: 15px;
+00501:   }
+00502: 
+00503:   .catalog-pdf-card__media {
+00504:     aspect-ratio: 16 / 10;
+00505:     border-radius: 11px;
+00506:   }
+00507: 
+00508:   .catalog-pdf-card__code,
+00509:   .catalog-pdf-card__category,
+00510:   .catalog-pdf-card__stock {
+00511:     min-height: 16px;
+00512:     padding: 0 4px;
+00513:     font-size: 0.39rem;
+00514:   }
+00515: 
+00516:   .catalog-pdf-card__title {
+00517:     font-size: 0.66rem;
+00518:   }
+00519: 
+00520:   .catalog-pdf-card__priceBox {
+00521:     min-height: 24px;
+00522:     padding: 4px 5px;
+00523:   }
+00524: 
+00525:   .catalog-pdf-card__priceBox span {
+00526:     font-size: 0.4rem;
+00527:   }
+00528: 
+00529:   .catalog-pdf-card__priceBox strong {
+00530:     font-size: 0.58rem;
+00531:   }
+00532: 
+00533:   .catalog-pdf-card__sectionLabel {
+00534:     font-size: 0.44rem;
+00535:   }
+00536: 
+00537:   .catalog-pdf-card__tiers {
+00538:     gap: 4px;
+00539:   }
+00540: 
+00541:   .catalog-pdf-card__tier {
+00542:     min-height: 38px;
+00543:     border-radius: 10px;
+00544:     padding: 5px 6px;
+00545:   }
+00546: 
+00547:   .catalog-pdf-card__tierLabel {
+00548:     font-size: 0.42rem;
+00549:   }
+00550: 
+00551:   .catalog-pdf-card__tierPrice {
+00552:     font-size: 0.78rem;
+00553:   }
+00554: 
+00555:   .catalog-pdf-card__tier--price3 {
+00556:     min-height: 44px;
+00557:   }
+00558: 
+00559:   .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierLabel {
+00560:     font-size: 0.46rem;
+00561:   }
+00562: 
+00563:   .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierPrice {
+00564:     font-size: 0.92rem;
+00565:   }
+00566: 
+00567:   .catalog-pdf-card__description {
+00568:     font-size: 0.42rem;
+00569:     line-height: 1.12;
+00570:   }
+00571: }
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx
+============================================================
+
+00001: import type { PdfProduct } from "../../types/PdfProduct";
+00002: import { PDF_PRODUCT_PLACEHOLDER_IMAGE } from "../../mappers/PdfProductMapper";
+00003: 
+00004: import "./CatalogPdfCard.css";
+00005: 
+00006: interface CatalogPdfCardProps {
+00007:   product: PdfProduct;
+00008: }
+00009: 
+00010: type TierKind = "price3" | "price12" | "price50" | "price100";
+00011: 
+00012: type TierPrice = {
+00013:   kind: TierKind;
+00014:   label: string;
+00015:   value?: number | null;
+00016: };
+00017: 
+00018: const moneyFormatter = new Intl.NumberFormat("es-PE", {
+00019:   style: "currency",
+00020:   currency: "PEN",
+00021:   minimumFractionDigits: 2,
+00022: });
+00023: 
+00024: const formatMoney = (value?: number | null) => {
+00025:   const amount = Number(value || 0);
+00026: 
+00027:   if (amount <= 0) {
+00028:     return "Consultar";
+00029:   }
+00030: 
+00031:   return moneyFormatter.format(amount);
+00032: };
+00033: 
+00034: const formatCategory = (category: string) =>
+00035:   category.replace(/-/g, " ").replace(/\s+/g, " ").trim();
+00036: 
+00037: const getTierPrices = (product: PdfProduct): TierPrice[] =>
+00038:   [
+00039:     {
+00040:       kind: "price3",
+00041:       label: "Por Mayor (3u) a",
+00042:       value: product.price3,
+00043:     },
+00044:     {
+00045:       kind: "price12",
+00046:       label: "Por Docena (12u) a",
+00047:       value: product.price12,
+00048:     },
+00049:     {
+00050:       kind: "price50",
+00051:       label: "Por 50 (50u) a",
+00052:       value: product.price50,
+00053:     },
+00054:     {
+00055:       kind: "price100",
+00056:       label: "Por 100 (100u) a",
+00057:       value: product.price100,
+00058:     },
+00059:   ].filter((tier) => Number(tier.value || 0) > 0);
+00060: 
+00061: export default function CatalogPdfCard({ product }: CatalogPdfCardProps) {
+00062:   const tierPrices = getTierPrices(product);
+00063: 
+00064:   const hasOffer =
+00065:     Number(product.offerPrice || 0) > 0 &&
+00066:     Number(product.offerPrice || 0) < Number(product.price1 || 0);
+00067: 
+00068:   const unitPrice = Number(product.price1 || product.primaryPrice || 0);
+00069:   const offerPrice = hasOffer ? Number(product.offerPrice || 0) : 0;
+00070: 
+00071:   return (
+00072:     <article className="catalog-pdf-card">
+00073:       <div className="catalog-pdf-card__media">
+00074:         <img
+00075:           className="catalog-pdf-card__image"
+00076:           src={product.image}
+00077:           alt={product.title}
+00078:           loading="lazy"
+00079:           onError={(event) => {
+00080:             event.currentTarget.src = PDF_PRODUCT_PLACEHOLDER_IMAGE;
+00081:           }}
+00082:         />
+00083: 
+00084:         {hasOffer ? (
+00085:           <span className="catalog-pdf-card__offerBadge">Oferta</span>
+00086:         ) : null}
+00087:       </div>
+00088: 
+00089:       <div className="catalog-pdf-card__content">
+00090:         <div className="catalog-pdf-card__meta">
+00091:           <span className="catalog-pdf-card__code">{product.id}</span>
+00092: 
+00093:           <span className="catalog-pdf-card__category">
+00094:             {formatCategory(product.category)}
+00095:           </span>
+00096: 
+00097:           <span className="catalog-pdf-card__stock">
+00098:             ✓ {product.stockLabel}
+00099:           </span>
+00100:         </div>
+00101: 
+00102:         <h2 className="catalog-pdf-card__title">{product.title}</h2>
+00103: 
+00104:         <div
+00105:           className={`catalog-pdf-card__priceSummary ${
+00106:             hasOffer ? "" : "catalog-pdf-card__priceSummary--single"
+00107:           }`}
+00108:         >
+00109:           <div className="catalog-pdf-card__priceBox catalog-pdf-card__priceBox--unit">
+00110:             <span>Precio unidad:</span>
+00111:             <strong>{formatMoney(unitPrice)}</strong>
+00112:           </div>
+00113: 
+00114:           {hasOffer ? (
+00115:             <div className="catalog-pdf-card__priceBox catalog-pdf-card__priceBox--offer">
+00116:               <span>Precio oferta:</span>
+00117:               <strong>{formatMoney(offerPrice)}</strong>
+00118:             </div>
+00119:           ) : null}
+00120:         </div>
+00121: 
+00122:         <div className="catalog-pdf-card__wholesaleSection">
+00123:           <span className="catalog-pdf-card__sectionLabel">
+00124:             Precios mayoristas
+00125:           </span>
+00126: 
+00127:           {tierPrices.length > 0 ? (
+00128:             <div
+00129:               className="catalog-pdf-card__tiers"
+00130:               aria-label="Precios mayoristas"
+00131:             >
+00132:               {tierPrices.map((tier) => (
+00133:                 <div
+00134:                   className={`catalog-pdf-card__tier catalog-pdf-card__tier--${tier.kind}`}
+00135:                   key={tier.kind}
+00136:                 >
+00137:                   <span className="catalog-pdf-card__tierLabel">
+00138:                     {tier.label}
+00139:                   </span>
+00140: 
+00141:                   <strong className="catalog-pdf-card__tierPrice">
+00142:                     {formatMoney(tier.value)}
+00143:                   </strong>
+00144:                 </div>
+00145:               ))}
+00146:             </div>
+00147:           ) : (
+00148:             <p className="catalog-pdf-card__noTiers">
+00149:               Mayorista: consultar con asesora
+00150:             </p>
+00151:           )}
+00152:         </div>
+00153: 
+00154:         {product.description ? (
+00155:           <p className="catalog-pdf-card__description">
+00156:             <span>Descripción:</span> {product.description}
+00157:           </p>
+00158:         ) : null}
+00159:       </div>
+00160:     </article>
+00161:   );
+00162: }
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfGrid\CatalogPdfGrid.css
+============================================================
+
+00001: /* =========================================================
+00002:    Catalog PDF Grid
+00003:    Fase 2.2B: catálogo en 2 columnas
+00004:    ========================================================= */
+00005: 
+00006: .catalog-pdf-grid {
+00007:   display: grid;
+00008:   grid-template-columns: repeat(2, minmax(0, 1fr));
+00009:   gap: 10px;
+00010:   align-items: start;
+00011: }
+00012: 
+00013: @media print {
+00014:   .catalog-pdf-grid {
+00015:     grid-template-columns: repeat(2, minmax(0, 1fr));
+00016:     gap: 7px;
+00017:   }
+00018: }
+00019: 
+00020: @media (max-width: 640px) {
+00021:   .catalog-pdf-grid {
+00022:     grid-template-columns: repeat(2, minmax(0, 1fr));
+00023:     gap: 7px;
+00024:   }
+00025: }
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfGrid\CatalogPdfGrid.tsx
+============================================================
+
+00001: import type { PdfProduct } from "../../types/PdfProduct";
+00002: import CatalogPdfCard from "../CatalogPdfCard/CatalogPdfCard";
+00003: 
+00004: import "./CatalogPdfGrid.css";
+00005: 
+00006: interface CatalogPdfGridProps {
+00007:   products: PdfProduct[];
+00008: }
+00009: 
+00010: export default function CatalogPdfGrid({ products }: CatalogPdfGridProps) {
+00011:   return (
+00012:     <section className="catalog-pdf-grid" aria-label="Productos del catálogo">
+00013:       {products.map((product) => (
+00014:         <CatalogPdfCard key={product.id} product={product} />
+00015:       ))}
+00016:     </section>
+00017:   );
+00018: }
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfHeader\CatalogPdfHeader.css
+============================================================
+
+00001: /* =========================================================
+00002:    Catalog PDF Header
+00003:    Fase 2.3B: portada media hoja estilo Wooly
+00004:    ========================================================= */
+00005: 
+00006: /* ===== BASE ===== */
+00007: 
+00008: .catalog-pdf-header {
+00009:   margin-bottom: 10px;
+00010:   break-after: avoid;
+00011:   page-break-after: avoid;
+00012: }
+00013: 
+00014: .catalog-pdf-header__cover {
+00015:   position: relative;
+00016:   overflow: hidden;
+00017:   display: grid;
+00018:   grid-template-rows: auto minmax(0, 1fr) auto auto;
+00019:   justify-items: center;
+00020:   box-sizing: border-box;
+00021:   min-height: 136mm;
+00022:   padding: 18mm 16mm 10mm;
+00023:   border: 1px solid rgba(213, 225, 235, 0.95);
+00024:   border-radius: 32px;
+00025:   background:
+00026:     radial-gradient(circle at top left, rgba(29, 130, 153, 0.08), transparent 34%),
+00027:     radial-gradient(circle at bottom right, rgba(242, 134, 190, 0.12), transparent 35%),
+00028:     linear-gradient(180deg, #ffffff 0%, #ffffff 58%, #f8fbfc 100%);
+00029:   box-shadow:
+00030:     0 10px 30px rgba(15, 23, 42, 0.04),
+00031:     0 18px 45px rgba(15, 23, 42, 0.05);
+00032: }
+00033: 
+00034: /* ===== LOGO ===== */
+00035: 
+00036: .catalog-pdf-header__logoWrap {
+00037:   display: flex;
+00038:   width: 100%;
+00039:   flex-direction: column;
+00040:   align-items: center;
+00041:   margin: 0;
+00042:   text-align: center;
+00043: }
+00044: 
+00045: .catalog-pdf-header__logoImage {
+00046:   display: block;
+00047:   width: min(365px, 78%);
+00048:   height: auto;
+00049:   max-height: 104px;
+00050:   object-fit: contain;
+00051:   object-position: center;
+00052:   user-select: none;
+00053: }
+00054: 
+00055: .catalog-pdf-header__logoFallback {
+00056:   color: var(--w-primary, #1d8299);
+00057:   font-size: 2.15rem;
+00058:   font-weight: 1000;
+00059:   letter-spacing: -0.05em;
+00060: }
+00061: 
+00062: .catalog-pdf-header__brandFootnote {
+00063:   max-width: 560px;
+00064:   margin: 7px 0 0;
+00065:   color: #64748b;
+00066:   font-size: 0.68rem;
+00067:   font-weight: 850;
+00068:   line-height: 1.25;
+00069:   text-align: center;
+00070: }
+00071: 
+00072: /* ===== COPY CENTRAL ===== */
+00073: 
+00074: .catalog-pdf-header__copy {
+00075:   display: flex;
+00076:   width: 100%;
+00077:   max-width: 660px;
+00078:   flex-direction: column;
+00079:   align-self: center;
+00080:   align-items: center;
+00081:   justify-content: center;
+00082:   text-align: center;
+00083: }
+00084: 
+00085: .catalog-pdf-header__segment {
+00086:   display: inline-flex;
+00087:   width: fit-content;
+00088:   min-height: 29px;
+00089:   align-items: center;
+00090:   justify-content: center;
+00091:   margin-bottom: 11px;
+00092:   border-radius: 999px;
+00093:   padding: 0 15px;
+00094:   background: #fce8e6;
+00095:   color: #c5221f;
+00096:   font-size: 0.64rem;
+00097:   font-weight: 1000;
+00098:   line-height: 1;
+00099:   letter-spacing: 0.08em;
+00100:   text-transform: uppercase;
+00101: }
+00102: 
+00103: .catalog-pdf-header__title {
+00104:   margin: 0;
+00105:   color: #202124;
+00106:   font-size: 2.34rem;
+00107:   font-weight: 1000;
+00108:   line-height: 1.02;
+00109:   letter-spacing: -0.065em;
+00110: }
+00111: 
+00112: .catalog-pdf-header__subtitle {
+00113:   max-width: 620px;
+00114:   margin: 10px 0 0;
+00115:   color: #5f6368;
+00116:   font-size: 0.9rem;
+00117:   font-weight: 850;
+00118:   line-height: 1.36;
+00119: }
+00120: 
+00121: /* ===== META GRID ===== */
+00122: 
+00123: .catalog-pdf-header__metaGrid {
+00124:   display: grid;
+00125:   width: 100%;
+00126:   grid-template-columns: 1fr 1.24fr 1fr;
+00127:   gap: 10px;
+00128:   align-self: end;
+00129:   margin-top: 12px;
+00130: }
+00131: 
+00132: .catalog-pdf-header__metaCard {
+00133:   display: flex;
+00134:   min-height: 58px;
+00135:   flex-direction: column;
+00136:   align-items: center;
+00137:   justify-content: center;
+00138:   gap: 5px;
+00139:   border-radius: 18px;
+00140:   padding: 10px 10px;
+00141:   text-align: center;
+00142: }
+00143: 
+00144: .catalog-pdf-header__metaCard span {
+00145:   font-size: 0.58rem;
+00146:   font-weight: 1000;
+00147:   line-height: 1;
+00148:   letter-spacing: 0.1em;
+00149:   text-transform: uppercase;
+00150: }
+00151: 
+00152: .catalog-pdf-header__metaCard strong {
+00153:   font-size: 1.2rem;
+00154:   font-weight: 1000;
+00155:   line-height: 1;
+00156:   letter-spacing: -0.03em;
+00157: }
+00158: 
+00159: .catalog-pdf-header__metaCard--products {
+00160:   border: 1px solid #fbcfe8;
+00161:   background: #fff0f5;
+00162:   color: #ad1457;
+00163: }
+00164: 
+00165: .catalog-pdf-header__metaCard--products span {
+00166:   color: #d81b60;
+00167: }
+00168: 
+00169: .catalog-pdf-header__metaCard--contact {
+00170:   background: linear-gradient(
+00171:     135deg,
+00172:     var(--w-primary, #1d8299),
+00173:     var(--w-primary-dark, #156f84)
+00174:   );
+00175:   color: #ffffff;
+00176:   box-shadow: 0 10px 22px rgba(29, 130, 153, 0.14);
+00177: }
+00178: 
+00179: .catalog-pdf-header__metaCard--contact span {
+00180:   color: rgba(255, 255, 255, 0.86);
+00181: }
+00182: 
+00183: .catalog-pdf-header__metaCard--contact strong {
+00184:   font-size: 1rem;
+00185:   letter-spacing: -0.02em;
+00186: }
+00187: 
+00188: .catalog-pdf-header__metaCard--validity {
+00189:   border: 1px solid #fde293;
+00190:   background: #fffbef;
+00191:   color: #e65100;
+00192: }
+00193: 
+00194: .catalog-pdf-header__metaCard--validity span {
+00195:   color: #b06000;
+00196: }
+00197: 
+00198: /* ===== STATUS ===== */
+00199: 
+00200: .catalog-pdf-header__statusRow {
+00201:   display: flex;
+00202:   flex-wrap: wrap;
+00203:   justify-content: center;
+00204:   gap: 8px 14px;
+00205:   width: 100%;
+00206:   margin-top: 8px;
+00207:   color: #9aa0a6;
+00208:   font-size: 0.6rem;
+00209:   font-weight: 850;
+00210:   line-height: 1.2;
+00211:   text-align: center;
+00212: }
+00213: 
+00214: /* ===== PRINT ===== */
+00215: 
+00216: @media print {
+00217:   .catalog-pdf-header,
+00218:   .catalog-pdf-header *,
+00219:   .catalog-pdf-header *::before,
+00220:   .catalog-pdf-header *::after {
+00221:     -webkit-print-color-adjust: exact !important;
+00222:     print-color-adjust: exact !important;
+00223:     box-sizing: border-box;
+00224:   }
+00225: 
+00226:   .catalog-pdf-header {
+00227:     margin-bottom: 8px;
+00228:     break-after: avoid;
+00229:     page-break-after: avoid;
+00230:   }
+00231: 
+00232:   .catalog-pdf-header__cover {
+00233:     display: flex;
+00234:     flex-direction: column;
+00235:     align-items: center;
+00236:     justify-content: center;
+00237: 
+00238:     /* Media hoja útil controlada */
+00239:     height: 132mm;
+00240:     min-height: 0;
+00241: 
+00242:     gap: 7mm;
+00243:     padding: 10mm 14mm 8mm;
+00244: 
+00245:     border-radius: 28px;
+00246:     box-shadow: none;
+00247:   }
+00248: 
+00249:   /* ===== LOGO ===== */
+00250: 
+00251:   .catalog-pdf-header__logoWrap {
+00252:     flex: 0 0 auto;
+00253:     width: 100%;
+00254:     margin: 0;
+00255:   }
+00256: 
+00257:   .catalog-pdf-header__logoImage {
+00258:     width: min(350px, 76%);
+00259:     max-height: 92px;
+00260:   }
+00261: 
+00262:   .catalog-pdf-header__brandFootnote {
+00263:     max-width: 520px;
+00264:     margin-top: 5px;
+00265:     font-size: 0.62rem;
+00266:     line-height: 1.2;
+00267:   }
+00268: 
+00269:   /* ===== COPY ===== */
+00270: 
+00271:   .catalog-pdf-header__copy {
+00272:     flex: 0 0 auto;
+00273:     width: 100%;
+00274:     max-width: 620px;
+00275:     margin: 0;
+00276:   }
+00277: 
+00278:   .catalog-pdf-header__segment {
+00279:     min-height: 26px;
+00280:     margin-bottom: 9px;
+00281:     padding: 0 13px;
+00282:     font-size: 0.6rem;
+00283:   }
+00284: 
+00285:   .catalog-pdf-header__title {
+00286:     font-size: 2.1rem;
+00287:     line-height: 1.02;
+00288:   }
+00289: 
+00290:   .catalog-pdf-header__subtitle {
+00291:     max-width: 560px;
+00292:     margin-top: 8px;
+00293:     font-size: 0.8rem;
+00294:     line-height: 1.32;
+00295:   }
+00296: 
+00297:   /* ===== META ===== */
+00298: 
+00299:   .catalog-pdf-header__metaGrid {
+00300:     flex: 0 0 auto;
+00301:     width: 100%;
+00302:     grid-template-columns: 1fr 1.24fr 1fr;
+00303:     gap: 9px;
+00304:     margin-top: 0;
+00305:   }
+00306: 
+00307:   .catalog-pdf-header__metaCard {
+00308:     min-height: 54px;
+00309:     border-radius: 16px;
+00310:     padding: 9px 8px;
+00311:   }
+00312: 
+00313:   .catalog-pdf-header__metaCard span {
+00314:     font-size: 0.54rem;
+00315:   }
+00316: 
+00317:   .catalog-pdf-header__metaCard strong {
+00318:     font-size: 1.08rem;
+00319:   }
+00320: 
+00321:   .catalog-pdf-header__metaCard--contact strong {
+00322:     font-size: 0.92rem;
+00323:   }
+00324: 
+00325:   /* ===== STATUS ===== */
+00326: 
+00327:   .catalog-pdf-header__statusRow {
+00328:     flex: 0 0 auto;
+00329:     margin-top: -2mm;
+00330:     font-size: 0.56rem;
+00331:     line-height: 1.15;
+00332:   }
+00333: }
+00334: /* ===== TABLET / SMALL PREVIEW ===== */
+00335: 
+00336: @media screen and (max-width: 900px) {
+00337:   .catalog-pdf-header {
+00338:     margin-bottom: 12px;
+00339:   }
+00340: 
+00341:   .catalog-pdf-header__cover {
+00342:     min-height: auto;
+00343:     padding: 22px 16px 18px;
+00344:     border-radius: 24px;
+00345:   }
+00346: 
+00347:   .catalog-pdf-header__logoImage {
+00348:     width: min(340px, 88%);
+00349:     max-height: 104px;
+00350:   }
+00351: 
+00352:   .catalog-pdf-header__brandFootnote {
+00353:     max-width: 360px;
+00354:     font-size: 0.62rem;
+00355:   }
+00356: 
+00357:   .catalog-pdf-header__title {
+00358:     font-size: 1.72rem;
+00359:   }
+00360: 
+00361:   .catalog-pdf-header__subtitle {
+00362:     font-size: 0.74rem;
+00363:   }
+00364: 
+00365:   .catalog-pdf-header__metaGrid {
+00366:     grid-template-columns: 1fr;
+00367:     gap: 8px;
+00368:     margin-top: 16px;
+00369:   }
+00370: 
+00371:   .catalog-pdf-header__metaCard {
+00372:     min-height: 54px;
+00373:   }
+00374: }
+00375: 
+00376: /* ===== MOBILE PREVIEW ===== */
+00377: 
+00378: @media screen and (max-width: 640px) {
+00379:   .catalog-pdf-header__cover {
+00380:     padding: 20px 14px 16px;
+00381:   }
+00382: 
+00383:   .catalog-pdf-header__logoImage {
+00384:     width: min(320px, 92%);
+00385:     max-height: 96px;
+00386:   }
+00387: 
+00388:   .catalog-pdf-header__brandFootnote {
+00389:     max-width: 300px;
+00390:     margin-top: 6px;
+00391:     font-size: 0.58rem;
+00392:   }
+00393: 
+00394:   .catalog-pdf-header__segment {
+00395:     min-height: 25px;
+00396:     margin-bottom: 10px;
+00397:     padding: 0 11px;
+00398:     font-size: 0.55rem;
+00399:   }
+00400: 
+00401:   .catalog-pdf-header__title {
+00402:     font-size: 1.52rem;
+00403:     line-height: 1.05;
+00404:   }
+00405: 
+00406:   .catalog-pdf-header__subtitle {
+00407:     margin-top: 8px;
+00408:     font-size: 0.7rem;
+00409:     line-height: 1.35;
+00410:   }
+00411: 
+00412:   .catalog-pdf-header__metaCard {
+00413:     min-height: 52px;
+00414:     border-radius: 16px;
+00415:     padding: 10px;
+00416:   }
+00417: 
+00418:   .catalog-pdf-header__metaCard span {
+00419:     font-size: 0.52rem;
+00420:   }
+00421: 
+00422:   .catalog-pdf-header__metaCard strong {
+00423:     font-size: 1.08rem;
+00424:   }
+00425: 
+00426:   .catalog-pdf-header__metaCard--contact strong {
+00427:     font-size: 0.92rem;
+00428:   }
+00429: 
+00430:   .catalog-pdf-header__statusRow {
+00431:     margin-top: 10px;
+00432:     font-size: 0.52rem;
+00433:   }
+00434: }
+00435: 
+00436: 
+00437: /* =========================================================
+00438:    PRINT OVERRIDE FINAL
+00439:    Debe quedar al final para que nada pise el PDF
+00440:    ========================================================= */
+00441: 
+00442: @media print {
+00443:   .catalog-pdf-header,
+00444:   .catalog-pdf-header *,
+00445:   .catalog-pdf-header *::before,
+00446:   .catalog-pdf-header *::after {
+00447:     -webkit-print-color-adjust: exact !important;
+00448:     print-color-adjust: exact !important;
+00449:     box-sizing: border-box !important;
+00450:   }
+00451: 
+00452:   .catalog-pdf-header {
+00453:     margin-bottom: 8px !important;
+00454:     break-after: avoid !important;
+00455:     page-break-after: avoid !important;
+00456:   }
+00457: 
+00458:   .catalog-pdf-header__cover {
+00459:     display: flex !important;
+00460:     flex-direction: column !important;
+00461:     align-items: center !important;
+00462:     justify-content: center !important;
+00463: 
+00464:     height: 132mm !important;
+00465:     min-height: 132mm !important;
+00466:     max-height: 132mm !important;
+00467: 
+00468:     gap: 7mm !important;
+00469:     padding: 10mm 14mm 8mm !important;
+00470: 
+00471:     border-radius: 28px !important;
+00472:     box-shadow: none !important;
+00473:   }
+00474: 
+00475:   .catalog-pdf-header__logoWrap {
+00476:     width: 100% !important;
+00477:     margin: 0 !important;
+00478:   }
+00479: 
+00480:   .catalog-pdf-header__logoImage {
+00481:     width: min(350px, 76%) !important;
+00482:     max-height: 92px !important;
+00483:   }
+00484: 
+00485:   .catalog-pdf-header__brandFootnote {
+00486:     max-width: 520px !important;
+00487:     margin-top: 5px !important;
+00488:     font-size: 0.62rem !important;
+00489:     line-height: 1.2 !important;
+00490:   }
+00491: 
+00492:   .catalog-pdf-header__copy {
+00493:     width: 100% !important;
+00494:     max-width: 620px !important;
+00495:     margin: 0 !important;
+00496:   }
+00497: 
+00498:   .catalog-pdf-header__segment {
+00499:     min-height: 26px !important;
+00500:     margin-bottom: 9px !important;
+00501:     padding: 0 13px !important;
+00502:     font-size: 0.6rem !important;
+00503:   }
+00504: 
+00505:   .catalog-pdf-header__title {
+00506:     font-size: 2.1rem !important;
+00507:     line-height: 1.02 !important;
+00508:   }
+00509: 
+00510:   .catalog-pdf-header__subtitle {
+00511:     max-width: 560px !important;
+00512:     margin-top: 8px !important;
+00513:     font-size: 0.8rem !important;
+00514:     line-height: 1.32 !important;
+00515:   }
+00516: 
+00517:   .catalog-pdf-header__metaGrid {
+00518:     display: grid !important;
+00519:     width: 100% !important;
+00520:     grid-template-columns: 1fr 1.24fr 1fr !important;
+00521:     gap: 9px !important;
+00522:     margin-top: 0 !important;
+00523:   }
+00524: 
+00525:   .catalog-pdf-header__metaCard {
+00526:     min-height: 54px !important;
+00527:     border-radius: 16px !important;
+00528:     padding: 9px 8px !important;
+00529:   }
+00530: 
+00531:   .catalog-pdf-header__metaCard span {
+00532:     font-size: 0.54rem !important;
+00533:   }
+00534: 
+00535:   .catalog-pdf-header__metaCard strong {
+00536:     font-size: 1.08rem !important;
+00537:   }
+00538: 
+00539:   .catalog-pdf-header__metaCard--contact strong {
+00540:     font-size: 0.92rem !important;
+00541:   }
+00542: 
+00543:   .catalog-pdf-header__statusRow {
+00544:     margin-top: -2mm !important;
+00545:     font-size: 0.56rem !important;
+00546:     line-height: 1.15 !important;
+00547:   }
+00548: }
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfHeader\CatalogPdfHeader.tsx
+============================================================
+
+00001: import "./CatalogPdfHeader.css";
+00002: 
+00003: type CatalogPdfSegmentType = "general" | "category" | "campaign";
+00004: 
+00005: interface CatalogPdfHeaderProps {
+00006:   logoSrc?: string;
+00007:   title: string;
+00008:   subtitle: string;
+00009:   segmentLabel: string;
+00010:   segmentType: CatalogPdfSegmentType;
+00011:   generatedAt: string;
+00012:   validUntil: string;
+00013:   productCount: number;
+00014:   contactNumber: string;
+00015:   isComplete?: boolean;
+00016:   brandFootnote?: string;
+00017: }
+00018: 
+00019: const getSegmentLabel = (segmentType: CatalogPdfSegmentType) => {
+00020:   if (segmentType === "campaign") return "Campaña";
+00021:   if (segmentType === "category") return "Categoría";
+00022:   return "Catálogo";
+00023: };
+00024: 
+00025: export default function CatalogPdfHeader({
+00026:   logoSrc,
+00027:   title,
+00028:   subtitle,
+00029:   segmentLabel,
+00030:   segmentType,
+00031:   generatedAt,
+00032:   validUntil,
+00033:   productCount,
+00034:   contactNumber,
+00035:   brandFootnote = "Una marca de JUNG INVERSIONES SAC RUC 20616037120",
+00036: }: CatalogPdfHeaderProps) {
+00037:   return (
+00038:     <header className="catalog-pdf-header">
+00039:       <section className="catalog-pdf-header__cover">
+00040:         <div className="catalog-pdf-header__logoWrap">
+00041:           {logoSrc ? (
+00042:             <img
+00043:               className="catalog-pdf-header__logoImage"
+00044:               src={logoSrc}
+00045:               alt="Wooly Imports"
+00046:               onError={(event) => {
+00047:                 event.currentTarget.style.display = "none";
+00048:               }}
+00049:             />
+00050:           ) : (
+00051:             <span className="catalog-pdf-header__logoFallback">
+00052:               Wooly Imports
+00053:             </span>
+00054:           )}
+00055: 
+00056:           <p className="catalog-pdf-header__brandFootnote">
+00057:             {brandFootnote}
+00058:           </p>
+00059:         </div>
+00060: 
+00061:         <div className="catalog-pdf-header__copy">
+00062:           <span className="catalog-pdf-header__segment">
+00063:             {getSegmentLabel(segmentType)} · {segmentLabel}
+00064:           </span>
+00065: 
+00066:           <h1 className="catalog-pdf-header__title">{title}</h1>
+00067: 
+00068:           <p className="catalog-pdf-header__subtitle">{subtitle}</p>
+00069:         </div>
+00070: 
+00071:         <div className="catalog-pdf-header__metaGrid">
+00072:           <div className="catalog-pdf-header__metaCard catalog-pdf-header__metaCard--products">
+00073:             <span>Total productos</span>
+00074:             <strong>{productCount}</strong>
+00075:           </div>
+00076: 
+00077:           <div className="catalog-pdf-header__metaCard catalog-pdf-header__metaCard--contact">
+00078:             <span>Pedidos y stock</span>
+00079:             <strong>{contactNumber}</strong>
+00080:           </div>
+00081: 
+00082:           <div className="catalog-pdf-header__metaCard catalog-pdf-header__metaCard--validity">
+00083:             <span>Válido hasta</span>
+00084:             <strong>{validUntil}</strong>
+00085:           </div>
+00086:         </div>
+00087: 
+00088:         <div className="catalog-pdf-header__statusRow">
+00089:           <span>Generado: {generatedAt}</span>
+00090:         </div>
+00091:       </section>
+00092:     </header>
+00093:   );
+00094: }
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.css
+============================================================
+
+00001: /* =========================================================
+00002:    Catalog PDF Page
+00003:    Vista imprimible mobile-first para WhatsApp / celular
+00004:    ========================================================= */
+00005: 
+00006: /* ===== PAGE PREVIEW ===== */
+00007: 
+00008: .catalog-pdf-page {
+00009:   min-height: 100vh;
+00010:   padding: 28px;
+00011:   background:
+00012:     radial-gradient(circle at top left, rgba(29, 130, 153, 0.12), transparent 30%),
+00013:     radial-gradient(circle at top right, rgba(242, 134, 190, 0.16), transparent 34%),
+00014:     linear-gradient(135deg, #f8fafc 0%, #ffffff 52%, #eef9fb 100%);
+00015:   color: #0f172a;
+00016: }
+00017: 
+00018: .catalog-pdf-toolbar {
+00019:   display: flex;
+00020:   justify-content: space-between;
+00021:   gap: 24px;
+00022:   max-width: 980px;
+00023:   margin: 0 auto 22px;
+00024:   padding: 18px;
+00025:   border: 1px solid rgba(226, 232, 240, 0.95);
+00026:   border-radius: 26px;
+00027:   background: rgba(255, 255, 255, 0.9);
+00028:   box-shadow:
+00029:     0 10px 30px rgba(15, 23, 42, 0.05),
+00030:     0 18px 45px rgba(15, 23, 42, 0.06);
+00031:   backdrop-filter: blur(14px);
+00032: }
+00033: 
+00034: .catalog-pdf-toolbar__eyebrow {
+00035:   margin: 0 0 6px;
+00036:   color: var(--w-primary, #1d8299);
+00037:   font-size: 0.72rem;
+00038:   font-weight: 950;
+00039:   letter-spacing: 0.14em;
+00040:   text-transform: uppercase;
+00041: }
+00042: 
+00043: .catalog-pdf-toolbar__title {
+00044:   margin: 0;
+00045:   color: #0f172a;
+00046:   font-size: clamp(1.35rem, 2.4vw, 1.95rem);
+00047:   font-weight: 1000;
+00048:   line-height: 1.02;
+00049:   letter-spacing: -0.045em;
+00050: }
+00051: 
+00052: .catalog-pdf-toolbar__description {
+00053:   max-width: 620px;
+00054:   margin: 8px 0 0;
+00055:   color: #64748b;
+00056:   font-size: 0.92rem;
+00057:   font-weight: 750;
+00058:   line-height: 1.35;
+00059: }
+00060: 
+00061: .catalog-pdf-toolbar__warning {
+00062:   margin: 12px 0 0;
+00063:   color: #92400e;
+00064:   font-size: 0.84rem;
+00065:   font-weight: 900;
+00066: }
+00067: 
+00068: .catalog-pdf-toolbar__actions {
+00069:   display: flex;
+00070:   flex-shrink: 0;
+00071:   align-items: center;
+00072:   gap: 10px;
+00073: }
+00074: 
+00075: .catalog-pdf-toolbar__link,
+00076: .catalog-pdf-toolbar__button {
+00077:   display: inline-flex;
+00078:   min-height: 42px;
+00079:   align-items: center;
+00080:   justify-content: center;
+00081:   border-radius: 999px;
+00082:   padding: 0 16px;
+00083:   font-size: 0.84rem;
+00084:   font-weight: 950;
+00085:   text-decoration: none;
+00086:   cursor: pointer;
+00087: }
+00088: 
+00089: .catalog-pdf-toolbar__link {
+00090:   border: 1px solid rgba(226, 232, 240, 0.95);
+00091:   background: #ffffff;
+00092:   color: #334155;
+00093: }
+00094: 
+00095: .catalog-pdf-toolbar__button {
+00096:   border: 0;
+00097:   background: linear-gradient(
+00098:     135deg,
+00099:     var(--w-primary, #1d8299),
+00100:     var(--w-primary-dark, #156f84)
+00101:   );
+00102:   color: #ffffff;
+00103:   box-shadow: 0 8px 18px rgba(29, 130, 153, 0.18);
+00104: }
+00105: 
+00106: .catalog-pdf-toolbar__button:disabled {
+00107:   cursor: not-allowed;
+00108:   opacity: 0.55;
+00109: }
+00110: 
+00111: /* ===== A4 SHEET ===== */
+00112: 
+00113: .catalog-pdf-sheet {
+00114:   width: 210mm;
+00115:   min-height: 297mm;
+00116:   margin: 0 auto;
+00117:   padding: 10mm;
+00118:   background: #ffffff;
+00119:   box-shadow: 0 24px 80px rgba(15, 23, 42, 0.16);
+00120: }
+00121: 
+00122: .catalog-pdf-state {
+00123:   display: grid;
+00124:   min-height: 220px;
+00125:   place-items: center;
+00126:   margin: 16px 0;
+00127:   border: 1px dashed #cbd5e1;
+00128:   border-radius: 24px;
+00129:   background: #f8fafc;
+00130:   color: #64748b;
+00131:   text-align: center;
+00132: }
+00133: 
+00134: .catalog-pdf-state h2 {
+00135:   margin: 0 0 8px;
+00136:   color: #0f172a;
+00137:   font-size: 1.25rem;
+00138: }
+00139: 
+00140: .catalog-pdf-state p {
+00141:   margin: 0;
+00142:   font-size: 0.92rem;
+00143: }
+00144: 
+00145: /* ===== FOOTER ===== */
+00146: 
+00147: .catalog-pdf-footer {
+00148:   display: grid;
+00149:   grid-template-columns: minmax(0, 1fr) auto;
+00150:   gap: 18px;
+00151:   margin-top: 14px;
+00152:   padding: 12px 2px 0;
+00153:   border-top: 1px dashed rgba(226, 232, 240, 0.95);
+00154:   color: #64748b;
+00155:   font-size: 0.72rem;
+00156:   font-weight: 750;
+00157:   line-height: 1.35;
+00158: }
+00159: 
+00160: .catalog-pdf-footer p {
+00161:   margin: 0;
+00162: }
+00163: 
+00164: /* ===== PRINT ===== */
+00165: 
+00166: @page {
+00167:   size: A4;
+00168:   margin: 8mm;
+00169: }
+00170: 
+00171: @media print {
+00172:   html,
+00173:   body {
+00174:     width: 210mm;
+00175:     min-height: 297mm;
+00176:     margin: 0;
+00177:     background: #ffffff !important;
+00178:   }
+00179: 
+00180:   .no-print {
+00181:     display: none !important;
+00182:   }
+00183: 
+00184:   .catalog-pdf-page {
+00185:     min-height: auto;
+00186:     padding: 0;
+00187:     background: #ffffff !important;
+00188:   }
+00189: 
+00190:   .catalog-pdf-sheet {
+00191:     width: auto;
+00192:     min-height: auto;
+00193:     margin: 0;
+00194:     padding: 0;
+00195:     box-shadow: none;
+00196:   }
+00197: 
+00198:   .catalog-pdf-footer {
+00199:     break-inside: avoid;
+00200:     page-break-inside: avoid;
+00201:   }
+00202: }
+00203: 
+00204: /* ===== SMALL PREVIEW ===== */
+00205: 
+00206: @media (max-width: 900px) {
+00207:   .catalog-pdf-page {
+00208:     padding: 14px;
+00209:   }
+00210: 
+00211:   .catalog-pdf-toolbar {
+00212:     flex-direction: column;
+00213:   }
+00214: 
+00215:   .catalog-pdf-toolbar__actions {
+00216:     flex-wrap: wrap;
+00217:   }
+00218: 
+00219:   .catalog-pdf-sheet {
+00220:     width: 100%;
+00221:     min-height: auto;
+00222:     padding: 12px;
+00223:     border-radius: 24px;
+00224:   }
+00225: }
+00226: 
+00227: @media (max-width: 640px) {
+00228:   .catalog-pdf-page {
+00229:     padding: 10px;
+00230:   }
+00231: 
+00232:   .catalog-pdf-toolbar {
+00233:     padding: 14px;
+00234:     border-radius: 24px;
+00235:   }
+00236: 
+00237:   .catalog-pdf-footer {
+00238:     grid-template-columns: 1fr;
+00239:     gap: 6px;
+00240:     font-size: 0.66rem;
+00241:   }
+00242: }
+00243: 
+
+============================================================
+FILE: src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.tsx
+============================================================
+
+00001: import { useMemo } from "react";
+00002: import { useSearchParams } from "react-router-dom";
+00003: 
+00004: import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
+00005: import type { Product } from "@/shared/types/product";
+00006: import { mapProductsToPdfProducts } from "../../mappers/PdfProductMapper";
+00007: import CatalogPdfHeader from "../CatalogPdfHeader/CatalogPdfHeader";
+00008: import CatalogPdfGrid from "../CatalogPdfGrid/CatalogPdfGrid";
+00009: 
+00010: import "./CatalogPdfPage.css";
+00011: 
+00012: /*
+00013:   Configuración comercial del PDF.
+00014:   Cambia estos valores cuando tengamos el número/logo oficial final.
+00015: */
+00016: const PDF_CONTACT_NUMBER = "+51 936 188 636";
+00017: const PDF_LOGO_SRC = "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
+00018: const PDF_VALID_DAYS = 7;
+00019: 
+00020: const formatDate = (date: Date, includeTime = false) =>
+00021:   new Intl.DateTimeFormat("es-PE", {
+00022:     day: "2-digit",
+00023:     month: "2-digit",
+00024:     year: "numeric",
+00025:     ...(includeTime
+00026:       ? {
+00027:           hour: "2-digit",
+00028:           minute: "2-digit",
+00029:         }
+00030:       : {}),
+00031:   }).format(date);
+00032: 
+00033: const addDays = (date: Date, days: number) => {
+00034:   const nextDate = new Date(date);
+00035:   nextDate.setDate(nextDate.getDate() + days);
+00036:   return nextDate;
+00037: };
+00038: 
+00039: const cleanParam = (value: string | null) =>
+00040:   String(value || "")
+00041:     .trim()
+00042:     .toLowerCase();
+00043: 
+00044: const normalizeText = (value?: string | null) =>
+00045:   String(value || "")
+00046:     .trim()
+00047:     .toLowerCase()
+00048:     .normalize("NFD")
+00049:     .replace(/[\u0300-\u036f]/g, "");
+00050: 
+00051: const toDisplayLabel = (value: string) => {
+00052:   const cleanValue = decodeURIComponent(value || "")
+00053:     .replace(/[-_]+/g, " ")
+00054:     .replace(/\s+/g, " ")
+00055:     .trim();
+00056: 
+00057:   if (!cleanValue) return "";
+00058: 
+00059:   return cleanValue
+00060:     .split(" ")
+00061:     .map((word) =>
+00062:       word.length <= 2
+00063:         ? word.toUpperCase()
+00064:         : `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`,
+00065:     )
+00066:     .join(" ");
+00067: };
+00068: 
+00069: const filterProductsBySegment = (
+00070:   products: Product[],
+00071:   categoryId: string,
+00072:   campaignId: string,
+00073: ) => {
+00074:   const normalizedCategoryId = normalizeText(categoryId);
+00075:   const normalizedCampaignId = normalizeText(campaignId);
+00076: 
+00077:   if (normalizedCampaignId) {
+00078:     return products.filter((product) =>
+00079:       product.campaigns?.some(
+00080:         (campaign) => normalizeText(campaign) === normalizedCampaignId,
+00081:       ),
+00082:     );
+00083:   }
+00084: 
+00085:   if (normalizedCategoryId) {
+00086:     return products.filter(
+00087:       (product) => normalizeText(product.category) === normalizedCategoryId,
+00088:     );
+00089:   }
+00090: 
+00091:   return products;
+00092: };
+00093: 
+00094: const buildCatalogPdfCopy = (categoryId: string, campaignId: string) => {
+00095:   if (campaignId) {
+00096:     const campaignLabel = toDisplayLabel(campaignId);
+00097: 
+00098:     return {
+00099:       title: `Catálogo Mayorista · ${campaignLabel}`,
+00100:       subtitle: `Productos seleccionados para la campaña ${campaignLabel}. Precios y productos sujetos a disponibilidad.`,
+00101:       segmentLabel: campaignLabel,
+00102:       segmentType: "campaign" as const,
+00103:     };
+00104:   }
+00105: 
+00106:   if (categoryId) {
+00107:     const categoryLabel = toDisplayLabel(categoryId);
+00108: 
+00109:     return {
+00110:       title: `Catálogo Mayorista · ${categoryLabel}`,
+00111:       subtitle: `Selección comercial de productos de la categoría ${categoryLabel} para pedidos mayoristas.`,
+00112:       segmentLabel: categoryLabel,
+00113:       segmentType: "category" as const,
+00114:     };
+00115:   }
+00116: 
+00117:   return {
+00118:     title: "Catálogo Mayorista",
+00119:     subtitle:
+00120:       "Productos seleccionados para emprendedores, tiendas y ventas por campaña.",
+00121:     segmentLabel: "General",
+00122:     segmentType: "general" as const,
+00123:   };
+00124: };
+00125: 
+00126: export default function CatalogPdfPage() {
+00127:   const [searchParams] = useSearchParams();
+00128: 
+00129:   const categoryId = cleanParam(
+00130:     searchParams.get("categoria") ||
+00131:       searchParams.get("category") ||
+00132:       searchParams.get("cat"),
+00133:   );
+00134: 
+00135:   const campaignId = cleanParam(
+00136:     searchParams.get("cpg") || searchParams.get("campania") || searchParams.get("campaign"),
+00137:   );
+00138: 
+00139:   const { data, isLoading, isFullCatalogLoaded } = useCatalogData("todas");
+00140: 
+00141:   const generatedDate = useMemo(() => new Date(), []);
+00142:   const validUntilDate = useMemo(
+00143:     () => addDays(generatedDate, PDF_VALID_DAYS),
+00144:     [generatedDate],
+00145:   );
+00146: 
+00147:   const generatedAt = useMemo(
+00148:     () => formatDate(generatedDate, true),
+00149:     [generatedDate],
+00150:   );
+00151: 
+00152:   const validUntil = useMemo(
+00153:     () => formatDate(validUntilDate),
+00154:     [validUntilDate],
+00155:   );
+00156: 
+00157:   const copy = useMemo(
+00158:     () => buildCatalogPdfCopy(categoryId, campaignId),
+00159:     [categoryId, campaignId],
+00160:   );
+00161: 
+00162:   const products = useMemo(() => {
+00163:     const filteredProducts = filterProductsBySegment(
+00164:       data,
+00165:       categoryId,
+00166:       campaignId,
+00167:     );
+00168: 
+00169:     return mapProductsToPdfProducts(filteredProducts);
+00170:   }, [data, categoryId, campaignId]);
+00171: 
+00172:   const handlePrint = () => {
+00173:     window.print();
+00174:   };
+00175: 
+00176:   const hasProducts = products.length > 0;
+00177: 
+00178:   return (
+00179:     <main className="catalog-pdf-page">
+00180:       <section className="catalog-pdf-toolbar no-print">
+00181:         <div>
+00182:           <p className="catalog-pdf-toolbar__eyebrow">PDF MVP</p>
+00183:           <h1 className="catalog-pdf-toolbar__title">
+00184:             Catálogo mayorista imprimible
+00185:           </h1>
+00186:           <p className="catalog-pdf-toolbar__description">
+00187:             Vista optimizada para guardar como PDF desde el navegador.
+00188:           </p>
+00189: 
+00190:           {!isFullCatalogLoaded && (
+00191:             <p className="catalog-pdf-toolbar__warning">
+00192:               El catálogo aún está cargando categorías. Espera unos segundos
+00193:               antes de exportar para evitar un PDF incompleto.
+00194:             </p>
+00195:           )}
+00196:         </div>
+00197: 
+00198:         <div className="catalog-pdf-toolbar__actions">
+00199:           <a className="catalog-pdf-toolbar__link" href="/catalogo">
+00200:             Volver al catálogo
+00201:           </a>
+00202: 
+00203:           <button
+00204:             className="catalog-pdf-toolbar__button"
+00205:             type="button"
+00206:             onClick={handlePrint}
+00207:             disabled={!hasProducts}
+00208:           >
+00209:             Exportar PDF
+00210:           </button>
+00211:         </div>
+00212:       </section>
+00213: 
+00214:       <article className="catalog-pdf-sheet">
+00215:         <CatalogPdfHeader
+00216:           logoSrc={PDF_LOGO_SRC}
+00217:           title={copy.title}
+00218:           subtitle={copy.subtitle}
+00219:           segmentLabel={copy.segmentLabel}
+00220:           segmentType={copy.segmentType}
+00221:           generatedAt={generatedAt}
+00222:           validUntil={validUntil}
+00223:           productCount={products.length}
+00224:           contactNumber={PDF_CONTACT_NUMBER}
+00225:           isComplete={isFullCatalogLoaded}
+00226:         />
+00227: 
+00228:         {isLoading && !hasProducts ? (
+00229:           <section className="catalog-pdf-state">
+00230:             <h2>Cargando catálogo...</h2>
+00231:             <p>Estamos preparando los productos para el PDF.</p>
+00232:           </section>
+00233:         ) : null}
+00234: 
+00235:         {!isLoading && !hasProducts ? (
+00236:           <section className="catalog-pdf-state">
+00237:             <h2>No hay productos disponibles</h2>
+00238:             <p>Revisa la fuente de datos o los estados de publicación.</p>
+00239:           </section>
+00240:         ) : null}
+00241: 
+00242:         {hasProducts ? <CatalogPdfGrid products={products} /> : null}
+00243: 
+00244:         <footer className="catalog-pdf-footer">
+00245:           <p>
+00246:             Precios, productos y stock sujetos a confirmación por asesora
+00247:             comercial.
+00248:           </p>
+00249:           <p>Wooly Imports · Catálogo mayorista para emprendedores</p>
+00250:         </footer>
+00251:       </article>
+00252:     </main>
+00253:   );
+00254: }
+00255: 
+00256: 
+
+============================================================
+FILE: src\modules\catalog-export\data\PdfImageManifest.ts
+============================================================
+
+00001: /**
+00002:  * Manifest generado por scripts/catalog/OptimizePdfImages.ts
+00003:  *
+00004:  * Regla:
+00005:  * - La imagen original vive en Google Sheets como img.
+00006:  * - Este manifest contiene solo derivados optimizados para PDF.
+00007:  * - No se edita manualmente.
+00008:  */
+00009: export const PDF_IMAGE_MANIFEST: Record<string, string> = {
+00010:   "FNT001": "/catalog/pdf-images/hotwheels/FNT001.jpg",
+00011:   "HWC001": "/catalog/pdf-images/hotwheels/HWC001.jpg",
+00012:   "HWC002": "/catalog/pdf-images/hotwheels/HWC002.jpg",
+00013:   "HWC0022": "/catalog/pdf-images/hotwheels/HWC0022.jpg",
+00014:   "HWC0026": "/catalog/pdf-images/hotwheels/HWC0026.jpg",
+00015: };
+
+============================================================
+FILE: src\modules\catalog-export\index.ts
+============================================================
+
+00001: export { default as CatalogPdfPage } from "./components/CatalogPdfPage/CatalogPdfPage";
+00002: export type { PdfProduct } from "./types/PdfProduct";
+00003: export {
+00004:   mapProductToPdfProduct,
+00005:   mapProductsToPdfProducts,
+00006: } from "./mappers/PdfProductMapper";
+
+============================================================
+FILE: src\modules\catalog-export\mappers\PdfProductMapper.ts
+============================================================
+
+00001: import type { Product } from "@/shared/types/product";
+00002: import { PDF_IMAGE_MANIFEST } from "../data/PdfImageManifest";
+00003: import type { PdfProduct } from "../types/PdfProduct";
+00004: 
+00005: export const PDF_PRODUCT_PLACEHOLDER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(`
+00006: <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+00007:   <rect width="600" height="600" rx="48" fill="#f8fafc"/>
+00008:   <rect x="110" y="145" width="380" height="270" rx="28" fill="#e2e8f0"/>
+00009:   <circle cx="235" cy="245" r="45" fill="#cbd5e1"/>
+00010:   <path d="M145 380l105-110 78 78 54-58 73 90H145z" fill="#cbd5e1"/>
+00011:   <text x="300" y="475" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#64748b">
+00012:     Wooly Imports
+00013:   </text>
+00014: </svg>
+00015: `)}`;
+00016: 
+00017: const PDF_DESCRIPTION_MAX_LENGTH = 190;
+00018: 
+00019: const cleanText = (value?: string | null, fallback = "") =>
+00020:   String(value || fallback).replace(/\s+/g, " ").trim();
+00021: 
+00022: const normalizeStatus = (status?: string) => cleanText(status).toLowerCase();
+00023: 
+00024: const isHiddenProduct = (product: Product) =>
+00025:   normalizeStatus(product.status) === "oculto";
+00026: 
+00027: const getMainImage = (product: Product) => {
+00028:   const productId = cleanText(product.id);
+00029:   const optimizedPdfImage = cleanText(PDF_IMAGE_MANIFEST[productId]);
+00030:   const catalogImage = cleanText(product.img);
+00031: 
+00032:   return optimizedPdfImage || catalogImage || PDF_PRODUCT_PLACEHOLDER_IMAGE;
+00033: };
+00034: 
+00035: const getPrimaryPrice = (product: Product) => {
+00036:   const offerPrice = Number(product.price_offer || 0);
+00037:   const basePrice = Number(product.price_1 || 0);
+00038: 
+00039:   return offerPrice > 0 ? offerPrice : basePrice;
+00040: };
+00041: 
+00042: const getStockLabel = (product: Product) => {
+00043:   const status = normalizeStatus(product.status);
+00044: 
+00045:   if (status === "agotado") {
+00046:     return "Agotado";
+00047:   }
+00048: 
+00049:   if (typeof product.stock !== "number") {
+00050:     return "Consultar stock";
+00051:   }
+00052: 
+00053:   if (product.stock <= 0) {
+00054:     return "Consultar stock";
+00055:   }
+00056: 
+00057:   return `Stock: ${product.stock} und.`;
+00058: };
+00059: 
+00060: const getShortDescription = (product: Product) => {
+00061:   const description = cleanText(product.description);
+00062: 
+00063:   if (!description) {
+00064:     return "";
+00065:   }
+00066: 
+00067:   if (description.length <= PDF_DESCRIPTION_MAX_LENGTH) {
+00068:     return description;
+00069:   }
+00070: 
+00071:   return `${description.slice(0, PDF_DESCRIPTION_MAX_LENGTH - 3).trim()}...`;
+00072: };
+00073: 
+00074: export const mapProductToPdfProduct = (product: Product): PdfProduct => ({
+00075:   id: cleanText(product.id),
+00076:   title: cleanText(product.title, "Producto Wooly"),
+00077:   description: getShortDescription(product),
+00078:   category: cleanText(product.category, "Sin categoría"),
+00079:   image: getMainImage(product),
+00080: 
+00081:   price1: Number(product.price_1 || 0),
+00082:   price3: product.price_3,
+00083:   price12: product.price_12,
+00084:   price50: product.price_50,
+00085:   price100: product.price_100,
+00086:   offerPrice: product.price_offer,
+00087: 
+00088:   primaryPrice: getPrimaryPrice(product),
+00089:   stock: product.stock,
+00090:   stockLabel: getStockLabel(product),
+00091: 
+00092:   status: product.status,
+00093:   priority: Number(product.priority || 0),
+00094: });
+00095: 
+00096: export const mapProductsToPdfProducts = (products: Product[]) =>
+00097:   products
+00098:     .filter((product) => !isHiddenProduct(product))
+00099:     .map(mapProductToPdfProduct)
+00100:     .sort((a, b) => b.priority - a.priority);
+
+============================================================
+FILE: src\modules\catalog-export\types\PdfProduct.ts
+============================================================
+
+00001: export interface PdfProduct {
+00002:   id: string;
+00003:   title: string;
+00004:   description: string;
+00005:   category: string;
+00006:   image: string;
+00007: 
+00008:   price1: number;
+00009:   price3?: number | null;
+00010:   price12?: number | null;
+00011:   price50?: number | null;
+00012:   price100?: number | null;
+00013:   offerPrice?: number | null;
+00014: 
+00015:   primaryPrice: number;
+00016:   stock?: number | null;
+00017:   stockLabel: string;
+00018: 
+00019:   status?: string;
+00020:   priority: number;
+00021: }
+
+============================================================
+FILE: src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.css
+============================================================
+
+00001: /* =========================================================
+00002:    Sales Catalog Tools Page
+00003:    Ruta interna: /ventas/catalogos
+00004:    ========================================================= */
+00005: 
+00006: .sales-catalog-tools {
+00007:   min-height: 100vh;
+00008:   padding: 28px;
+00009:   background:
+00010:     radial-gradient(circle at top left, rgba(29, 130, 153, 0.16), transparent 32%),
+00011:     radial-gradient(circle at top right, rgba(242, 134, 190, 0.18), transparent 34%),
+00012:     linear-gradient(135deg, #f8fafc 0%, #ffffff 52%, #eef9fb 100%);
+00013:   color: #0f172a;
+00014: }
+00015: 
+00016: .sales-catalog-tools__hero,
+00017: .sales-catalog-tools__layout,
+00018: .sales-catalog-tools__notice {
+00019:   width: min(1180px, 100%);
+00020:   margin-right: auto;
+00021:   margin-left: auto;
+00022: }
+00023: 
+00024: .sales-catalog-tools__hero {
+00025:   display: flex;
+00026:   align-items: flex-start;
+00027:   justify-content: space-between;
+00028:   gap: 22px;
+00029:   margin-bottom: 18px;
+00030:   padding: 24px;
+00031:   border: 1px solid rgba(226, 232, 240, 0.95);
+00032:   border-radius: 30px;
+00033:   background: rgba(255, 255, 255, 0.92);
+00034:   box-shadow:
+00035:     0 14px 36px rgba(15, 23, 42, 0.06),
+00036:     0 24px 70px rgba(15, 23, 42, 0.08);
+00037: }
+00038: 
+00039: .sales-catalog-tools__eyebrow {
+00040:   margin: 0 0 8px;
+00041:   color: var(--w-primary, #1d8299);
+00042:   font-size: 0.72rem;
+00043:   font-weight: 1000;
+00044:   letter-spacing: 0.14em;
+00045:   text-transform: uppercase;
+00046: }
+00047: 
+00048: .sales-catalog-tools__hero h1 {
+00049:   margin: 0;
+00050:   color: #0f172a;
+00051:   font-size: clamp(1.9rem, 4vw, 3rem);
+00052:   font-weight: 1000;
+00053:   line-height: 0.98;
+00054:   letter-spacing: -0.06em;
+00055: }
+00056: 
+00057: .sales-catalog-tools__hero p:not(.sales-catalog-tools__eyebrow) {
+00058:   max-width: 680px;
+00059:   margin: 12px 0 0;
+00060:   color: #64748b;
+00061:   font-size: 0.98rem;
+00062:   font-weight: 750;
+00063:   line-height: 1.45;
+00064: }
+00065: 
+00066: .sales-catalog-tools__heroActions {
+00067:   display: flex;
+00068:   flex-shrink: 0;
+00069:   flex-wrap: wrap;
+00070:   gap: 8px;
+00071:   justify-content: flex-end;
+00072: }
+00073: 
+00074: .sales-catalog-tools__back,
+00075: .sales-catalog-tools__heroActions button {
+00076:   display: inline-flex;
+00077:   min-height: 42px;
+00078:   align-items: center;
+00079:   justify-content: center;
+00080:   border: 1px solid rgba(226, 232, 240, 0.95);
+00081:   border-radius: 999px;
+00082:   padding: 0 16px;
+00083:   background: #ffffff;
+00084:   color: #334155;
+00085:   font-size: 0.84rem;
+00086:   font-weight: 950;
+00087:   text-decoration: none;
+00088:   cursor: pointer;
+00089: }
+00090: 
+00091: .sales-catalog-tools__heroActions button {
+00092:   background: #0f172a;
+00093:   color: #ffffff;
+00094: }
+00095: 
+00096: .sales-catalog-tools__notice {
+00097:   margin-bottom: 18px;
+00098:   border: 1px solid #fde293;
+00099:   border-radius: 18px;
+00100:   padding: 12px 16px;
+00101:   background: #fffbef;
+00102:   color: #92400e;
+00103:   font-size: 0.88rem;
+00104:   font-weight: 900;
+00105: }
+00106: 
+00107: .sales-catalog-tools__layout {
+00108:   display: grid;
+00109:   grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.65fr);
+00110:   gap: 18px;
+00111:   align-items: start;
+00112: }
+00113: 
+00114: .sales-catalog-tools__workspace {
+00115:   display: grid;
+00116:   gap: 18px;
+00117: }
+00118: 
+00119: .sales-catalog-tools__panel,
+00120: .sales-catalog-tools__result {
+00121:   border: 1px solid rgba(226, 232, 240, 0.95);
+00122:   border-radius: 28px;
+00123:   padding: 22px;
+00124:   background: rgba(255, 255, 255, 0.94);
+00125:   box-shadow:
+00126:     0 14px 36px rgba(15, 23, 42, 0.05),
+00127:     0 24px 70px rgba(15, 23, 42, 0.06);
+00128: }
+00129: 
+00130: .sales-catalog-tools__result {
+00131:   position: sticky;
+00132:   top: 18px;
+00133: }
+00134: 
+00135: .sales-catalog-tools__sectionHead {
+00136:   display: flex;
+00137:   align-items: flex-start;
+00138:   gap: 12px;
+00139:   margin-bottom: 18px;
+00140: }
+00141: 
+00142: .sales-catalog-tools__sectionHead > span {
+00143:   display: inline-flex;
+00144:   min-width: 38px;
+00145:   height: 38px;
+00146:   flex-shrink: 0;
+00147:   align-items: center;
+00148:   justify-content: center;
+00149:   border-radius: 14px;
+00150:   padding: 0 10px;
+00151:   background: linear-gradient(
+00152:     135deg,
+00153:     var(--w-primary, #1d8299),
+00154:     var(--w-primary-dark, #156f84)
+00155:   );
+00156:   color: #ffffff;
+00157:   font-size: 0.78rem;
+00158:   font-weight: 1000;
+00159: }
+00160: 
+00161: .sales-catalog-tools__sectionHead h2 {
+00162:   margin: 0;
+00163:   color: #0f172a;
+00164:   font-size: 1.22rem;
+00165:   font-weight: 1000;
+00166:   letter-spacing: -0.035em;
+00167: }
+00168: 
+00169: .sales-catalog-tools__sectionHead p {
+00170:   margin: 4px 0 0;
+00171:   color: #64748b;
+00172:   font-size: 0.84rem;
+00173:   font-weight: 750;
+00174:   line-height: 1.35;
+00175: }
+00176: 
+00177: .sales-catalog-tools__categoryGrid {
+00178:   display: grid;
+00179:   grid-template-columns: repeat(4, minmax(0, 1fr));
+00180:   gap: 10px;
+00181: }
+00182: 
+00183: .sales-catalog-tools__campaignGrid {
+00184:   display: grid;
+00185:   grid-template-columns: repeat(3, minmax(0, 1fr));
+00186:   gap: 10px;
+00187: }
+00188: 
+00189: .sales-catalog-tools__comboGrid {
+00190:   display: grid;
+00191:   grid-template-columns: repeat(3, minmax(0, 1fr));
+00192:   gap: 10px;
+00193: }
+00194: 
+00195: .sales-catalog-tools__categoryCard,
+00196: .sales-catalog-tools__campaignCard,
+00197: .sales-catalog-tools__comboCard {
+00198:   min-height: 112px;
+00199:   border: 1px solid rgba(226, 232, 240, 0.95);
+00200:   border-radius: 22px;
+00201:   padding: 14px;
+00202:   background: #ffffff;
+00203:   color: #0f172a;
+00204:   text-align: left;
+00205:   cursor: pointer;
+00206:   transition:
+00207:     transform 0.18s ease,
+00208:     border-color 0.18s ease,
+00209:     box-shadow 0.18s ease,
+00210:     background 0.18s ease;
+00211: }
+00212: 
+00213: .sales-catalog-tools__categoryCard:hover,
+00214: .sales-catalog-tools__campaignCard:hover,
+00215: .sales-catalog-tools__comboCard:hover {
+00216:   transform: translateY(-2px);
+00217:   border-color: rgba(29, 130, 153, 0.45);
+00218:   box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+00219: }
+00220: 
+00221: .sales-catalog-tools__categoryCard.is-active,
+00222: .sales-catalog-tools__campaignCard.is-active,
+00223: .sales-catalog-tools__comboCard.is-active {
+00224:   border-color: rgba(29, 130, 153, 0.62);
+00225:   background:
+00226:     linear-gradient(135deg, rgba(29, 130, 153, 0.12), rgba(242, 134, 190, 0.08)),
+00227:     #ffffff;
+00228:   box-shadow:
+00229:     inset 0 0 0 2px rgba(29, 130, 153, 0.12),
+00230:     0 16px 34px rgba(15, 23, 42, 0.08);
+00231: }
+00232: 
+00233: .sales-catalog-tools__categoryIcon {
+00234:   display: inline-flex;
+00235:   width: 38px;
+00236:   height: 38px;
+00237:   align-items: center;
+00238:   justify-content: center;
+00239:   margin-bottom: 10px;
+00240:   border-radius: 15px;
+00241:   background: #f8fafc;
+00242:   font-size: 1.35rem;
+00243: }
+00244: 
+00245: .sales-catalog-tools__categoryCard strong,
+00246: .sales-catalog-tools__campaignCard strong,
+00247: .sales-catalog-tools__comboCard strong {
+00248:   display: block;
+00249:   color: #0f172a;
+00250:   font-size: 0.94rem;
+00251:   font-weight: 1000;
+00252:   line-height: 1.15;
+00253: }
+00254: 
+00255: .sales-catalog-tools__categoryCard small,
+00256: .sales-catalog-tools__campaignCard small,
+00257: .sales-catalog-tools__comboCard small {
+00258:   display: block;
+00259:   margin-top: 6px;
+00260:   color: #64748b;
+00261:   font-size: 0.72rem;
+00262:   font-weight: 850;
+00263: }
+00264: 
+00265: .sales-catalog-tools__campaignCard > span {
+00266:   display: inline-flex;
+00267:   min-height: 24px;
+00268:   align-items: center;
+00269:   margin-bottom: 12px;
+00270:   border-radius: 999px;
+00271:   padding: 0 9px;
+00272:   background: #fff0f5;
+00273:   color: #9d174d;
+00274:   font-size: 0.62rem;
+00275:   font-weight: 1000;
+00276:   letter-spacing: 0.08em;
+00277:   text-transform: uppercase;
+00278: }
+00279: 
+00280: .sales-catalog-tools__empty {
+00281:   margin: 0;
+00282:   border-radius: 18px;
+00283:   padding: 16px;
+00284:   background: #f8fafc;
+00285:   color: #64748b;
+00286:   font-size: 0.88rem;
+00287:   font-weight: 850;
+00288: }
+00289: 
+00290: .sales-catalog-tools__resultHero {
+00291:   display: flex;
+00292:   align-items: center;
+00293:   gap: 14px;
+00294:   margin-bottom: 14px;
+00295:   border-radius: 22px;
+00296:   padding: 16px;
+00297:   background:
+00298:     linear-gradient(135deg, #0f172a, #1e293b);
+00299:   color: #ffffff;
+00300: }
+00301: 
+00302: .sales-catalog-tools__resultHero > span {
+00303:   display: inline-flex;
+00304:   width: 52px;
+00305:   height: 52px;
+00306:   flex-shrink: 0;
+00307:   align-items: center;
+00308:   justify-content: center;
+00309:   border-radius: 18px;
+00310:   background: rgba(255, 255, 255, 0.12);
+00311:   font-size: 1.65rem;
+00312: }
+00313: 
+00314: .sales-catalog-tools__resultHero p {
+00315:   margin: 0 0 4px;
+00316:   color: rgba(255, 255, 255, 0.68);
+00317:   font-size: 0.66rem;
+00318:   font-weight: 1000;
+00319:   letter-spacing: 0.1em;
+00320:   text-transform: uppercase;
+00321: }
+00322: 
+00323: .sales-catalog-tools__resultHero h3 {
+00324:   margin: 0;
+00325:   color: #ffffff;
+00326:   font-size: 1.18rem;
+00327:   font-weight: 1000;
+00328:   line-height: 1.08;
+00329:   letter-spacing: -0.035em;
+00330: }
+00331: 
+00332: .sales-catalog-tools__zeroWarning {
+00333:   margin-bottom: 14px;
+00334:   border: 1px solid #fecaca;
+00335:   border-radius: 18px;
+00336:   padding: 12px 14px;
+00337:   background: #fef2f2;
+00338:   color: #991b1b;
+00339:   font-size: 0.82rem;
+00340:   font-weight: 950;
+00341:   line-height: 1.35;
+00342: }
+00343: 
+00344: .sales-catalog-tools__summary {
+00345:   display: grid;
+00346:   grid-template-columns: 1fr;
+00347:   gap: 10px;
+00348:   margin-bottom: 14px;
+00349: }
+00350: 
+00351: .sales-catalog-tools__summary div {
+00352:   border-radius: 18px;
+00353:   padding: 12px;
+00354:   background: #f8fafc;
+00355: }
+00356: 
+00357: .sales-catalog-tools__summary span,
+00358: .sales-catalog-tools__urlBox span,
+00359: .sales-catalog-tools__messagePreview span {
+00360:   display: block;
+00361:   margin-bottom: 6px;
+00362:   color: #64748b;
+00363:   font-size: 0.62rem;
+00364:   font-weight: 1000;
+00365:   letter-spacing: 0.1em;
+00366:   text-transform: uppercase;
+00367: }
+00368: 
+00369: .sales-catalog-tools__summary strong {
+00370:   display: block;
+00371:   color: #0f172a;
+00372:   font-size: 0.96rem;
+00373:   font-weight: 1000;
+00374:   line-height: 1.18;
+00375: }
+00376: 
+00377: .sales-catalog-tools__fieldGroup {
+00378:   display: grid;
+00379:   gap: 10px;
+00380:   margin-bottom: 14px;
+00381: }
+00382: 
+00383: .sales-catalog-tools__field {
+00384:   display: flex;
+00385:   flex-direction: column;
+00386:   gap: 8px;
+00387: }
+00388: 
+00389: .sales-catalog-tools__field label {
+00390:   color: #334155;
+00391:   font-size: 0.72rem;
+00392:   font-weight: 1000;
+00393:   letter-spacing: 0.1em;
+00394:   text-transform: uppercase;
+00395: }
+00396: 
+00397: .sales-catalog-tools__field select {
+00398:   width: 100%;
+00399:   min-height: 46px;
+00400:   border: 1px solid rgba(203, 213, 225, 0.95);
+00401:   border-radius: 16px;
+00402:   padding: 0 14px;
+00403:   background: #ffffff;
+00404:   color: #0f172a;
+00405:   font-size: 0.9rem;
+00406:   font-weight: 900;
+00407:   outline: none;
+00408: }
+00409: 
+00410: .sales-catalog-tools__field select:focus {
+00411:   border-color: var(--w-primary, #1d8299);
+00412:   box-shadow: 0 0 0 4px rgba(29, 130, 153, 0.12);
+00413: }
+00414: 
+00415: .sales-catalog-tools__urlBox {
+00416:   margin-bottom: 14px;
+00417:   border: 1px dashed rgba(29, 130, 153, 0.36);
+00418:   border-radius: 18px;
+00419:   padding: 14px;
+00420:   background: rgba(29, 130, 153, 0.055);
+00421: }
+00422: 
+00423: .sales-catalog-tools__urlBox code {
+00424:   display: block;
+00425:   overflow-wrap: anywhere;
+00426:   color: var(--w-primary-dark, #156f84);
+00427:   font-size: 0.88rem;
+00428:   font-weight: 950;
+00429: }
+00430: 
+00431: .sales-catalog-tools__actions {
+00432:   display: grid;
+00433:   grid-template-columns: 1fr;
+00434:   gap: 9px;
+00435:   margin-bottom: 14px;
+00436: }
+00437: 
+00438: .sales-catalog-tools__actions a,
+00439: .sales-catalog-tools__actions button {
+00440:   display: inline-flex;
+00441:   min-height: 44px;
+00442:   align-items: center;
+00443:   justify-content: center;
+00444:   border: 0;
+00445:   border-radius: 999px;
+00446:   padding: 0 12px;
+00447:   font-size: 0.84rem;
+00448:   font-weight: 1000;
+00449:   text-align: center;
+00450:   text-decoration: none;
+00451:   cursor: pointer;
+00452: }
+00453: 
+00454: .sales-catalog-tools__actions a:first-child {
+00455:   background: linear-gradient(135deg, #1d8299, #156f84);
+00456:   color: #ffffff;
+00457: }
+00458: 
+00459: .sales-catalog-tools__actions button {
+00460:   background: #f1f5f9;
+00461:   color: #334155;
+00462: }
+00463: 
+00464: .sales-catalog-tools__actions a:last-child {
+00465:   background: #e6f4ea;
+00466:   color: #137333;
+00467: }
+00468: 
+00469: .sales-catalog-tools__messagePreview {
+00470:   border-radius: 18px;
+00471:   padding: 14px;
+00472:   background: #fff0f5;
+00473:   color: #9d174d;
+00474: }
+00475: 
+00476: .sales-catalog-tools__messagePreview p,
+00477: .sales-catalog-tools__messagePreview pre {
+00478:   margin: 0;
+00479:   white-space: pre-wrap;
+00480:   color: inherit;
+00481:   font-family: inherit;
+00482:   font-size: 0.88rem;
+00483:   font-weight: 750;
+00484:   line-height: 1.4;
+00485: }
+00486: 
+00487: @media (max-width: 1080px) {
+00488:   .sales-catalog-tools__layout {
+00489:     grid-template-columns: 1fr;
+00490:   }
+00491: 
+00492:   .sales-catalog-tools__result {
+00493:     position: static;
+00494:   }
+00495: 
+00496:   .sales-catalog-tools__summary,
+00497:   .sales-catalog-tools__actions {
+00498:     grid-template-columns: repeat(3, minmax(0, 1fr));
+00499:   }
+00500: }
+00501: 
+00502: @media (max-width: 900px) {
+00503:   .sales-catalog-tools {
+00504:     padding: 16px;
+00505:   }
+00506: 
+00507:   .sales-catalog-tools__hero {
+00508:     flex-direction: column;
+00509:     padding: 20px;
+00510:   }
+00511: 
+00512:   .sales-catalog-tools__heroActions {
+00513:     justify-content: flex-start;
+00514:   }
+00515: 
+00516:   .sales-catalog-tools__categoryGrid,
+00517:   .sales-catalog-tools__campaignGrid,
+00518:   .sales-catalog-tools__comboGrid {
+00519:     grid-template-columns: repeat(2, minmax(0, 1fr));
+00520:   }
+00521: 
+00522:   .sales-catalog-tools__summary,
+00523:   .sales-catalog-tools__actions {
+00524:     grid-template-columns: 1fr;
+00525:   }
+00526: }
+00527: 
+00528: @media (max-width: 640px) {
+00529:   .sales-catalog-tools {
+00530:     padding: 10px;
+00531:   }
+00532: 
+00533:   .sales-catalog-tools__hero,
+00534:   .sales-catalog-tools__panel,
+00535:   .sales-catalog-tools__result {
+00536:     border-radius: 24px;
+00537:     padding: 16px;
+00538:   }
+00539: 
+00540:   .sales-catalog-tools__hero h1 {
+00541:     font-size: 1.8rem;
+00542:   }
+00543: 
+00544:   .sales-catalog-tools__categoryGrid,
+00545:   .sales-catalog-tools__campaignGrid,
+00546:   .sales-catalog-tools__comboGrid {
+00547:     grid-template-columns: 1fr;
+00548:   }
+00549: 
+00550:   .sales-catalog-tools__categoryCard,
+00551:   .sales-catalog-tools__campaignCard,
+00552:   .sales-catalog-tools__comboCard {
+00553:     min-height: 96px;
+00554:   }
+00555: }
+00556: 
+
+============================================================
+FILE: src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx
+============================================================
+
+00001: import { useMemo, useState } from "react";
+00002: 
+00003: import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
+00004: import {
+00005:   buildCatalogPdfPath,
+00006:   buildCatalogPdfUrl,
+00007: } from "@/modules/catalog-tools/services/BuildCatalogPdfUrl";
+00008: 
+00009: import "./SalesCatalogToolsPage.css";
+00010: 
+00011: type Option = {
+00012:   id: string;
+00013:   label: string;
+00014:   count: number;
+00015: };
+00016: 
+00017: type SalesCopyParams = {
+00018:   selectedCategory: string;
+00019:   selectedCategoryLabel: string;
+00020:   selectedCampaign: string;
+00021:   selectedCampaignLabel: string;
+00022:   productCount: number;
+00023:   pdfUrl: string;
+00024: };
+00025: 
+00026: const CATEGORY_LABELS: Record<string, string> = {
+00027:   todas: "Todo el catálogo",
+00028:   flores: "Flores",
+00029:   peluches: "Peluches",
+00030:   papeles: "Papeles",
+00031:   cajas: "Cajas",
+00032:   cintas: "Cintas",
+00033:   globos: "Globos",
+00034:   accesorios: "Accesorios",
+00035:   llaveros: "Llaveros",
+00036:   hotwheels: "Hot Wheels",
+00037: };
+00038: 
+00039: const CATEGORY_ICONS: Record<string, string> = {
+00040:   todas: "📦",
+00041:   flores: "🌸",
+00042:   peluches: "🧸",
+00043:   papeles: "🎁",
+00044:   cajas: "📦",
+00045:   cintas: "🎀",
+00046:   globos: "🎈",
+00047:   accesorios: "✨",
+00048:   llaveros: "🔑",
+00049:   hotwheels: "🏎️",
+00050: };
+00051: 
+00052: const normalizeText = (value?: string | null) =>
+00053:   String(value || "")
+00054:     .trim()
+00055:     .toLowerCase()
+00056:     .normalize("NFD")
+00057:     .replace(/[\u0300-\u036f]/g, "");
+00058: 
+00059: const toDisplayLabel = (value: string) => {
+00060:   const cleanValue = decodeURIComponent(value || "")
+00061:     .replace(/hotwheels/gi, "hot wheels")
+00062:     .replace(/[-_]+/g, " ")
+00063:     .replace(/\s+/g, " ")
+00064:     .trim();
+00065: 
+00066:   if (!cleanValue) return "";
+00067: 
+00068:   return cleanValue
+00069:     .split(" ")
+00070:     .map((word) =>
+00071:       word.length <= 2
+00072:         ? word.toUpperCase()
+00073:         : `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`,
+00074:     )
+00075:     .join(" ");
+00076: };
+00077: 
+00078: const getCategoryLabel = (categoryId: string) =>
+00079:   CATEGORY_LABELS[categoryId] || toDisplayLabel(categoryId);
+00080: 
+00081: const getCategoryIcon = (categoryId: string) =>
+00082:   CATEGORY_ICONS[categoryId] || "📁";
+00083: 
+00084: const copyToClipboard = async (value: string) => {
+00085:   if (navigator.clipboard?.writeText) {
+00086:     await navigator.clipboard.writeText(value);
+00087:     return;
+00088:   }
+00089: 
+00090:   const textarea = document.createElement("textarea");
+00091:   textarea.value = value;
+00092:   textarea.setAttribute("readonly", "true");
+00093:   textarea.style.position = "fixed";
+00094:   textarea.style.opacity = "0";
+00095: 
+00096:   document.body.appendChild(textarea);
+00097:   textarea.select();
+00098:   document.execCommand("copy");
+00099:   document.body.removeChild(textarea);
+00100: };
+00101: 
+00102: const buildSalesWhatsappCopy = ({
+00103:   selectedCategory,
+00104:   selectedCategoryLabel,
+00105:   selectedCampaign,
+00106:   selectedCampaignLabel,
+00107:   productCount,
+00108:   pdfUrl,
+00109: }: SalesCopyParams) => {
+00110:   const hasCategory = selectedCategory !== "todas";
+00111:   const hasCampaign = Boolean(selectedCampaign);
+00112: 
+00113:   let opening = "Hola 👋, te comparto el catálogo mayorista Wooly completo.";
+00114: 
+00115:   if (hasCategory && hasCampaign) {
+00116:     opening = `Hola 👋, te comparto el catálogo mayorista Wooly de ${selectedCategoryLabel} en campaña ${selectedCampaignLabel}.`;
+00117:   } else if (hasCategory) {
+00118:     opening = `Hola 👋, te comparto el catálogo mayorista Wooly de ${selectedCategoryLabel}.`;
+00119:   } else if (hasCampaign) {
+00120:     opening = `Hola 👋, te comparto el catálogo mayorista Wooly de la campaña ${selectedCampaignLabel}.`;
+00121:   }
+00122: 
+00123:   const productLine =
+00124:     productCount > 0
+00125:       ? `Incluye ${productCount} productos referenciales para revisar.`
+00126:       : "Esta combinación no tiene productos cargados por ahora. Te recomiendo confirmar con ventas antes de compartirla.";
+00127: 
+00128:   return [
+00129:     opening,
+00130:     productLine,
+00131:     "Los precios por escala y el stock están sujetos a disponibilidad.",
+00132:     "Puedes revisarlo aquí:",
+00133:     pdfUrl,
+00134:     "Wooly Imports",
+00135:   ].join("\n");
+00136: };
+00137: 
+00138: export default function SalesCatalogToolsPage() {
+00139:   const [selectedCategory, setSelectedCategory] = useState("todas");
+00140:   const [selectedCampaign, setSelectedCampaign] = useState("");
+00141:   const [copyStatus, setCopyStatus] = useState("");
+00142:   const [messageCopyStatus, setMessageCopyStatus] = useState("");
+00143: 
+00144:   const { data, isLoading, isFullCatalogLoaded } = useCatalogData("todas");
+00145: 
+00146:   const categoryOptions = useMemo<Option[]>(() => {
+00147:     const counts = new Map<string, number>();
+00148: 
+00149:     data.forEach((product) => {
+00150:       const categoryId = normalizeText(product.category);
+00151: 
+00152:       if (!categoryId) return;
+00153: 
+00154:       counts.set(categoryId, (counts.get(categoryId) || 0) + 1);
+00155:     });
+00156: 
+00157:     const options = Array.from(counts.entries())
+00158:       .map(([id, count]) => ({
+00159:         id,
+00160:         label: getCategoryLabel(id),
+00161:         count,
+00162:       }))
+00163:       .sort((a, b) => a.label.localeCompare(b.label, "es"));
+00164: 
+00165:     return [
+00166:       {
+00167:         id: "todas",
+00168:         label: "Todo el catálogo",
+00169:         count: data.length,
+00170:       },
+00171:       ...options,
+00172:     ];
+00173:   }, [data]);
+00174: 
+00175:   const campaignOptions = useMemo<Option[]>(() => {
+00176:     const counts = new Map<string, number>();
+00177: 
+00178:     data.forEach((product) => {
+00179:       const campaigns = Array.from(new Set(product.campaigns || []));
+00180: 
+00181:       campaigns.forEach((campaignId) => {
+00182:         const cleanCampaignId = normalizeText(campaignId);
+00183: 
+00184:         if (!cleanCampaignId) return;
+00185: 
+00186:         counts.set(cleanCampaignId, (counts.get(cleanCampaignId) || 0) + 1);
+00187:       });
+00188:     });
+00189: 
+00190:     return Array.from(counts.entries())
+00191:       .map(([id, count]) => ({
+00192:         id,
+00193:         label: toDisplayLabel(id),
+00194:         count,
+00195:       }))
+00196:       .sort((a, b) => a.label.localeCompare(b.label, "es"));
+00197:   }, [data]);
+00198: 
+00199:   const selectedCampaignCategoryOptions = useMemo<Option[]>(() => {
+00200:     const normalizedCampaign = normalizeText(selectedCampaign);
+00201: 
+00202:     if (!normalizedCampaign) return [];
+00203: 
+00204:     const counts = new Map<string, number>();
+00205: 
+00206:     data.forEach((product) => {
+00207:       const matchesCampaign = product.campaigns?.some(
+00208:         (campaignId) => normalizeText(campaignId) === normalizedCampaign,
+00209:       );
+00210: 
+00211:       if (!matchesCampaign) return;
+00212: 
+00213:       const categoryId = normalizeText(product.category);
+00214: 
+00215:       if (!categoryId) return;
+00216: 
+00217:       counts.set(categoryId, (counts.get(categoryId) || 0) + 1);
+00218:     });
+00219: 
+00220:     return Array.from(counts.entries())
+00221:       .map(([id, count]) => ({
+00222:         id,
+00223:         label: getCategoryLabel(id),
+00224:         count,
+00225:       }))
+00226:       .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "es"));
+00227:   }, [data, selectedCampaign]);
+00228: 
+00229:   const selectedCategoryLabel = getCategoryLabel(selectedCategory);
+00230:   const selectedCampaignLabel = selectedCampaign
+00231:     ? toDisplayLabel(selectedCampaign)
+00232:     : "Sin campaña específica";
+00233: 
+00234:   const filteredProducts = useMemo(() => {
+00235:     const normalizedCategory = normalizeText(selectedCategory);
+00236:     const normalizedCampaign = normalizeText(selectedCampaign);
+00237: 
+00238:     return data.filter((product) => {
+00239:       const matchesCategory =
+00240:         !normalizedCategory ||
+00241:         normalizedCategory === "todas" ||
+00242:         normalizeText(product.category) === normalizedCategory;
+00243: 
+00244:       const matchesCampaign =
+00245:         !normalizedCampaign ||
+00246:         product.campaigns?.some(
+00247:           (campaign) => normalizeText(campaign) === normalizedCampaign,
+00248:         );
+00249: 
+00250:       return matchesCategory && matchesCampaign;
+00251:     });
+00252:   }, [data, selectedCategory, selectedCampaign]);
+00253: 
+00254:   const hasEmptyResult = filteredProducts.length === 0 && isFullCatalogLoaded;
+00255: 
+00256:   const pdfPath = useMemo(
+00257:     () =>
+00258:       buildCatalogPdfPath({
+00259:         categoryId: selectedCategory,
+00260:         campaignId: selectedCampaign,
+00261:       }),
+00262:     [selectedCategory, selectedCampaign],
+00263:   );
+00264: 
+00265:   const pdfUrl = useMemo(() => {
+00266:     const origin = window.location.origin;
+00267: 
+00268:     return buildCatalogPdfUrl({
+00269:       origin,
+00270:       categoryId: selectedCategory,
+00271:       campaignId: selectedCampaign,
+00272:     });
+00273:   }, [selectedCategory, selectedCampaign]);
+00274: 
+00275:   const resultTitle = useMemo(() => {
+00276:     if (selectedCategory !== "todas" && selectedCampaign) {
+00277:       return `${selectedCategoryLabel} + ${selectedCampaignLabel}`;
+00278:     }
+00279: 
+00280:     if (selectedCategory !== "todas") {
+00281:       return selectedCategoryLabel;
+00282:     }
+00283: 
+00284:     if (selectedCampaign) {
+00285:       return selectedCampaignLabel;
+00286:     }
+00287: 
+00288:     return "Catálogo completo";
+00289:   }, [
+00290:     selectedCategory,
+00291:     selectedCategoryLabel,
+00292:     selectedCampaign,
+00293:     selectedCampaignLabel,
+00294:   ]);
+00295: 
+00296:   const whatsappMessage = useMemo(
+00297:     () =>
+00298:       buildSalesWhatsappCopy({
+00299:         selectedCategory,
+00300:         selectedCategoryLabel,
+00301:         selectedCampaign,
+00302:         selectedCampaignLabel,
+00303:         productCount: filteredProducts.length,
+00304:         pdfUrl,
+00305:       }),
+00306:     [
+00307:       selectedCategory,
+00308:       selectedCategoryLabel,
+00309:       selectedCampaign,
+00310:       selectedCampaignLabel,
+00311:       filteredProducts.length,
+00312:       pdfUrl,
+00313:     ],
+00314:   );
+00315: 
+00316:   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+00317:     whatsappMessage,
+00318:   )}`;
+00319: 
+00320:   const clearCopyStatuses = () => {
+00321:     setCopyStatus("");
+00322:     setMessageCopyStatus("");
+00323:   };
+00324: 
+00325:   const resetSelection = () => {
+00326:     setSelectedCategory("todas");
+00327:     setSelectedCampaign("");
+00328:     clearCopyStatuses();
+00329:   };
+00330: 
+00331:   const selectCategory = (categoryId: string) => {
+00332:     setSelectedCategory(categoryId);
+00333:     clearCopyStatuses();
+00334:   };
+00335: 
+00336:   const selectCampaign = (campaignId: string) => {
+00337:     setSelectedCampaign((currentCampaign) =>
+00338:       currentCampaign === campaignId ? "" : campaignId,
+00339:     );
+00340:     clearCopyStatuses();
+00341:   };
+00342: 
+00343:   const handleCopy = async () => {
+00344:     await copyToClipboard(pdfUrl);
+00345:     setCopyStatus("Link copiado");
+00346: 
+00347:     window.setTimeout(() => {
+00348:       setCopyStatus("");
+00349:     }, 1800);
+00350:   };
+00351: 
+00352:   const handleCopyMessage = async () => {
+00353:     await copyToClipboard(whatsappMessage);
+00354:     setMessageCopyStatus("Mensaje copiado");
+00355: 
+00356:     window.setTimeout(() => {
+00357:       setMessageCopyStatus("");
+00358:     }, 1800);
+00359:   };
+00360: 
+00361:   return (
+00362:     <main className="sales-catalog-tools">
+00363:       <section className="sales-catalog-tools__hero">
+00364:         <div>
+00365:           <p className="sales-catalog-tools__eyebrow">Wooly Ventas</p>
+00366: 
+00367:           <h1>Explorer de catálogos PDF</h1>
+00368: 
+00369:           <p>
+00370:             Herramienta interna para que ventas arme catálogos mayoristas por
+00371:             categoría, campaña o combinación comercial.
+00372:           </p>
+00373:         </div>
+00374: 
+00375:         <div className="sales-catalog-tools__heroActions">
+00376:           <a className="sales-catalog-tools__back" href="/catalogo">
+00377:             Ver catálogo público
+00378:           </a>
+00379: 
+00380:           <button type="button" onClick={resetSelection}>
+00381:             Reiniciar
+00382:           </button>
+00383:         </div>
+00384:       </section>
+00385: 
+00386:       {!isFullCatalogLoaded ? (
+00387:         <section className="sales-catalog-tools__notice">
+00388:           {isLoading
+00389:             ? "Cargando catálogo completo..."
+00390:             : "El catálogo aún puede estar cargando categorías. Espera unos segundos antes de compartir un PDF."}
+00391:         </section>
+00392:       ) : null}
+00393: 
+00394:       <section className="sales-catalog-tools__layout">
+00395:         <section className="sales-catalog-tools__workspace">
+00396:           <article className="sales-catalog-tools__panel">
+00397:             <div className="sales-catalog-tools__sectionHead">
+00398:               <span>01</span>
+00399:               <div>
+00400:                 <h2>Catálogos por categoría</h2>
+00401:                 <p>Elige la familia principal del catálogo mayorista.</p>
+00402:               </div>
+00403:             </div>
+00404: 
+00405:             <div className="sales-catalog-tools__categoryGrid">
+00406:               {categoryOptions.map((category) => {
+00407:                 const isActive = selectedCategory === category.id;
+00408: 
+00409:                 return (
+00410:                   <button
+00411:                     type="button"
+00412:                     key={category.id}
+00413:                     className={`sales-catalog-tools__categoryCard ${
+00414:                       isActive ? "is-active" : ""
+00415:                     }`}
+00416:                     onClick={() => selectCategory(category.id)}
+00417:                   >
+00418:                     <span className="sales-catalog-tools__categoryIcon">
+00419:                       {getCategoryIcon(category.id)}
+00420:                     </span>
+00421: 
+00422:                     <strong>{category.label}</strong>
+00423: 
+00424:                     <small>{category.count} productos</small>
+00425:                   </button>
+00426:                 );
+00427:               })}
+00428:             </div>
+00429:           </article>
+00430: 
+00431:           <article className="sales-catalog-tools__panel">
+00432:             <div className="sales-catalog-tools__sectionHead">
+00433:               <span>02</span>
+00434:               <div>
+00435:                 <h2>Campañas disponibles</h2>
+00436:                 <p>Activa una campaña para combinarla con categoría.</p>
+00437:               </div>
+00438:             </div>
+00439: 
+00440:             {campaignOptions.length > 0 ? (
+00441:               <div className="sales-catalog-tools__campaignGrid">
+00442:                 {campaignOptions.map((campaign) => {
+00443:                   const isActive = selectedCampaign === campaign.id;
+00444: 
+00445:                   return (
+00446:                     <button
+00447:                       type="button"
+00448:                       key={campaign.id}
+00449:                       className={`sales-catalog-tools__campaignCard ${
+00450:                         isActive ? "is-active" : ""
+00451:                       }`}
+00452:                       onClick={() => selectCampaign(campaign.id)}
+00453:                     >
+00454:                       <span>{isActive ? "✓" : "Campaña"}</span>
+00455: 
+00456:                       <strong>{campaign.label}</strong>
+00457: 
+00458:                       <small>{campaign.count} productos</small>
+00459:                     </button>
+00460:                   );
+00461:                 })}
+00462:               </div>
+00463:             ) : (
+00464:               <p className="sales-catalog-tools__empty">
+00465:                 No hay campañas detectadas en los productos cargados.
+00466:               </p>
+00467:             )}
+00468:           </article>
+00469: 
+00470:           {selectedCampaign ? (
+00471:             <article className="sales-catalog-tools__panel">
+00472:               <div className="sales-catalog-tools__sectionHead">
+00473:                 <span>03</span>
+00474:                 <div>
+00475:                   <h2>Combinar campaña con categoría</h2>
+00476:                   <p>
+00477:                     Atajos rápidos para crear un PDF más específico de la
+00478:                     campaña seleccionada.
+00479:                   </p>
+00480:                 </div>
+00481:               </div>
+00482: 
+00483:               <div className="sales-catalog-tools__comboGrid">
+00484:                 <button
+00485:                   type="button"
+00486:                   className={`sales-catalog-tools__comboCard ${
+00487:                     selectedCategory === "todas" ? "is-active" : ""
+00488:                   }`}
+00489:                   onClick={() => selectCategory("todas")}
+00490:                 >
+00491:                   <strong>Toda la campaña</strong>
+00492:                   <small>{selectedCampaignLabel}</small>
+00493:                 </button>
+00494: 
+00495:                 {selectedCampaignCategoryOptions.map((category) => (
+00496:                   <button
+00497:                     type="button"
+00498:                     key={category.id}
+00499:                     className={`sales-catalog-tools__comboCard ${
+00500:                       selectedCategory === category.id ? "is-active" : ""
+00501:                     }`}
+00502:                     onClick={() => selectCategory(category.id)}
+00503:                   >
+00504:                     <strong>
+00505:                       {getCategoryIcon(category.id)} {category.label}
+00506:                     </strong>
+00507:                     <small>{category.count} productos en campaña</small>
+00508:                   </button>
+00509:                 ))}
+00510:               </div>
+00511:             </article>
+00512:           ) : null}
+00513:         </section>
+00514: 
+00515:         <aside className="sales-catalog-tools__result">
+00516:           <div className="sales-catalog-tools__sectionHead">
+00517:             <span>PDF</span>
+00518:             <div>
+00519:               <h2>Catálogo listo</h2>
+00520:               <p>Link preparado para abrir, copiar o enviar.</p>
+00521:             </div>
+00522:           </div>
+00523: 
+00524:           <div className="sales-catalog-tools__resultHero">
+00525:             <span>{getCategoryIcon(selectedCategory)}</span>
+00526:             <div>
+00527:               <p>Combinación actual</p>
+00528:               <h3>{resultTitle}</h3>
+00529:             </div>
+00530:           </div>
+00531: 
+00532:           {hasEmptyResult ? (
+00533:             <div className="sales-catalog-tools__zeroWarning">
+00534:               Esta combinación no tiene productos. Revisa categoría/campaña
+00535:               antes de compartir el catálogo.
+00536:             </div>
+00537:           ) : null}
+00538: 
+00539:           <div className="sales-catalog-tools__summary">
+00540:             <div>
+00541:               <span>Categoría</span>
+00542:               <strong>{selectedCategoryLabel}</strong>
+00543:             </div>
+00544: 
+00545:             <div>
+00546:               <span>Campaña</span>
+00547:               <strong>{selectedCampaignLabel}</strong>
+00548:             </div>
+00549: 
+00550:             <div>
+00551:               <span>Productos estimados</span>
+00552:               <strong>{filteredProducts.length}</strong>
+00553:             </div>
+00554:           </div>
+00555: 
+00556:           <div className="sales-catalog-tools__fieldGroup">
+00557:             <div className="sales-catalog-tools__field">
+00558:               <label htmlFor="sales-category">Categoría</label>
+00559: 
+00560:               <select
+00561:                 id="sales-category"
+00562:                 value={selectedCategory}
+00563:                 onChange={(event) => {
+00564:                   setSelectedCategory(event.target.value);
+00565:                   clearCopyStatuses();
+00566:                 }}
+00567:               >
+00568:                 {categoryOptions.map((category) => (
+00569:                   <option value={category.id} key={category.id}>
+00570:                     {category.label} ({category.count})
+00571:                   </option>
+00572:                 ))}
+00573:               </select>
+00574:             </div>
+00575: 
+00576:             <div className="sales-catalog-tools__field">
+00577:               <label htmlFor="sales-campaign">Campaña</label>
+00578: 
+00579:               <select
+00580:                 id="sales-campaign"
+00581:                 value={selectedCampaign}
+00582:                 onChange={(event) => {
+00583:                   setSelectedCampaign(event.target.value);
+00584:                   clearCopyStatuses();
+00585:                 }}
+00586:               >
+00587:                 <option value="">Sin campaña específica</option>
+00588: 
+00589:                 {campaignOptions.map((campaign) => (
+00590:                   <option value={campaign.id} key={campaign.id}>
+00591:                     {campaign.label} ({campaign.count})
+00592:                   </option>
+00593:                 ))}
+00594:               </select>
+00595:             </div>
+00596:           </div>
+00597: 
+00598:           <div className="sales-catalog-tools__urlBox">
+00599:             <span>URL generada</span>
+00600:             <code>{pdfPath}</code>
+00601:           </div>
+00602: 
+00603:           <div className="sales-catalog-tools__actions">
+00604:             <a href={pdfPath} target="_blank" rel="noreferrer">
+00605:               Ver PDF
+00606:             </a>
+00607: 
+00608:             <button type="button" onClick={handleCopy}>
+00609:               {copyStatus || "Copiar link"}
+00610:             </button>
+00611: 
+00612:             <button type="button" onClick={handleCopyMessage}>
+00613:               {messageCopyStatus || "Copiar mensaje"}
+00614:             </button>
+00615: 
+00616:             <a href={whatsappUrl} target="_blank" rel="noreferrer">
+00617:               WhatsApp
+00618:             </a>
+00619:           </div>
+00620: 
+00621:           <div className="sales-catalog-tools__messagePreview">
+00622:             <span>Mensaje WhatsApp</span>
+00623:             <pre>{whatsappMessage}</pre>
+00624:           </div>
+00625:         </aside>
+00626:       </section>
+00627:     </main>
+00628:   );
+00629: }
+
+============================================================
+FILE: src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts
+============================================================
+
+00001: export interface BuildCatalogPdfUrlParams {
+00002:   categoryId?: string;
+00003:   campaignId?: string;
+00004:   origin?: string;
+00005: }
+00006: 
+00007: const cleanValue = (value?: string | null) =>
+00008:   String(value || "").trim().toLowerCase();
+00009: 
+00010: export const buildCatalogPdfPath = ({
+00011:   categoryId,
+00012:   campaignId,
+00013: }: BuildCatalogPdfUrlParams) => {
+00014:   const cleanCategoryId = cleanValue(categoryId);
+00015:   const cleanCampaignId = cleanValue(campaignId);
+00016: 
+00017:   const params = new URLSearchParams();
+00018: 
+00019:   if (cleanCategoryId && cleanCategoryId !== "todas") {
+00020:     params.set("cat", cleanCategoryId);
+00021:   }
+00022: 
+00023:   if (cleanCampaignId) {
+00024:     params.set("cpg", cleanCampaignId);
+00025:   }
+00026: 
+00027:   const query = params.toString();
+00028: 
+00029:   return query ? `/catalogo/pdf?${query}` : "/catalogo/pdf";
+00030: };
+00031: 
+00032: export const buildCatalogPdfUrl = ({
+00033:   origin,
+00034:   ...params
+00035: }: BuildCatalogPdfUrlParams) => {
+00036:   const path = buildCatalogPdfPath(params);
+00037:   const cleanOrigin = String(origin || "").replace(/\/$/, "");
+00038: 
+00039:   return cleanOrigin ? `${cleanOrigin}${path}` : path;
+00040: };
+
+============================================================
+FILE: src\shared\types\product.ts
+============================================================
+
+00001: export interface Category {
+00002:   id: string;
+00003:   name: string;
+00004:   icon: string;
+00005: }
+00006: 
+00007: export type CampaignComputedStatus =
+00008:   | "activa"
+00009:   | "programada"
+00010:   | "finalizada"
+00011:   | "borrador"
+00012:   | "oculta";
+00013: 
+00014: export interface Campaign {
+00015:   id: string;
+00016:   name: string;
+00017:   icon: string;
+00018: 
+00019:   color?: string;
+00020:   colorClass: string;
+00021: 
+00022:   startDate: string;
+00023:   endDate: string;
+00024:   priority: number;
+00025: 
+00026:   publicationStatus: string;
+00027:   computedStatus: CampaignComputedStatus;
+00028: }
+00029: 
+00030: export interface Product {
+00031:   id: string;
+00032: 
+00033:   title: string;
+00034:   description: string;
+00035: 
+00036:   category: string;
+00037: 
+00038:   price_1: number;
+00039:   price_3?: number | null;
+00040:   price_12?: number | null;
+00041:   price_50?: number | null;
+00042:   price_100?: number | null;
+00043: 
+00044:   price_offer?: number | null;
+00045: 
+00046:   stock?: number | null;
+00047:   img: string;
+00048:   gallery?: string;
+00049: 
+00050:   status?: string;
+00051:   badges?: string[];
+00052:   campaigns?: string[];
+00053: 
+00054:   priority?: number;
+00055: }
+
+============================================================
+FILE: src\test\example.test.ts
+============================================================
+
+00001: import { describe, it, expect } from "vitest";
+00002: 
+00003: describe("example", () => {
+00004:   it("should pass", () => {
+00005:     expect(true).toBe(true);
+00006:   });
+00007: });
+
+============================================================
+FILE: src\test\setup.ts
+============================================================
+
+00001: import "@testing-library/jest-dom";
+00002: 
+00003: Object.defineProperty(window, "matchMedia", {
+00004:   writable: true,
+00005:   value: (query: string) => ({
+00006:     matches: false,
+00007:     media: query,
+00008:     onchange: null,
+00009:     addListener: () => {},
+00010:     removeListener: () => {},
+00011:     addEventListener: () => {},
+00012:     removeEventListener: () => {},
+00013:     dispatchEvent: () => {},
+00014:   }),
+00015: });
+
+============================================================
+FILE: tsconfig.app.json
+============================================================
+
+00001: {
+00002:   "compilerOptions": {
+00003:     "allowImportingTsExtensions": true,
+00004:     "isolatedModules": true,
+00005:     "jsx": "react-jsx",
+00006:     "lib": [
+00007:       "ES2020",
+00008:       "DOM",
+00009:       "DOM.Iterable"
+00010:     ],
+00011:     "module": "ESNext",
+00012:     "moduleDetection": "force",
+00013:     "moduleResolution": "bundler",
+00014:     "noEmit": true,
+00015:     "noFallthroughCasesInSwitch": false,
+00016:     "noImplicitAny": false,
+00017:     "noUnusedLocals": false,
+00018:     "noUnusedParameters": false,
+00019:     "paths": {
+00020:       "@/*": [
+00021:         "./src/*"
+00022:       ]
+00023:     },
+00024:     "skipLibCheck": true,
+00025:     "strict": false,
+00026:     "target": "ES2020",
+00027:     "types": [
+00028:       "vitest/globals"
+00029:     ],
+00030:     "useDefineForClassFields": true
+00031:   },
+00032:   "include": [
+00033:     "src"
+00034:   ]
+00035: }
+
+============================================================
+FILE: tsconfig.json
+============================================================
+
+00001: {
+00002:   "compilerOptions": {
+00003:     "allowJs": true,
+00004:     "noImplicitAny": false,
+00005:     "noUnusedLocals": false,
+00006:     "noUnusedParameters": false,
+00007:     "paths": {
+00008:       "@/*": [
+00009:         "./src/*"
+00010:       ]
+00011:     },
+00012:     "skipLibCheck": true,
+00013:     "strictNullChecks": false
+00014:   },
+00015:   "files": [],
+00016:   "references": [
+00017:     {
+00018:       "path": "./tsconfig.app.json"
+00019:     },
+00020:     {
+00021:       "path": "./tsconfig.node.json"
+00022:     }
+00023:   ]
+00024: }
+
+============================================================
+FILE: vite.config.ts
+============================================================
+
+00001: import { defineConfig } from "vite";
+00002: import react from "@vitejs/plugin-react-swc";
+00003: import path from "path";
+00004: import { componentTagger } from "lovable-tagger";
+00005: 
+00006: // https://vitejs.dev/config/
+00007: export default defineConfig(({ mode }) => ({
+00008:   server: {
+00009:     host: "::",
+00010:     port: 8080,
+00011:     hmr: {
+00012:       overlay: false,
+00013:     },
+00014:   },
+00015: 
+00016:   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+00017: 
+00018:   resolve: {
+00019:     alias: {
+00020:       "@": path.resolve(__dirname, "./src"),
+00021:     },
+00022:     dedupe: [
+00023:       "react",
+00024:       "react-dom",
+00025:       "react/jsx-runtime",
+00026:       "react/jsx-dev-runtime",
+00027:       "@tanstack/react-query",
+00028:       "@tanstack/query-core",
+00029:     ],
+00030:   },
+00031: 
+00032:   build: {
+00033:     cssMinify: false,
+00034:   },
+00035: }));
+
+============================================================
+COMMERCIAL FLOW REFERENCES
+============================================================
+src\app\App.tsx:58: <Route path="/catalogo/pdf" element={<CatalogPdfPage />} />
+src\app\App.tsx:59: <Route path="/ventas/catalogos" element={<SalesCatalogToolsPage />} />
+src\modules\cart\components\CartFooter.tsx:2: import { CartItem } from "@/shared/types/product";
+src\modules\cart\components\CartFooter.tsx:6: cart:CartItem[];
+src\modules\cart\components\CartNoteTextarea.tsx:2: import { CartItem } from "@/shared/types/product";
+src\modules\cart\components\CartNoteTextarea.tsx:5: item: CartItem;
+src\modules\cart\components\CartQtyControls.tsx:2: import { CartItem } from "@/shared/types/product";
+src\modules\cart\components\CartQtyControls.tsx:6: item: CartItem;
+src\modules\cart\components\CartQtyInput.tsx:2: import { CartItem } from "@/shared/types/product";
+src\modules\cart\components\CartQtyInput.tsx:5: item: CartItem;
+src\modules\cart\components\CartRow.tsx:4: import { CartItem } from "@/shared/types/product";
+src\modules\cart\components\CartRow.tsx:14: item: CartItem;
+src\modules\cart\components\CartSidebar.tsx:1: import { CartItem } from "@/shared/types/product";
+src\modules\cart\components\CartSidebar.tsx:11: cart: CartItem[];
+src\modules\cart\components\CartTierSelector.tsx:1: import { CartItem } from "@/shared/types/product";
+src\modules\cart\components\CartTierSelector.tsx:5: item:CartItem;
+src\modules\cart\store\cart.actions.ts:1: import type { CartItem, Product } from "@/shared/types/product";
+src\modules\cart\store\cart.actions.ts:4: cart: CartItem[],
+src\modules\cart\store\cart.actions.ts:7: ): CartItem[] {
+src\modules\cart\store\cart.actions.ts:34: cart: CartItem[],
+src\modules\cart\store\cart.actions.ts:36: ): CartItem[] {
+src\modules\cart\store\cart.actions.ts:40: export function changeCartItemQty(
+src\modules\cart\store\cart.actions.ts:41: cart: CartItem[],
+src\modules\cart\store\cart.actions.ts:44: ): CartItem[] {
+src\modules\cart\store\cart.actions.ts:58: .filter(Boolean) as CartItem[];
+src\modules\cart\store\cart.actions.ts:61: export function setCartItemQty(
+src\modules\cart\store\cart.actions.ts:62: cart: CartItem[],
+src\modules\cart\store\cart.actions.ts:65: ): CartItem[] {
+src\modules\cart\store\cart.actions.ts:81: .filter(Boolean) as CartItem[];
+src\modules\cart\store\cart.actions.ts:84: export function setCartItemNote(
+src\modules\cart\store\cart.actions.ts:85: cart: CartItem[],
+src\modules\cart\store\cart.actions.ts:88: ): CartItem[] {
+src\modules\cart\store\cart.persistence.ts:1: import type { CartItem } from "@/shared/types/product";
+src\modules\cart\store\cart.persistence.ts:5: export function loadCart(): CartItem[] {
+src\modules\cart\store\cart.persistence.ts:7: const saved = localStorage.getItem(CART_KEY);
+src\modules\cart\store\cart.persistence.ts:14: export function saveCart(cart: CartItem[]) {
+src\modules\cart\store\cart.persistence.ts:16: localStorage.setItem(CART_KEY, JSON.stringify(cart));
+src\modules\cart\store\cart.selectors.ts:1: import type { CartItem } from "@/shared/types/product";
+src\modules\cart\store\cart.selectors.ts:9: export function getTotalItems(cart: CartItem[]) {
+src\modules\cart\store\cart.selectors.ts:16: export function getTotalPrice(cart: CartItem[]) {
+src\modules\cart\store\cart.selectors.ts:25: export function getTotalOriginal(cart: CartItem[]) {
+src\modules\cart\store\cart.selectors.ts:34: export function getTotalSavings(cart: CartItem[]) {
+src\modules\cart\store\cart.store.ts:2: import { CartItem, Product } from "@/shared/types/product";
+src\modules\cart\store\cart.store.ts:13: changeCartItemQty,
+src\modules\cart\store\cart.store.ts:14: setCartItemQty,
+src\modules\cart\store\cart.store.ts:15: setCartItemNote,
+src\modules\cart\store\cart.store.ts:25: const [cart, setCart] = useState<CartItem[]>(() => loadCart());
+src\modules\cart\store\cart.store.ts:65: changeCartItemQty(prev, id, delta)
+src\modules\cart\store\cart.store.ts:74: setCartItemQty(prev, id, qty)
+src\modules\cart\store\cart.store.ts:83: setCartItemNote(prev, id, note)
+src\modules\cart\utils\checkout.ts:1: import { CartItem } from "@/shared/types/product";
+src\modules\cart\utils\checkout.ts:5: cart: CartItem[],
+src\modules\cart\utils\getActiveTierQty.ts:1: import { CartItem } from "@/shared/types/product";
+src\modules\cart\utils\getActiveTierQty.ts:3: export function getActiveTierQty(item: CartItem): number {
+src\modules\cart\utils\getTierUnlockMessage.ts:1: import { CartItem } from "@/shared/types/product";
+src\modules\cart\utils\getTierUnlockMessage.ts:4: export function getTierUnlockMessage(item: CartItem): string | null {
+src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.tsx:173: window.print();
+src\modules\catalog-export\data\PdfImageManifest.ts:2: * Manifest generado por scripts/catalog/OptimizePdfImages.ts
+src\modules\catalog-export\data\PdfImageManifest.ts:9: export const PDF_IMAGE_MANIFEST: Record<string, string> = {
+src\modules\catalog-export\mappers\PdfProductMapper.ts:2: import { PDF_IMAGE_MANIFEST } from "../data/PdfImageManifest";
+src\modules\catalog-export\mappers\PdfProductMapper.ts:29: const optimizedPdfImage = cleanText(PDF_IMAGE_MANIFEST[productId]);
+src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.css:3: Ruta interna: /ventas/catalogos
+src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:5: buildCatalogPdfPath,
+src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:6: buildCatalogPdfUrl,
+src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:7: } from "@/modules/catalog-tools/services/BuildCatalogPdfUrl";
+src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:258: buildCatalogPdfPath({
+src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:268: return buildCatalogPdfUrl({
+src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts:1: export interface BuildCatalogPdfUrlParams {
+src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts:10: export const buildCatalogPdfPath = ({
+src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts:13: }: BuildCatalogPdfUrlParams) => {
+src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts:29: return query ? `/catalogo/pdf?${query}` : "/catalogo/pdf";
+src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts:32: export const buildCatalogPdfUrl = ({
+src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts:35: }: BuildCatalogPdfUrlParams) => {
+src\modules\catalog-tools\services\BuildCatalogPdfUrl.ts:36: const path = buildCatalogPdfPath(params);
+src\modules\catalog\components\ProductCard.tsx:4: import { CartItem, Product } from "@/shared/types/product";
+src\modules\catalog\components\ProductCard.tsx:14: cart?: CartItem[];
+src\modules\catalog\services\campaignService.ts:84: const raw = localStorage.getItem(CAMPAIGNS_CACHE_KEY);
+src\modules\catalog\services\campaignService.ts:121: localStorage.setItem(CAMPAIGNS_CACHE_KEY, JSON.stringify(entry));
+src\modules\catalog\services\campaignService.ts:123: // Si localStorage falla, se conserva el cache en memoria.
+src\modules\catalog\services\productService.ts:64: const raw = localStorage.getItem(productKey(category));
+src\modules\catalog\services\productService.ts:122: localStorage.setItem(productKey(category), JSON.stringify(entry));
+src\modules\catalog\services\productService.ts:124: // Si localStorage falla, se conserva el cache en memoria.
+src\modules\category\components\CategoryGrid.tsx:1: import type { Product, CartItem } from "@/shared/types/product";
+src\modules\category\components\CategoryGrid.tsx:6: cart: CartItem[];
+src\modules\home\components\CampaignHero\CampaignHeroDiaPadre.tsx:18: const savedDate = localStorage.getItem(COUNTDOWN_KEY);
+src\modules\home\components\CampaignHero\CampaignHeroDiaPadre.tsx:26: localStorage.setItem(COUNTDOWN_KEY, countdownDate.toISOString());
+src\modules\home\components\HeroSlider.tsx:18: const savedDate = localStorage.getItem(COUNTDOWN_KEY);
+src\modules\home\components\HeroSlider.tsx:26: localStorage.setItem(COUNTDOWN_KEY, countdownDate.toISOString());
+src\modules\product-detail\hooks\useProductCard.ts:2: import type { CartItem, Product } from "@/shared/types/product";
+src\modules\product-detail\hooks\useProductCard.ts:8: cart: CartItem[],
+src\modules\product-detail\hooks\useProductCard.ts:26: const cartItem = cart.find((item) => item.id === p.id);
+src\modules\product-detail\hooks\useProductCard.ts:27: const qtyInCart = cartItem?.qty ?? 0;
