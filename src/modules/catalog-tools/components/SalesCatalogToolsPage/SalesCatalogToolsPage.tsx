@@ -150,6 +150,36 @@ export default function SalesCatalogToolsPage() {
       .sort((a, b) => a.label.localeCompare(b.label, "es"));
   }, [data]);
 
+  const selectedCampaignCategoryOptions = useMemo<Option[]>(() => {
+    const normalizedCampaign = normalizeText(selectedCampaign);
+
+    if (!normalizedCampaign) return [];
+
+    const counts = new Map<string, number>();
+
+    data.forEach((product) => {
+      const matchesCampaign = product.campaigns?.some(
+        (campaignId) => normalizeText(campaignId) === normalizedCampaign,
+      );
+
+      if (!matchesCampaign) return;
+
+      const categoryId = normalizeText(product.category);
+
+      if (!categoryId) return;
+
+      counts.set(categoryId, (counts.get(categoryId) || 0) + 1);
+    });
+
+    return Array.from(counts.entries())
+      .map(([id, count]) => ({
+        id,
+        label: getCategoryLabel(id),
+        count,
+      }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "es"));
+  }, [data, selectedCampaign]);
+
   const selectedCategoryLabel = getCategoryLabel(selectedCategory);
   const selectedCampaignLabel = selectedCampaign
     ? toDisplayLabel(selectedCampaign)
@@ -194,6 +224,27 @@ export default function SalesCatalogToolsPage() {
     });
   }, [selectedCategory, selectedCampaign]);
 
+  const resultTitle = useMemo(() => {
+    if (selectedCategory !== "todas" && selectedCampaign) {
+      return `${selectedCategoryLabel} + ${selectedCampaignLabel}`;
+    }
+
+    if (selectedCategory !== "todas") {
+      return selectedCategoryLabel;
+    }
+
+    if (selectedCampaign) {
+      return selectedCampaignLabel;
+    }
+
+    return "Catálogo completo";
+  }, [
+    selectedCategory,
+    selectedCategoryLabel,
+    selectedCampaign,
+    selectedCampaignLabel,
+  ]);
+
   const whatsappMessage = useMemo(() => {
     const parts = ["Hola 👋, te comparto el catálogo mayorista Wooly."];
 
@@ -206,6 +257,7 @@ export default function SalesCatalogToolsPage() {
     }
 
     parts.push("Precios y stock sujetos a disponibilidad.");
+    parts.push("Puedes revisarlo aquí:");
     parts.push(pdfUrl);
 
     return parts.join(" ");
@@ -227,6 +279,18 @@ export default function SalesCatalogToolsPage() {
     setCopyStatus("");
   };
 
+  const selectCategory = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setCopyStatus("");
+  };
+
+  const selectCampaign = (campaignId: string) => {
+    setSelectedCampaign((currentCampaign) =>
+      currentCampaign === campaignId ? "" : campaignId,
+    );
+    setCopyStatus("");
+  };
+
   const handleCopy = async () => {
     await copyToClipboard(pdfUrl);
     setCopyStatus("Link copiado");
@@ -242,17 +306,23 @@ export default function SalesCatalogToolsPage() {
         <div>
           <p className="sales-catalog-tools__eyebrow">Wooly Ventas</p>
 
-          <h1>Panel de catálogos PDF</h1>
+          <h1>Explorer de catálogos PDF</h1>
 
           <p>
-            Herramienta interna para armar catálogos mayoristas por categoría,
-            campaña o combinación comercial.
+            Herramienta interna para que ventas arme catálogos mayoristas por
+            categoría, campaña o combinación comercial.
           </p>
         </div>
 
-        <a className="sales-catalog-tools__back" href="/catalogo">
-          Ver catálogo público
-        </a>
+        <div className="sales-catalog-tools__heroActions">
+          <a className="sales-catalog-tools__back" href="/catalogo">
+            Ver catálogo público
+          </a>
+
+          <button type="button" onClick={resetSelection}>
+            Reiniciar
+          </button>
+        </div>
       </section>
 
       {!isFullCatalogLoaded ? (
@@ -264,99 +334,147 @@ export default function SalesCatalogToolsPage() {
       ) : null}
 
       <section className="sales-catalog-tools__layout">
-        <article className="sales-catalog-tools__panel">
+        <section className="sales-catalog-tools__workspace">
+          <article className="sales-catalog-tools__panel">
+            <div className="sales-catalog-tools__sectionHead">
+              <span>01</span>
+              <div>
+                <h2>Catálogos por categoría</h2>
+                <p>Elige la familia principal del catálogo mayorista.</p>
+              </div>
+            </div>
+
+            <div className="sales-catalog-tools__categoryGrid">
+              {categoryOptions.map((category) => {
+                const isActive = selectedCategory === category.id;
+
+                return (
+                  <button
+                    type="button"
+                    key={category.id}
+                    className={`sales-catalog-tools__categoryCard ${
+                      isActive ? "is-active" : ""
+                    }`}
+                    onClick={() => selectCategory(category.id)}
+                  >
+                    <span className="sales-catalog-tools__categoryIcon">
+                      {getCategoryIcon(category.id)}
+                    </span>
+
+                    <strong>{category.label}</strong>
+
+                    <small>{category.count} productos</small>
+                  </button>
+                );
+              })}
+            </div>
+          </article>
+
+          <article className="sales-catalog-tools__panel">
+            <div className="sales-catalog-tools__sectionHead">
+              <span>02</span>
+              <div>
+                <h2>Campañas disponibles</h2>
+                <p>Activa una campaña para combinarla con categoría.</p>
+              </div>
+            </div>
+
+            {campaignOptions.length > 0 ? (
+              <div className="sales-catalog-tools__campaignGrid">
+                {campaignOptions.map((campaign) => {
+                  const isActive = selectedCampaign === campaign.id;
+
+                  return (
+                    <button
+                      type="button"
+                      key={campaign.id}
+                      className={`sales-catalog-tools__campaignCard ${
+                        isActive ? "is-active" : ""
+                      }`}
+                      onClick={() => selectCampaign(campaign.id)}
+                    >
+                      <span>{isActive ? "✓" : "Campaña"}</span>
+
+                      <strong>{campaign.label}</strong>
+
+                      <small>{campaign.count} productos</small>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="sales-catalog-tools__empty">
+                No hay campañas detectadas en los productos cargados.
+              </p>
+            )}
+          </article>
+
+          {selectedCampaign ? (
+            <article className="sales-catalog-tools__panel">
+              <div className="sales-catalog-tools__sectionHead">
+                <span>03</span>
+                <div>
+                  <h2>Combinar campaña con categoría</h2>
+                  <p>
+                    Atajos rápidos para crear un PDF más específico de la
+                    campaña seleccionada.
+                  </p>
+                </div>
+              </div>
+
+              <div className="sales-catalog-tools__comboGrid">
+                <button
+                  type="button"
+                  className={`sales-catalog-tools__comboCard ${
+                    selectedCategory === "todas" ? "is-active" : ""
+                  }`}
+                  onClick={() => selectCategory("todas")}
+                >
+                  <strong>Toda la campaña</strong>
+                  <small>{selectedCampaignLabel}</small>
+                </button>
+
+                {selectedCampaignCategoryOptions.map((category) => (
+                  <button
+                    type="button"
+                    key={category.id}
+                    className={`sales-catalog-tools__comboCard ${
+                      selectedCategory === category.id ? "is-active" : ""
+                    }`}
+                    onClick={() => selectCategory(category.id)}
+                  >
+                    <strong>
+                      {getCategoryIcon(category.id)} {category.label}
+                    </strong>
+                    <small>{category.count} productos en campaña</small>
+                  </button>
+                ))}
+              </div>
+            </article>
+          ) : null}
+        </section>
+
+        <aside className="sales-catalog-tools__result">
           <div className="sales-catalog-tools__sectionHead">
-            <span>01</span>
+            <span>PDF</span>
             <div>
-              <h2>Selecciona combinación</h2>
-              <p>Crea el PDF exacto que necesita la asesora.</p>
+              <h2>Catálogo listo</h2>
+              <p>Link preparado para abrir, copiar o enviar.</p>
             </div>
           </div>
 
-          <div className="sales-catalog-tools__field">
-            <label htmlFor="sales-category">Categoría</label>
-
-            <select
-              id="sales-category"
-              value={selectedCategory}
-              onChange={(event) => {
-                setSelectedCategory(event.target.value);
-                setCopyStatus("");
-              }}
-            >
-              {categoryOptions.map((category) => (
-                <option value={category.id} key={category.id}>
-                  {category.label} ({category.count})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="sales-catalog-tools__field">
-            <label htmlFor="sales-campaign">Campaña</label>
-
-            <select
-              id="sales-campaign"
-              value={selectedCampaign}
-              onChange={(event) => {
-                setSelectedCampaign(event.target.value);
-                setCopyStatus("");
-              }}
-            >
-              <option value="">Sin campaña específica</option>
-
-              {campaignOptions.map((campaign) => (
-                <option value={campaign.id} key={campaign.id}>
-                  {campaign.label} ({campaign.count})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="sales-catalog-tools__quickActions">
-            <button type="button" onClick={resetSelection}>
-              Catálogo completo
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory("hotwheels");
-                setSelectedCampaign("");
-                setCopyStatus("");
-              }}
-            >
-              Hot Wheels
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedCategory("cintas");
-                setSelectedCampaign("");
-                setCopyStatus("");
-              }}
-            >
-              Cintas
-            </button>
-          </div>
-        </article>
-
-        <article className="sales-catalog-tools__result">
-          <div className="sales-catalog-tools__sectionHead">
-            <span>02</span>
+          <div className="sales-catalog-tools__resultHero">
+            <span>{getCategoryIcon(selectedCategory)}</span>
             <div>
-              <h2>Resultado</h2>
-              <p>Link listo para abrir, copiar o enviar.</p>
+              <p>Combinación actual</p>
+              <h3>{resultTitle}</h3>
             </div>
           </div>
 
           <div className="sales-catalog-tools__summary">
             <div>
               <span>Categoría</span>
-              <strong>
-                {getCategoryIcon(selectedCategory)} {selectedCategoryLabel}
-              </strong>
+              <strong>{selectedCategoryLabel}</strong>
             </div>
 
             <div>
@@ -367,6 +485,48 @@ export default function SalesCatalogToolsPage() {
             <div>
               <span>Productos estimados</span>
               <strong>{filteredProducts.length}</strong>
+            </div>
+          </div>
+
+          <div className="sales-catalog-tools__fieldGroup">
+            <div className="sales-catalog-tools__field">
+              <label htmlFor="sales-category">Categoría</label>
+
+              <select
+                id="sales-category"
+                value={selectedCategory}
+                onChange={(event) => {
+                  setSelectedCategory(event.target.value);
+                  setCopyStatus("");
+                }}
+              >
+                {categoryOptions.map((category) => (
+                  <option value={category.id} key={category.id}>
+                    {category.label} ({category.count})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sales-catalog-tools__field">
+              <label htmlFor="sales-campaign">Campaña</label>
+
+              <select
+                id="sales-campaign"
+                value={selectedCampaign}
+                onChange={(event) => {
+                  setSelectedCampaign(event.target.value);
+                  setCopyStatus("");
+                }}
+              >
+                <option value="">Sin campaña específica</option>
+
+                {campaignOptions.map((campaign) => (
+                  <option value={campaign.id} key={campaign.id}>
+                    {campaign.label} ({campaign.count})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -385,7 +545,7 @@ export default function SalesCatalogToolsPage() {
             </button>
 
             <a href={whatsappUrl} target="_blank" rel="noreferrer">
-              Enviar por WhatsApp
+              WhatsApp
             </a>
           </div>
 
@@ -393,7 +553,7 @@ export default function SalesCatalogToolsPage() {
             <span>Mensaje WhatsApp</span>
             <p>{whatsappMessage}</p>
           </div>
-        </article>
+        </aside>
       </section>
     </main>
   );
