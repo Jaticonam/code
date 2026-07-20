@@ -329,6 +329,18 @@
   letter-spacing: -0.035em;
 }
 
+.sales-catalog-tools__zeroWarning {
+  margin-bottom: 14px;
+  border: 1px solid #fecaca;
+  border-radius: 18px;
+  padding: 12px 14px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 0.82rem;
+  font-weight: 950;
+  line-height: 1.35;
+}
+
 .sales-catalog-tools__summary {
   display: grid;
   grid-template-columns: 1fr;
@@ -461,8 +473,12 @@
   color: #9d174d;
 }
 
-.sales-catalog-tools__messagePreview p {
+.sales-catalog-tools__messagePreview p,
+.sales-catalog-tools__messagePreview pre {
   margin: 0;
+  white-space: pre-wrap;
+  color: inherit;
+  font-family: inherit;
   font-size: 0.88rem;
   font-weight: 750;
   line-height: 1.4;
@@ -537,3 +553,4 @@
     min-height: 96px;
   }
 }
+

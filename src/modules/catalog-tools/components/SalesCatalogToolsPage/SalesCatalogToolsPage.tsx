@@ -14,6 +14,15 @@ type Option = {
   count: number;
 };
 
+type SalesCopyParams = {
+  selectedCategory: string;
+  selectedCategoryLabel: string;
+  selectedCampaign: string;
+  selectedCampaignLabel: string;
+  productCount: number;
+  pdfUrl: string;
+};
+
 const CATEGORY_LABELS: Record<string, string> = {
   todas: "Todo el catálogo",
   flores: "Flores",
@@ -90,10 +99,47 @@ const copyToClipboard = async (value: string) => {
   document.body.removeChild(textarea);
 };
 
+const buildSalesWhatsappCopy = ({
+  selectedCategory,
+  selectedCategoryLabel,
+  selectedCampaign,
+  selectedCampaignLabel,
+  productCount,
+  pdfUrl,
+}: SalesCopyParams) => {
+  const hasCategory = selectedCategory !== "todas";
+  const hasCampaign = Boolean(selectedCampaign);
+
+  let opening = "Hola 👋, te comparto el catálogo mayorista Wooly completo.";
+
+  if (hasCategory && hasCampaign) {
+    opening = `Hola 👋, te comparto el catálogo mayorista Wooly de ${selectedCategoryLabel} en campaña ${selectedCampaignLabel}.`;
+  } else if (hasCategory) {
+    opening = `Hola 👋, te comparto el catálogo mayorista Wooly de ${selectedCategoryLabel}.`;
+  } else if (hasCampaign) {
+    opening = `Hola 👋, te comparto el catálogo mayorista Wooly de la campaña ${selectedCampaignLabel}.`;
+  }
+
+  const productLine =
+    productCount > 0
+      ? `Incluye ${productCount} productos referenciales para revisar.`
+      : "Esta combinación no tiene productos cargados por ahora. Te recomiendo confirmar con ventas antes de compartirla.";
+
+  return [
+    opening,
+    productLine,
+    "Los precios por escala y el stock están sujetos a disponibilidad.",
+    "Puedes revisarlo aquí:",
+    pdfUrl,
+    "Wooly Imports",
+  ].join("\n");
+};
+
 export default function SalesCatalogToolsPage() {
   const [selectedCategory, setSelectedCategory] = useState("todas");
   const [selectedCampaign, setSelectedCampaign] = useState("");
   const [copyStatus, setCopyStatus] = useState("");
+  const [messageCopyStatus, setMessageCopyStatus] = useState("");
 
   const { data, isLoading, isFullCatalogLoaded } = useCatalogData("todas");
 
@@ -205,6 +251,8 @@ export default function SalesCatalogToolsPage() {
     });
   }, [data, selectedCategory, selectedCampaign]);
 
+  const hasEmptyResult = filteredProducts.length === 0 && isFullCatalogLoaded;
+
   const pdfPath = useMemo(
     () =>
       buildCatalogPdfPath({
@@ -245,50 +293,51 @@ export default function SalesCatalogToolsPage() {
     selectedCampaignLabel,
   ]);
 
-  const whatsappMessage = useMemo(() => {
-    const parts = ["Hola 👋, te comparto el catálogo mayorista Wooly."];
-
-    if (selectedCategory !== "todas") {
-      parts.push(`Categoría: ${selectedCategoryLabel}.`);
-    }
-
-    if (selectedCampaign) {
-      parts.push(`Campaña: ${selectedCampaignLabel}.`);
-    }
-
-    parts.push("Precios y stock sujetos a disponibilidad.");
-    parts.push("Puedes revisarlo aquí:");
-    parts.push(pdfUrl);
-
-    return parts.join(" ");
-  }, [
-    pdfUrl,
-    selectedCategory,
-    selectedCategoryLabel,
-    selectedCampaign,
-    selectedCampaignLabel,
-  ]);
+  const whatsappMessage = useMemo(
+    () =>
+      buildSalesWhatsappCopy({
+        selectedCategory,
+        selectedCategoryLabel,
+        selectedCampaign,
+        selectedCampaignLabel,
+        productCount: filteredProducts.length,
+        pdfUrl,
+      }),
+    [
+      selectedCategory,
+      selectedCategoryLabel,
+      selectedCampaign,
+      selectedCampaignLabel,
+      filteredProducts.length,
+      pdfUrl,
+    ],
+  );
 
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
     whatsappMessage,
   )}`;
 
+  const clearCopyStatuses = () => {
+    setCopyStatus("");
+    setMessageCopyStatus("");
+  };
+
   const resetSelection = () => {
     setSelectedCategory("todas");
     setSelectedCampaign("");
-    setCopyStatus("");
+    clearCopyStatuses();
   };
 
   const selectCategory = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    setCopyStatus("");
+    clearCopyStatuses();
   };
 
   const selectCampaign = (campaignId: string) => {
     setSelectedCampaign((currentCampaign) =>
       currentCampaign === campaignId ? "" : campaignId,
     );
-    setCopyStatus("");
+    clearCopyStatuses();
   };
 
   const handleCopy = async () => {
@@ -297,6 +346,15 @@ export default function SalesCatalogToolsPage() {
 
     window.setTimeout(() => {
       setCopyStatus("");
+    }, 1800);
+  };
+
+  const handleCopyMessage = async () => {
+    await copyToClipboard(whatsappMessage);
+    setMessageCopyStatus("Mensaje copiado");
+
+    window.setTimeout(() => {
+      setMessageCopyStatus("");
     }, 1800);
   };
 
@@ -471,6 +529,13 @@ export default function SalesCatalogToolsPage() {
             </div>
           </div>
 
+          {hasEmptyResult ? (
+            <div className="sales-catalog-tools__zeroWarning">
+              Esta combinación no tiene productos. Revisa categoría/campaña
+              antes de compartir el catálogo.
+            </div>
+          ) : null}
+
           <div className="sales-catalog-tools__summary">
             <div>
               <span>Categoría</span>
@@ -497,7 +562,7 @@ export default function SalesCatalogToolsPage() {
                 value={selectedCategory}
                 onChange={(event) => {
                   setSelectedCategory(event.target.value);
-                  setCopyStatus("");
+                  clearCopyStatuses();
                 }}
               >
                 {categoryOptions.map((category) => (
@@ -516,7 +581,7 @@ export default function SalesCatalogToolsPage() {
                 value={selectedCampaign}
                 onChange={(event) => {
                   setSelectedCampaign(event.target.value);
-                  setCopyStatus("");
+                  clearCopyStatuses();
                 }}
               >
                 <option value="">Sin campaña específica</option>
@@ -544,6 +609,10 @@ export default function SalesCatalogToolsPage() {
               {copyStatus || "Copiar link"}
             </button>
 
+            <button type="button" onClick={handleCopyMessage}>
+              {messageCopyStatus || "Copiar mensaje"}
+            </button>
+
             <a href={whatsappUrl} target="_blank" rel="noreferrer">
               WhatsApp
             </a>
@@ -551,7 +620,7 @@ export default function SalesCatalogToolsPage() {
 
           <div className="sales-catalog-tools__messagePreview">
             <span>Mensaje WhatsApp</span>
-            <p>{whatsappMessage}</p>
+            <pre>{whatsappMessage}</pre>
           </div>
         </aside>
       </section>
