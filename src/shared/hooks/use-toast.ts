@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-import type { ReactNode } from "react";
 
 type Toast = {
   id: string;
