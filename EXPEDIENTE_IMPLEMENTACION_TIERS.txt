@@ -1,0 +1,801 @@
+
+=========================================================
+ARCHIVO: src\shared\config\priceTiers.ts
+=========================================================
+
+import type { Product } from "@/shared/types/product";
+
+export const PRICE_TIERS = [
+  {
+    qty: 1,
+    key: "price_1" as const,
+    label: "1u",
+    className: "price-tier-1",
+  },
+  {
+    qty: 3,
+    key: "price_3" as const,
+    label: "3u",
+    className: "price-tier-3",
+  },
+  {
+    qty: 12,
+    key: "price_12" as const,
+    label: "12u",
+    className: "price-tier-12",
+  },
+  {
+    qty: 50,
+    key: "price_50" as const,
+    label: "50u",
+    className: "price-tier-50",
+  },
+  {
+    qty: 100,
+    key: "price_100" as const,
+    label: "100u",
+    className: "price-tier-100",
+  },
+] as const;
+
+export const VOLUME_PRICE_TIERS = PRICE_TIERS.filter(
+  (tier) => tier.key !== "price_1",
+);
+
+export function getAvailablePriceTiers(product: Product) {
+  return VOLUME_PRICE_TIERS.filter((tier) => {
+    const value = product[tier.key];
+    return typeof value === "number" && Number.isFinite(value) && value > 0;
+  });
+}
+
+export function getUnitPriceByQty(product: Product, qty: number): number {
+  if (qty >= 100 && product.price_100) return product.price_100;
+  if (qty >= 50 && product.price_50) return product.price_50;
+  if (qty >= 12 && product.price_12) return product.price_12;
+  if (qty >= 3 && product.price_3) return product.price_3;
+  return product.price_1 || 0;
+}
+
+export function getNextTier(product: Product, qty: number) {
+  if (qty < 3 && product.price_3) return { qty: 3, price: product.price_3 };
+  if (qty < 12 && product.price_12) return { qty: 12, price: product.price_12 };
+  if (qty < 50 && product.price_50) return { qty: 50, price: product.price_50 };
+  if (qty < 100 && product.price_100)
+    return { qty: 100, price: product.price_100 };
+  return null;
+}
+
+=========================================================
+ARCHIVO: src\shared\config\cartTiers.ts
+=========================================================
+
+export const CART_TIERS = [
+  { qty: 1, key: "price_1" as const, cls: "active-1", label: "1u" },
+  { qty: 3, key: "price_3" as const, cls: "active-3", label: "3u" },
+  { qty: 12, key: "price_12" as const, cls: "active-12", label: "12u" },
+  { qty: 50, key: "price_50" as const, cls: "active-50", label: "50u" },
+  { qty: 100, key: "price_100" as const, cls: "active-100", label: "100u" },
+];
+
+export const TIER_COLORS = {
+  "active-1": "active-1",
+  "active-3": "active-3",
+  "active-12": "active-12",
+  "active-50": "active-50",
+  "active-100": "active-100",
+};
+
+=========================================================
+ARCHIVO: src\shared\styles\components\badges.css
+=========================================================
+
+@layer components {
+
+  /* ===== PRODUCT CARD TIERS ===== */
+
+  .price-tier-3,
+  .price-tier-12,
+  .price-tier-50,
+  .price-tier-100 {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 84px;
+    min-height: 30px;
+
+    padding:
+      0.35rem 0.8rem;
+
+    border-radius: 9999px;
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    letter-spacing: -0.02em;
+    line-height: 1;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow:
+      0 10px 20px rgba(15,23,42,0.16);
+
+    border:
+      1px solid rgba(255,255,255,0.16);
+  }
+
+  .price-tier-3 {
+    background:
+      linear-gradient(
+        135deg,
+        #f5b025,
+        #e19a00
+      );
+  }
+
+  .price-tier-12 {
+    background:
+      linear-gradient(
+        135deg,
+        #f286be,
+        #e85ca7
+      );
+  }
+
+  .price-tier-50 {
+    background:
+      linear-gradient(
+        135deg,
+        #8b5cf6,
+        #6d28d9
+      );
+  }
+
+  .price-tier-100 {
+    background:
+      linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b
+      );
+  }
+
+  /* ===== PRODUCT CARD POSITION ===== */
+
+  .product-card-tiers {
+    position: absolute;
+
+    right: 0.75rem;
+    bottom: 0.75rem;
+
+    z-index: 4;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    align-items: flex-end;
+  }
+
+  /* ===== ACTIVE CART TIERS ===== */
+
+  .active-1,
+  .active-3,
+  .active-12,
+  .active-50,
+  .active-100 {
+    background: linear-gradient(
+      135deg,
+      #0f9d7a,
+      #34c9a6
+    );
+  }
+
+  .active-1 {
+    background: linear-gradient(
+      135deg,
+      #44ada0,
+      #2f8f84
+    );
+  }
+
+  .active-3 {
+    background: linear-gradient(
+      135deg,
+      #f28c28,
+      #ffb347
+    );
+  }
+
+  .active-12 {
+    background: linear-gradient(
+      135deg,
+      #d946ef,
+      #f58ac8
+    );
+  }
+
+  .active-50 {
+    background: linear-gradient(
+      135deg,
+      #8b5cf6,
+      #a78bfa
+    );
+  }
+
+  .active-100 {
+    background: linear-gradient(
+      135deg,
+      #0f9d7a,
+      #34c9a6
+    );
+  }
+
+  .price-tier {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 84px;
+    min-height: 30px;
+
+    padding:
+      0.35rem 0.8rem;
+
+    border-radius: 9999px;
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    letter-spacing: -0.02em;
+    line-height: 1;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow:
+      0 10px 20px rgba(15,23,42,0.16);
+
+    animation:
+      price-tier-float 2.8s ease-in-out infinite;
+  }
+  
+  @keyframes price-tier-float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-2px);
+    }
+
+  }
+
+}
+
+
+=========================================================
+ARCHIVO: src\shared\styles\catalog\product-card.css
+=========================================================
+
+.card-product {
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 28px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.05),
+    0 18px 45px rgba(15, 23, 42, 0.06);
+  transition: 0.28s;
+}
+
+.card-product:hover {
+  transform: translateY(-5px);
+  border-color: rgba(29, 130, 153, 0.22);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.1),
+    0 30px 70px rgba(29, 130, 153, 0.12);
+}
+
+.card-product-image {
+  overflow: hidden;
+  border-radius: 22px;
+  background: #f8fafc;
+}
+
+.card-product-image img {
+  transition: 0.7s;
+}
+
+.card-product:hover .card-product-image img {
+  transform: scale(1.08);
+}
+
+.card-product-title {
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #334155;
+  transition: 0.2s;
+}
+
+.card-product-title:hover {
+  color: #1d8299;
+}
+
+.card-product-button {
+  min-height: 40px;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.15px;
+  box-shadow: 0 6px 16px rgba(29, 130, 153, 0.16);
+  transition: 0.18s;
+}
+
+.card-product-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Precio mayorista */
+.wholesale-pricing {
+  margin-top: 10px;
+  border-top: 1px dashed rgba(226, 232, 240, 0.95);
+  padding-top: 9px;
+}
+
+.wholesale-title {
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.wholesale-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wholesale-chip {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 7px 9px;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.wholesale-chip span {
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* Colores por tier */
+.wholesale-chip-price-3 {
+  border-color: #f5b025;
+  background: rgba(245, 176, 37, 0.12);
+  color: #92400e;
+}
+
+.wholesale-chip-price-12 {
+  border-color: #f286be;
+  background: rgba(242, 134, 190, 0.13);
+  color: #9d174d;
+}
+
+.wholesale-chip-price-50 {
+  border-color: #7c3aed;
+  background: rgba(124, 58, 237, 0.11);
+  color: #5b21b6;
+}
+
+.wholesale-chip-price-100 {
+  border-color: #22c55e;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.1),
+    rgba(74, 222, 128, 0.18)
+  );
+  color: #15803d;
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.08),
+    0 6px 14px rgba(34, 197, 94, 0.12);
+}
+
+/* ================================
+   Product Card - Selección de texto
+================================ */
+
+.card-product [data-no-card-click] {
+  user-select: text;
+  cursor: text;
+}
+
+.card-product button,
+.card-product img {
+  user-select: none;
+}
+
+@media (max-width: 767px) {
+  .card-product {
+    border-radius: 22px;
+    padding: 8px;
+  }
+
+  .card-product-image {
+    height: 180px !important;
+    border-radius: 18px;
+  }
+
+  .card-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .card-product-title {
+    font-size: 15px;
+    line-height: 1.18;
+  }
+
+  .card-product-button {
+    min-height: 38px;
+    border-radius: 16px;
+    font-size: 12px;
+    line-height: 1;
+    padding: 8px 10px;
+  }
+
+  .card-product-button span {
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .card-product-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .wholesale-pricing {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .wholesale-title {
+    margin-bottom: 6px;
+    font-size: 9px;
+  }
+
+  .wholesale-list {
+    gap: 5px;
+  }
+
+  .wholesale-chip {
+    border-radius: 12px;
+    padding: 7px 8px;
+    font-size: 10px;
+  }
+
+  .wholesale-chip span {
+    font-size: 10px;
+  }
+}
+
+=========================================================
+ARCHIVO: src\modules\product-detail\components\ProductTierSelector.tsx
+=========================================================
+
+import type { Product } from "@/shared/types/product";
+import { PRICE_TIERS } from "@/shared/config/priceTiers";
+
+interface ProductTierSelectorProps {
+  product: Product;
+  effectiveQty: number;
+  onSelectQty: (qty: number) => void;
+}
+
+export function ProductTierSelector({
+  product,
+  effectiveQty,
+  onSelectQty,
+}: ProductTierSelectorProps) {
+  return (
+    <div className="flex flex-wrap justify-center md:justify-start gap-2">
+      {PRICE_TIERS.map((tier) => {
+        const value = product[tier.key];
+
+        if (!value) return null;
+
+        const active =
+          (tier.qty === 1 && effectiveQty < 3) ||
+          (tier.qty === 3 && effectiveQty >= 3 && effectiveQty < 12) ||
+          (tier.qty === 12 && effectiveQty >= 12 && effectiveQty < 50) ||
+          (tier.qty === 50 && effectiveQty >= 50 && effectiveQty < 100) ||
+          (tier.qty === 100 && effectiveQty >= 100);
+
+        const tierStyle = active
+          ? "bg-[#1d8299] text-white border-[#1d8299] shadow-md"
+          : tier.qty === 3
+            ? "bg-[#fff7e6] text-[#f59e0b] border-[#f6d28b] hover:bg-[#fff1cc]"
+            : tier.qty === 12
+              ? "bg-[#fff0f7] text-[#f286be] border-[#f6bfdc] hover:bg-[#ffe3f1]"
+              : tier.qty === 50
+                ? "bg-[#f3efff] text-[#8b5cf6] border-[#d8ccff] hover:bg-[#ebe3ff]"
+                : tier.qty === 100
+                  ? "bg-[#f1f5f9] text-[#0f172a] border-[#cbd5e1] hover:bg-[#e2e8f0]"
+                  : "bg-white text-[#1d8299] border-[#d8e2ed] hover:bg-[#f0f8fa]";
+
+        return (
+          <button
+            key={tier.key}
+            type="button"
+            onClick={()=>onSelectQty(tier.qty)}
+            className={`px-3 py-1.5 rounded-2xl border transition-all duration-200 min-w-[96px] shadow-sm cursor-pointer ${tierStyle} ${active?"scale-[1.04]":"hover:scale-[1.03]"}`}
+          >
+            <div className="flex items-center justify-center gap-1.5 whitespace-nowrap">
+              <span className="text-[13px] font-black tracking-wide">
+                {tier.label}
+              </span>
+
+              <span className="text-[13px] md:text-sm font-black">
+                S/{value.toFixed(2)}
+              </span>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+=========================================================
+ARCHIVO: src\modules\cart\components\CartTierSelector.tsx
+=========================================================
+
+import type { CartItem } from "@/modules/cart/types";
+import { CART_TIERS,TIER_COLORS } from "@/shared/config/cartTiers";
+
+interface CartTierSelectorProps{
+  item:CartItem;
+  onSetQty:(id:string,qty:number|null)=>void;
+}
+
+export function CartTierSelector({item,onSetQty}:CartTierSelectorProps){
+  const itemTiers=CART_TIERS.filter(tier=>{
+    const value=item[tier.key];
+    return value!==null&&value!==undefined&&value>0;
+  });
+
+  const gridCols=
+    itemTiers.length<=1?"grid-cols-1":
+    itemTiers.length===2?"grid-cols-2":
+    "grid-cols-3";
+
+  return(
+    <div className={`grid ${gridCols} gap-1 flex-1`}>
+      {itemTiers.map((tier,index)=>{
+        const nextTier=itemTiers[index+1];
+        const isActive=item.qty>=tier.qty&&(!nextTier||item.qty<nextTier.qty);
+
+        return(
+          <button
+            key={tier.qty}
+            type="button"
+            onClick={()=>onSetQty(item.id,tier.qty)}
+            className={[
+              "cart-tier-btn",
+              "w-full py-1.5",
+              "transition-all duration-300",
+              isActive?`${TIER_COLORS[tier.cls]} scale-[1.02] shadow-md`:"cart-tier-btn-muted hover:scale-[1.02]"
+            ].join(" ")}
+          >
+            {tier.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+=========================================================
+ARCHIVO: src\modules\cart\components\AddToCartModalInfo.tsx
+=========================================================
+
+import { Product } from "@/shared/types/product";
+
+interface Props{
+  product:Product;
+  currentQty:number;
+  pulse:boolean;
+  nextTier:any;
+}
+
+export function AddToCartModalInfo({product,currentQty,pulse,nextTier}:Props){
+  const tiers=[
+  {qty:1,price:product.price_1},
+  {qty:3,price:product.price_3},
+  {qty:12,price:product.price_12},
+  {qty:50,price:product.price_50},
+  {qty:100,price:product.price_100},
+  ].filter(t=>typeof t.price==="number"&&Number.isFinite(t.price)&&t.price>0)
+
+  const currentTierClass=
+  currentQty>=100?"active-100":
+  currentQty>=50?"active-50":
+  currentQty>=12?"active-12":
+  currentQty>=3?"active-3":
+  "active-1";
+
+  const bestTarget=tiers.at(-1)?.qty??1;
+  const targetQty=nextTier?.targetQty??nextTier?.qty??bestTarget;
+  const unitPrice=nextTier?.unitPrice??nextTier?.price??product.price_1;
+  const missingQty=Math.max(targetQty-currentQty,0);
+  const activeTiers=tiers.map(t=>t.qty);
+  const currentTierIndex=activeTiers.reduce((acc,qty,i)=>currentQty>=qty?i:acc,0);
+  const nextTierIndex=activeTiers.findIndex(qty=>currentQty<qty);
+  const nextIndex=nextTierIndex===-1?activeTiers.length-1:nextTierIndex;
+  const prevQty=activeTiers[currentTierIndex]??1;
+  const nextQty=activeTiers[nextIndex]??prevQty;
+  const segmentBase=activeTiers.length>1?100/(activeTiers.length-1):100;
+  const segmentProgress=nextQty>prevQty?((currentQty-prevQty)/(nextQty-prevQty))*segmentBase:0;
+  const rawProgress=Math.min((currentTierIndex*segmentBase)+segmentProgress,100);
+  const progress=currentQty>0?Math.max(rawProgress,10):0;
+  const unlocked=currentQty>=bestTarget;
+
+  return(
+    <div className={["mt-3 rounded-2xl border border-slate-200 bg-[#f8fafc] p-2.5 transition-transform",pulse?"scale-[1.02]":""].join(" ")}>
+      <div className="relative mb-2">
+        <img src={product.img||"/placeholder.svg"} alt={product.title} className="h-[320px] md:h-[420px] w-full rounded-2xl border border-slate-200 bg-white object-cover"/>
+
+        <div className={`absolute left-1/2 bottom-3 grid h-12 min-w-[50px] -translate-x-1/2 place-items-center rounded-full px-3 text-[13px] font-black text-white shadow-lg animate-pulse ${currentTierClass}`}>
+          +{currentQty}
+        </div>
+    </div>
+      <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5">
+        <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[10px] font-black uppercase text-slate-500">Código: {product.id}</span>
+        <span className="rounded-full bg-[#e6f6f8] px-2 py-[3px] text-[10px] font-black capitalize text-[#1d8299]">{product.category}</span>
+      </div>
+
+      <div className="mt-3 rounded-xl bg-white p-3 shadow-sm">
+        <div className="mb-2 flex items-center justify-between text-[12px] md:text-[14px] font-black">
+          <span className="text-slate-600">Ya tienes {currentQty} productos</span>
+          <span className={unlocked?"text-emerald-600":"text-orange-500"}>{currentQty}/{bestTarget}</span>
+        </div>
+
+        <div className="h-3 overflow-hidden rounded-full bg-slate-200">
+          <div className={["h-full rounded-full transition-all duration-500",unlocked?"bg-gradient-to-r from-emerald-500 to-green-600":"bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-500"].join(" ")} style={{width:`${progress}%`}}/>
+        </div>
+
+        {tiers.length>0&&(
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+            {tiers.map(t=>{
+              const active=currentQty>=t.qty;
+              const cls=`active-${t.qty}`;
+
+              return(
+                <button
+                  key={t.qty}
+                  disabled
+                  className={[
+                    "rounded-full px-2.5 py-1 text-[12px] md:text-[13px] font-black transition-all flex items-center justify-center gap-2",
+                    active?cls:"cart-tier-btn-muted"
+                  ].join(" ")}
+                >
+                  <span>{t.qty}+</span>
+                  <span>S/{t.price!.toFixed(1)}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        <p className="mt-2 text-center text-[13px] md:text-[16px] font-bold leading-snug text-slate-700">
+          {unlocked?(<>🎉 Mejor precio desbloqueado</>):nextTier?(<>🚀 Agrega <span className="text-[#1d8299]">{missingQty}</span> más y paga <span className="text-[#1d8299]">S/{unitPrice.toFixed(1)}</span> c/u</>):(<>✅ Ya tienes el mejor precio disponible</>)}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+=========================================================
+ARCHIVO: src\modules\catalog\components\ProductCardTierBadges.tsx
+=========================================================
+
+import type { Product } from "@/shared/types/product";
+import { getAvailablePriceTiers } from "@/shared/config/priceTiers";
+
+const CHIP_COLORS: Record<string, string> = {
+  price_3: "wholesale-chip-price-3",
+  price_12: "wholesale-chip-price-12",
+  price_50: "wholesale-chip-price-50",
+  price_100: "wholesale-chip-price-100",
+};
+
+const ICONS: Record<string, string> = {
+  price_3: "🔥",
+  price_12: "⚡",
+  price_50: "🚀",
+  price_100: "💎",
+};
+
+const LABELS: Record<string, string> = {
+  price_3: "Por Mayor",
+  price_12: "Por Docena",
+  price_50: "Medio ciento",
+  price_100: "Por Caja",
+};
+
+interface Props {
+  product: Product;
+  available: boolean;
+  isPreventa: boolean;
+}
+
+export function ProductCardTierBadges({
+  product,
+  available,
+  isPreventa,
+}: Props) {
+  if (!available || isPreventa) return null;
+
+  const tiers = getAvailablePriceTiers(product);
+
+  if (!tiers.length) return null;
+
+  return (
+    <div className="wholesale-list">
+      <div className="wholesale-title mt-1 pt-1.5 border-t border-dashed border-slate-300 flex items-center justify-center gap-1 text-[10px] font-black uppercase tracking-wider text-slate-600">
+        <span>📦</span>
+        <span>PRECIOS MAYORISTA</span>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        {tiers.map((tier) => {
+          const price = Number(product[tier.key]);
+          if (price >= product.price_1) return null;
+
+          const units = parseInt(tier.label, 10);
+          const total = price * units;
+
+          return (
+            <div
+              key={tier.key}
+              className={`wholesale-chip flex justify-center text-center ${
+                CHIP_COLORS[tier.key] ||
+                "border-slate-200 bg-slate-50 text-slate-600"
+              }`}
+            >
+              <span className="block w-full text-center">
+                {LABELS[tier.key]} ({tier.label}) x S/{total.toFixed(0)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

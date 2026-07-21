@@ -1,79 +1,147 @@
 @layer components {
 
-  /* ===== PRODUCT CARD TIERS ===== */
+  /* =====================================================
+     WOOLY TIER DESIGN SYSTEM
+  ===================================================== */
 
-  .price-tier-3,
-  .price-tier-12,
-  .price-tier-50,
-  .price-tier-100 {
-    position: relative;
+  .tier {
+    --tier-color: #1d8299;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
+    border: 1px solid var(--tier-color);
+    background: #ffffff;
+    color: var(--tier-color);
+
+    font-weight: 900;
+    line-height: 1;
+
+    transition:
+      background-color 180ms ease,
+      color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  /* =====================================================
+     IDENTIDAD POR TIER
+  ===================================================== */
+
+  .tier-1 {
+    --tier-color: #1d8299;
+  }
+
+  .tier-3 {
+    --tier-color: #e99518;
+  }
+
+  .tier-12 {
+    --tier-color: #e85ca7;
+  }
+
+  .tier-50 {
+    --tier-color: #7c3aed;
+  }
+
+  .tier-100 {
+    --tier-color: #0f9d7a;
+  }
+
+  /* =====================================================
+     BOTÓN DE SELECCIÓN
+  ===================================================== */
+
+  .tier-button {
     min-width: 84px;
     min-height: 30px;
 
-    padding:
-      0.35rem 0.8rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.9rem;
 
-    border-radius: 9999px;
+    background: #ffffff;
+    color: var(--tier-color);
 
-    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .tier-button:hover {
+    background: color-mix(
+      in srgb,
+      var(--tier-color) 8%,
+      white
+    );
+
+    transform: translateY(-1px);
+  }
+
+  /* =====================================================
+     CHIP INFORMATIVO
+  ===================================================== */
+
+  .tier-chip {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+
+    border-radius: 0.75rem;
+
+    background: #ffffff;
+    color: var(--tier-color);
 
     font-size: 11px;
-    font-weight: 900;
+  }
 
-    letter-spacing: -0.02em;
-    line-height: 1;
+  /* =====================================================
+     ESTADO ACTIVO
+  ===================================================== */
 
-    backdrop-filter: blur(10px);
+  .tier-active {
+    border-color: var(--tier-color);
+    background: var(--tier-color);
+    color: #ffffff;
 
     box-shadow:
-      0 10px 20px rgba(15,23,42,0.16);
-
-    border:
-      1px solid rgba(255,255,255,0.16);
-  }
-
-  .price-tier-3 {
-    background:
-      linear-gradient(
-        135deg,
-        #f5b025,
-        #e19a00
+      0 5px 14px
+      color-mix(
+        in srgb,
+        var(--tier-color) 24%,
+        transparent
       );
   }
 
-  .price-tier-12 {
-    background:
-      linear-gradient(
-        135deg,
-        #f286be,
-        #e85ca7
+  .tier-active:hover {
+    background: var(--tier-color);
+    color: #ffffff;
+  }
+
+  /* =====================================================
+     BADGE FLOTANTE
+  ===================================================== */
+
+  .tier-badge {
+    min-width: 50px;
+    min-height: 48px;
+
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+
+    background: var(--tier-color);
+    color: #ffffff;
+
+    box-shadow:
+      0 8px 20px
+      color-mix(
+        in srgb,
+        var(--tier-color) 28%,
+        transparent
       );
   }
 
-  .price-tier-50 {
-    background:
-      linear-gradient(
-        135deg,
-        #8b5cf6,
-        #6d28d9
-      );
-  }
-
-  .price-tier-100 {
-    background:
-      linear-gradient(
-        135deg,
-        #0f172a,
-        #1e293b
-      );
-  }
-
-  /* ===== PRODUCT CARD POSITION ===== */
+  /* =====================================================
+     POSICIÓN SOBRE PRODUCT CARD
+  ===================================================== */
 
   .product-card-tiers {
     position: absolute;
@@ -85,113 +153,8 @@
 
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
     align-items: flex-end;
-  }
-
-  /* ===== ACTIVE CART TIERS ===== */
-
-  .active-1,
-  .active-3,
-  .active-12,
-  .active-50,
-  .active-100 {
-    color: #ffffff;
-
-    border-color: transparent;
-
-    box-shadow:
-      0 8px 18px rgba(15,23,42,0.14);
-  }
-
-  .active-1 {
-    background:
-      linear-gradient(
-        135deg,
-        #1d8299,
-        #156f84
-      );
-  }
-
-  .active-3 {
-    background:
-      linear-gradient(
-        135deg,
-        #f5b025,
-        #e19a00
-      );
-  }
-
-  .active-12 {
-    background:
-      linear-gradient(
-        135deg,
-        #f286be,
-        #e85ca7
-      );
-  }
-
-  .active-50 {
-    background:
-      linear-gradient(
-        135deg,
-        #8b5cf6,
-        #6d28d9
-      );
-  }
-
-  .active-100 {
-    background:
-      linear-gradient(
-        135deg,
-        #0f172a,
-        #1e293b
-      );
-  }
-
-  .price-tier {
-    position: relative;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-width: 84px;
-    min-height: 30px;
-
-    padding:
-      0.35rem 0.8rem;
-
-    border-radius: 9999px;
-
-    color: #ffffff;
-
-    font-size: 11px;
-    font-weight: 900;
-
-    letter-spacing: -0.02em;
-    line-height: 1;
-
-    backdrop-filter: blur(10px);
-
-    box-shadow:
-      0 10px 20px rgba(15,23,42,0.16);
-
-    animation:
-      price-tier-float 2.8s ease-in-out infinite;
-  }
-  
-  @keyframes price-tier-float {
-
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-
-    50% {
-      transform: translateY(-2px);
-    }
-
+    gap: 0.45rem;
   }
 
 }

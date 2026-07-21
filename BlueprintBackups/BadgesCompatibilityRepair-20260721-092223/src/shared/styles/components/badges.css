@@ -1,0 +1,192 @@
+@layer components {
+
+  /* ===== PRODUCT CARD TIERS ===== */
+
+  .price-tier-3,
+  .price-tier-12,
+  .price-tier-50,
+  .price-tier-100 {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 84px;
+    min-height: 30px;
+
+    padding:
+      0.35rem 0.8rem;
+
+    border-radius: 9999px;
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    letter-spacing: -0.02em;
+    line-height: 1;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow:
+      0 10px 20px rgba(15,23,42,0.16);
+
+    border:
+      1px solid rgba(255,255,255,0.16);
+  }
+
+  .price-tier-3 {
+    background:
+      linear-gradient(
+        135deg,
+        #f5b025,
+        #e19a00
+      );
+  }
+
+  .price-tier-12 {
+    background:
+      linear-gradient(
+        135deg,
+        #f286be,
+        #e85ca7
+      );
+  }
+
+  .price-tier-50 {
+    background:
+      linear-gradient(
+        135deg,
+        #8b5cf6,
+        #6d28d9
+      );
+  }
+
+  .price-tier-100 {
+    background:
+      linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b
+      );
+  }
+
+  /* ===== PRODUCT CARD POSITION ===== */
+
+  .product-card-tiers {
+    position: absolute;
+
+    right: 0.75rem;
+    bottom: 0.75rem;
+
+    z-index: 4;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    align-items: flex-end;
+  }
+
+  /* ===== ACTIVE CART TIERS ===== */
+
+  .active-1,
+  .active-3,
+  .active-12,
+  .active-50,
+  .active-100 {
+    background: linear-gradient(
+      135deg,
+      #0f9d7a,
+      #34c9a6
+    );
+  }
+
+  .active-1 {
+    background: linear-gradient(
+      135deg,
+      #44ada0,
+      #2f8f84
+    );
+  }
+
+  .active-3 {
+    background: linear-gradient(
+      135deg,
+      #f28c28,
+      #ffb347
+    );
+  }
+
+  .active-12 {
+    background: linear-gradient(
+      135deg,
+      #d946ef,
+      #f58ac8
+    );
+  }
+
+  .active-50 {
+    background: linear-gradient(
+      135deg,
+      #8b5cf6,
+      #a78bfa
+    );
+  }
+
+  .active-100 {
+    background: linear-gradient(
+      135deg,
+      #0f9d7a,
+      #34c9a6
+    );
+  }
+
+  .price-tier {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 84px;
+    min-height: 30px;
+
+    padding:
+      0.35rem 0.8rem;
+
+    border-radius: 9999px;
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    letter-spacing: -0.02em;
+    line-height: 1;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow:
+      0 10px 20px rgba(15,23,42,0.16);
+
+    animation:
+      price-tier-float 2.8s ease-in-out infinite;
+  }
+  
+  @keyframes price-tier-float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-2px);
+    }
+
+  }
+
+}
+

@@ -1,0 +1,9 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mD:/JUNG/code/wooly/wooly-web[39m
+
+No test files found, exiting with code 1
+
+filter: src/modules/catalog/domain/badges/ResolveProductCompatibility.test.ts
+include: src/**/*.{test,spec}.{ts,tsx}
+exclude:  **/node_modules/**, **/dist/**, **/cypress/**, **/.{idea,git,cache,output,temp}/**, **/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*
+

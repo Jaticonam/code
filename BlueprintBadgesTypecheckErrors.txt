@@ -1,0 +1,2 @@
+src/modules/product-detail/components/ProductGallery.tsx(130,14): error TS2304: Cannot find name 'sortBadges'.
+src/modules/product-detail/components/ProductGallery.tsx(133,38): error TS2304: Cannot find name 'getBadgePresentation'.
