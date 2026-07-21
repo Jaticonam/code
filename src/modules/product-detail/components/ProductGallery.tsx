@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import type { Product } from "@/shared/types/product";
 import { getProductMedia } from "@/shared/lib/productMedia";
-import { getBadgePresentation, sortBadges } from "@/shared/config/badgeRules";
+import { ProductBadgeStack } from "@/modules/catalog/components/ProductBadgeStack";
 
 interface ProductGalleryProps {
   product: Product;
@@ -125,28 +125,14 @@ export function ProductGallery({
           ].join(" ")}
         />
 
-        {product.badges && product.badges.length > 0 && (
-          <div className="absolute left-4 top-4 z-10 flex max-w-[75%] flex-col items-start gap-2">
-            {sortBadges(product.badges)
-              .slice(0, 3)
-              .map((badge, index) => {
-                const presentation = getBadgePresentation(badge);
-
-                return (
-                  <div
-                    key={`${product.id}-detail-image-badge-${index}`}
-                    className={[
-                      "rounded-full border border-white/10 px-3 py-1.5 text-[10px] font-semibold leading-tight tracking-normal shadow-md backdrop-blur-sm md:text-[11px]",
-                      presentation.className,
-                      presentation.animation,
-                    ].join(" ")}
-                  >
-                    {badge}
-                  </div>
-                );
-              })}
-          </div>
-        )}
+        <ProductBadgeStack
+          product={product}
+          maxVisible={3}
+          includePricingBadges={false}
+          includeSeasonality
+          variant="detail"
+          className="absolute left-4 top-4 z-10 flex max-w-[75%] flex-col items-start gap-2"
+        />
 
         {hasMany && (
           <>
