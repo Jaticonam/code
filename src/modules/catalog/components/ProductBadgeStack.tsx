@@ -1,4 +1,10 @@
-import type { Product } from "@/shared/types/product";
+import type {
+  Product,
+} from "@/shared/types/product";
+
+import {
+  useCatalogCampaignRegistry,
+} from "@/modules/catalog/context/CatalogCampaignRegistryContext";
 
 import {
   getProductDisplayIndicators,
@@ -15,7 +21,6 @@ interface ProductBadgeStackProps {
 
   maxVisible?: number;
   includePricingBadges?: boolean;
-  includeSeasonality?: boolean;
 
   variant?: "card" | "detail";
   className?: string;
@@ -33,59 +38,85 @@ export function ProductBadgeStack({
   product,
   maxVisible = 2,
   includePricingBadges = true,
-  includeSeasonality = true,
   variant = "card",
   className = "",
 }: ProductBadgeStackProps) {
-  const profile = resolveProductCompatibility(
-    product,
-    {
-      includePricingBadges,
-    },
-  );
+  const {
+    campaignById,
+  } =
+    useCatalogCampaignRegistry();
 
-  const indicators = getProductDisplayIndicators(
-    profile,
-    {
-      maxVisible,
-      includeSeasonality,
-    },
-  );
+  const profile =
+    resolveProductCompatibility(
+      product,
+      {
+        includePricingBadges,
 
-  if (indicators.length === 0) {
+        campaignRegistry:
+          campaignById,
+      },
+    );
+
+  const indicators =
+    getProductDisplayIndicators(
+      profile,
+      {
+        maxVisible,
+      },
+    );
+
+  if (
+    indicators.length === 0
+  ) {
     return null;
   }
 
   return (
     <div className={className}>
-      {indicators.map((indicator) => {
-        const presentation =
-          getBadgeThemePresentation(
-            indicator.themeToken,
-          );
+      {indicators.map(
+        (indicator) => {
+          const presentation =
+            getBadgeThemePresentation(
+              indicator.themeToken,
+            );
 
-        return (
-          <div
-            key={`${product.id}-${indicator.id}`}
-            className={[
-              "rounded-full",
-              "border border-white/10",
-              "backdrop-blur-sm",
-              "shadow-md",
-              VARIANT_CLASS_MAP[variant],
-              presentation.className,
-              presentation.animation,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            data-badge-code={indicator.code}
-            data-badge-kind={indicator.kind}
-            data-badge-source={indicator.source}
-          >
-            {formatBadgeDisplayText(indicator)}
-          </div>
-        );
-      })}
+          return (
+            <div
+              key={`${product.id}-${indicator.id}`}
+              className={[
+                "rounded-full",
+                "border border-white/10",
+                "backdrop-blur-sm",
+                "shadow-md",
+                VARIANT_CLASS_MAP[
+                  variant
+                ],
+                presentation.className,
+                presentation.animation,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              data-badge-code={
+                indicator.code
+              }
+              data-badge-kind={
+                indicator.kind
+              }
+              data-badge-source={
+                indicator.source
+              }
+              data-badge-reference={
+                indicator.sourceReferenceId ??
+                undefined
+              }
+            >
+              {formatBadgeDisplayText(
+                indicator,
+              )}
+            </div>
+          );
+        },
+      )}
     </div>
   );
 }

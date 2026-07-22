@@ -2,16 +2,23 @@ export type {
   CatalogBadge,
   CatalogBadgeKind,
   CatalogBadgeSource,
-  LegacyCampaignReference,
+  IgnoredLegacyBadgeReason,
+  IgnoredLegacyBadgeValue,
   ProductCompatibilityProfile,
   ProductDisplayIndicator,
   ProductDisplayIndicatorKind,
-  ProductSeasonality,
 } from "./BadgeTypes";
+
+export {
+  resolveCampaignBadges,
+  type CampaignBadgeResolution,
+  type CampaignRegistry,
+} from "./CampaignBadgeResolver";
 
 export {
   normalizeLegacyBadgeValue,
   resolveLegacyBadgeValue,
+  type LegacyBadgeResolution,
 } from "./LegacyBadgeAliases";
 
 export {

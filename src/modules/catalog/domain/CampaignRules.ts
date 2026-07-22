@@ -8,11 +8,22 @@ export type CampaignNameToIdMap =
   Record<string, string>;
 
 /* =========================================================
-   HELPERS INTERNOS
+   NORMALIZACIÓN
    ========================================================= */
 
 function cleanText(value: unknown): string {
   return String(value ?? "").trim();
+}
+
+export function normalizeCampaignLookupKey(
+  value: unknown,
+): string {
+  return cleanText(value)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function parseCampaignDate(
@@ -52,7 +63,8 @@ function parseCampaignDate(
 function normalizePublicationStatus(
   value: unknown,
 ): Campaign["computedStatus"] {
-  const status = cleanText(value).toLowerCase();
+  const status =
+    normalizeCampaignLookupKey(value);
 
   const statusMap: Record<
     string,
@@ -135,16 +147,40 @@ export function getCampaignComputedStatus(
 export function isCampaignActive(
   campaign: Campaign,
 ): boolean {
-  return campaign.computedStatus === "activa";
+  /**
+   * No se confía únicamente en computedStatus porque una
+   * campaña almacenada en caché puede cruzar de fecha.
+   */
+  return getCampaignComputedStatus(
+    campaign,
+  ) === "activa";
 }
 
 export function buildCampaignNameToIdMap(
-  campaigns: Campaign[],
+  campaigns: readonly Campaign[],
 ): CampaignNameToIdMap {
   return campaigns.reduce<CampaignNameToIdMap>(
     (map, campaign) => {
+      const normalizedName =
+        normalizeCampaignLookupKey(
+          campaign.name,
+        );
+
+      const normalizedId =
+        normalizeCampaignLookupKey(
+          campaign.id,
+        );
+
       map[campaign.name] = campaign.id;
       map[campaign.id] = campaign.id;
+
+      if (normalizedName) {
+        map[normalizedName] = campaign.id;
+      }
+
+      if (normalizedId) {
+        map[normalizedId] = campaign.id;
+      }
 
       return map;
     },

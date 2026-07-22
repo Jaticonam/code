@@ -1,9 +1,37 @@
-import { useEffect, useState } from "react";
-import type { Campaign } from "@/shared/types/product";
-import { loadCatalogCampaigns } from "@/modules/catalog/services/campaignService";
-export function useCatalogCampaigns() {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import type {
+  Campaign,
+} from "@/shared/types/product";
+
+import {
+  loadCatalogCampaigns,
+} from "@/modules/catalog/services/campaignService";
+
+export interface UseCatalogCampaignsOptions {
+  includeInactive?: boolean;
+}
+
+export function useCatalogCampaigns(
+  options:
+    UseCatalogCampaignsOptions = {},
+) {
+  const {
+    includeInactive = false,
+  } = options;
+
+  const [
+    campaigns,
+    setCampaigns,
+  ] = useState<Campaign[]>([]);
+
+  const [
+    isLoading,
+    setIsLoading,
+  ] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -12,13 +40,19 @@ export function useCatalogCampaigns() {
       setIsLoading(true);
 
       try {
-        const result = await loadCatalogCampaigns();
+        const result =
+          await loadCatalogCampaigns({
+            includeInactive,
+          });
 
         if (!cancelled) {
           setCampaigns(result);
         }
       } catch (error) {
-        console.error("Error cargando campañas:", error);
+        console.error(
+          "Error cargando campañas:",
+          error,
+        );
 
         if (!cancelled) {
           setCampaigns([]);
@@ -30,12 +64,12 @@ export function useCatalogCampaigns() {
       }
     };
 
-    run();
+    void run();
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [includeInactive]);
 
   return {
     campaigns,

@@ -10,13 +10,6 @@ export type CatalogBadgeSource =
   | "analytics"
   | "legacyManual";
 
-export type ProductSeasonality =
-  | "evergreen"
-  | "seasonal"
-  | "campaignOnly"
-  | "limited"
-  | "unspecified";
-
 export interface CatalogBadge {
   id: string;
   code: string;
@@ -31,30 +24,39 @@ export interface CatalogBadge {
   sourceReferenceId: string | null;
 }
 
-export interface LegacyCampaignReference {
-  code: string;
-  label: string;
-  normalizedName: string;
+export type IgnoredLegacyBadgeReason =
+  | "redundantDefault"
+  | "campaignMustComeFromSheetCampaign";
 
-  themeToken: string;
-  priority: number;
-
-  sourceReferenceId: string;
+export interface IgnoredLegacyBadgeValue {
+  value: string;
+  normalizedValue: string;
+  reason: IgnoredLegacyBadgeReason;
 }
 
 export interface ProductCompatibilityProfile {
   badges: CatalogBadge[];
 
-  seasonality: ProductSeasonality;
-  seasonalitySourceValue: string | null;
+  /**
+   * Valores legacy conocidos que no deben
+   * producir ninguna representación visual.
+   */
+  ignoredLegacyValues: IgnoredLegacyBadgeValue[];
 
-  campaignReferences: LegacyCampaignReference[];
+  /**
+   * Valores todavía no homologados.
+   */
   unknownLegacyValues: string[];
+
+  /**
+   * IDs asignados al producto que no corresponden
+   * a una campaña oficial cargada.
+   */
+  unresolvedCampaignIds: string[];
 }
 
 export type ProductDisplayIndicatorKind =
-  | CatalogBadgeKind
-  | "seasonality";
+  CatalogBadgeKind;
 
 export interface ProductDisplayIndicator {
   id: string;

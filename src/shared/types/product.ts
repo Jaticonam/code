@@ -16,7 +16,22 @@ export interface Campaign {
   name: string;
   icon: string;
 
+  /**
+   * Nombre comercial del color recibido desde la fuente.
+   * Ejemplos: rosado, amarillo, morado.
+   */
   color?: string;
+
+  /**
+   * Token semántico compatible con JUNG CORE.
+   * La API no necesita conocer Tailwind ni clases CSS.
+   */
+  themeToken: string;
+
+  /**
+   * Compatibilidad temporal con componentes legacy de Wooly.
+   * Debe desaparecer cuando todos consuman themeToken.
+   */
   colorClass: string;
 
   startDate: string;
@@ -49,6 +64,13 @@ export interface Product {
 
   status?: string;
   badges?: string[];
+
+  /**
+   * Compatibilidad temporal:
+   * actualmente contiene IDs de campañas.
+   *
+   * En el contrato futuro de JUNG CORE se llamará campaignIds.
+   */
   campaigns?: string[];
 
   priority?: number;

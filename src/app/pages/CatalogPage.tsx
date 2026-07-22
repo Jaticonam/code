@@ -15,7 +15,7 @@ import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 import { useCatalogFilters } from "@/modules/catalog/hooks/useCatalogFilters";
-import { useCatalogCampaigns } from "@/modules/catalog/hooks/useCatalogCampaigns";
+import { useCatalogCampaignRegistry } from "@/modules/catalog/context/CatalogCampaignRegistryContext";
 import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPrioritySections";
 import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
 import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
@@ -35,7 +35,7 @@ const CatalogPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { campaigns: catalogCampaigns } = useCatalogCampaigns();
+  const { activeCampaigns: catalogCampaigns } = useCatalogCampaignRegistry();
   const CATALOG_CAMPAIGNS = catalogCampaigns;
 
   const [activeCategory, setActiveCategory] = useState(() => {

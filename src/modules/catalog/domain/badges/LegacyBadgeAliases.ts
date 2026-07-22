@@ -1,6 +1,6 @@
 import type {
   CatalogBadgeKind,
-  ProductSeasonality,
+  IgnoredLegacyBadgeReason,
 } from "./BadgeTypes";
 
 interface LegacyBadgeDescriptor {
@@ -19,21 +19,13 @@ export type LegacyBadgeResolution =
       badge: LegacyBadgeDescriptor;
     }
   | {
-      type: "seasonality";
-      seasonality: ProductSeasonality;
-    }
-  | {
-      type: "campaign";
-      campaign: {
-        code: string;
-        label: string;
-        normalizedName: string;
-        themeToken: string;
-        priority: number;
-      };
+      type: "ignored";
+      reason: IgnoredLegacyBadgeReason;
     };
 
-export function normalizeLegacyBadgeValue(value: string): string {
+export function normalizeLegacyBadgeValue(
+  value: string,
+): string {
   return value
     .trim()
     .toLowerCase()
@@ -52,55 +44,74 @@ const BEST_SELLER_ALIASES = new Set([
   "popular",
 ]);
 
-const EVERGREEN_ALIASES = new Set([
+const REDUNDANT_DEFAULT_ALIASES = new Set([
   "todo el ano",
   "evergreen",
 ]);
 
-const BRIDE_DAY_ALIASES = new Set([
+const CAMPAIGN_VALUE_ALIASES = new Set([
   "dia de la novia",
 ]);
 
 export function resolveLegacyBadgeValue(
   value: string,
 ): LegacyBadgeResolution | null {
-  const normalizedValue = normalizeLegacyBadgeValue(value);
+  const normalizedValue =
+    normalizeLegacyBadgeValue(value);
 
   if (!normalizedValue) {
     return null;
   }
 
-  if (BEST_SELLER_ALIASES.has(normalizedValue)) {
+  if (
+    BEST_SELLER_ALIASES.has(
+      normalizedValue,
+    )
+  ) {
     return {
       type: "badge",
+
       badge: {
-        code: "merchandising.bestSeller",
-        label: "Más vendido",
+        code:
+          "merchandising.bestSeller",
+
+        label:
+          "Más vendido",
+
         icon: null,
-        kind: "merchandising",
-        themeToken: "merchandising.bestSeller",
+
+        kind:
+          "merchandising",
+
+        themeToken:
+          "merchandising.bestSeller",
+
         priority: 80,
       },
     };
   }
 
-  if (EVERGREEN_ALIASES.has(normalizedValue)) {
+  if (
+    REDUNDANT_DEFAULT_ALIASES.has(
+      normalizedValue,
+    )
+  ) {
     return {
-      type: "seasonality",
-      seasonality: "evergreen",
+      type: "ignored",
+      reason: "redundantDefault",
     };
   }
 
-  if (BRIDE_DAY_ALIASES.has(normalizedValue)) {
+  if (
+    CAMPAIGN_VALUE_ALIASES.has(
+      normalizedValue,
+    )
+  ) {
     return {
-      type: "campaign",
-      campaign: {
-        code: "campaign.diaNovia",
-        label: "Día de la Novia",
-        normalizedName: normalizedValue,
-        themeToken: "campaign.rose",
-        priority: 100,
-      },
+      type: "ignored",
+
+      reason:
+        "campaignMustComeFromSheetCampaign",
     };
   }
 
