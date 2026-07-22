@@ -30,23 +30,28 @@
      IDENTIDAD POR TIER
   ===================================================== */
 
-  .tier-1 {
+  .tier-1,
+.volume-price-1 {
     --tier-color: #1d8299;
   }
 
-  .tier-3 {
+  .tier-3,
+.volume-price-3 {
     --tier-color: #e99518;
   }
 
-  .tier-12 {
+  .tier-12,
+.volume-price-12 {
     --tier-color: #e85ca7;
   }
 
-  .tier-50 {
+  .tier-50,
+.volume-price-50 {
     --tier-color: #7c3aed;
   }
 
-  .tier-100 {
+  .tier-100,
+.volume-price-100 {
     --tier-color: #0f9d7a;
   }
 
@@ -158,3 +163,4 @@
   }
 
 }
+

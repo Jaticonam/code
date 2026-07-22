@@ -37,6 +37,7 @@ import { ProductPriceBlock } from "@/modules/product-detail/components/ProductPr
 import { ProductQuantitySelector } from "@/modules/product-detail/components/ProductQuantitySelector";
 import { ProductPurchaseActions } from "@/modules/product-detail/components/ProductPurchaseActions";
 import { RelatedProducts } from "@/modules/product-detail/components/RelatedProducts";
+import { ProductVolumePriceProgress } from "@/modules/product-detail/components/ProductVolumePriceProgress";
 import { ProductSeo } from "@/shared/seo/productSeoComponent";
 import { getProductSeo } from "@/shared/seo/productSeo";
 import { getProductMedia } from "@/shared/lib/productMedia";
@@ -412,6 +413,19 @@ const ProductDetailPage = () => {
             />
 
 
+            <ProductVolumePriceProgress
+              product={product}
+              effectiveQty={effectiveQty}
+              nextVolumePrice={
+                nextVolumePrice
+                  ? {
+                      qty: nextVolumePrice.qty,
+                      price: nextVolumePrice.unitPrice,
+                    }
+                  : null
+              }
+            />
+
             {available && (
               <ProductQuantitySelector
                 value={qtyInput}
@@ -491,4 +505,6 @@ const ProductDetailPage = () => {
 };
 
 export default ProductDetailPage;
+
+
 

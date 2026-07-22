@@ -3,7 +3,7 @@ import type { Product } from "@/shared/types/product";
 interface ProductVolumePriceProgressProps {
   product: Product;
   effectiveQty: number;
-  nextTier: {
+  nextVolumePrice: {
     qty: number;
     price: number;
   } | null;
@@ -12,7 +12,7 @@ interface ProductVolumePriceProgressProps {
 export function ProductVolumePriceProgress({
   product,
   effectiveQty,
-  nextTier,
+  nextVolumePrice,
 }: ProductVolumePriceProgressProps) {
   const tiers = [
     { qty: 1, price: product.price_1 },
@@ -36,14 +36,14 @@ export function ProductVolumePriceProgress({
     0,
   );
 
-  const nextTierIndex = activeTiers.findIndex(
+  const nextVolumePriceIndex = activeTiers.findIndex(
     (tierQty) => effectiveQty < tierQty,
   );
 
   const nextIndex =
-    nextTierIndex === -1
+    nextVolumePriceIndex === -1
       ? activeTiers.length - 1
-      : nextTierIndex;
+      : nextVolumePriceIndex;
 
   const previousQty = activeTiers[currentTierIndex] ?? 1;
   const nextQty = activeTiers[nextIndex] ?? previousQty;
@@ -71,7 +71,7 @@ export function ProductVolumePriceProgress({
       : 0;
 
   const unlocked = effectiveQty >= bestTarget;
-  const targetQty = nextTier?.qty ?? bestTarget;
+  const targetQty = nextVolumePrice?.qty ?? bestTarget;
   const missingQty = Math.max(targetQty - effectiveQty, 0);
 
   if (tiers.length <= 1) return null;
@@ -105,7 +105,7 @@ export function ProductVolumePriceProgress({
       <p className="mt-2 text-center text-[14px] font-bold leading-snug text-slate-600">
         {unlocked ? (
           <>🎉 Mejor precio desbloqueado</>
-        ) : nextTier ? (
+        ) : nextVolumePrice ? (
           <>
             🚀 Agrega{" "}
             <span className="text-[#1d8299]">
@@ -113,7 +113,7 @@ export function ProductVolumePriceProgress({
             </span>{" "}
             más y baja a{" "}
             <span className="text-[#1d8299]">
-              S/{nextTier.price.toFixed(2)}
+              S/{nextVolumePrice.price.toFixed(2)}
             </span>{" "}
             c/u
           </>
@@ -124,4 +124,5 @@ export function ProductVolumePriceProgress({
     </div>
   );
 }
+
 
