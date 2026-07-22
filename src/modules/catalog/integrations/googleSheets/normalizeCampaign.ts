@@ -1,8 +1,17 @@
 import type { Campaign } from "@/shared/types/product";
 
-import { getCampaignComputedStatus } from "@/modules/catalog/domain/CampaignRules";
+import {
+  getCampaignComputedStatus,
+} from "@/modules/catalog/domain/CampaignRules";
 
-import { getCampaignColorClass } from "./campaignColors";
+import {
+  getCampaignThemeToken,
+} from "@/modules/catalog/domain/CampaignTheme";
+
+import {
+  getCampaignColorClass,
+} from "./campaignColors";
+
 import type { CsvRow } from "./fetchSheets";
 
 /* =========================================================
@@ -43,24 +52,28 @@ function parsePriority(value: unknown): number {
 export function normalizeCampaign(
   row: CsvRow,
 ): Campaign {
+  const color = cleanText(row.color);
+
   const campaign: Campaign = {
     id: cleanText(row.id),
     name: cleanText(row.name),
     icon: cleanText(row.icon),
-    color: cleanText(row.color),
 
-    colorClass: getCampaignColorClass(
-      row.color,
-    ),
+    color,
+    themeToken:
+      getCampaignThemeToken(color),
+
+    colorClass:
+      getCampaignColorClass(color),
 
     startDate: cleanText(row.startdate),
     endDate: cleanText(row.enddate),
 
-    priority: parsePriority(row.priority),
+    priority:
+      parsePriority(row.priority),
 
-    publicationStatus: cleanText(
-      row.publicationstatus,
-    ),
+    publicationStatus:
+      cleanText(row.publicationstatus),
 
     computedStatus: "borrador",
   };
@@ -69,7 +82,9 @@ export function normalizeCampaign(
     ...campaign,
 
     computedStatus:
-      getCampaignComputedStatus(campaign),
+      getCampaignComputedStatus(
+        campaign,
+      ),
   };
 }
 
