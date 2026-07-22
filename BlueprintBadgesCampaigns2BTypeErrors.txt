@@ -1,0 +1,2 @@
+src/app/pages/ProductDetailPage.tsx(404,15): error TS2741: Property 'price' is missing in type 'NextVolumePrice' but required in type '{ qty: number; price: number; }'.
+src/app/pages/ProductDetailPage.tsx(411,15): error TS2741: Property 'price' is missing in type 'NextVolumePrice' but required in type '{ qty: number; price: number; }'.

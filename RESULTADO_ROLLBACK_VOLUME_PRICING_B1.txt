@@ -1,0 +1,21 @@
+=========================================================
+RESULTADO — ROLLBACK VOLUME PRICING B1
+Fecha: 2026-07-21 15:50:29
+=========================================================
+
+BACKUP UTILIZADO
+---------------------------------------------------------
+D:\JUNG\code\wooly\wooly-web\BlueprintBackups\VolumePricingLoteB1-20260721-153638
+
+ARCHIVOS RESTAURADOS
+---------------------------------------------------------
+src\app\pages\ProductDetailPage.tsx
+src\modules\product-detail\components\ProductTierSelector.tsx
+src\modules\product-detail\components\ProductTierProgress.tsx
+src\modules\product-detail\components\ProductPriceBlock.tsx
+
+TYPECHECK
+---------------------------------------------------------
+src/app/pages/ProductDetailPage.tsx(35,44): error TS2307: Cannot find module '@/modules/product-detail/components/ProductVolumePriceSelector' or its corresponding type declarations.
+src/app/pages/ProductDetailPage.tsx(40,44): error TS2307: Cannot find module '@/modules/product-detail/components/ProductVolumePriceProgress' or its corresponding type declarations.
+src/app/pages/ProductDetailPage.tsx(404,15): error TS2741: Property 'price' is missing in type 'NextVolumePrice' but required in type '{ qty: number; price: number; }'.

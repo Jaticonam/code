@@ -1,0 +1,3134 @@
+
+============================================================
+ESTADO ACTUAL
+============================================================
+Commit: b468485 avances en casa tiers y badges
+
+Git status:
+
+============================================================
+FILE: src\shared\types\product.ts
+============================================================
+00001: export interface Category {
+00002:   id: string;
+00003:   name: string;
+00004:   icon: string;
+00005: }
+00006: 
+00007: export type CampaignComputedStatus =
+00008:   | "activa"
+00009:   | "programada"
+00010:   | "finalizada"
+00011:   | "borrador"
+00012:   | "oculta";
+00013: 
+00014: export interface Campaign {
+00015:   id: string;
+00016:   name: string;
+00017:   icon: string;
+00018: 
+00019:   color?: string;
+00020:   colorClass: string;
+00021: 
+00022:   startDate: string;
+00023:   endDate: string;
+00024:   priority: number;
+00025: 
+00026:   publicationStatus: string;
+00027:   computedStatus: CampaignComputedStatus;
+00028: }
+00029: 
+00030: export interface Product {
+00031:   id: string;
+00032: 
+00033:   title: string;
+00034:   description: string;
+00035: 
+00036:   category: string;
+00037: 
+00038:   price_1: number;
+00039:   price_3?: number | null;
+00040:   price_12?: number | null;
+00041:   price_50?: number | null;
+00042:   price_100?: number | null;
+00043: 
+00044:   price_offer?: number | null;
+00045: 
+00046:   stock?: number | null;
+00047:   img: string;
+00048:   gallery?: string;
+00049: 
+00050:   status?: string;
+00051:   badges?: string[];
+00052:   campaigns?: string[];
+00053: 
+00054:   priority?: number;
+00055: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 55]
+
+============================================================
+FILE: src\shared\config\campaigns.ts
+============================================================
+00001: export interface CampaignTheme {
+00002:   from: string;
+00003:   to: string;
+00004:   foreground: string;
+00005:   shadow: string;
+00006: }
+00007: 
+00008: export interface CampaignConfig {
+00009:   id: string;
+00010:   name: string;
+00011:   icon: string;
+00012:   color: string;
+00013:   priority: number;
+00014:   keywords: readonly string[];
+00015:   theme: CampaignTheme;
+00016: }
+00017: 
+00018: export const CAMPAIGN_CONFIG = [
+00019:   {
+00020:     id: "san-valentin",
+00021:     name: "San Valentín",
+00022:     icon: "❤️",
+00023:     color: "rosado",
+00024:     priority: 100,
+00025:     keywords: [
+00026:       "san valentin",
+00027:       "san valentín",
+00028:       "valentin",
+00029:       "valentín",
+00030:       "enamorados",
+00031:     ],
+00032:     theme: {
+00033:       from: "#f286be",
+00034:       to: "#ffb7d5",
+00035:       foreground: "#ffffff",
+00036:       shadow: "rgba(242, 134, 190, 0.28)",
+00037:     },
+00038:   },
+00039:   {
+00040:     id: "dia-mujer",
+00041:     name: "Día de la Mujer",
+00042:     icon: "🌷",
+00043:     color: "fucsia",
+00044:     priority: 95,
+00045:     keywords: [
+00046:       "dia de la mujer",
+00047:       "día de la mujer",
+00048:       "dia mujer",
+00049:       "día mujer",
+00050:       "mujer",
+00051:     ],
+00052:     theme: {
+00053:       from: "#be185d",
+00054:       to: "#fb7185",
+00055:       foreground: "#ffffff",
+00056:       shadow: "rgba(190, 24, 93, 0.28)",
+00057:     },
+00058:   },
+00059:   {
+00060:     id: "dia-madre",
+00061:     name: "Día de la Madre",
+00062:     icon: "💐",
+00063:     color: "lavanda",
+00064:     priority: 90,
+00065:     keywords: [
+00066:       "dia de la madre",
+00067:       "día de la madre",
+00068:       "dia madre",
+00069:       "día madre",
+00070:       "madre",
+00071:       "mama",
+00072:       "mamá",
+00073:     ],
+00074:     theme: {
+00075:       from: "#d946ef",
+00076:       to: "#f9a8d4",
+00077:       foreground: "#ffffff",
+00078:       shadow: "rgba(217, 70, 239, 0.28)",
+00079:     },
+00080:   },
+00081:   {
+00082:     id: "dia-padre",
+00083:     name: "Día del Padre",
+00084:     icon: "👔",
+00085:     color: "azul",
+00086:     priority: 85,
+00087:     keywords: [
+00088:       "para papa",
+00089:       "para papá",
+00090:       "dia del padre",
+00091:       "día del padre",
+00092:       "dia padre",
+00093:       "día padre",
+00094:       "padre",
+00095:       "papa",
+00096:       "papá",
+00097:       "father",
+00098:     ],
+00099:     theme: {
+00100:       from: "#1e3a8a",
+00101:       to: "#3b82f6",
+00102:       foreground: "#ffffff",
+00103:       shadow: "rgba(37, 99, 235, 0.28)",
+00104:     },
+00105:   },
+00106:   {
+00107:     id: "graduados",
+00108:     name: "Graduados",
+00109:     icon: "🎓",
+00110:     color: "morado",
+00111:     priority: 80,
+00112:     keywords: [
+00113:       "graduados",
+00114:       "graduado",
+00115:       "graduada",
+00116:       "graduacion",
+00117:       "graduación",
+00118:     ],
+00119:     theme: {
+00120:       from: "#7c3aed",
+00121:       to: "#a78bfa",
+00122:       foreground: "#ffffff",
+00123:       shadow: "rgba(124, 58, 237, 0.28)",
+00124:     },
+00125:   },
+00126:   {
+00127:     id: "flores-amarillas",
+00128:     name: "Flores Amarillas",
+00129:     icon: "🌻",
+00130:     color: "amarillo",
+00131:     priority: 75,
+00132:     keywords: [
+00133:       "flores amarillas",
+00134:       "flor amarilla",
+00135:       "amarillas",
+00136:       "yellow flowers",
+00137:     ],
+00138:     theme: {
+00139:       from: "#f5b025",
+00140:       to: "#facc15",
+00141:       foreground: "#422006",
+00142:       shadow: "rgba(245, 176, 37, 0.3)",
+00143:     },
+00144:   },
+00145:   {
+00146:     id: "hotwheels",
+00147:     name: "Hot Wheels",
+00148:     icon: "🏎️",
+00149:     color: "rojo",
+00150:     priority: 70,
+00151:     keywords: [
+00152:       "hot wheels",
+00153:       "hotwheels",
+00154:       "autos hot wheels",
+00155:     ],
+00156:     theme: {
+00157:       from: "#dc2626",
+00158:       to: "#f97316",
+00159:       foreground: "#ffffff",
+00160:       shadow: "rgba(220, 38, 38, 0.28)",
+00161:     },
+00162:   },
+00163: ] as const satisfies readonly CampaignConfig[];
+00164: 
+00165: export type CampaignId = (typeof CAMPAIGN_CONFIG)[number]["id"];
+00166: 
+00167: export function getCampaignById(id: string) {
+00168:   return CAMPAIGN_CONFIG.find((campaign) => campaign.id === id);
+00169: }
+00170: 
+00171: export function normalizeCampaignText(value: unknown): string {
+00172:   return String(value ?? "")
+00173:     .toLowerCase()
+00174:     .normalize("NFD")
+00175:     .replace(/[\u0300-\u036f]/g, "")
+00176:     .trim();
+00177: }
+00178: 
+00179: export function getCampaignFromText(value: string) {
+00180:   const normalizedValue = normalizeCampaignText(value);
+00181: 
+00182:   return CAMPAIGN_CONFIG.find((campaign) =>
+00183:     campaign.keywords.some((keyword) =>
+00184:       normalizedValue.includes(normalizeCampaignText(keyword)),
+00185:     ),
+00186:   );
+00187: }
+00188: 
+00189: export function getCampaignStyle(id: string) {
+00190:   const campaign = getCampaignById(id);
+00191: 
+00192:   if (!campaign) return undefined;
+00193: 
+00194:   return {
+00195:     background: `linear-gradient(135deg, ${campaign.theme.from}, ${campaign.theme.to})`,
+00196:     color: campaign.theme.foreground,
+00197:     boxShadow: `0 10px 24px ${campaign.theme.shadow}`,
+00198:   };
+00199: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 199]
+
+============================================================
+FILE: src\modules\catalog\domain\CampaignRules.ts
+============================================================
+00001: import type { Campaign } from "@/shared/types/product";
+00002: 
+00003: /* =========================================================
+00004:    TIPOS
+00005:    ========================================================= */
+00006: 
+00007: export type CampaignNameToIdMap =
+00008:   Record<string, string>;
+00009: 
+00010: /* =========================================================
+00011:    HELPERS INTERNOS
+00012:    ========================================================= */
+00013: 
+00014: function cleanText(value: unknown): string {
+00015:   return String(value ?? "").trim();
+00016: }
+00017: 
+00018: function parseCampaignDate(
+00019:   value: unknown,
+00020: ): Date | null {
+00021:   const clean = cleanText(value);
+00022: 
+00023:   if (!clean) {
+00024:     return null;
+00025:   }
+00026: 
+00027:   const humanDate = clean.match(
+00028:     /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/,
+00029:   );
+00030: 
+00031:   if (humanDate) {
+00032:     const [, day, month, year] = humanDate;
+00033: 
+00034:     const date = new Date(
+00035:       Number(year),
+00036:       Number(month) - 1,
+00037:       Number(day),
+00038:     );
+00039: 
+00040:     return Number.isNaN(date.getTime())
+00041:       ? null
+00042:       : date;
+00043:   }
+00044: 
+00045:   const isoDate = new Date(clean);
+00046: 
+00047:   return Number.isNaN(isoDate.getTime())
+00048:     ? null
+00049:     : isoDate;
+00050: }
+00051: 
+00052: function normalizePublicationStatus(
+00053:   value: unknown,
+00054: ): Campaign["computedStatus"] {
+00055:   const status = cleanText(value).toLowerCase();
+00056: 
+00057:   const statusMap: Record<
+00058:     string,
+00059:     Campaign["computedStatus"]
+00060:   > = {
+00061:     publicado: "activa",
+00062:     publicada: "activa",
+00063:     publicadas: "activa",
+00064:     active: "activa",
+00065:     published: "activa",
+00066: 
+00067:     oculto: "oculta",
+00068:     oculta: "oculta",
+00069:     hidden: "oculta",
+00070: 
+00071:     borrador: "borrador",
+00072:     draft: "borrador",
+00073:   };
+00074: 
+00075:   return statusMap[status] ?? "borrador";
+00076: }
+00077: 
+00078: /* =========================================================
+00079:    ESTADO OPERATIVO
+00080:    ========================================================= */
+00081: 
+00082: export function getCampaignComputedStatus(
+00083:   campaign: Pick<
+00084:     Campaign,
+00085:     "startDate" | "endDate" | "publicationStatus"
+00086:   >,
+00087: ): Campaign["computedStatus"] {
+00088:   const publicationStatus =
+00089:     normalizePublicationStatus(
+00090:       campaign.publicationStatus,
+00091:     );
+00092: 
+00093:   if (publicationStatus === "oculta") {
+00094:     return "oculta";
+00095:   }
+00096: 
+00097:   if (publicationStatus === "borrador") {
+00098:     return "borrador";
+00099:   }
+00100: 
+00101:   const today = new Date();
+00102:   today.setHours(0, 0, 0, 0);
+00103: 
+00104:   const start = parseCampaignDate(
+00105:     campaign.startDate,
+00106:   );
+00107: 
+00108:   const end = parseCampaignDate(
+00109:     campaign.endDate,
+00110:   );
+00111: 
+00112:   if (start) {
+00113:     start.setHours(0, 0, 0, 0);
+00114:   }
+00115: 
+00116:   if (end) {
+00117:     end.setHours(23, 59, 59, 999);
+00118:   }
+00119: 
+00120:   if (start && today < start) {
+00121:     return "programada";
+00122:   }
+00123: 
+00124:   if (end && today > end) {
+00125:     return "finalizada";
+00126:   }
+00127: 
+00128:   return "activa";
+00129: }
+00130: 
+00131: /* =========================================================
+00132:    REGLAS DE CAMPAÑA
+00133:    ========================================================= */
+00134: 
+00135: export function isCampaignActive(
+00136:   campaign: Campaign,
+00137: ): boolean {
+00138:   return campaign.computedStatus === "activa";
+00139: }
+00140: 
+00141: export function buildCampaignNameToIdMap(
+00142:   campaigns: Campaign[],
+00143: ): CampaignNameToIdMap {
+00144:   return campaigns.reduce<CampaignNameToIdMap>(
+00145:     (map, campaign) => {
+00146:       map[campaign.name] = campaign.id;
+00147:       map[campaign.id] = campaign.id;
+00148: 
+00149:       return map;
+00150:     },
+00151:     {},
+00152:   );
+00153: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 153]
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts
+============================================================
+00001: import type { Campaign } from "@/shared/types/product";
+00002: 
+00003: import { getCampaignComputedStatus } from "@/modules/catalog/domain/CampaignRules";
+00004: 
+00005: import { getCampaignColorClass } from "./campaignColors";
+00006: import type { CsvRow } from "./fetchSheets";
+00007: 
+00008: /* =========================================================
+00009:    SCHEMA DE GOOGLE SHEETS
+00010:    ========================================================= */
+00011: 
+00012: export const CAMPAIGN_REQUIRED_HEADERS = [
+00013:   "id",
+00014:   "name",
+00015:   "icon",
+00016:   "color",
+00017:   "startdate",
+00018:   "enddate",
+00019:   "priority",
+00020:   "publicationstatus",
+00021: ] as const;
+00022: 
+00023: /* =========================================================
+00024:    HELPERS DE NORMALIZACIÓN
+00025:    ========================================================= */
+00026: 
+00027: function cleanText(value: unknown): string {
+00028:   return String(value ?? "").trim();
+00029: }
+00030: 
+00031: function parsePriority(value: unknown): number {
+00032:   const priority = Number(cleanText(value));
+00033: 
+00034:   return Number.isFinite(priority)
+00035:     ? priority
+00036:     : 0;
+00037: }
+00038: 
+00039: /* =========================================================
+00040:    NORMALIZACIÓN DESDE GOOGLE SHEETS
+00041:    ========================================================= */
+00042: 
+00043: export function normalizeCampaign(
+00044:   row: CsvRow,
+00045: ): Campaign {
+00046:   const campaign: Campaign = {
+00047:     id: cleanText(row.id),
+00048:     name: cleanText(row.name),
+00049:     icon: cleanText(row.icon),
+00050:     color: cleanText(row.color),
+00051: 
+00052:     colorClass: getCampaignColorClass(
+00053:       row.color,
+00054:     ),
+00055: 
+00056:     startDate: cleanText(row.startdate),
+00057:     endDate: cleanText(row.enddate),
+00058: 
+00059:     priority: parsePriority(row.priority),
+00060: 
+00061:     publicationStatus: cleanText(
+00062:       row.publicationstatus,
+00063:     ),
+00064: 
+00065:     computedStatus: "borrador",
+00066:   };
+00067: 
+00068:   return {
+00069:     ...campaign,
+00070: 
+00071:     computedStatus:
+00072:       getCampaignComputedStatus(campaign),
+00073:   };
+00074: }
+00075: 
+00076: /* =========================================================
+00077:    COMPATIBILIDAD TEMPORAL
+00078:    ========================================================= */
+00079: 
+00080: export {
+00081:   buildCampaignNameToIdMap,
+00082:   getCampaignComputedStatus,
+00083:   isCampaignActive,
+00084: } from "@/modules/catalog/domain/CampaignRules";
+
+[TOTAL LÍNEAS DEL ARCHIVO: 84]
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\campaignColors.ts
+============================================================
+00001: export const CAMPAIGN_COLOR_MAP: Record<string, string> = {
+00002:   morado: "catalog-campaign-purple",
+00003:   rosado: "catalog-campaign-pink",
+00004:   azul: "catalog-campaign-blue",
+00005:   verde: "catalog-campaign-green",
+00006:   rojo: "catalog-campaign-red",
+00007:   dorado: "catalog-campaign-gold",
+00008:   turquesa: "catalog-campaign-teal",
+00009:   negro: "catalog-campaign-dark",
+00010: 
+00011:   naranja: "catalog-campaign-orange",
+00012:   coral: "catalog-campaign-coral",
+00013:   lavanda: "catalog-campaign-lavender",
+00014:   plata: "catalog-campaign-silver",
+00015:   cobre: "catalog-campaign-copper",
+00016:   esmeralda: "catalog-campaign-emerald",
+00017:   vino: "catalog-campaign-wine",
+00018:   celeste: "catalog-campaign-sky",
+00019:   fucsia: "catalog-campaign-fuchsia",
+00020:   amarillo: "catalog-campaign-yellow",
+00021: };
+00022: 
+00023: export function getCampaignColorClass(
+00024:   color: string | undefined | null,
+00025: ): string {
+00026:   const key = (color ?? "").trim().toLowerCase();
+00027: 
+00028:   return CAMPAIGN_COLOR_MAP[key] ?? "catalog-campaign-purple";
+00029: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 29]
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\normalizeProduct.ts
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: import type { CatalogCategoryId } from "./sheetsConfig";
+00003: import type { CsvRow } from "./fetchSheets";
+00004: 
+00005: export interface SheetProduct extends Product {
+00006:   badges: string[];
+00007:   campaigns: string[];
+00008:   priority: number;
+00009:   status: string;
+00010:   updated_at: string;
+00011: }
+00012: 
+00013: export type CampaignNameToIdMap = Record<string, string>;
+00014: 
+00015: function cleanText(value: unknown): string {
+00016:   return String(value ?? "").trim();
+00017: }
+00018: 
+00019: function parseNumber(value: unknown): number | null {
+00020:   let cleaned = cleanText(value)
+00021:     .replace(/S\/\.?/gi, "")
+00022:     .replace(/\s/g, "");
+00023: 
+00024:   if (!cleaned) return null;
+00025: 
+00026:   if (cleaned.includes(",") && cleaned.includes(".")) {
+00027:     cleaned = cleaned.replace(/,/g, "");
+00028:   } else {
+00029:     cleaned = cleaned.replace(",", ".");
+00030:   }
+00031: 
+00032:   const num = Number(cleaned);
+00033:   return Number.isFinite(num) ? num : null;
+00034: }
+00035: 
+00036: function parseRequiredNumber(value: unknown): number {
+00037:   return parseNumber(value) ?? 0;
+00038: }
+00039: 
+00040: function parsePipeArray(value: unknown): string[] {
+00041:   return cleanText(value)
+00042:     .split("|")
+00043:     .map((item) => item.trim())
+00044:     .filter(Boolean);
+00045: }
+00046: 
+00047: function parseCampaigns(
+00048:   value: unknown,
+00049:   campaignNameToIdMap: CampaignNameToIdMap,
+00050: ): string[] {
+00051:   return parsePipeArray(value)
+00052:     .map((campaignName) => campaignNameToIdMap[campaignName])
+00053:     .filter(Boolean);
+00054: }
+00055: 
+00056: export function normalizeProduct(
+00057:   row: CsvRow,
+00058:   categoryFromConfig: CatalogCategoryId,
+00059:   campaignNameToIdMap: CampaignNameToIdMap = {},
+00060: ): SheetProduct {
+00061:   return {
+00062:     id: cleanText(row.id),
+00063:     title: cleanText(row.title),
+00064:     description: cleanText(row.description),
+00065: 
+00066:     category: categoryFromConfig,
+00067: 
+00068:     price_1: parseRequiredNumber(row.price_1),
+00069:     price_3: parseNumber(row.price_3),
+00070:     price_12: parseNumber(row.price_12),
+00071:     price_50: parseNumber(row.price_50),
+00072:     price_100: parseNumber(row.price_100),
+00073: 
+00074:     price_offer: parseNumber(row.price_offer),
+00075: 
+00076:     stock: parseNumber(row.stock),
+00077: 
+00078:     img: cleanText(row.cover || row.img),
+00079:     gallery: cleanText(row.gallery || row.images),
+00080: 
+00081:     badges: parsePipeArray(row.badge),
+00082:     campaigns: parseCampaigns(row.campaigns, campaignNameToIdMap),
+00083: 
+00084:     priority: parseRequiredNumber(row.priority),
+00085:     status: cleanText(row.status),
+00086:     updated_at: cleanText(row.updated_at),
+00087:   };
+00088: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 88]
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts
+============================================================
+00001: import type { Campaign, Product } from "@/shared/types/product";
+00002: 
+00003: import { buildCampaignNameToIdMap } from "@/modules/catalog/domain/CampaignRules";
+00004: 
+00005: import type {
+00006:   CatalogCategoryId,
+00007:   CatalogProvider,
+00008: } from "@/modules/catalog/providers/CatalogProvider";
+00009: 
+00010: import { fetchSheetRows } from "./fetchSheets";
+00011: 
+00012: import {
+00013:   CAMPAIGN_REQUIRED_HEADERS,
+00014:   normalizeCampaign,
+00015: } from "./normalizeCampaign";
+00016: 
+00017: import { normalizeProduct } from "./normalizeProduct";
+00018: 
+00019: import {
+00020:   CAMPAIGNS_SHEET_CONFIG,
+00021:   PRODUCT_SHEETS_CONFIG,
+00022: } from "./sheetsConfig";
+00023: 
+00024: import { validateProducts } from "./validateProducts";
+00025: 
+00026: /* =========================================================
+00027:    SCHEMA DE PRODUCTOS
+00028:    ========================================================= */
+00029: 
+00030: const PRODUCT_REQUIRED_HEADERS = [
+00031:   "id",
+00032:   "title",
+00033:   "description",
+00034:   "category",
+00035:   "price_1",
+00036:   "price_3",
+00037:   "price_12",
+00038:   "price_50",
+00039:   "price_100",
+00040:   "stock",
+00041:   "img",
+00042:   "badge",
+00043:   "campaigns",
+00044:   "priority",
+00045:   "status",
+00046:   "updated_at",
+00047: ] as const;
+00048: 
+00049: /* =========================================================
+00050:    HELPERS
+00051:    ========================================================= */
+00052: 
+00053: function getProductSource(category: CatalogCategoryId) {
+00054:   return PRODUCT_SHEETS_CONFIG.find(
+00055:     (source) => source.category === category,
+00056:   );
+00057: }
+00058: 
+00059: /* =========================================================
+00060:    GOOGLE SHEETS PROVIDER
+00061:    ========================================================= */
+00062: 
+00063: export const googleSheetsCatalogProvider: CatalogProvider = {
+00064:   getCategories(): readonly CatalogCategoryId[] {
+00065:     return PRODUCT_SHEETS_CONFIG.map(
+00066:       (source) => source.category,
+00067:     );
+00068:   },
+00069: 
+00070:   async loadCampaigns(): Promise<Campaign[]> {
+00071:     const rows = await fetchSheetRows(
+00072:       CAMPAIGNS_SHEET_CONFIG,
+00073:       CAMPAIGN_REQUIRED_HEADERS,
+00074:     );
+00075: 
+00076:     return rows.map(normalizeCampaign);
+00077:   },
+00078: 
+00079:   async loadCategoryProducts(
+00080:     category: CatalogCategoryId,
+00081:     campaigns: readonly Campaign[],
+00082:   ): Promise<Product[]> {
+00083:     const source = getProductSource(category);
+00084: 
+00085:     if (!source) {
+00086:       return [];
+00087:     }
+00088: 
+00089:     const rows = await fetchSheetRows(
+00090:       source,
+00091:       PRODUCT_REQUIRED_HEADERS,
+00092:     );
+00093: 
+00094:     const campaignNameToIdMap =
+00095:       buildCampaignNameToIdMap([...campaigns]);
+00096: 
+00097:     const normalizedProducts = rows.map((row) =>
+00098:       normalizeProduct(
+00099:         row,
+00100:         source.category,
+00101:         campaignNameToIdMap,
+00102:       ),
+00103:     );
+00104: 
+00105:     return validateProducts(normalizedProducts).map(
+00106:       ({ updated_at, ...product }) => product,
+00107:     );
+00108:   },
+00109: };
+
+[TOTAL LÍNEAS DEL ARCHIVO: 109]
+
+============================================================
+FILE: src\modules\catalog\providers\CatalogProvider.ts
+============================================================
+00001: import type { Campaign, Product } from "@/shared/types/product";
+00002: 
+00003: /* =========================================================
+00004:    TIPOS DEL PROVIDER
+00005:    ========================================================= */
+00006: 
+00007: export type CatalogCategoryId = NonNullable<Product["category"]>;
+00008: 
+00009: /* =========================================================
+00010:    CONTRATO DEL CATÁLOGO
+00011:    ========================================================= */
+00012: 
+00013: export interface CatalogProvider {
+00014:   getCategories(): readonly CatalogCategoryId[];
+00015: 
+00016:   loadCampaigns(): Promise<Campaign[]>;
+00017: 
+00018:   loadCategoryProducts(
+00019:     category: CatalogCategoryId,
+00020:     campaigns: readonly Campaign[],
+00021:   ): Promise<Product[]>;
+00022: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 22]
+
+============================================================
+FILE: src\modules\catalog\providers\DefaultCatalogProvider.ts
+============================================================
+00001: import { googleSheetsCatalogProvider } from "@/modules/catalog/integrations/googleSheets/GoogleSheetsCatalogProvider";
+00002: 
+00003: import type { CatalogProvider } from "./CatalogProvider";
+00004: 
+00005: /* =========================================================
+00006:    PROVIDER ACTIVO
+00007:    ========================================================= */
+00008: 
+00009: export const catalogProvider: CatalogProvider = googleSheetsCatalogProvider;
+
+[TOTAL LÍNEAS DEL ARCHIVO: 9]
+
+============================================================
+FILE: src\modules\catalog\services\campaignService.ts
+============================================================
+00001: import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+00002: import type { Campaign } from "@/shared/types/product";
+00003: 
+00004: import { getCampaignColorClass } from "@/modules/catalog/integrations/googleSheets/campaignColors";
+00005: import {
+00006:   buildCampaignNameToIdMap,
+00007:   isCampaignActive,
+00008: } from "@/modules/catalog/domain/CampaignRules";
+00009: 
+00010: import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
+00011: 
+00012: /* =========================================================
+00013:    TIPOS INTERNOS
+00014:    ========================================================= */
+00015: 
+00016: type CampaignCacheEntry = {
+00017:   savedAt: number;
+00018:   items: Campaign[];
+00019: };
+00020: 
+00021: export interface LoadCatalogCampaignsOptions {
+00022:   includeInactive?: boolean;
+00023:   forceRefresh?: boolean;
+00024: }
+00025: 
+00026: /* =========================================================
+00027:    CONFIGURACIÓN
+00028:    ========================================================= */
+00029: 
+00030: const CACHE_TTL = 1000 * 60 * 5;
+00031: const CAMPAIGNS_CACHE_KEY = "jung_catalog_campaigns_v2";
+00032: 
+00033: /* =========================================================
+00034:    CACHE EN MEMORIA
+00035:    ========================================================= */
+00036: 
+00037: let campaignsMemoryCache: CampaignCacheEntry | null = null;
+00038: let pendingCampaignsRequest: Promise<Campaign[]> | null = null;
+00039: 
+00040: /* =========================================================
+00041:    HELPERS
+00042:    ========================================================= */
+00043: 
+00044: const now = () => Date.now();
+00045: 
+00046: const isFresh = (savedAt: number) => now() - savedAt <= CACHE_TTL;
+00047: 
+00048: const sortCampaigns = (items: Campaign[]) =>
+00049:   [...items].sort((a, b) => b.priority - a.priority);
+00050: 
+00051: /* =========================================================
+00052:    FALLBACK DE CAMPAÑAS
+00053:    Si Google Sheets falla, el catálogo sigue funcionando.
+00054:    ========================================================= */
+00055: 
+00056: function getFallbackCampaigns(): Campaign[] {
+00057:   return CAMPAIGN_CONFIG.map((campaign) => ({
+00058:     id: campaign.id,
+00059:     name: campaign.name,
+00060:     icon: campaign.icon,
+00061: 
+00062:     color: campaign.color,
+00063:     colorClass: getCampaignColorClass(campaign.color),
+00064: 
+00065:     startDate: "",
+00066:     endDate: "",
+00067:     priority: campaign.priority,
+00068: 
+00069:     publicationStatus: "Publicado",
+00070:     computedStatus: "activa",
+00071:   }));
+00072: }
+00073: 
+00074: /* =========================================================
+00075:    CACHE LOCAL
+00076:    ========================================================= */
+00077: 
+00078: function readStoredCampaigns(): Campaign[] | null {
+00079:   if (typeof window === "undefined") {
+00080:     return null;
+00081:   }
+00082: 
+00083:   try {
+00084:     const raw = localStorage.getItem(CAMPAIGNS_CACHE_KEY);
+00085: 
+00086:     if (!raw) {
+00087:       return null;
+00088:     }
+00089: 
+00090:     const parsed = JSON.parse(raw) as CampaignCacheEntry;
+00091: 
+00092:     if (!parsed?.savedAt || !isFresh(parsed.savedAt)) {
+00093:       return null;
+00094:     }
+00095: 
+00096:     if (!Array.isArray(parsed.items)) {
+00097:       return null;
+00098:     }
+00099: 
+00100:     campaignsMemoryCache = parsed;
+00101: 
+00102:     return parsed.items;
+00103:   } catch {
+00104:     return null;
+00105:   }
+00106: }
+00107: 
+00108: function writeCampaignsCache(items: Campaign[]): void {
+00109:   const entry: CampaignCacheEntry = {
+00110:     savedAt: now(),
+00111:     items,
+00112:   };
+00113: 
+00114:   campaignsMemoryCache = entry;
+00115: 
+00116:   if (typeof window === "undefined") {
+00117:     return;
+00118:   }
+00119: 
+00120:   try {
+00121:     localStorage.setItem(CAMPAIGNS_CACHE_KEY, JSON.stringify(entry));
+00122:   } catch {
+00123:     // Si localStorage falla, se conserva el cache en memoria.
+00124:   }
+00125: }
+00126: 
+00127: /* =========================================================
+00128:    GOOGLE SHEETS
+00129:    ========================================================= */
+00130: 
+00131: async function fetchCampaignsFromProvider(): Promise<Campaign[]> {
+00132:   const campaigns = await catalogProvider.loadCampaigns();
+00133: 
+00134:   return sortCampaigns(campaigns);
+00135: }
+00136: 
+00137: /* =========================================================
+00138:    CARGA INTERNA
+00139:    ========================================================= */
+00140: 
+00141: async function loadAllCatalogCampaigns(
+00142:   options: Pick<LoadCatalogCampaignsOptions, "forceRefresh"> = {},
+00143: ): Promise<Campaign[]> {
+00144:   if (!options.forceRefresh) {
+00145:     if (campaignsMemoryCache && isFresh(campaignsMemoryCache.savedAt)) {
+00146:       return campaignsMemoryCache.items;
+00147:     }
+00148: 
+00149:     const storedCampaigns = readStoredCampaigns();
+00150: 
+00151:     if (storedCampaigns) {
+00152:       return storedCampaigns;
+00153:     }
+00154:   }
+00155: 
+00156:   if (pendingCampaignsRequest) {
+00157:     return pendingCampaignsRequest;
+00158:   }
+00159: 
+00160:   pendingCampaignsRequest = fetchCampaignsFromProvider()
+00161:     .then((campaigns) => {
+00162:       writeCampaignsCache(campaigns);
+00163: 
+00164:       return campaigns;
+00165:     })
+00166:     .catch((error: unknown) => {
+00167:       console.error("Error cargando campañas. Usando fallback:", error);
+00168: 
+00169:       const fallbackCampaigns = sortCampaigns(getFallbackCampaigns());
+00170: 
+00171:       writeCampaignsCache(fallbackCampaigns);
+00172: 
+00173:       return fallbackCampaigns;
+00174:     })
+00175:     .finally(() => {
+00176:       pendingCampaignsRequest = null;
+00177:     });
+00178: 
+00179:   return pendingCampaignsRequest;
+00180: }
+00181: 
+00182: /* =========================================================
+00183:    API PÚBLICA
+00184:    ========================================================= */
+00185: 
+00186: export async function loadCatalogCampaigns(
+00187:   options: LoadCatalogCampaignsOptions = {},
+00188: ): Promise<Campaign[]> {
+00189:   const campaigns = await loadAllCatalogCampaigns({
+00190:     forceRefresh: options.forceRefresh,
+00191:   });
+00192: 
+00193:   if (options.includeInactive) {
+00194:     return campaigns;
+00195:   }
+00196: 
+00197:   return campaigns.filter(isCampaignActive);
+00198: }
+00199: 
+00200: export async function getCampaignNameToIdMap() {
+00201:   const campaigns = await loadCatalogCampaigns({
+00202:     includeInactive: true,
+00203:   });
+00204: 
+00205:   return buildCampaignNameToIdMap(campaigns);
+00206: }
+00207: 
+
+[TOTAL LÍNEAS DEL ARCHIVO: 207]
+
+============================================================
+FILE: src\modules\catalog\hooks\useCatalogCampaigns.ts
+============================================================
+00001: import { useEffect, useState } from "react";
+00002: import type { Campaign } from "@/shared/types/product";
+00003: import { loadCatalogCampaigns } from "@/modules/catalog/services/campaignService";
+00004: export function useCatalogCampaigns() {
+00005:   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+00006:   const [isLoading, setIsLoading] = useState(true);
+00007: 
+00008:   useEffect(() => {
+00009:     let cancelled = false;
+00010: 
+00011:     const run = async () => {
+00012:       setIsLoading(true);
+00013: 
+00014:       try {
+00015:         const result = await loadCatalogCampaigns();
+00016: 
+00017:         if (!cancelled) {
+00018:           setCampaigns(result);
+00019:         }
+00020:       } catch (error) {
+00021:         console.error("Error cargando campañas:", error);
+00022: 
+00023:         if (!cancelled) {
+00024:           setCampaigns([]);
+00025:         }
+00026:       } finally {
+00027:         if (!cancelled) {
+00028:           setIsLoading(false);
+00029:         }
+00030:       }
+00031:     };
+00032: 
+00033:     run();
+00034: 
+00035:     return () => {
+00036:       cancelled = true;
+00037:     };
+00038:   }, []);
+00039: 
+00040:   return {
+00041:     campaigns,
+00042:     isLoading,
+00043:   };
+00044: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 44]
+
+============================================================
+FILE: src\modules\catalog\components\ProductCardBadges.tsx
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: 
+00003: import {
+00004:   ProductBadgeStack,
+00005: } from "./ProductBadgeStack";
+00006: 
+00007: interface ProductCardBadgesProps {
+00008:   product: Product;
+00009: }
+00010: 
+00011: export function ProductCardBadges({
+00012:   product,
+00013: }: ProductCardBadgesProps) {
+00014:   return (
+00015:     <ProductBadgeStack
+00016:       product={product}
+00017:       maxVisible={2}
+00018:       includePricingBadges
+00019:       includeSeasonality
+00020:       variant="card"
+00021:       className="absolute left-2 top-2 z-10 flex max-w-[75%] flex-col items-start gap-1.5"
+00022:     />
+00023:   );
+00024: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 24]
+
+============================================================
+FILE: src\modules\catalog\components\ProductBadgeStack.tsx
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: 
+00003: import {
+00004:   getProductDisplayIndicators,
+00005:   resolveProductCompatibility,
+00006: } from "@/modules/catalog/domain/badges";
+00007: 
+00008: import {
+00009:   formatBadgeDisplayText,
+00010:   getBadgeThemePresentation,
+00011: } from "@/modules/catalog/presentation/badges";
+00012: 
+00013: interface ProductBadgeStackProps {
+00014:   product: Product;
+00015: 
+00016:   maxVisible?: number;
+00017:   includePricingBadges?: boolean;
+00018:   includeSeasonality?: boolean;
+00019: 
+00020:   variant?: "card" | "detail";
+00021:   className?: string;
+00022: }
+00023: 
+00024: const VARIANT_CLASS_MAP = {
+00025:   card:
+00026:     "px-5 py-0.5 text-[10px] font-bold md:text-[11px]",
+00027: 
+00028:   detail:
+00029:     "px-3 py-1.5 text-[10px] font-semibold leading-tight tracking-normal md:text-[11px]",
+00030: };
+00031: 
+00032: export function ProductBadgeStack({
+00033:   product,
+00034:   maxVisible = 2,
+00035:   includePricingBadges = true,
+00036:   includeSeasonality = true,
+00037:   variant = "card",
+00038:   className = "",
+00039: }: ProductBadgeStackProps) {
+00040:   const profile = resolveProductCompatibility(
+00041:     product,
+00042:     {
+00043:       includePricingBadges,
+00044:     },
+00045:   );
+00046: 
+00047:   const indicators = getProductDisplayIndicators(
+00048:     profile,
+00049:     {
+00050:       maxVisible,
+00051:       includeSeasonality,
+00052:     },
+00053:   );
+00054: 
+00055:   if (indicators.length === 0) {
+00056:     return null;
+00057:   }
+00058: 
+00059:   return (
+00060:     <div className={className}>
+00061:       {indicators.map((indicator) => {
+00062:         const presentation =
+00063:           getBadgeThemePresentation(
+00064:             indicator.themeToken,
+00065:           );
+00066: 
+00067:         return (
+00068:           <div
+00069:             key={`${product.id}-${indicator.id}`}
+00070:             className={[
+00071:               "rounded-full",
+00072:               "border border-white/10",
+00073:               "backdrop-blur-sm",
+00074:               "shadow-md",
+00075:               VARIANT_CLASS_MAP[variant],
+00076:               presentation.className,
+00077:               presentation.animation,
+00078:             ]
+00079:               .filter(Boolean)
+00080:               .join(" ")}
+00081:             data-badge-code={indicator.code}
+00082:             data-badge-kind={indicator.kind}
+00083:             data-badge-source={indicator.source}
+00084:           >
+00085:             {formatBadgeDisplayText(indicator)}
+00086:           </div>
+00087:         );
+00088:       })}
+00089:     </div>
+00090:   );
+00091: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 91]
+
+============================================================
+FILE: src\modules\catalog\domain\badges\BadgeTypes.ts
+============================================================
+00001: export type CatalogBadgeKind =
+00002:   | "campaign"
+00003:   | "promotion"
+00004:   | "merchandising";
+00005: 
+00006: export type CatalogBadgeSource =
+00007:   | "campaign"
+00008:   | "pricingRule"
+00009:   | "manual"
+00010:   | "analytics"
+00011:   | "legacyManual";
+00012: 
+00013: export type ProductSeasonality =
+00014:   | "evergreen"
+00015:   | "seasonal"
+00016:   | "campaignOnly"
+00017:   | "limited"
+00018:   | "unspecified";
+00019: 
+00020: export interface CatalogBadge {
+00021:   id: string;
+00022:   code: string;
+00023:   label: string;
+00024:   icon: string | null;
+00025: 
+00026:   kind: CatalogBadgeKind;
+00027:   themeToken: string;
+00028:   priority: number;
+00029: 
+00030:   source: CatalogBadgeSource;
+00031:   sourceReferenceId: string | null;
+00032: }
+00033: 
+00034: export interface LegacyCampaignReference {
+00035:   code: string;
+00036:   label: string;
+00037:   normalizedName: string;
+00038: 
+00039:   themeToken: string;
+00040:   priority: number;
+00041: 
+00042:   sourceReferenceId: string;
+00043: }
+00044: 
+00045: export interface ProductCompatibilityProfile {
+00046:   badges: CatalogBadge[];
+00047: 
+00048:   seasonality: ProductSeasonality;
+00049:   seasonalitySourceValue: string | null;
+00050: 
+00051:   campaignReferences: LegacyCampaignReference[];
+00052:   unknownLegacyValues: string[];
+00053: }
+00054: 
+00055: export type ProductDisplayIndicatorKind =
+00056:   | CatalogBadgeKind
+00057:   | "seasonality";
+00058: 
+00059: export interface ProductDisplayIndicator {
+00060:   id: string;
+00061:   code: string;
+00062:   label: string;
+00063:   icon: string | null;
+00064: 
+00065:   kind: ProductDisplayIndicatorKind;
+00066:   themeToken: string;
+00067:   priority: number;
+00068: 
+00069:   source: CatalogBadgeSource;
+00070:   sourceReferenceId: string | null;
+00071: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 71]
+
+============================================================
+FILE: src\modules\catalog\domain\badges\LegacyBadgeAliases.ts
+============================================================
+00001: import type {
+00002:   CatalogBadgeKind,
+00003:   ProductSeasonality,
+00004: } from "./BadgeTypes";
+00005: 
+00006: interface LegacyBadgeDescriptor {
+00007:   code: string;
+00008:   label: string;
+00009:   icon: string | null;
+00010: 
+00011:   kind: CatalogBadgeKind;
+00012:   themeToken: string;
+00013:   priority: number;
+00014: }
+00015: 
+00016: export type LegacyBadgeResolution =
+00017:   | {
+00018:       type: "badge";
+00019:       badge: LegacyBadgeDescriptor;
+00020:     }
+00021:   | {
+00022:       type: "seasonality";
+00023:       seasonality: ProductSeasonality;
+00024:     }
+00025:   | {
+00026:       type: "campaign";
+00027:       campaign: {
+00028:         code: string;
+00029:         label: string;
+00030:         normalizedName: string;
+00031:         themeToken: string;
+00032:         priority: number;
+00033:       };
+00034:     };
+00035: 
+00036: export function normalizeLegacyBadgeValue(value: string): string {
+00037:   return value
+00038:     .trim()
+00039:     .toLowerCase()
+00040:     .normalize("NFD")
+00041:     .replace(/[\u0300-\u036f]/g, "")
+00042:     .replace(/[✨⚡🔥🚀💎]/g, "")
+00043:     .replace(/\s+/g, " ")
+00044:     .trim();
+00045: }
+00046: 
+00047: const BEST_SELLER_ALIASES = new Set([
+00048:   "mas vendido",
+00049:   "best seller",
+00050:   "bestseller",
+00051:   "favorito",
+00052:   "popular",
+00053: ]);
+00054: 
+00055: const EVERGREEN_ALIASES = new Set([
+00056:   "todo el ano",
+00057:   "evergreen",
+00058: ]);
+00059: 
+00060: const BRIDE_DAY_ALIASES = new Set([
+00061:   "dia de la novia",
+00062: ]);
+00063: 
+00064: export function resolveLegacyBadgeValue(
+00065:   value: string,
+00066: ): LegacyBadgeResolution | null {
+00067:   const normalizedValue = normalizeLegacyBadgeValue(value);
+00068: 
+00069:   if (!normalizedValue) {
+00070:     return null;
+00071:   }
+00072: 
+00073:   if (BEST_SELLER_ALIASES.has(normalizedValue)) {
+00074:     return {
+00075:       type: "badge",
+00076:       badge: {
+00077:         code: "merchandising.bestSeller",
+00078:         label: "Más vendido",
+00079:         icon: null,
+00080:         kind: "merchandising",
+00081:         themeToken: "merchandising.bestSeller",
+00082:         priority: 80,
+00083:       },
+00084:     };
+00085:   }
+00086: 
+00087:   if (EVERGREEN_ALIASES.has(normalizedValue)) {
+00088:     return {
+00089:       type: "seasonality",
+00090:       seasonality: "evergreen",
+00091:     };
+00092:   }
+00093: 
+00094:   if (BRIDE_DAY_ALIASES.has(normalizedValue)) {
+00095:     return {
+00096:       type: "campaign",
+00097:       campaign: {
+00098:         code: "campaign.diaNovia",
+00099:         label: "Día de la Novia",
+00100:         normalizedName: normalizedValue,
+00101:         themeToken: "campaign.rose",
+00102:         priority: 100,
+00103:       },
+00104:     };
+00105:   }
+00106: 
+00107:   return null;
+00108: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 108]
+
+============================================================
+FILE: src\modules\catalog\domain\badges\ResolveProductCompatibility.ts
+============================================================
+00001: import type { Product } from "@/shared/types/product";
+00002: 
+00003: import type {
+00004:   CatalogBadge,
+00005:   LegacyCampaignReference,
+00006:   ProductCompatibilityProfile,
+00007: } from "./BadgeTypes";
+00008: 
+00009: import {
+00010:   normalizeLegacyBadgeValue,
+00011:   resolveLegacyBadgeValue,
+00012: } from "./LegacyBadgeAliases";
+00013: 
+00014: export interface ResolveProductCompatibilityOptions {
+00015:   includePricingBadges?: boolean;
+00016: }
+00017: 
+00018: const hasValidOffer = (product: Product): boolean =>
+00019:   typeof product.price_offer === "number" &&
+00020:   Number.isFinite(product.price_offer) &&
+00021:   product.price_offer > 0 &&
+00022:   product.price_offer < product.price_1;
+00023: 
+00024: const toCodeSegment = (value: string): string =>
+00025:   normalizeLegacyBadgeValue(value)
+00026:     .replace(/[^a-z0-9]+/g, ".")
+00027:     .replace(/^\.+|\.+$/g, "") || "unknown";
+00028: 
+00029: const deduplicateBadges = (
+00030:   badges: CatalogBadge[],
+00031: ): CatalogBadge[] => {
+00032:   const byCode = new Map<string, CatalogBadge>();
+00033: 
+00034:   badges.forEach((badge) => {
+00035:     const existing = byCode.get(badge.code);
+00036: 
+00037:     if (!existing || badge.priority > existing.priority) {
+00038:       byCode.set(badge.code, badge);
+00039:     }
+00040:   });
+00041: 
+00042:   return [...byCode.values()];
+00043: };
+00044: 
+00045: const deduplicateCampaigns = (
+00046:   campaigns: LegacyCampaignReference[],
+00047: ): LegacyCampaignReference[] => {
+00048:   const byCode = new Map<string, LegacyCampaignReference>();
+00049: 
+00050:   campaigns.forEach((campaign) => {
+00051:     const existing = byCode.get(campaign.code);
+00052: 
+00053:     if (!existing || campaign.priority > existing.priority) {
+00054:       byCode.set(campaign.code, campaign);
+00055:     }
+00056:   });
+00057: 
+00058:   return [...byCode.values()];
+00059: };
+00060: 
+00061: export function resolveProductCompatibility(
+00062:   product: Product,
+00063:   options: ResolveProductCompatibilityOptions = {},
+00064: ): ProductCompatibilityProfile {
+00065:   const {
+00066:     includePricingBadges = true,
+00067:   } = options;
+00068: 
+00069:   const badges: CatalogBadge[] = [];
+00070:   const campaignReferences: LegacyCampaignReference[] = [];
+00071:   const unknownLegacyValues: string[] = [];
+00072: 
+00073:   let seasonality: ProductCompatibilityProfile["seasonality"] =
+00074:     "unspecified";
+00075: 
+00076:   let seasonalitySourceValue: string | null = null;
+00077: 
+00078:   if (includePricingBadges && hasValidOffer(product)) {
+00079:     badges.push({
+00080:       id: "badge:promotion.flash",
+00081:       code: "promotion.flash",
+00082:       label: "Promo Flash",
+00083:       icon: "⚡",
+00084:       kind: "promotion",
+00085:       themeToken: "promotion.flash",
+00086:       priority: 120,
+00087:       source: "pricingRule",
+00088:       sourceReferenceId: null,
+00089:     });
+00090:   }
+00091: 
+00092:   (product.badges ?? []).forEach((rawValue) => {
+00093:     const cleanValue = String(rawValue || "").trim();
+00094: 
+00095:     if (!cleanValue) {
+00096:       return;
+00097:     }
+00098: 
+00099:     const resolution = resolveLegacyBadgeValue(cleanValue);
+00100: 
+00101:     if (!resolution) {
+00102:       const codeSegment = toCodeSegment(cleanValue);
+00103: 
+00104:       unknownLegacyValues.push(cleanValue);
+00105: 
+00106:       badges.push({
+00107:         id: `badge:legacy.${codeSegment}`,
+00108:         code: `legacy.${codeSegment}`,
+00109:         label: cleanValue,
+00110:         icon: null,
+00111:         kind: "merchandising",
+00112:         themeToken: "legacy.default",
+00113:         priority: 10,
+00114:         source: "legacyManual",
+00115:         sourceReferenceId: `legacy-badge:${codeSegment}`,
+00116:       });
+00117: 
+00118:       return;
+00119:     }
+00120: 
+00121:     if (resolution.type === "badge") {
+00122:       badges.push({
+00123:         id: `badge:${resolution.badge.code}`,
+00124:         ...resolution.badge,
+00125:         source: "legacyManual",
+00126:         sourceReferenceId: null,
+00127:       });
+00128: 
+00129:       return;
+00130:     }
+00131: 
+00132:     if (resolution.type === "seasonality") {
+00133:       seasonality = resolution.seasonality;
+00134:       seasonalitySourceValue = cleanValue;
+00135: 
+00136:       return;
+00137:     }
+00138: 
+00139:     campaignReferences.push({
+00140:       ...resolution.campaign,
+00141:       sourceReferenceId:
+00142:         `legacy-campaign:${toCodeSegment(
+00143:           resolution.campaign.normalizedName,
+00144:         )}`,
+00145:     });
+00146:   });
+00147: 
+00148:   return {
+00149:     badges: deduplicateBadges(badges),
+00150:     seasonality,
+00151:     seasonalitySourceValue,
+00152:     campaignReferences:
+00153:       deduplicateCampaigns(campaignReferences),
+00154:     unknownLegacyValues: [
+00155:       ...new Set(unknownLegacyValues),
+00156:     ],
+00157:   };
+00158: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 158]
+
+============================================================
+FILE: src\modules\catalog\domain\badges\BadgeDisplayPolicy.ts
+============================================================
+00001: import type {
+00002:   ProductCompatibilityProfile,
+00003:   ProductDisplayIndicator,
+00004: } from "./BadgeTypes";
+00005: 
+00006: export interface ProductBadgeDisplayPolicy {
+00007:   maxVisible?: number;
+00008:   includeSeasonality?: boolean;
+00009: }
+00010: 
+00011: const SEASONALITY_INDICATORS = {
+00012:   evergreen: {
+00013:     id: "seasonality:evergreen",
+00014:     code: "seasonality.evergreen",
+00015:     label: "Todo el Año",
+00016:     icon: "✨",
+00017:     kind: "seasonality" as const,
+00018:     themeToken: "seasonality.evergreen",
+00019:     priority: 40,
+00020:     source: "legacyManual" as const,
+00021:     sourceReferenceId: null,
+00022:   },
+00023: };
+00024: 
+00025: export function getProductDisplayIndicators(
+00026:   profile: ProductCompatibilityProfile,
+00027:   policy: ProductBadgeDisplayPolicy = {},
+00028: ): ProductDisplayIndicator[] {
+00029:   const {
+00030:     maxVisible = 2,
+00031:     includeSeasonality = true,
+00032:   } = policy;
+00033: 
+00034:   const campaignIndicator = profile.campaignReferences
+00035:     .slice()
+00036:     .sort((a, b) => b.priority - a.priority)
+00037:     .map<ProductDisplayIndicator>((campaign) => ({
+00038:       id: `campaign:${campaign.code}`,
+00039:       code: campaign.code,
+00040:       label: campaign.label,
+00041:       icon: null,
+00042:       kind: "campaign",
+00043:       themeToken: campaign.themeToken,
+00044:       priority: campaign.priority,
+00045:       source: "campaign",
+00046:       sourceReferenceId: campaign.sourceReferenceId,
+00047:     }))[0];
+00048: 
+00049:   const commercialIndicators = profile.badges
+00050:     .slice()
+00051:     .sort((a, b) => b.priority - a.priority);
+00052: 
+00053:   const seasonalityIndicator =
+00054:     includeSeasonality &&
+00055:     profile.seasonality === "evergreen"
+00056:       ? SEASONALITY_INDICATORS.evergreen
+00057:       : null;
+00058: 
+00059:   const ordered = [
+00060:     campaignIndicator,
+00061:     ...commercialIndicators,
+00062:     seasonalityIndicator,
+00063:   ].filter(
+00064:     (
+00065:       indicator,
+00066:     ): indicator is ProductDisplayIndicator =>
+00067:       Boolean(indicator),
+00068:   );
+00069: 
+00070:   const unique = new Map<
+00071:     string,
+00072:     ProductDisplayIndicator
+00073:   >();
+00074: 
+00075:   ordered.forEach((indicator) => {
+00076:     if (!unique.has(indicator.id)) {
+00077:       unique.set(indicator.id, indicator);
+00078:     }
+00079:   });
+00080: 
+00081:   return [...unique.values()].slice(
+00082:     0,
+00083:     Math.max(maxVisible, 0),
+00084:   );
+00085: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 85]
+
+============================================================
+FILE: src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts
+============================================================
+00001: import { describe, expect, it } from "vitest";
+00002: 
+00003: import type { Product } from "@/shared/types/product";
+00004: 
+00005: import {
+00006:   getProductDisplayIndicators,
+00007:   resolveProductCompatibility,
+00008: } from "./index";
+00009: 
+00010: const createProduct = (
+00011:   overrides: Partial<Product> = {},
+00012: ): Product => ({
+00013:   id: "TEST-001",
+00014:   title: "Producto de prueba",
+00015:   description: "Producto para pruebas",
+00016:   category: "cajas",
+00017:   price_1: 10,
+00018:   stock: 10,
+00019:   img: "/placeholder.svg",
+00020:   badges: [],
+00021:   campaigns: [],
+00022:   ...overrides,
+00023: });
+00024: 
+00025: describe("resolveProductCompatibility", () => {
+00026:   it("homologa Más vendido", () => {
+00027:     const profile = resolveProductCompatibility(
+00028:       createProduct({
+00029:         badges: ["Más vendido"],
+00030:       }),
+00031:     );
+00032: 
+00033:     expect(profile.badges).toHaveLength(1);
+00034: 
+00035:     expect(profile.badges[0]).toMatchObject({
+00036:       code: "merchandising.bestSeller",
+00037:       kind: "merchandising",
+00038:       source: "legacyManual",
+00039:     });
+00040:   });
+00041: 
+00042:   it("separa Todo el Año como evergreen", () => {
+00043:     const profile = resolveProductCompatibility(
+00044:       createProduct({
+00045:         badges: ["✨Todo el Año"],
+00046:       }),
+00047:     );
+00048: 
+00049:     expect(profile.badges).toHaveLength(0);
+00050:     expect(profile.seasonality).toBe("evergreen");
+00051:   });
+00052: 
+00053:   it("separa Día de la Novia como campaña", () => {
+00054:     const profile = resolveProductCompatibility(
+00055:       createProduct({
+00056:         badges: ["Día de la Novia"],
+00057:       }),
+00058:     );
+00059: 
+00060:     expect(profile.campaignReferences).toHaveLength(1);
+00061: 
+00062:     expect(profile.campaignReferences[0]).toMatchObject({
+00063:       code: "campaign.diaNovia",
+00064:       label: "Día de la Novia",
+00065:     });
+00066:   });
+00067: 
+00068:   it("deriva Promo Flash desde una oferta válida", () => {
+00069:     const profile = resolveProductCompatibility(
+00070:       createProduct({
+00071:         price_offer: 8,
+00072:       }),
+00073:     );
+00074: 
+00075:     expect(profile.badges[0]).toMatchObject({
+00076:       code: "promotion.flash",
+00077:       source: "pricingRule",
+00078:     });
+00079:   });
+00080: 
+00081:   it("preserva valores desconocidos como legacy", () => {
+00082:     const profile = resolveProductCompatibility(
+00083:       createProduct({
+00084:         badges: ["Selección especial"],
+00085:       }),
+00086:     );
+00087: 
+00088:     expect(profile.unknownLegacyValues).toEqual([
+00089:       "Selección especial",
+00090:     ]);
+00091: 
+00092:     expect(profile.badges[0].code).toBe(
+00093:       "legacy.seleccion.especial",
+00094:     );
+00095:   });
+00096: 
+00097:   it("prioriza campaña y promoción", () => {
+00098:     const profile = resolveProductCompatibility(
+00099:       createProduct({
+00100:         badges: [
+00101:           "Día de la Novia",
+00102:           "Más vendido",
+00103:         ],
+00104:         price_offer: 8,
+00105:       }),
+00106:     );
+00107: 
+00108:     const indicators = getProductDisplayIndicators(
+00109:       profile,
+00110:       {
+00111:         maxVisible: 2,
+00112:       },
+00113:     );
+00114: 
+00115:     expect(
+00116:       indicators.map(
+00117:         (indicator) => indicator.code,
+00118:       ),
+00119:     ).toEqual([
+00120:       "campaign.diaNovia",
+00121:       "promotion.flash",
+00122:     ]);
+00123:   });
+00124: });
+
+[TOTAL LÍNEAS DEL ARCHIVO: 124]
+
+============================================================
+FILE: src\modules\catalog\domain\badges\index.ts
+============================================================
+00001: export type {
+00002:   CatalogBadge,
+00003:   CatalogBadgeKind,
+00004:   CatalogBadgeSource,
+00005:   LegacyCampaignReference,
+00006:   ProductCompatibilityProfile,
+00007:   ProductDisplayIndicator,
+00008:   ProductDisplayIndicatorKind,
+00009:   ProductSeasonality,
+00010: } from "./BadgeTypes";
+00011: 
+00012: export {
+00013:   normalizeLegacyBadgeValue,
+00014:   resolveLegacyBadgeValue,
+00015: } from "./LegacyBadgeAliases";
+00016: 
+00017: export {
+00018:   resolveProductCompatibility,
+00019:   type ResolveProductCompatibilityOptions,
+00020: } from "./ResolveProductCompatibility";
+00021: 
+00022: export {
+00023:   getProductDisplayIndicators,
+00024:   type ProductBadgeDisplayPolicy,
+00025: } from "./BadgeDisplayPolicy";
+
+[TOTAL LÍNEAS DEL ARCHIVO: 25]
+
+============================================================
+FILE: src\modules\catalog\presentation\badges\BadgeThemeMap.ts
+============================================================
+00001: import type {
+00002:   ProductDisplayIndicator,
+00003: } from "@/modules/catalog/domain/badges";
+00004: 
+00005: export interface BadgeThemePresentation {
+00006:   className: string;
+00007:   animation: string;
+00008: }
+00009: 
+00010: const DEFAULT_PRESENTATION: BadgeThemePresentation = {
+00011:   className:
+00012:     "bg-gradient-to-r from-slate-900 to-slate-700 text-white shadow-[0_0_10px_rgba(15,23,42,0.22)]",
+00013:   animation: "",
+00014: };
+00015: 
+00016: const BADGE_THEME_MAP: Record<
+00017:   string,
+00018:   BadgeThemePresentation
+00019: > = {
+00020:   "promotion.flash": {
+00021:     className:
+00022:       "bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_0_12px_rgba(37,99,235,0.28)]",
+00023:     animation: "animate-pulse",
+00024:   },
+00025: 
+00026:   "merchandising.bestSeller": {
+00027:     className:
+00028:       "bg-gradient-to-r from-[#f5b025] to-[#d49615] text-slate-950 shadow-[0_0_12px_rgba(245,176,37,0.30)]",
+00029:     animation: "",
+00030:   },
+00031: 
+00032:   "campaign.rose": {
+00033:     className:
+00034:       "bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 text-white shadow-[0_0_14px_rgba(225,29,72,0.28)]",
+00035:     animation: "",
+00036:   },
+00037: 
+00038:   "seasonality.evergreen": {
+00039:     className:
+00040:       "bg-gradient-to-r from-emerald-600 to-green-500 text-white shadow-[0_0_12px_rgba(5,150,105,0.24)]",
+00041:     animation: "",
+00042:   },
+00043: 
+00044:   "legacy.default": DEFAULT_PRESENTATION,
+00045: };
+00046: 
+00047: export function getBadgeThemePresentation(
+00048:   themeToken: string,
+00049: ): BadgeThemePresentation {
+00050:   return (
+00051:     BADGE_THEME_MAP[themeToken] ??
+00052:     DEFAULT_PRESENTATION
+00053:   );
+00054: }
+00055: 
+00056: export function formatBadgeDisplayText(
+00057:   indicator: ProductDisplayIndicator,
+00058: ): string {
+00059:   if (!indicator.icon) {
+00060:     return indicator.label;
+00061:   }
+00062: 
+00063:   if (indicator.kind === "promotion") {
+00064:     return `${indicator.label} ${indicator.icon}`;
+00065:   }
+00066: 
+00067:   return `${indicator.icon} ${indicator.label}`;
+00068: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 68]
+
+============================================================
+FILE: src\modules\catalog\presentation\badges\index.ts
+============================================================
+00001: export {
+00002:   formatBadgeDisplayText,
+00003:   getBadgeThemePresentation,
+00004:   type BadgeThemePresentation,
+00005: } from "./BadgeThemeMap";
+
+[TOTAL LÍNEAS DEL ARCHIVO: 5]
+
+============================================================
+FILE: src\app\main.tsx
+============================================================
+00001: import { createRoot } from "react-dom/client";
+00002: 
+00003: import App from "@/app/App";
+00004: import "@/index.css";
+00005: 
+00006: import { CartProvider } from "@/modules/cart/store";
+00007: import { AOSProvider } from "@/shared/providers/AOSProvider";
+00008: 
+00009: createRoot(document.getElementById("root")!).render(
+00010:   <CartProvider>
+00011:     <AOSProvider>
+00012:       <App />
+00013:     </AOSProvider>
+00014:   </CartProvider>,
+00015: );
+
+[TOTAL LÍNEAS DEL ARCHIVO: 15]
+
+============================================================
+FILE: src\app\App.tsx
+============================================================
+00001: import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+00002: import { BrowserRouter, Route, Routes } from "react-router-dom";
+00003: import { HelmetProvider } from "react-helmet-async";
+00004: 
+00005: import { Toaster } from "@/shared/components/ui/toaster";
+00006: import { Toaster as Sonner } from "@/shared/components/ui/sonner";
+00007: import { TooltipProvider } from "@/shared/components/ui/tooltip";
+00008: 
+00009: import HomePage from "@/app/pages/HomePage";
+00010: import CatalogPage from "@/app/pages/CatalogPage";
+00011: import CatalogPdfPage from "@/app/pages/CatalogPdfPage";
+00012: import SalesCatalogToolsPage from "@/app/pages/SalesCatalogToolsPage";
+00013: import ProductDetailPage from "@/app/pages/ProductDetailPage";
+00014: import CategoryPage from "@/app/pages/CategoryPage";
+00015: import BlogPage from "@/app/pages/BlogPage";
+00016: import BlogArticlePage from "@/app/pages/BlogArticlePage";
+00017: import BlogSectionPage from "@/app/pages/BlogSectionPage";
+00018: import NotFound from "@/app/pages/NotFound";
+00019: import IntegrationsPage from "@/modules/integrations/pages/IntegrationsPage";
+00020: import CommercialCenter from "@/modules/commercial/pages/CommercialCenter";
+00021: 
+00022: const queryClient = new QueryClient();
+00023: 
+00024: export default function App() {
+00025:   return (
+00026:     <QueryClientProvider client={queryClient}>
+00027:       <HelmetProvider>
+00028:         <TooltipProvider>
+00029:           <Toaster />
+00030:           <Sonner />
+00031: 
+00032:           <BrowserRouter future={{ v7_relativeSplatPath: true }}>
+00033:             <Routes>
+00034:               {/* HOME */}
+00035:               <Route path="/" element={<HomePage />} />
+00036: 
+00037:               {/* BLOG */}
+00038:               <Route path="/blog" element={<BlogPage />} />
+00039:               <Route path="/blog/laboratorio" element={<BlogSectionPage />} />
+00040:               <Route path="/blog/tendencias" element={<BlogSectionPage />} />
+00041:               <Route path="/blog/oportunidades" element={<BlogSectionPage />} />
+00042:               <Route path="/blog/herramientas" element={<BlogSectionPage />} />
+00043:               <Route
+00044:                 path="/blog/herramientas/:tool"
+00045:                 element={<BlogSectionPage />}
+00046:               />
+00047:               <Route path="/blog/campanas" element={<BlogSectionPage />} />
+00048:               <Route
+00049:                 path="/blog/campanas/:campaign"
+00050:                 element={<BlogSectionPage />}
+00051:               />
+00052:               <Route path="/blog/catalogo" element={<BlogSectionPage />} />
+00053:               <Route path="/blog/guias" element={<BlogSectionPage />} />
+00054:               <Route path="/blog/:slug" element={<BlogArticlePage />} />
+00055: 
+00056:               {/* CATALOGO */}
+00057:               <Route path="/catalogo" element={<CatalogPage />} />
+00058:               <Route path="/catalogo/pdf" element={<CatalogPdfPage />} />
+00059:               <Route path="/ventas/catalogos" element={<SalesCatalogToolsPage />} />
+00060:               <Route
+00061:                 path="/catalogo/producto.html"
+00062:                 element={<ProductDetailPage />}
+00063:               />
+00064:               <Route
+00065:                 path="/catalogo/categoria.html"
+00066:                 element={<CategoryPage />}
+00067:               />
+00068: 
+00069:               {/* COMMERCIAL CENTER */}
+00070:               <Route path="/admin/commercial" element={<CommercialCenter />} />
+00071: 
+00072:               {/* WOOLY CONNECT */}
+00073:               <Route
+00074:                 path="/admin/integrations"
+00075:                 element={<IntegrationsPage />}
+00076:               />
+00077: 
+00078:               {/* LEGACY */}
+00079:               <Route path="/producto/:id" element={<ProductDetailPage />} />
+00080:               <Route path="/categoria/:id" element={<CategoryPage />} />
+00081: 
+00082:               {/* 404 */}
+00083:               <Route path="*" element={<NotFound />} />
+00084:             </Routes>
+00085:           </BrowserRouter>
+00086:         </TooltipProvider>
+00087:       </HelmetProvider>
+00088:     </QueryClientProvider>
+00089:   );
+00090: }
+00091: 
+00092: 
+
+[TOTAL LÍNEAS DEL ARCHIVO: 92]
+
+============================================================
+FILE: src\app\pages\CatalogPage.tsx
+============================================================
+00001: import { useState, useEffect, useCallback } from "react";
+00002: import { useLocation, useNavigate } from "react-router-dom";
+00003: import { SearchX } from "lucide-react";
+00004: import { useCartStore } from "@/modules/cart/store";
+00005: import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
+00006: import { Product } from "@/shared/types/product";
+00007: import { CATEGORY_CONFIG } from "@/shared/config/categories";
+00008: import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
+00009: import { CatalogTopNav } from "@/modules/catalog/components/CatalogTopNav";
+00010: import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
+00011: import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
+00012: import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
+00013: import { ProductCard } from "@/modules/catalog/components/ProductCard";
+00014: import { CartSidebar } from "@/modules/cart/components/CartSidebar";
+00015: import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
+00016: import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
+00017: import { useCatalogFilters } from "@/modules/catalog/hooks/useCatalogFilters";
+00018: import { useCatalogCampaigns } from "@/modules/catalog/hooks/useCatalogCampaigns";
+00019: import { useCatalogPrioritySections } from "@/modules/catalog/hooks/useCatalogPrioritySections";
+00020: import { CatalogExploreCenter } from "@/modules/catalog/components/CatalogExploreCenter";
+00021: import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
+00022: import { getCatalogSeo } from "@/shared/seo/catalogSeo";
+00023: import { getProductMedia, ProductMedia } from "@/shared/lib/productMedia";
+00024: import AOS from "aos";
+00025: 
+00026: const getCategoryFromUrl = () =>
+00027:   new URLSearchParams(window.location.search).get("cat") || "todas";
+00028: 
+00029: const getCampaignFromUrl = () =>
+00030:   new URLSearchParams(window.location.search).get("cpg") || "";
+00031: 
+00032: const isValidCategory = (id: string) =>
+00033:   id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
+00034: const CatalogPage = () => {
+00035:   const location = useLocation();
+00036:   const navigate = useNavigate();
+00037: 
+00038:   const { campaigns: catalogCampaigns } = useCatalogCampaigns();
+00039:   const CATALOG_CAMPAIGNS = catalogCampaigns;
+00040: 
+00041:   const [activeCategory, setActiveCategory] = useState(() => {
+00042:     const initialCat = getCategoryFromUrl();
+00043:     return isValidCategory(initialCat) ? initialCat : "todas";
+00044:   });
+00045: 
+00046:   const [activeCampaign, setActiveCampaign] = useState(() =>
+00047:     getCampaignFromUrl(),
+00048:   );
+00049: 
+00050:   const [searchQuery, setSearchQuery] = useState("");
+00051:   const [cartOpen, setCartOpen] = useState(false);
+00052:   const [addModalOpen, setAddModalOpen] = useState(false);
+00053:   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+00054:   const [zoomGallery, setZoomGallery] = useState<{
+00055:     media: ProductMedia[];
+00056:     initialIndex: number;
+00057:     title: string;
+00058:   } | null>(null);
+00059:   const [exploreOpen, setExploreOpen] = useState(false);
+00060: 
+00061:   const isCatalogCampaignId = useCallback(
+00062:     (id: string) =>
+00063:       !id || CATALOG_CAMPAIGNS.some((campaign) => campaign.id === id),
+00064:     [CATALOG_CAMPAIGNS],
+00065:   );
+00066: 
+00067:   const {
+00068:     cart,
+00069:     addToCart,
+00070:     totalItems,
+00071:     totalPrice,
+00072:     savings,
+00073:     removeFromCart,
+00074:     changeQty,
+00075:     setExactQty,
+00076:     setItemNote,
+00077:     clearCart,
+00078:   } = useCartStore();
+00079: 
+00080:   const {
+00081:     data: products = [],
+00082:     isLoading: loading,
+00083:     isFullCatalogLoaded,
+00084:     isCategoryLoading,
+00085:   } = useCatalogData(activeCategory as any);
+00086: 
+00087:   useEffect(() => {
+00088:     const params = new URLSearchParams(location.search);
+00089:     const cat = params.get("cat") || "todas";
+00090:     const campaign = params.get("cpg") || "";
+00091: 
+00092:     setActiveCategory(isValidCategory(cat) ? cat : "todas");
+00093:     setActiveCampaign(campaign);
+00094:   }, [location.search]);
+00095: 
+00096:   useEffect(() => {
+00097:     if (!activeCampaign) return;
+00098:     if (CATALOG_CAMPAIGNS.length === 0) return;
+00099: 
+00100:     if (!isCatalogCampaignId(activeCampaign)) {
+00101:       setActiveCampaign("");
+00102:       navigate("/catalogo", { replace: true });
+00103:     }
+00104:   }, [activeCampaign, CATALOG_CAMPAIGNS, isCatalogCampaignId, navigate]);
+00105: 
+00106:   useEffect(() => {
+00107:     const restored =
+00108:       location.state?.restoreSearch ||
+00109:       sessionStorage.getItem("wooly_restore_search");
+00110: 
+00111:     if (!restored) return;
+00112: 
+00113:     setSearchQuery(restored);
+00114:     sessionStorage.removeItem("wooly_restore_search");
+00115:     window.history.replaceState({}, document.title);
+00116:   }, [location.state]);
+00117: 
+00118:   const handleCategorySelect = useCallback(
+00119:     (id: string) => {
+00120:       setSearchQuery("");
+00121:       setActiveCategory(id);
+00122: 
+00123:       const params = new URLSearchParams();
+00124: 
+00125:       if (id !== "todas") params.set("cat", id);
+00126:       if (activeCampaign) params.set("cpg", activeCampaign);
+00127: 
+00128:       navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
+00129:     },
+00130:     [navigate, activeCampaign],
+00131:   );
+00132: 
+00133:   const handleCampaignSelect = useCallback(
+00134:     (campaign: string) => {
+00135:       setSearchQuery("");
+00136:       setActiveCampaign(campaign);
+00137: 
+00138:       const params = new URLSearchParams();
+00139: 
+00140:       if (activeCategory !== "todas") params.set("cat", activeCategory);
+00141:       if (campaign) params.set("cpg", campaign);
+00142: 
+00143:       navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
+00144:     },
+00145:     [navigate, activeCategory],
+00146:   );
+00147: 
+00148:   const handleResetCatalog = useCallback(() => {
+00149:     setSearchQuery("");
+00150:     setActiveCategory("todas");
+00151:     setActiveCampaign("");
+00152:     navigate("/catalogo");
+00153:   }, [navigate]);
+00154: 
+00155:   const {
+00156:     filteredProducts,
+00157:     categoryCounts,
+00158:     campaignCounts,
+00159:     visibleCategories,
+00160:   } = useCatalogFilters({
+00161:     products,
+00162:     activeCategory,
+00163:     activeCampaign,
+00164:     searchQuery,
+00165:     showCounts: isFullCatalogLoaded,
+00166:   });
+00167: 
+00168:   const activeCat =
+00169:     activeCategory !== "todas"
+00170:       ? CATEGORY_CONFIG.find((c) => c.id === activeCategory)
+00171:       : null;
+00172: 
+00173:   const activeCampaignData = activeCampaign
+00174:     ? CATALOG_CAMPAIGNS.find((c) => c.id === activeCampaign)
+00175:     : null;
+00176: 
+00177:   const handleAddToCart = useCallback(
+00178:     (product: Product) => {
+00179:       addToCart(product, 1);
+00180:       setSelectedProduct(product);
+00181:       setAddModalOpen(true);
+00182:     },
+00183:     [addToCart],
+00184:   );
+00185: 
+00186:   const handleCloseAddModal = useCallback(() => setAddModalOpen(false), []);
+00187: 
+00188:   const handleAddExtra = useCallback(
+00189:     (qty: number) => {
+00190:       if (selectedProduct && qty > 0) addToCart(selectedProduct, qty);
+00191:     },
+00192:     [addToCart, selectedProduct],
+00193:   );
+00194: 
+00195:   const currentQtyInCart = selectedProduct
+00196:     ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
+00197:     : 0;
+00198: 
+00199:   const renderGrid = (items: Product[]) => (
+00200:     <div className="grid grid-cols-2 gap-[3px] md:grid-cols-3 md:gap-2 xl:grid-cols-5 xl:gap-2">
+00201:       {items.map((p, index) => (
+00202:         <div key={p.id} data-aos="fade-up" data-aos-delay={(index % 5) * 40}>
+00203:           <ProductCard
+00204:             product={p}
+00205:             cart={cart}
+00206:             onAddToCart={handleAddToCart}
+00207:             onImageClick={(product) => {
+00208:               const gallery = getProductMedia(product);
+00209: 
+00210:               setZoomGallery({
+00211:                 media: gallery,
+00212:                 initialIndex: 0,
+00213:                 title: product.title,
+00214:               });
+00215:             }}
+00216:           />
+00217:         </div>
+00218:       ))}
+00219:     </div>
+00220:   );
+00221: 
+00222:   const {
+00223:     showPriorityBlocks,
+00224:     topProducts,
+00225:     strongProducts,
+00226:     highlightProducts,
+00227:     regularProducts,
+00228:   } = useCatalogPrioritySections({
+00229:     products,
+00230:     filteredProducts,
+00231:     activeCategory,
+00232:     activeCampaign,
+00233:     searchQuery,
+00234:   });
+00235: 
+00236:   const seo = getCatalogSeo(activeCategory);
+00237: 
+00238:   useEffect(() => {
+00239:     if (loading || products.length === 0) return;
+00240: 
+00241:     const timer = setTimeout(() => {
+00242:       AOS.refresh();
+00243:     }, 120);
+00244: 
+00245:     return () => clearTimeout(timer);
+00246:   }, [loading, products.length]);
+00247:   return (
+00248:     <div className="min-h-screen bg-background pb-40">
+00249:       <CatalogSeo seo={seo} />
+00250: 
+00251:       <header className="sticky top-0 z-[100] flex w-full flex-col shadow-sm">
+00252:         <CountdownTimer />
+00253: 
+00254:         <CatalogTopNav
+00255:           products={products}
+00256:           searchQuery={searchQuery}
+00257:           onSearchChange={setSearchQuery}
+00258:           categories={visibleCategories}
+00259:           activeCategory={activeCategory}
+00260:           categoryCounts={categoryCounts}
+00261:           onCategorySelect={handleCategorySelect}
+00262:           campaigns={CATALOG_CAMPAIGNS}
+00263:           activeCampaign={activeCampaign}
+00264:           campaignCounts={campaignCounts}
+00265:           showCampaigns={CATALOG_CAMPAIGNS.length > 0}
+00266:           onCampaignSelect={handleCampaignSelect}
+00267:           onLogoClick={handleResetCatalog}
+00268:         />
+00269:       </header>
+00270: 
+00271:       <main className="mx-auto mt-6 max-w-7xl px-2 md:mt-8 md:px-4">
+00272:         {loading ? (
+00273:           <CatalogSkeleton />
+00274:         ) : isCategoryLoading && filteredProducts.length === 0 ? (
+00275:           <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+00276:             <div className="mb-4 rounded-full bg-muted p-6">
+00277:               <SearchX className="h-10 w-10 opacity-30" />
+00278:             </div>
+00279: 
+00280:             <p className="text-center text-sm font-black tracking-widest">
+00281:               Cargando categoría...
+00282:             </p>
+00283: 
+00284:             <p className="mt-2 text-center text-xs font-medium text-muted-foreground">
+00285:               Estamos preparando los productos de esta sección.
+00286:             </p>
+00287:           </div>
+00288:         ) : filteredProducts.length === 0 ? (
+00289:           <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+00290:             <div className="mb-4 rounded-full bg-muted p-6">
+00291:               <SearchX className="h-10 w-10 opacity-30" />
+00292:             </div>
+00293: 
+00294:             <p className="text-center text-sm font-black tracking-widest">
+00295:               Sin resultados
+00296:             </p>
+00297:           </div>
+00298:         ) : (
+00299:           <div className="space-y-8">
+00300:             {showPriorityBlocks && topProducts.length > 0 && (
+00301:               <section className="space-y-3">
+00302:                 <div className="px-2 md:px-0">
+00303:                   <h2 className="text-lg font-black text-foreground md:text-xl">
+00304:                     🔥 Lo más vendido hoy
+00305:                   </h2>
+00306:                   <p className="text-[12px] font-medium text-muted-foreground">
+00307:                     Productos con mayor rotación ahora mismo.
+00308:                   </p>
+00309:                 </div>
+00310: 
+00311:                 {renderGrid(topProducts)}
+00312:               </section>
+00313:             )}
+00314: 
+00315:             {showPriorityBlocks && strongProducts.length > 0 && (
+00316:               <section className="space-y-3">
+00317:                 <div className="px-2 md:px-0">
+00318:                   <h2 className="text-lg font-black text-foreground md:text-xl">
+00319:                     ⭐ Recomendados para vender rápido
+00320:                   </h2>
+00321:                   <p className="text-[12px] font-medium text-muted-foreground">
+00322:                     Seleccionados para vender fácil y mover stock.
+00323:                   </p>
+00324:                 </div>
+00325: 
+00326:                 {renderGrid(strongProducts)}
+00327:               </section>
+00328:             )}
+00329: 
+00330:             {showPriorityBlocks && highlightProducts.length > 0 && (
+00331:               <section className="space-y-3">
+00332:                 <div className="px-2 md:px-0">
+00333:                   <h2 className="text-lg font-black text-foreground md:text-xl">
+00334:                     🟡 Oportunidades del catálogo
+00335:                   </h2>
+00336:                   <p className="text-[12px] font-medium text-muted-foreground">
+00337:                     Opciones para ampliar tu oferta y comprar con estrategia.
+00338:                   </p>
+00339:                 </div>
+00340: 
+00341:                 {renderGrid(highlightProducts)}
+00342:               </section>
+00343:             )}
+00344: 
+00345:             {regularProducts.length > 0 && (
+00346:               <section className="space-y-3">
+00347:                 <div className="px-2 md:px-0">
+00348:                   <h2 className="text-lg font-black text-foreground md:text-xl">
+00349:                     {showPriorityBlocks
+00350:                       ? "🛍️ Todo el catálogo"
+00351:                       : "🛍️ Resultados"}
+00352:                   </h2>
+00353: 
+00354:                   <p className="text-[12px] font-medium text-muted-foreground">
+00355:                     {showPriorityBlocks
+00356:                       ? "Explora todos los productos disponibles para tu negocio."
+00357:                       : "Productos encontrados según tu búsqueda, campaña o categoría."}
+00358:                   </p>
+00359:                 </div>
+00360: 
+00361:                 {renderGrid(regularProducts)}
+00362:               </section>
+00363:             )}
+00364:           </div>
+00365:         )}
+00366:       </main>
+00367: 
+00368:       <CatalogExploreCenter
+00369:         open={exploreOpen}
+00370:         activeCampaign={activeCampaign}
+00371:         activeCategory={activeCategory}
+00372:         activeCampaignName={activeCampaignData?.name}
+00373:         activeCategoryName={activeCat?.name}
+00374:         campaigns={CATALOG_CAMPAIGNS}
+00375:         campaignCounts={campaignCounts}
+00376:         categoryCounts={categoryCounts}
+00377:         categories={visibleCategories}
+00378:         cartCount={totalItems}
+00379:         onClose={() => setExploreOpen(false)}
+00380:         onResetCatalog={handleResetCatalog}
+00381:         onCampaignSelect={handleCampaignSelect}
+00382:         onCategorySelect={handleCategorySelect}
+00383:         onOpenCart={() => setCartOpen(true)}
+00384:       />
+00385: 
+00386:       <RecentActivity products={products} />
+00387: 
+00388:       <FloatingButtons
+00389:         cartCount={totalItems}
+00390:         onCartClick={() => setCartOpen(true)}
+00391:         onExploreClick={() => setExploreOpen(true)}
+00392:       />
+00393: 
+00394:       <CartSidebar
+00395:         isOpen={cartOpen}
+00396:         onClose={() => setCartOpen(false)}
+00397:         cart={cart}
+00398:         totalItems={totalItems}
+00399:         totalPrice={totalPrice}
+00400:         savings={savings}
+00401:         onRemove={removeFromCart}
+00402:         onChangeQty={changeQty}
+00403:         onSetQty={setExactQty}
+00404:         onChangeNote={setItemNote}
+00405:         onClearCart={clearCart}
+00406:       />
+00407: 
+00408:       <ImageZoomModal
+00409:         media={zoomGallery?.media ?? []}
+00410:         initialIndex={zoomGallery?.initialIndex ?? 0}
+00411:         open={!!zoomGallery}
+00412:         title={zoomGallery?.title ?? ""}
+00413:         onClose={() => setZoomGallery(null)}
+00414:       />
+00415: 
+00416:       <AddToCartModal
+00417:         open={addModalOpen}
+00418:         product={selectedProduct}
+00419:         currentQty={currentQtyInCart}
+00420:         onClose={handleCloseAddModal}
+00421:         onAddExtra={handleAddExtra}
+00422:         onOpenCart={() => {
+00423:           setAddModalOpen(false);
+00424:           setCartOpen(true);
+00425:         }}
+00426:       />
+00427:     </div>
+00428:   );
+00429: };
+00430: 
+00431: export default CatalogPage;
+
+[TOTAL LÍNEAS DEL ARCHIVO: 431]
+
+============================================================
+FILE: src\app\pages\ProductDetailPage.tsx
+============================================================
+00001: import { useCallback, useEffect, useMemo, useState } from "react";
+00002: import { ArrowLeft } from "lucide-react";
+00003: import {
+00004:   useLocation,
+00005:   useNavigate,
+00006:   useParams,
+00007:   useSearchParams,
+00008: } from "react-router-dom";
+00009: 
+00010: import { useCartStore } from "@/modules/cart/store";
+00011: import { useProducts } from "@/modules/catalog/hooks/useProducts";
+00012: import type { Product } from "@/shared/types/product";
+00013: import {
+00014:   getUnitPrice,
+00015:   getStockPresentation,
+00016:   getNextTier,
+00017: } from "@/shared/lib/product";
+00018: 
+00019: import { useProductViewers } from "@/modules/product-detail/hooks/useProductViewers";
+00020: import { useRelatedProducts } from "@/modules/product-detail/hooks/useRelatedProducts";
+00021: 
+00022: import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
+00023: import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
+00024: import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
+00025: 
+00026: import { CartSidebar } from "@/modules/cart/components/CartSidebar";
+00027: import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
+00028: import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
+00029: 
+00030: import { ProductDetailHeader } from "@/modules/product-detail/components/ProductDetailHeader";
+00031: import { ProductGallery } from "@/modules/product-detail/components/ProductGallery";
+00032: import { ProductStockInfo } from "@/modules/product-detail/components/ProductStockInfo";
+00033: import { ProductTierSelector } from "@/modules/product-detail/components/ProductTierSelector";
+00034: import { ProductPriceBlock } from "@/modules/product-detail/components/ProductPriceBlock";
+00035: import { ProductQuantitySelector } from "@/modules/product-detail/components/ProductQuantitySelector";
+00036: import { ProductPurchaseActions } from "@/modules/product-detail/components/ProductPurchaseActions";
+00037: import { RelatedProducts } from "@/modules/product-detail/components/RelatedProducts";
+00038: import { ProductTierProgress } from "@/modules/product-detail/components/ProductTierProgress";
+00039: import { ProductSeo } from "@/shared/seo/productSeoComponent";
+00040: import { getProductSeo } from "@/shared/seo/productSeo";
+00041: import { getProductMedia } from "@/shared/lib/productMedia";
+00042: 
+00043: const ProductDetailPage = () => {
+00044:   const { id: paramId } = useParams<{ id: string }>();
+00045:   const [searchParams] = useSearchParams();
+00046:   const navigate = useNavigate();
+00047:   const location = useLocation();
+00048: 
+00049:   const fromSearch = location.state?.fromSearch;
+00050:   const searchQuery = location.state?.searchQuery;
+00051:   const currentCategory = searchParams.get("cat") || "";
+00052:   const id = searchParams.get("id") || paramId;
+00053: 
+00054:   const productCategory = currentCategory || "todas";
+00055: 
+00056:   const { data: products = [], isLoading: loading } = useProducts(
+00057:     productCategory as any,
+00058:   );
+00059: 
+00060:   const [cartOpen, setCartOpen] = useState(false);
+00061:   const [addModalOpen, setAddModalOpen] = useState(false);
+00062:   const [selectedRelated, setSelectedRelated] = useState<Product | null>(null);
+00063:   const [zoomGallery, setZoomGallery] = useState<{
+00064:     initialIndex: number;
+00065:   } | null>(null);
+00066: 
+00067:   const [qty, setQty] = useState(1);
+00068:   const [qtyInput, setQtyInput] = useState("1");
+00069:   const [lastTier, setLastTier] = useState(1);
+00070:   const [showUnlock, setShowUnlock] = useState(false);
+00071:   const [pricePulse, setPricePulse] = useState(false);
+00072:   const [pageReady, setPageReady] = useState(false);
+00073: 
+00074:   const viewers = useProductViewers();
+00075: 
+00076:   const {
+00077:     cart,
+00078:     addToCart,
+00079:     removeFromCart,
+00080:     changeQty,
+00081:     setExactQty,
+00082:     setItemNote,
+00083:     clearCart,
+00084:     totalItems,
+00085:     totalPrice,
+00086:     savings,
+00087:   } = useCartStore();
+00088: 
+00089:   const product = useMemo(
+00090:     () => products.find((item) => item.id === id),
+00091:     [products, id],
+00092:   );
+00093: 
+00094:   const productMedia = product ? getProductMedia(product) : [];
+00095:   const productSeo = getProductSeo(product, id);
+00096: 
+00097:   const selectedRelatedQty = selectedRelated
+00098:     ? (cart.find((i) => i.id === selectedRelated.id)?.qty ?? 0)
+00099:     : 0;
+00100: 
+00101:   useEffect(() => {
+00102:     setPageReady(false);
+00103: 
+00104:     const timer = window.setTimeout(() => {
+00105:       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+00106:     }, 0);
+00107: 
+00108:     const readyTimer = window.setTimeout(() => setPageReady(true), 220);
+00109: 
+00110:     setQty(1);
+00111:     setQtyInput("1");
+00112:     setLastTier(1);
+00113:     setShowUnlock(false);
+00114:     setPricePulse(false);
+00115: 
+00116:     return () => {
+00117:       window.clearTimeout(timer);
+00118:       window.clearTimeout(readyTimer);
+00119:     };
+00120:   }, [id]);
+00121: 
+00122:   const status = (product?.status || "").trim().toLowerCase();
+00123:   const available = !!product && ["publicado", "preventa"].includes(status);
+00124:   const isPreventa = status === "preventa";
+00125:   const isOutOfStock =
+00126:     !!product && !isPreventa && !!product.price_1 && product.stock === 0;
+00127:   const showWhatsAppButton = isPreventa || isOutOfStock;
+00128: 
+00129:   const parsedQtyInput =
+00130:     qtyInput.trim() !== "" && /^\d+$/.test(qtyInput)
+00131:       ? parseInt(qtyInput, 10)
+00132:       : null;
+00133: 
+00134:   const isQtyInputValid = parsedQtyInput !== null && parsedQtyInput >= 1;
+00135:   const effectiveQty = isQtyInputValid ? parsedQtyInput : qty;
+00136: 
+00137:   const unitPrice = product ? getUnitPrice(effectiveQty, product) : 0;
+00138:   const total = unitPrice * effectiveQty;
+00139:   const nextTier = product ? getNextTier(effectiveQty, product) : null;
+00140: 
+00141:   const savingsByQty =
+00142:     product && product.price_1 > unitPrice
+00143:       ? (product.price_1 - unitPrice) * effectiveQty
+00144:       : 0;
+00145: 
+00146:   const related = useRelatedProducts(products, product);
+00147:   const stockPresentation = product
+00148:     ? getStockPresentation(product, isPreventa)
+00149:     : null;
+00150: 
+00151:   const handleBack = useCallback(() => {
+00152:     if (fromSearch) {
+00153:       navigate("/catalogo", { state: { restoreSearch: searchQuery } });
+00154:       return;
+00155:     }
+00156: 
+00157:     navigate(
+00158:       currentCategory
+00159:         ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
+00160:         : "/catalogo",
+00161:     );
+00162:   }, [navigate, currentCategory, fromSearch, searchQuery]);
+00163: 
+00164:   useEffect(() => {
+00165:     const onKeyDown = (event: KeyboardEvent) => {
+00166:       const target = event.target as HTMLElement;
+00167:       const isTyping =
+00168:         ["INPUT", "TEXTAREA"].includes(target.tagName) ||
+00169:         target.isContentEditable;
+00170: 
+00171:       if (isTyping) return;
+00172: 
+00173:       if (event.key === "Backspace") {
+00174:         event.preventDefault();
+00175:         handleBack();
+00176:       }
+00177:     };
+00178: 
+00179:     window.addEventListener("keydown", onKeyDown);
+00180:     return () => window.removeEventListener("keydown", onKeyDown);
+00181:   }, [handleBack]);
+00182: 
+00183:   const handleShare = useCallback(async () => {
+00184:     const url = window.location.href;
+00185: 
+00186:     try {
+00187:       if (navigator.share) {
+00188:         await navigator.share({
+00189:           title: product?.title,
+00190:           text: product?.description,
+00191:           url,
+00192:         });
+00193:         return;
+00194:       }
+00195: 
+00196:       await navigator.clipboard.writeText(url);
+00197:     } catch {
+00198:       console.warn("No se pudo compartir el producto");
+00199:     }
+00200:   }, [product]);
+00201: 
+00202:   const updateQty = useCallback(
+00203:     (nextQty: number) => {
+00204:       const cleanQty = Math.max(1, nextQty);
+00205: 
+00206:       setQty(cleanQty);
+00207:       setQtyInput(String(cleanQty));
+00208: 
+00209:       const nextUnitPrice = product ? getUnitPrice(cleanQty, product) : 0;
+00210:       const nextTierQty =
+00211:         cleanQty >= 100
+00212:           ? 100
+00213:           : cleanQty >= 50
+00214:             ? 50
+00215:             : cleanQty >= 12
+00216:               ? 12
+00217:               : cleanQty >= 3
+00218:                 ? 3
+00219:                 : 1;
+00220: 
+00221:       if (nextTierQty > lastTier) {
+00222:         setShowUnlock(true);
+00223:         window.setTimeout(() => setShowUnlock(false), 1400);
+00224:       }
+00225: 
+00226:       if (nextUnitPrice !== unitPrice) {
+00227:         setPricePulse(true);
+00228:         window.setTimeout(() => setPricePulse(false), 220);
+00229:       }
+00230: 
+00231:       setLastTier(nextTierQty);
+00232:     },
+00233:     [product, lastTier, unitPrice],
+00234:   );
+00235: 
+00236:   const handleQtyInputChange = useCallback((value: string) => {
+00237:     if (value === "" || /^\d+$/.test(value)) {
+00238:       setQtyInput(value);
+00239:     }
+00240:   }, []);
+00241: 
+00242:   const handleQtyInputBlur = useCallback(() => {
+00243:     if (!isQtyInputValid) {
+00244:       setQtyInput(String(qty));
+00245:       return;
+00246:     }
+00247: 
+00248:     updateQty(effectiveQty);
+00249:   }, [effectiveQty, isQtyInputValid, qty, updateQty]);
+00250: 
+00251:   const handleQtyInputKeyDown = useCallback(
+00252:     (event: React.KeyboardEvent<HTMLInputElement>) => {
+00253:       if (event.key === "Enter") {
+00254:         event.currentTarget.blur();
+00255:       }
+00256:     },
+00257:     [],
+00258:   );
+00259: 
+00260:   const handleAddToCart = useCallback(() => {
+00261:     if (!product || !available || !isQtyInputValid) return;
+00262: 
+00263:     addToCart(product, effectiveQty);
+00264:     setCartOpen(true);
+00265:   }, [product, available, isQtyInputValid, addToCart, effectiveQty]);
+00266: 
+00267:   const handleRelatedAddToCart = useCallback(
+00268:     (relatedProduct: Product) => {
+00269:       addToCart(relatedProduct, 1);
+00270:       setSelectedRelated(relatedProduct);
+00271:       setAddModalOpen(true);
+00272:     },
+00273:     [addToCart],
+00274:   );
+00275: 
+00276:   const handleRelatedExtra = useCallback(
+00277:     (qty: number) => {
+00278:       if (!selectedRelated || qty <= 0) return;
+00279:       addToCart(selectedRelated, qty);
+00280:     },
+00281:     [selectedRelated, addToCart],
+00282:   );
+00283: 
+00284:   const handleRelatedOpenCart = useCallback(() => {
+00285:     setAddModalOpen(false);
+00286:     setCartOpen(true);
+00287:   }, []);
+00288: 
+00289:   const handleWhatsApp = useCallback(() => {
+00290:     if (!product) return;
+00291: 
+00292:     const message = [
+00293:       "Hola Wooly, quiero consultar por este producto:",
+00294:       "",
+00295:       `Producto: ${product.title}`,
+00296:       `Código: ${product.id}`,
+00297:       `Cantidad: ${effectiveQty}`,
+00298:       currentCategory ? `Categoría: ${currentCategory}` : "",
+00299:       "",
+00300:       `Link: ${window.location.href}`,
+00301:     ]
+00302:       .filter(Boolean)
+00303:       .join("\n");
+00304: 
+00305:     window.open(
+00306:       `https://wa.me/51936188636?text=${encodeURIComponent(message)}`,
+00307:       "_blank",
+00308:     );
+00309:   }, [product, effectiveQty, currentCategory]);
+00310: 
+00311:   if (loading || !pageReady) return <ProductSkeleton />;
+00312: 
+00313:   if (!product) {
+00314:     return (
+00315:       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+00316:         <p className="text-muted-foreground font-black text-lg">
+00317:           Producto no encontrado
+00318:         </p>
+00319: 
+00320:         <button
+00321:           onClick={() => {
+00322:             if (window.history.length > 1) {
+00323:               navigate(-1);
+00324:               return;
+00325:             }
+00326: 
+00327:             navigate(
+00328:               currentCategory
+00329:                 ? `/catalogo/categoria.html?cat=${encodeURIComponent(currentCategory)}`
+00330:                 : "/catalogo",
+00331:             );
+00332:           }}
+00333:           className="flex h-11 w-11 items-center justify-center rounded-2xl bg-muted text-muted-foreground shadow-sm transition-all hover:bg-accent hover:text-foreground active:scale-95"
+00334:           aria-label="Volver"
+00335:         >
+00336:           <ArrowLeft className="h-5 w-5" />
+00337:         </button>
+00338:       </div>
+00339:     );
+00340:   }
+00341: 
+00342:   return (
+00343:     <div className="min-h-screen bg-background pb-28 md:pb-40">
+00344:       <ProductSeo seo={productSeo} product={product} />
+00345: 
+00346:       <ProductDetailHeader
+00347:         product={product}
+00348:         onBack={handleBack}
+00349:         onShare={handleShare}
+00350:       />
+00351: 
+00352:       <main className="max-w-7xl mx-auto px-4 md:px-6 mt-4 md:mt-10">
+00353:         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,560px)_minmax(420px,1fr)] xl:grid-cols-[minmax(0,620px)_minmax(460px,1fr)] lg:gap-8 xl:gap-10 items-start">
+00354:           <ProductGallery
+00355:             product={product}
+00356:             available={available}
+00357:             onZoom={(index) => setZoomGallery({ initialIndex: index })}
+00358:           />
+00359: 
+00360:           <div className="flex flex-col gap-4 md:gap-6 card-shop p-4 md:p-7 bg-white">
+00361:             <div className="mb-2 flex flex-wrap justify-center gap-2 md:justify-start">
+00362:               <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black text-slate-600">
+00363:                 Código: {product.id}
+00364:               </span>
+00365: 
+00366:               <span className="rounded-full bg-[#e6f6f8] px-3 py-1 text-[11px] font-black capitalize text-[#1d8299]">
+00367:                 {product.category}
+00368:               </span>
+00369:             </div>
+00370: 
+00371:             <div className="text-center md:text-left">
+00372:               <h2 className="text-2xl md:text-[28px] tracking-tight font-black text-foreground leading-tight mb-3">
+00373:                 {product.title}
+00374:               </h2>
+00375: 
+00376:               <p className="text-sm md:text-base text-[#64748b] leading-relaxed">
+00377:                 {product.description}
+00378:               </p>
+00379:             </div>
+00380: 
+00381:             <ProductStockInfo
+00382:               product={product}
+00383:               available={available}
+00384:               viewers={viewers}
+00385:               stockPresentation={stockPresentation}
+00386:             />
+00387: 
+00388:             <ProductTierSelector
+00389:               product={product}
+00390:               effectiveQty={effectiveQty}
+00391:               onSelectQty={updateQty}
+00392:             />
+00393: 
+00394:             <ProductPriceBlock
+00395:               unitPrice={unitPrice}
+00396:               total={total}
+00397:               effectiveQty={effectiveQty}
+00398:               pricePulse={pricePulse}
+00399:               showUnlock={showUnlock}
+00400:               savingsByQty={savingsByQty}
+00401:               basePrice={product.price_1}
+00402:               nextTier={nextTier}
+00403:               isQtyInputValid={isQtyInputValid}
+00404:             />
+00405: 
+00406:             <ProductTierProgress
+00407:               product={product}
+00408:               effectiveQty={effectiveQty}
+00409:               nextTier={nextTier}
+00410:             />
+00411: 
+00412:             {available && (
+00413:               <ProductQuantitySelector
+00414:                 value={qtyInput}
+00415:                 effectiveQty={effectiveQty}
+00416:                 onDecrease={() => updateQty(effectiveQty - 1)}
+00417:                 onIncrease={() => updateQty(effectiveQty + 1)}
+00418:                 onChange={handleQtyInputChange}
+00419:                 onBlur={handleQtyInputBlur}
+00420:                 onKeyDown={handleQtyInputKeyDown}
+00421:               />
+00422:             )}
+00423: 
+00424:             <ProductPurchaseActions
+00425:               showWhatsAppButton={showWhatsAppButton}
+00426:               isPreventa={isPreventa}
+00427:               available={available}
+00428:               isQtyInputValid={isQtyInputValid}
+00429:               total={total}
+00430:               onWhatsApp={handleWhatsApp}
+00431:               onAddToCart={handleAddToCart}
+00432:             />
+00433:           </div>
+00434:         </div>
+00435: 
+00436:         <RelatedProducts
+00437:           products={related}
+00438:           onAddToCart={handleRelatedAddToCart}
+00439:           onImageClick={(product) => {
+00440:             navigate(
+00441:               `/catalogo/producto.html?id=${product.id}&cat=${encodeURIComponent(product.category)}`,
+00442:             );
+00443:           }}
+00444:         />
+00445:       </main>
+00446: 
+00447:       <FloatingButtons
+00448:         cartCount={totalItems}
+00449:         onCartClick={() => setCartOpen(true)}
+00450:       />
+00451: 
+00452:       <RecentActivity products={products} />
+00453: 
+00454:       <CartSidebar
+00455:         isOpen={cartOpen}
+00456:         onClose={() => setCartOpen(false)}
+00457:         cart={cart}
+00458:         totalItems={totalItems}
+00459:         totalPrice={totalPrice}
+00460:         savings={savings}
+00461:         onRemove={removeFromCart}
+00462:         onChangeQty={changeQty}
+00463:         onSetQty={setExactQty}
+00464:         onChangeNote={setItemNote}
+00465:         onClearCart={clearCart}
+00466:       />
+00467: 
+00468:       <ImageZoomModal
+00469:         media={productMedia}
+00470:         initialIndex={zoomGallery?.initialIndex ?? 0}
+00471:         open={!!zoomGallery && productMedia.length > 0}
+00472:         title={product?.title ?? ""}
+00473:         onClose={() => setZoomGallery(null)}
+00474:       />
+00475: 
+00476:       <AddToCartModal
+00477:         open={addModalOpen}
+00478:         product={selectedRelated}
+00479:         currentQty={selectedRelatedQty}
+00480:         onClose={() => setAddModalOpen(false)}
+00481:         onAddExtra={handleRelatedExtra}
+00482:         onOpenCart={handleRelatedOpenCart}
+00483:         secondaryActionLabel="Seguir viendo"
+00484:         onSecondaryAction={() => setAddModalOpen(false)}
+00485:       />
+00486:     </div>
+00487:   );
+00488: };
+00489: 
+00490: export default ProductDetailPage;
+
+[TOTAL LÍNEAS DEL ARCHIVO: 490]
+
+============================================================
+FILE: src\modules\product-detail\components\ProductGallery.tsx
+============================================================
+00001: import { useEffect, useMemo, useRef, useState } from "react";
+00002: import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+00003: import type { Product } from "@/shared/types/product";
+00004: import { getProductMedia } from "@/shared/lib/productMedia";
+00005: import { ProductBadgeStack } from "@/modules/catalog/components/ProductBadgeStack";
+00006: 
+00007: interface ProductGalleryProps {
+00008:   product: Product;
+00009:   available: boolean;
+00010:   onZoom: (initialIndex: number) => void;
+00011: }
+00012: 
+00013: export function ProductGallery({
+00014:   product,
+00015:   available,
+00016:   onZoom,
+00017: }: ProductGalleryProps) {
+00018:   const media = useMemo(() => getProductMedia(product), [product]);
+00019:   const [activeIndex, setActiveIndex] = useState(0);
+00020:   const [heroLoaded, setHeroLoaded] = useState(false);
+00021:   const touchStartX = useRef<number | null>(null);
+00022:   const activeMedia = media[activeIndex] ?? media[0];
+00023:   const hasMany = media.length > 1;
+00024: 
+00025:   const maxVisibleThumbs = 5;
+00026:   const visibleMedia = media.slice(0, maxVisibleThumbs);
+00027:   const hiddenCount = Math.max(media.length - maxVisibleThumbs, 0);
+00028: 
+00029:   const goPrev = () =>
+00030:     setActiveIndex((i) => (i === 0 ? media.length - 1 : i - 1));
+00031:   const goNext = () =>
+00032:     setActiveIndex((i) => (i === media.length - 1 ? 0 : i + 1));
+00033: 
+00034:   useEffect(() => {
+00035:     setActiveIndex(0);
+00036:   }, [product.id]);
+00037: 
+00038:   const handleTouchStart = (e: React.TouchEvent) => {
+00039:     touchStartX.current = e.touches[0].clientX;
+00040:   };
+00041: 
+00042:   const handleTouchEnd = (e: React.TouchEvent) => {
+00043:     if (!hasMany || touchStartX.current === null) return;
+00044: 
+00045:     const diff = touchStartX.current - e.changedTouches[0].clientX;
+00046: 
+00047:     if (Math.abs(diff) > 45) {
+00048:       diff > 0 ? goNext() : goPrev();
+00049:     }
+00050: 
+00051:     touchStartX.current = null;
+00052:   };
+00053: 
+00054:   return (
+00055:     <div className="relative flex flex-col gap-3 md:grid md:grid-cols-[96px_minmax(0,1fr)] xl:grid-cols-[100px_minmax(0,1fr)] md:gap-3 xl:gap-5">
+00056:       {hasMany && (
+00057:         <div className="order-2 flex gap-2 overflow-x-auto pb-1 md:order-1 md:flex-col md:max-h-[560px] md:overflow-x-visible md:overflow-y-auto md:pb-0">
+00058:           {visibleMedia.map((item, index) => {
+00059:             const isActive = index === activeIndex;
+00060: 
+00061:             return (
+00062:               <button
+00063:                 key={item.id}
+00064:                 type="button"
+00065:                 onMouseEnter={() => {
+00066:                   if (activeIndex !== index) {
+00067:                     setActiveIndex(index);
+00068:                   }
+00069:                 }}
+00070:                 onClick={() => setActiveIndex(index)}
+00071:                 className={[
+00072:                   "relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl border bg-white transition-all duration-200 md:h-[100px] md:w-[75px] xl:h-[100px] xl:w-[75px]",
+00073:                   isActive
+00074:                     ? "z-10 scale-105 border-[#1d8299] opacity-100 ring-2 ring-[#1d8299]/25 shadow-xl"
+00075:                     : "border-[#e2e8f0] opacity-70 hover:scale-[1.02] hover:opacity-100",
+00076:                 ].join(" ")}
+00077:               >
+00078:                 <img
+00079:                   src={item.thumb || item.src}
+00080:                   alt={item.alt}
+00081:                   className="h-full w-full object-cover object-center"
+00082:                 />
+00083:               </button>
+00084:             );
+00085:           })}
+00086: 
+00087:           {hiddenCount > 0 && (
+00088:             <button
+00089:               type="button"
+00090:               onClick={() => onZoom(maxVisibleThumbs)}
+00091:               className="relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl md:h-[100px] md:w-[75px] xl:h-[100px] xl:w-[75px]"
+00092:             >
+00093:               <img
+00094:                 src={
+00095:                   media[maxVisibleThumbs]?.thumb || media[maxVisibleThumbs]?.src
+00096:                 }
+00097:                 alt="Ver todas"
+00098:                 className="h-full w-full object-cover object-center brightness-50"
+00099:               />
+00100: 
+00101:               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 text-white">
+00102:                 <span className="text-lg font-black">+{hiddenCount}</span>
+00103:                 <span className="text-[10px] font-semibold">Ver todas</span>
+00104:               </div>
+00105:             </button>
+00106:           )}
+00107:         </div>
+00108:       )}
+00109: 
+00110:       <div
+00111:         className="order-1 relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-3xl border border-[#e2e8f0] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.16)] group cursor-zoom-in md:order-2 lg:min-h-[560px] xl:min-h-[620px]"
+00112:         onClick={() => onZoom(activeIndex)}
+00113:         onTouchStart={handleTouchStart}
+00114:         onTouchEnd={handleTouchEnd}
+00115:       >
+00116:         <img
+00117:           key={activeMedia.id}
+00118:           src={activeMedia.src}
+00119:           alt={activeMedia.alt}
+00120:           onLoad={() => setHeroLoaded(true)}
+00121:           className={[
+00122:             "h-full w-full object-cover object-center transition-all duration-300 ease-out group-hover:scale-[1.02]",
+00123:             heroLoaded ? "scale-100 opacity-100" : "scale-[0.985] opacity-0",
+00124:             !available ? "grayscale-[50%]" : "",
+00125:           ].join(" ")}
+00126:         />
+00127: 
+00128:         <ProductBadgeStack
+00129:           product={product}
+00130:           maxVisible={3}
+00131:           includePricingBadges={false}
+00132:           includeSeasonality
+00133:           variant="detail"
+00134:           className="absolute left-4 top-4 z-10 flex max-w-[75%] flex-col items-start gap-2"
+00135:         />
+00136: 
+00137:         {hasMany && (
+00138:           <>
+00139:             <button
+00140:               type="button"
+00141:               onClick={(e) => {
+00142:                 e.stopPropagation();
+00143:                 goPrev();
+00144:               }}
+00145:               className="absolute left-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white group-hover:opacity-100 md:flex"
+00146:               aria-label="Imagen anterior"
+00147:             >
+00148:               <ChevronLeft className="h-6 w-6" />
+00149:             </button>
+00150: 
+00151:             <button
+00152:               type="button"
+00153:               onClick={(e) => {
+00154:                 e.stopPropagation();
+00155:                 goNext();
+00156:               }}
+00157:               className="absolute right-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white group-hover:opacity-100 md:flex"
+00158:               aria-label="Imagen siguiente"
+00159:             >
+00160:               <ChevronRight className="h-6 w-6" />
+00161:             </button>
+00162:           </>
+00163:         )}
+00164: 
+00165:         <div className="absolute bottom-4 right-4 rounded-2xl border border-[#e2e8f0] bg-white/90 p-2.5 text-[#334155] shadow-lg backdrop-blur-md transition-all group-hover:scale-105">
+00166:           <ZoomIn className="h-5 w-5" />
+00167:         </div>
+00168: 
+00169:         {hasMany && (
+00170:           <div className="absolute bottom-4 left-4 rounded-2xl bg-black/45 px-3 py-2 text-[11px] font-black text-white backdrop-blur-md">
+00171:             📷 {activeIndex + 1} de {media.length}
+00172:           </div>
+00173:         )}
+00174:       </div>
+00175:     </div>
+00176:   );
+00177: }
+
+[TOTAL LÍNEAS DEL ARCHIVO: 177]
+
+============================================================
+CONSUMIDORES DE PRODUCTBADGESTACK
+============================================================
+
+============================================================
+PUNTOS DE CARGA DE CAMPAÑAS
+============================================================

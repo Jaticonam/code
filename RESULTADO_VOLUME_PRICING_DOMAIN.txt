@@ -1,0 +1,383 @@
+=========================================================
+RESULTADO — VOLUME PRICING DOMAIN
+Fecha: 2026-07-21 15:10:53
+=========================================================
+
+BACKUP
+---------------------------------------------------------
+.\BlueprintBackups\VolumePricingDomain-20260721-151047
+
+DOMINIO CREADO
+---------------------------------------------------------
+.\src\modules\catalog\domain\volumePricing
+
+TYPECHECK
+---------------------------------------------------------
+
+BUILD
+---------------------------------------------------------
+
+> vite_react_shadcn_ts@0.0.0 build
+> vite build
+
+[36mvite v5.4.19 [32mbuilding for production...[36m[39m
+transforming...
+Browserslist: browsers data (caniuse-lite) is 13 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[32mÔ£ô[39m 2083 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                            [39m[1m[2m  2.81 kB[22m[1m[22m[2m Ôöé gzip:   0.98 kB[22m
+[2mdist/[22m[35massets/index-DZZJg4WS.css             [39m[1m[2m389.47 kB[22m[1m[22m[2m Ôöé gzip:  56.76 kB[22m
+[2mdist/[22m[36massets/fallback-products-hLXIqj7h.js  [39m[1m[2m 73.41 kB[22m[1m[22m[2m Ôöé gzip:  17.32 kB[22m
+[2mdist/[22m[36massets/index-Bivmq5nn.js              [39m[1m[33m642.04 kB[39m[22m[2m Ôöé gzip: 193.10 kB[22m
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[32mÔ£ô built in 10.26s[39m
+
+ARCHIVOS DEL DOMINIO
+---------------------------------------------------------
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\domain\volumePricing\index.ts
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\domain\volumePricing\ResolveVolumePrice.ts
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\domain\volumePricing\VolumePrice.ts
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\domain\volumePricing\VolumePriceRules.ts
+
+REFERENCIAS RESTANTES A TIER
+---------------------------------------------------------
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:16: getNextTier,
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:33: import { ProductTierSelector } from "@/modules/product-detail/components/ProductTierSelector";
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:38: import { ProductTierProgress } from "@/modules/product-detail/components/ProductTierProgress";
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:69: const [lastTier, setLastTier] = useState(1);
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:112: setLastTier(1);
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:139: const nextTier = product ? getNextTier(effectiveQty, product) : null;
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:210: const nextTierQty =
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:221: if (nextTierQty > lastTier) {
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:231: setLastTier(nextTierQty);
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:233: [product, lastTier, unitPrice],
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:388: <ProductTierSelector
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:402: nextTier={nextTier}
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:406: <ProductTierProgress
+D:\JUNG\code\wooly\wooly-web\src\app\pages\ProductDetailPage.tsx:409: nextTier={nextTier}
+D:\JUNG\code\wooly\wooly-web\src\modules\blog\components\products\BlogCatalogProductCard.tsx:21: const TIERS = [
+D:\JUNG\code\wooly\wooly-web\src\modules\blog\components\products\BlogCatalogProductCard.tsx:34: const tiers = TIERS.filter((t) => product[t.key]);
+D:\JUNG\code\wooly\wooly-web\src\modules\blog\components\products\BlogCatalogProductCard.tsx:64: {!!tiers.length && (
+D:\JUNG\code\wooly\wooly-web\src\modules\blog\components\products\BlogCatalogProductCard.tsx:65: <div className="blog-catalog-product-tiers">
+D:\JUNG\code\wooly\wooly-web\src\modules\blog\components\products\BlogCatalogProductCard.tsx:67: {tiers.map((t) => (
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModal.tsx:84: nextTier={
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:2: import { PRICE_TIERS } from "@/shared/config/priceTiers";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:8: nextTier: any;
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:15: nextTier,
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:17: const tiers = PRICE_TIERS.filter((tier) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:18: const price = product[tier.key];
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:25: }).map((tier) => ({
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:26: ...tier,
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:27: price: Number(product[tier.key]),
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:30: const currentTier =
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:31: [...tiers]
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:33: .find((tier) => currentQty >= tier.qty) ?? tiers[0];
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:35: const bestTarget = tiers.at(-1)?.qty ?? 1;
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:38: nextTier?.targetQty ??
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:39: nextTier?.qty ??
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:43: nextTier?.unitPrice ??
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:44: nextTier?.price ??
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:49: const activeTiers = tiers.map((tier) => tier.qty);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:51: const currentTierIndex = activeTiers.reduce(
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:56: const nextTierIndex = activeTiers.findIndex(
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:61: nextTierIndex === -1
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:62: ? activeTiers.length - 1
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:63: : nextTierIndex;
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:65: const prevQty = activeTiers[currentTierIndex] ?? 1;
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:66: const nextQty = activeTiers[nextIndex] ?? prevQty;
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:69: activeTiers.length > 1
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:70: ? 100 / (activeTiers.length - 1)
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:80: currentTierIndex * segmentBase + segmentProgress,
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:105: {currentTier && (
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:108: "tier",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:109: "tier-badge",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:110: currentTier.className,
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:111: "tier-active",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:159: {tiers.length > 0 && (
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:161: {tiers.map((tier) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:162: const active = currentQty >= tier.qty;
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:166: key={tier.key}
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:170: "tier",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:171: "tier-chip",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:172: tier.className,
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:174: active ? "tier-active" : "",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:177: <span>{tier.qty}+</span>
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:180: S/{tier.price.toFixed(1)}
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\AddToCartModalInfo.tsx:191: ) : nextTier ? (
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:6: import { getActiveTierQty } from "@/modules/cart/utils/getActiveTierQty";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:7: import { getTierUnlockMessage } from "@/modules/cart/utils/getTierUnlockMessage";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:9: import { CartTierSelector } from "@/modules/cart/components/CartTierSelector";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:30: const activeTierQty = getActiveTierQty(item);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:34: const prevTierRef = useRef(activeTierQty);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:38: const [tierFlash, setTierFlash] = useState(false);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:65: if (prevTierRef.current !== activeTierQty) {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:66: setTierFlash(true);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:68: const timer = setTimeout(() => setTierFlash(false), 1500);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:70: prevTierRef.current = activeTierQty;
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:74: }, [activeTierQty]);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartRow.tsx:123: <CartTierSelector item={item} onSetQty={onSetQty} />
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:2: import { PRICE_TIERS } from "@/shared/config/priceTiers";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:4: interface CartTierSelectorProps {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:9: export function CartTierSelector({
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:12: }: CartTierSelectorProps) {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:13: const itemTiers = PRICE_TIERS.filter((tier) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:14: const value = item[tier.key];
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:24: itemTiers.length <= 1
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:26: : itemTiers.length === 2
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:32: {itemTiers.map((tier, index) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:33: const nextTier = itemTiers[index + 1];
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:36: item.qty >= tier.qty &&
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:37: (!nextTier || item.qty < nextTier.qty);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:41: key={tier.key}
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:43: onClick={() => onSetQty(item.id, tier.qty)}
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:45: "tier",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:46: "tier-button",
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:47: tier.className,
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:50: ? "tier-active scale-[1.02]"
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\components\CartTierSelector.tsx:54: {tier.label}
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getActiveTierQty.ts:3: export function getActiveTierQty(item: CartItem): number {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getTierUnlockMessage.ts:2: import { getActiveTierQty } from "@/modules/cart/utils/getActiveTierQty";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getTierUnlockMessage.ts:4: export function getTierUnlockMessage(item: CartItem): string | null {
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getTierUnlockMessage.ts:5: const activeTier = getActiveTierQty(item);
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getTierUnlockMessage.ts:7: if (activeTier >= 100) return "🔥 Precio por cajón activado";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getTierUnlockMessage.ts:8: if (activeTier >= 50) return "⚡ Precio máximo activado";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getTierUnlockMessage.ts:9: if (activeTier >= 12) return "✨ Precio por pack activado";
+D:\JUNG\code\wooly\wooly-web\src\modules\cart\utils\getTierUnlockMessage.ts:10: if (activeTier >= 3) return "🎉 Precio por mayor activado";
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:212: .catalog-pdf-card__tiers {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:218: .catalog-pdf-card__tier {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:231: .catalog-pdf-card__tierLabel {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:241: .catalog-pdf-card__tierPrice {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:252: /* ===== TIER COLORS ===== */
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:254: .catalog-pdf-card__tier--price3 {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:262: .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierLabel {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:266: .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierPrice {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:270: .catalog-pdf-card__tier--price12 {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:276: .catalog-pdf-card__tier--price50 {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:282: .catalog-pdf-card__tier--price100 {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:288: .catalog-pdf-card__noTiers {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:426: /* ===== TIERS ===== */
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:428: .catalog-pdf-card__tier {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:443: .catalog-pdf-card__tierLabel,
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:444: .catalog-pdf-card__tierPrice {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:451: .catalog-pdf-card__tierLabel {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:456: .catalog-pdf-card__tierPrice {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:463: .catalog-pdf-card__tier--price3 {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:467: .catalog-pdf-card__tier--price3
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:468: .catalog-pdf-card__tierLabel {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:472: .catalog-pdf-card__tier--price3
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:473: .catalog-pdf-card__tierPrice {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:537: .catalog-pdf-card__tiers {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:541: .catalog-pdf-card__tier {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:547: .catalog-pdf-card__tierLabel {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:551: .catalog-pdf-card__tierPrice {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:555: .catalog-pdf-card__tier--price3 {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:559: .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierLabel {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.css:563: .catalog-pdf-card__tier--price3 .catalog-pdf-card__tierPrice {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:10: type TierKind = "price3" | "price12" | "price50" | "price100";
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:12: type TierPrice = {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:13: kind: TierKind;
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:37: const getTierPrices = (product: PdfProduct): TierPrice[] => {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:38: const tiers: TierPrice[] = [
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:61: return tiers.filter((tier) => Number(tier.value || 0) > 0);
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:64: const tierPrices = getTierPrices(product);
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:129: {tierPrices.length > 0 ? (
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:131: className="catalog-pdf-card__tiers"
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:134: {tierPrices.map((tier) => (
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:136: className={`catalog-pdf-card__tier catalog-pdf-card__tier--${tier.kind}`}
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:137: key={tier.kind}
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:139: <span className="catalog-pdf-card__tierLabel">
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:140: {tier.label}
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:143: <strong className="catalog-pdf-card__tierPrice">
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:144: {formatMoney(tier.value)}
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog-export\components\CatalogPdfCard\CatalogPdfCard.tsx:150: <p className="catalog-pdf-card__noTiers">
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCard.tsx:10: import { ProductCardTierBadges } from "@/modules/catalog/components/ProductCardTierBadges";
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCard.tsx:129: <ProductCardTierBadges
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:2: import { getAvailablePriceTiers } from "@/shared/config/priceTiers";
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:4: const TIER_LABELS = {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:17: export function ProductCardTierBadges({
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:24: const tiers = getAvailablePriceTiers(product).filter((tier) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:25: const unitPrice = Number(product[tier.key]);
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:30: if (!tiers.length) return null;
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:40: {tiers.map((tier) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:41: const unitPrice = Number(product[tier.key]);
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:42: const totalPrice = unitPrice * tier.qty;
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:46: key={tier.key}
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:47: className={`wholesale-chip tier tier-chip ${tier.className}`}
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\components\ProductCardTierBadges.tsx:50: {TIER_LABELS[tier.key]} ({tier.label}) × S/
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:36: { id: "7017G1321", title: "Peluche león sentado con flor 30cm", description: "Tierno, suave, ideal para regalo romántico y ocasiones especiales", category: "peluches", price_1: 38.0, price_3: 26.0, price_12: 25.5, price_50: null, price_100: null, stock: 20, img: "https://dl.dropboxusercontent.com/scl/fi/7mo9hxhtghmdqorzzv0kg/G1321.jpg?rlkey=h7ci7z7jenbu08wwvwapfp1is&st=kh9utj8c&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:40: { id: "AC4054OTR", title: "Peluche corderito con tulipán 25cm", description: "Colores pastel, delicado, ideal para bebé o regalo tierno especial", category: "peluches", price_1: 25.0, price_3: 16.0, price_12: 15.5, price_50: null, price_100: null, stock: 20, img: "https://dl.dropboxusercontent.com/scl/fi/6ibksee81u129dpd8vu11/qP37M3vAP.jpg?rlkey=u1jfc8uut2qpn42ksxxog3j0j&st=denpsh52&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:41: { id: "GSJ-1737", title: "Peluche corderito con corazón 25cm", description: "Suave, tierno, perfecto para expresar amor en cualquier ocasión especial", category: "peluches", price_1: 25.0, price_3: 16.0, price_12: 15.5, price_50: null, price_100: null, stock: 20, img: "https://dl.dropboxusercontent.com/scl/fi/fiaqjzzmneaoq3g2s0wvz/GSJ-1737.jpg?rlkey=ykzp3b30z3rezprvimehsyjns&st=e2edrao6&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:48: { id: "ZlVzxn41t", title: "Peluche vaquita Milk 18cm", description: "Dulce, colores suaves, ideal para niños o decoración tierna infantil", category: "peluches", price_1: 22.0, price_3: 15.0, price_12: 14.5, price_50: null, price_100: null, stock: 20, img: "https://dl.dropboxusercontent.com/scl/fi/eu4zekiswtddm668z0dxy/ZIVzxb41t.jpg?rlkey=e9u9pwzwkhqgemqt9qi2ysy5v&st=l57q0riv&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:61: { id: "MN001", title: "Peluche monita con moño 20cm", description: "Tierna, femenina, suave, ideal para regalo delicado o decoración especial", category: "peluches", price_1: 25.0, price_3: 15.0, price_12: 14.5, price_50: null, price_100: null, stock: 50, img: "https://dl.dropboxusercontent.com/scl/fi/55hzfgjjfvxnoqh6m1ywi/MN001.jpg?rlkey=aawcwp12xik5bjv2qfkx7nx6c&st=i6swgm8v&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:66: { id: "CN001", title: "Peluche conejo con corazón 25cm", description: "Tierno, suave, ideal para decoración o regalo especial lleno cariño", category: "peluches", price_1: 25.0, price_3: 14.5, price_12: 14.0, price_50: null, price_100: null, stock: 20, img: "https://dl.dropboxusercontent.com/scl/fi/rnix71dajyu17xw149rtt/CN001.jpg?rlkey=dpjcekhphmfcl870gzf4b1e9w&st=quoqbbai&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:68: { id: "rICK2hc3D", title: "Peluche conejo de orejas largas 25cm", description: "Adorable, suave, ideal para niños o decoración tierna en casa", category: "peluches", price_1: 20.0, price_3: 13.0, price_12: 12.5, price_50: null, price_100: null, stock: 20, img: "https://dl.dropboxusercontent.com/scl/fi/hm3y873bx43u6dnilci0a/img_disp.jpg?rlkey=zptj17v7lajk0mo4vvqy2133r&st=6xgmmct3&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:69: { id: "70Baz06335", title: "Peluche Chancho collar 25cm", description: "Tierno, suave, ideal para decoración o regalo divertido y original", category: "peluches", price_1: 20.0, price_3: 15.0, price_12: 14.7, price_50: null, price_100: null, stock: 20, img: "https://dl.dropboxusercontent.com/scl/fi/hm3y873bx43u6dnilci0a/img_disp.jpg?rlkey=zptj17v7lajk0mo4vvqy2133r&st=6xgmmct3&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:71: { id: "70PLO30", title: "Peluche Lotso Echado 35cm", description: "Diseño adorable acostado perfecto para detalles tiernos y colecciones", category: "peluches", price_1: 35.0, price_3: 22.0, price_12: 21.0, price_50: null, price_100: null, stock: 100, img: "https://dl.dropboxusercontent.com/scl/fi/hm3y873bx43u6dnilci0a/img_disp.jpg?rlkey=zptj17v7lajk0mo4vvqy2133r&st=6xgmmct3&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\catalog\data\fallback-products.ts:81: { id:"8241110482153", title:"Papel Coreano Kitty 20u Paq.", description:"Diseño tierno de Kitty perfecto para regalos infantiles dulces encantadores", category:"papeles", price_1:10.0, price_3:7.9, price_12:7.4, price_50:null, price_100:null, stock:20, img:"https://dl.dropboxusercontent.com/scl/fi/bfz7nti08h2p1ic4dkykm/20260228_164133.jpg?rlkey=16d3elhipyiopznweytv1qm89&st=mx6203my&raw=1" },
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductPriceBlock.tsx:9: nextTier: {
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductPriceBlock.tsx:24: nextTier,
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductPriceBlock.tsx:83: {nextTier && !hasOffer && (
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductPriceBlock.tsx:85: 🔥 Agrega {nextTier.qty - effectiveQty} más y baja a S/{" "}
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductPriceBlock.tsx:86: {nextTier.price.toFixed(2)}
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:6: nextTier:{qty:number;price:number}|null;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:9: export function ProductTierProgress({product,effectiveQty,nextTier}:Props){
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:10: const tiers=[
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:18: const bestTarget=tiers.at(-1)?.qty??1;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:19: const activeTiers=tiers.map(t=>t.qty);
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:20: const currentTierIndex=activeTiers.reduce((acc,qty,i)=>effectiveQty>=qty?i:acc,0);
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:21: const nextTierIndex=activeTiers.findIndex(qty=>effectiveQty<qty);
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:22: const nextIndex=nextTierIndex===-1?activeTiers.length-1:nextTierIndex;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:23: const prevQty=activeTiers[currentTierIndex]??1;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:24: const nextQty=activeTiers[nextIndex]??prevQty;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:25: const segmentBase=activeTiers.length>1?100/(activeTiers.length-1):100;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:27: const rawProgress=Math.min((currentTierIndex*segmentBase)+segmentProgress,100);
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:30: const targetQty=nextTier?.qty??bestTarget;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:33: if(tiers.length<=1)return null;
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierProgress.tsx:48: {unlocked?(<>🎉 Mejor precio desbloqueado</>):nextTier?(<>🚀 Agrega <span className="text-[#1d8299]">{missingQty}</span> más y baja a <span className="text-[#1d8299]">S/{nextTier.price.toFixed(2)}</span> c/u</>):(<>✅ Ya tienes el mejor precio disponible</>)}
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:2: import { PRICE_TIERS } from "@/shared/config/priceTiers";
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:4: interface ProductTierSelectorProps {
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:10: export function ProductTierSelector({
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:14: }: ProductTierSelectorProps) {
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:15: const availableTiers = PRICE_TIERS.filter((tier) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:16: const value = product[tier.key];
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:27: {availableTiers.map((tier, index) => {
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:28: const value = Number(product[tier.key]);
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:29: const nextTier = availableTiers[index + 1];
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:32: effectiveQty >= tier.qty &&
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:33: (!nextTier || effectiveQty < nextTier.qty);
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:37: key={tier.key}
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:39: onClick={() => onSelectQty(tier.qty)}
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:41: "tier",
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:42: "tier-button",
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:43: tier.className,
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:46: ? "tier-active scale-[1.04]"
+D:\JUNG\code\wooly\wooly-web\src\modules\product-detail\components\ProductTierSelector.tsx:52: {tier.label}
+D:\JUNG\code\wooly\wooly-web\src\shared\config\priceTiers.ts:15: export const PRICE_TIERS = VOLUME_PRICES;
+D:\JUNG\code\wooly\wooly-web\src\shared\config\priceTiers.ts:20: export const VOLUME_PRICE_TIERS =
+D:\JUNG\code\wooly\wooly-web\src\shared\config\priceTiers.ts:26: export function getAvailablePriceTiers(
+D:\JUNG\code\wooly\wooly-web\src\shared\config\priceTiers.ts:47: export function getNextTier(
+D:\JUNG\code\wooly\wooly-web\src\shared\lib\product\getBestProductTier.ts:10: export function getBestProductTier(
+D:\JUNG\code\wooly\wooly-web\src\shared\lib\product\getNextTier.ts:10: export function getNextTier(
+D:\JUNG\code\wooly\wooly-web\src\shared\lib\product\index.ts:1: export * from "./getNextTier";
+D:\JUNG\code\wooly\wooly-web\src\shared\lib\product\index.ts:4: export * from "./getBestProductTier";
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:105: .blog-catalog-product-tiers {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:116: .blog-catalog-product-tiers span {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:249: .blog-catalog-product-tiers {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:254: .blog-catalog-product-tiers b {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:261: .blog-catalog-product-tiers span {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:270: .blog-catalog-product-tiers em {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:273: .blog-catalog-product-tiers strong {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:419: .blog-catalog-product-tiers {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:431: .blog-catalog-product-tiers b {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\blog\sections\blog-catalog.css:438: .blog-catalog-product-tiers span {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\catalog\product-card.css:107: /* Colores por tier */
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:4: WOOLY TIER DESIGN SYSTEM
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:7: .tier {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:8: --tier-color: #1d8299;
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:14: border: 1px solid var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:16: color: var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:30: IDENTIDAD POR TIER
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:33: .tier-1 {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:34: --tier-color: #1d8299;
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:37: .tier-3 {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:38: --tier-color: #e99518;
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:41: .tier-12 {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:42: --tier-color: #e85ca7;
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:45: .tier-50 {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:46: --tier-color: #7c3aed;
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:49: .tier-100 {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:50: --tier-color: #0f9d7a;
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:57: .tier-button {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:65: color: var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:70: .tier-button:hover {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:73: var(--tier-color) 8%,
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:84: .tier-chip {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:91: color: var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:100: .tier-active {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:101: border-color: var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:102: background: var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:109: var(--tier-color) 24%,
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:114: .tier-active:hover {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:115: background: var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:123: .tier-badge {
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:130: background: var(--tier-color);
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:137: var(--tier-color) 28%,
+D:\JUNG\code\wooly\wooly-web\src\shared\styles\components\badges.css:146: .product-card-tiers {
+
+GIT STATUS
+---------------------------------------------------------
+ D AUDITORIA_BADGES_COLORES_CAMPANAS.txt
+ D AUDITORIA_GLOBAL_TIERS_VISUALES.txt
+ D BlueprintBadgesTestErrors.txt
+ D BlueprintBadgesTypecheckErrors.txt
+ D BlueprintBaselineBatchAInputs.txt
+ D BlueprintBaselineBuild.txt
+ D BlueprintBlogDataAudit.txt
+ D BlueprintCommerceContractsAudit.txt
+ D BlueprintPdfCartBaselineAudit.txt
+ D BlueprintPdfCartBaselineAuditFixed.txt
+ D BlueprintPdfCommercialFlowAudit.txt
+ D BlueprintRealTypecheckAudit.txt
+ D BlueprintTree.txt
+ D BlueprintTypeErrorsMassAudit.txt
+ D BlueprintTypecheckAfterBatchA.txt
+ D BlueprintTypecheckAfterBatchB.txt
+ D BlueprintTypecheckAfterBatchB2.txt
+ D BlueprintTypecheckAfterBlogData.txt
+ D BlueprintTypecheckAfterPdfRepair.txt
+ D build-error.txt
+ M src/modules/cart/components/AddToCartModal.tsx
+ M src/modules/cart/components/AddToCartModalInfo.tsx
+ D src/modules/cart/utils/getNextTier.ts
+ M src/modules/catalog/components/ProductBadgeStack.tsx
+ M src/modules/catalog/components/ProductCardBadges.tsx
+ M src/modules/catalog/components/ProductCardTierBadges.tsx
+ M src/modules/catalog/domain/CampaignRules.ts
+ M src/modules/catalog/domain/badges/BadgeDisplayPolicy.ts
+ M src/modules/catalog/domain/badges/BadgeTypes.ts
+ M src/modules/catalog/domain/badges/LegacyBadgeAliases.ts
+ M src/modules/catalog/domain/badges/ResolveProductCompatibility.test.ts
+ M src/modules/catalog/domain/badges/ResolveProductCompatibility.ts
+ M src/modules/catalog/domain/badges/index.ts
+ M src/modules/catalog/integrations/googleSheets/normalizeCampaign.ts
+ M src/modules/catalog/integrations/googleSheets/normalizeProduct.ts
+ M src/modules/catalog/services/campaignService.ts
+ M src/modules/product-detail/components/ProductGallery.tsx
+ D src/shared/config/cartTiers.ts
+ M src/shared/config/priceTiers.ts
+ M src/shared/lib/product/getBestProductTier.ts
+ M src/shared/lib/product/getNextTier.ts
+ M src/shared/lib/product/getUnitPrice.ts
+ M src/shared/styles/cart/cart-item.css
+ M src/shared/types/product.ts
+?? AUDITORIA_RENAME_TIER_A_VOLUME_PRICE.txt
+?? BLUEPRINT_BADGES_CAMPANAS_CODIGO_REAL.txt
+?? BLUEPRINT_BADGES_CAMPANAS_CODIGO_REAL_V2.txt
+?? BLUEPRINT_VOLUME_PRICING_CODIGO_REAL.txt
+?? BlueprintBackups/BadgesCampaignResolver-20260721-144519/
+?? BlueprintBackups/BadgesCampaignsLote1-20260721-133941/
+?? BlueprintBackups/BadgesCierreFase1-20260721-142851/
+?? BlueprintBackups/BadgesLimpiezaSemantica-20260721-135504/
+?? BlueprintBackups/BadgesLimpiezaSemantica-20260721-140721/
+?? BlueprintBackups/VolumePricingCore-20260721-144251/
+?? BlueprintBackups/VolumePricingDomain-20260721-151047/
+?? BlueprintBadgesCampaignsAudit/
+?? BlueprintTiersAudit/
+?? BlueprintVolumePricingBackup-20260721-133057/
+?? BlueprintVolumePricingFix-20260721-134202/
+?? RESULTADO_MIGRACION_VOLUME_PRICING.txt
+?? RESULTADO_VOLUME_PRICING_CORE.txt
+?? RESULTADO_VOLUME_PRICING_DOMAIN.txt
+?? REVISION_PRODUCT_CARD_VOLUME_PRICING.txt
+?? src/modules/catalog/domain/CampaignTheme.ts
+?? src/modules/catalog/domain/badges/CampaignBadgeResolver.test.ts
+?? src/modules/catalog/domain/badges/CampaignBadgeResolver.ts
+?? src/modules/catalog/domain/volumePricing/
+?? src/shared/domain/

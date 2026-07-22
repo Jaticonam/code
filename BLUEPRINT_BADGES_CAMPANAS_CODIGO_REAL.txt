@@ -1,0 +1,155 @@
+
+============================================================
+ESTADO ACTUAL
+============================================================
+Commit: b468485 avances en casa tiers y badges
+
+Git status:
+ D AUDITORIA_BADGES_COLORES_CAMPANAS.txt
+ D AUDITORIA_GLOBAL_TIERS_VISUALES.txt
+ D BlueprintBadgesTestErrors.txt
+ D BlueprintBadgesTypecheckErrors.txt
+ D BlueprintBaselineBatchAInputs.txt
+ D BlueprintBaselineBuild.txt
+ D BlueprintBlogDataAudit.txt
+ D BlueprintCommerceContractsAudit.txt
+ D BlueprintPdfCartBaselineAudit.txt
+ D BlueprintPdfCartBaselineAuditFixed.txt
+ D BlueprintPdfCommercialFlowAudit.txt
+ D BlueprintRealTypecheckAudit.txt
+ D BlueprintTree.txt
+ D BlueprintTypeErrorsMassAudit.txt
+ D BlueprintTypecheckAfterBatchA.txt
+ D BlueprintTypecheckAfterBatchB.txt
+ D BlueprintTypecheckAfterBatchB2.txt
+ D BlueprintTypecheckAfterBlogData.txt
+ D BlueprintTypecheckAfterPdfRepair.txt
+ D build-error.txt
+ M src/modules/cart/components/AddToCartModalInfo.tsx
+?? BlueprintBadgesCampaignsAudit/
+?? BlueprintTiersAudit/
+?? REVISION_PRODUCT_CARD_VOLUME_PRICING.txt
+
+============================================================
+ÁRBOL RELACIONADO
+============================================================
+.\src\modules\catalog\components\HeaderCampaignFilter.tsx
+.\src\modules\catalog\components\ProductBadgeStack.tsx
+.\src\modules\catalog\components\ProductCardBadges.tsx
+.\src\modules\catalog\components\ProductCardTierBadges.tsx
+.\src\modules\catalog\domain\badges\BadgeDisplayPolicy.ts
+.\src\modules\catalog\domain\badges\BadgeTypes.ts
+.\src\modules\catalog\domain\badges\index.ts
+.\src\modules\catalog\domain\badges\LegacyBadgeAliases.ts
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts
+.\src\modules\catalog\domain\CampaignRules.ts
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts
+.\src\modules\catalog\hooks\useCatalogData.ts
+.\src\modules\catalog\hooks\useCatalogFilters.ts
+.\src\modules\catalog\hooks\useCatalogPrioritySections.ts
+.\src\modules\catalog\hooks\useFilteredProducts.ts
+.\src\modules\catalog\hooks\useProducts.ts
+.\src\modules\catalog\hooks\useProductViewers.ts
+.\src\modules\catalog\integrations\googleSheets\campaignColors.ts
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts
+.\src\modules\catalog\presentation\badges\BadgeThemeMap.ts
+.\src\modules\catalog\presentation\badges\index.ts
+.\src\modules\catalog\providers\CatalogProvider.ts
+.\src\modules\catalog\providers\DefaultCatalogProvider.ts
+.\src\modules\catalog\services\campaignService.ts
+
+============================================================
+FILE: src\shared\types\product.ts
+============================================================
+
+============================================================
+FILE: src\shared\config\campaigns.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\domain\CampaignRules.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\campaignColors.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\normalizeProduct.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\services\campaignService.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\hooks\useCatalogCampaigns.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\components\ProductCardBadges.tsx
+============================================================
+
+============================================================
+FILE: src\modules\catalog\components\ProductBadgeStack.tsx
+============================================================
+
+============================================================
+FILE: src\modules\catalog\domain\badges\BadgeTypes.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\domain\badges\LegacyBadgeAliases.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\domain\badges\ResolveProductCompatibility.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\domain\badges\BadgeDisplayPolicy.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\domain\badges\index.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\presentation\badges\BadgeThemeMap.ts
+============================================================
+
+============================================================
+FILE: src\modules\catalog\presentation\badges\index.ts
+============================================================
+
+============================================================
+FILE: src\app\main.tsx
+============================================================
+
+============================================================
+FILE: src\app\App.tsx
+============================================================
+
+============================================================
+FILE: src\app\pages\CatalogPage.tsx
+============================================================
+
+============================================================
+PÁGINAS DE DETALLE DE PRODUCTO
+============================================================
+.\src\app\pages\ProductDetailPage.tsx
+.\src\modules\product-detail\components\ProductDetailHeader.tsx

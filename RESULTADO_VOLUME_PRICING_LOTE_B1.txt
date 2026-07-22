@@ -1,0 +1,25 @@
+=========================================================
+RESULTADO — VOLUME PRICING LOTE B1
+Fecha: 2026-07-21 15:36:41
+=========================================================
+
+OBJETIVO
+---------------------------------------------------------
+Migrar Product Detail desde Tier hacia Volume Pricing.
+
+BACKUP
+---------------------------------------------------------
+.\BlueprintBackups\VolumePricingLoteB1-20260721-153638
+
+ARCHIVOS RENOMBRADOS
+---------------------------------------------------------
+.\src\modules\product-detail\components\ProductTierSelector.tsx
+→ .\src\modules\product-detail\components\ProductVolumePriceSelector.tsx
+
+.\src\modules\product-detail\components\ProductTierProgress.tsx
+→ .\src\modules\product-detail\components\ProductVolumePriceProgress.tsx
+
+TYPECHECK
+---------------------------------------------------------
+src/app/pages/ProductDetailPage.tsx(404,15): error TS2741: Property 'price' is missing in type 'NextVolumePrice' but required in type '{ qty: number; price: number; }'.
+src/app/pages/ProductDetailPage.tsx(411,15): error TS2741: Property 'price' is missing in type 'NextVolumePrice' but required in type '{ qty: number; price: number; }'.

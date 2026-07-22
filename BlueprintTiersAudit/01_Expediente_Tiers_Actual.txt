@@ -1,0 +1,635 @@
+BLUEPRINT — EXPEDIENTE ACTUAL DEL SISTEMA DE TIERS
+GeneratedAt: 2026-07-21 13:08:41
+
+BRANCH: main
+COMMIT: b468485 avances en casa tiers y badges
+
+============================================================
+INVENTARIO DE ARCHIVOS
+============================================================
+File: src\modules\cart\components\CartTierSelector.tsx
+Exists: True
+Lines: 60
+Bytes: 1478
+ModifiedAt: 07/21/2026 11:26:59
+
+File: src\modules\product-detail\components\ProductTierSelector.tsx
+Exists: True
+Lines: 64
+Bytes: 1796
+ModifiedAt: 07/21/2026 11:26:59
+
+File: src\shared\config\priceTiers.ts
+Exists: True
+Lines: 82
+Bytes: 1817
+ModifiedAt: 07/21/2026 11:26:59
+
+File: src\shared\styles\components\badges.css
+Exists: True
+Lines: 160
+Bytes: 3202
+ModifiedAt: 07/21/2026 11:26:59
+
+File: src\modules\product-detail\components\ProductGallery.tsx
+Exists: True
+Lines: 177
+Bytes: 7012
+ModifiedAt: 07/21/2026 11:26:59
+
+============================================================
+GIT STATUS
+============================================================
+ M src/modules/cart/components/AddToCartModalInfo.tsx
+
+============================================================
+DIFF STAT DE TIERS
+============================================================
+
+============================================================
+DIFF COMPLETO DE TIERS
+============================================================
+
+============================================================
+GIT DIFF CHECK
+============================================================
+ExitCode: 0
+[SIN PROBLEMAS]
+
+============================================================
+TYPECHECK ACTUAL
+============================================================
+ExitCode: 0
+[SIN ERRORES]
+
+============================================================
+REFERENCIAS CSS TIER / PRICE / BADGE
+============================================================
+
+============================================================
+PRODUCTGALLERY BACKUP TIER REPAIR VS ACTUAL
+============================================================
+
+
+============================================================
+ARCHIVO: src\modules\cart\components\CartTierSelector.tsx
+============================================================
+    1: import type { CartItem } from "@/modules/cart/types";
+    2: import { PRICE_TIERS } from "@/shared/config/priceTiers";
+    3: 
+    4: interface CartTierSelectorProps {
+    5:   item: CartItem;
+    6:   onSetQty: (id: string, qty: number | null) => void;
+    7: }
+    8: 
+    9: export function CartTierSelector({
+   10:   item,
+   11:   onSetQty,
+   12: }: CartTierSelectorProps) {
+   13:   const itemTiers = PRICE_TIERS.filter((tier) => {
+   14:     const value = item[tier.key];
+   15: 
+   16:     return (
+   17:       typeof value === "number" &&
+   18:       Number.isFinite(value) &&
+   19:       value > 0
+   20:     );
+   21:   });
+   22: 
+   23:   const gridCols =
+   24:     itemTiers.length <= 1
+   25:       ? "grid-cols-1"
+   26:       : itemTiers.length === 2
+   27:         ? "grid-cols-2"
+   28:         : "grid-cols-3";
+   29: 
+   30:   return (
+   31:     <div className={`grid ${gridCols} flex-1 gap-1`}>
+   32:       {itemTiers.map((tier, index) => {
+   33:         const nextTier = itemTiers[index + 1];
+   34: 
+   35:         const active =
+   36:           item.qty >= tier.qty &&
+   37:           (!nextTier || item.qty < nextTier.qty);
+   38: 
+   39:         return (
+   40:           <button
+   41:             key={tier.key}
+   42:             type="button"
+   43:             onClick={() => onSetQty(item.id, tier.qty)}
+   44:             className={[
+   45:               "tier",
+   46:               "tier-button",
+   47:               tier.className,
+   48:               "w-full py-1.5",
+   49:               active
+   50:                 ? "tier-active scale-[1.02]"
+   51:                 : "hover:scale-[1.02]",
+   52:             ].join(" ")}
+   53:           >
+   54:             {tier.label}
+   55:           </button>
+   56:         );
+   57:       })}
+   58:     </div>
+   59:   );
+   60: }
+
+============================================================
+ARCHIVO: src\modules\product-detail\components\ProductTierSelector.tsx
+============================================================
+    1: import type { Product } from "@/shared/types/product";
+    2: import { PRICE_TIERS } from "@/shared/config/priceTiers";
+    3: 
+    4: interface ProductTierSelectorProps {
+    5:   product: Product;
+    6:   effectiveQty: number;
+    7:   onSelectQty: (qty: number) => void;
+    8: }
+    9: 
+   10: export function ProductTierSelector({
+   11:   product,
+   12:   effectiveQty,
+   13:   onSelectQty,
+   14: }: ProductTierSelectorProps) {
+   15:   const availableTiers = PRICE_TIERS.filter((tier) => {
+   16:     const value = product[tier.key];
+   17: 
+   18:     return (
+   19:       typeof value === "number" &&
+   20:       Number.isFinite(value) &&
+   21:       value > 0
+   22:     );
+   23:   });
+   24: 
+   25:   return (
+   26:     <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+   27:       {availableTiers.map((tier, index) => {
+   28:         const value = Number(product[tier.key]);
+   29:         const nextTier = availableTiers[index + 1];
+   30: 
+   31:         const active =
+   32:           effectiveQty >= tier.qty &&
+   33:           (!nextTier || effectiveQty < nextTier.qty);
+   34: 
+   35:         return (
+   36:           <button
+   37:             key={tier.key}
+   38:             type="button"
+   39:             onClick={() => onSelectQty(tier.qty)}
+   40:             className={[
+   41:               "tier",
+   42:               "tier-button",
+   43:               tier.className,
+   44:               "min-w-[96px]",
+   45:               active
+   46:                 ? "tier-active scale-[1.04]"
+   47:                 : "hover:scale-[1.03]",
+   48:             ].join(" ")}
+   49:           >
+   50:             <div className="flex items-center justify-center gap-1.5 whitespace-nowrap">
+   51:               <span className="text-[13px] font-black tracking-wide">
+   52:                 {tier.label}
+   53:               </span>
+   54: 
+   55:               <span className="text-[13px] font-black md:text-sm">
+   56:                 S/{value.toFixed(2)}
+   57:               </span>
+   58:             </div>
+   59:           </button>
+   60:         );
+   61:       })}
+   62:     </div>
+   63:   );
+   64: }
+
+============================================================
+ARCHIVO: src\shared\config\priceTiers.ts
+============================================================
+    1: import type { Product } from "@/shared/types/product";
+    2: 
+    3: export const PRICE_TIERS = [
+    4:   {
+    5:     qty: 1,
+    6:     key: "price_1" as const,
+    7:     label: "1u",
+    8:     className: "tier-1",
+    9:   },
+   10:   {
+   11:     qty: 3,
+   12:     key: "price_3" as const,
+   13:     label: "3u",
+   14:     className: "tier-3",
+   15:   },
+   16:   {
+   17:     qty: 12,
+   18:     key: "price_12" as const,
+   19:     label: "12u",
+   20:     className: "tier-12",
+   21:   },
+   22:   {
+   23:     qty: 50,
+   24:     key: "price_50" as const,
+   25:     label: "50u",
+   26:     className: "tier-50",
+   27:   },
+   28:   {
+   29:     qty: 100,
+   30:     key: "price_100" as const,
+   31:     label: "100u",
+   32:     className: "tier-100",
+   33:   },
+   34: ] as const;
+   35: 
+   36: export const VOLUME_PRICE_TIERS = PRICE_TIERS.filter(
+   37:   (tier) => tier.key !== "price_1",
+   38: );
+   39: 
+   40: export function getAvailablePriceTiers(product: Product) {
+   41:   return VOLUME_PRICE_TIERS.filter((tier) => {
+   42:     const value = product[tier.key];
+   43: 
+   44:     return (
+   45:       typeof value === "number" &&
+   46:       Number.isFinite(value) &&
+   47:       value > 0
+   48:     );
+   49:   });
+   50: }
+   51: 
+   52: export function getUnitPriceByQty(
+   53:   product: Product,
+   54:   qty: number,
+   55: ): number {
+   56:   if (qty >= 100 && product.price_100) return product.price_100;
+   57:   if (qty >= 50 && product.price_50) return product.price_50;
+   58:   if (qty >= 12 && product.price_12) return product.price_12;
+   59:   if (qty >= 3 && product.price_3) return product.price_3;
+   60: 
+   61:   return product.price_1 || 0;
+   62: }
+   63: 
+   64: export function getNextTier(product: Product, qty: number) {
+   65:   if (qty < 3 && product.price_3) {
+   66:     return { qty: 3, price: product.price_3 };
+   67:   }
+   68: 
+   69:   if (qty < 12 && product.price_12) {
+   70:     return { qty: 12, price: product.price_12 };
+   71:   }
+   72: 
+   73:   if (qty < 50 && product.price_50) {
+   74:     return { qty: 50, price: product.price_50 };
+   75:   }
+   76: 
+   77:   if (qty < 100 && product.price_100) {
+   78:     return { qty: 100, price: product.price_100 };
+   79:   }
+   80: 
+   81:   return null;
+   82: }
+
+============================================================
+ARCHIVO: src\shared\styles\components\badges.css
+============================================================
+    1: @layer components {
+    2: 
+    3:   /* =====================================================
+    4:      WOOLY TIER DESIGN SYSTEM
+    5:   ===================================================== */
+    6: 
+    7:   .tier {
+    8:     --tier-color: #1d8299;
+    9: 
+   10:     display: inline-flex;
+   11:     align-items: center;
+   12:     justify-content: center;
+   13: 
+   14:     border: 1px solid var(--tier-color);
+   15:     background: #ffffff;
+   16:     color: var(--tier-color);
+   17: 
+   18:     font-weight: 900;
+   19:     line-height: 1;
+   20: 
+   21:     transition:
+   22:       background-color 180ms ease,
+   23:       color 180ms ease,
+   24:       border-color 180ms ease,
+   25:       box-shadow 180ms ease,
+   26:       transform 180ms ease;
+   27:   }
+   28: 
+   29:   /* =====================================================
+   30:      IDENTIDAD POR TIER
+   31:   ===================================================== */
+   32: 
+   33:   .tier-1 {
+   34:     --tier-color: #1d8299;
+   35:   }
+   36: 
+   37:   .tier-3 {
+   38:     --tier-color: #e99518;
+   39:   }
+   40: 
+   41:   .tier-12 {
+   42:     --tier-color: #e85ca7;
+   43:   }
+   44: 
+   45:   .tier-50 {
+   46:     --tier-color: #7c3aed;
+   47:   }
+   48: 
+   49:   .tier-100 {
+   50:     --tier-color: #0f9d7a;
+   51:   }
+   52: 
+   53:   /* =====================================================
+   54:      BOTÓN DE SELECCIÓN
+   55:   ===================================================== */
+   56: 
+   57:   .tier-button {
+   58:     min-width: 84px;
+   59:     min-height: 30px;
+   60: 
+   61:     padding: 0.4rem 0.75rem;
+   62:     border-radius: 0.9rem;
+   63: 
+   64:     background: #ffffff;
+   65:     color: var(--tier-color);
+   66: 
+   67:     cursor: pointer;
+   68:   }
+   69: 
+   70:   .tier-button:hover {
+   71:     background: color-mix(
+   72:       in srgb,
+   73:       var(--tier-color) 8%,
+   74:       white
+   75:     );
+   76: 
+   77:     transform: translateY(-1px);
+   78:   }
+   79: 
+   80:   /* =====================================================
+   81:      CHIP INFORMATIVO
+   82:   ===================================================== */
+   83: 
+   84:   .tier-chip {
+   85:     width: 100%;
+   86:     padding: 0.45rem 0.6rem;
+   87: 
+   88:     border-radius: 0.75rem;
+   89: 
+   90:     background: #ffffff;
+   91:     color: var(--tier-color);
+   92: 
+   93:     font-size: 11px;
+   94:   }
+   95: 
+   96:   /* =====================================================
+   97:      ESTADO ACTIVO
+   98:   ===================================================== */
+   99: 
+  100:   .tier-active {
+  101:     border-color: var(--tier-color);
+  102:     background: var(--tier-color);
+  103:     color: #ffffff;
+  104: 
+  105:     box-shadow:
+  106:       0 5px 14px
+  107:       color-mix(
+  108:         in srgb,
+  109:         var(--tier-color) 24%,
+  110:         transparent
+  111:       );
+  112:   }
+  113: 
+  114:   .tier-active:hover {
+  115:     background: var(--tier-color);
+  116:     color: #ffffff;
+  117:   }
+  118: 
+  119:   /* =====================================================
+  120:      BADGE FLOTANTE
+  121:   ===================================================== */
+  122: 
+  123:   .tier-badge {
+  124:     min-width: 50px;
+  125:     min-height: 48px;
+  126: 
+  127:     padding: 0.35rem 0.75rem;
+  128:     border-radius: 9999px;
+  129: 
+  130:     background: var(--tier-color);
+  131:     color: #ffffff;
+  132: 
+  133:     box-shadow:
+  134:       0 8px 20px
+  135:       color-mix(
+  136:         in srgb,
+  137:         var(--tier-color) 28%,
+  138:         transparent
+  139:       );
+  140:   }
+  141: 
+  142:   /* =====================================================
+  143:      POSICIÓN SOBRE PRODUCT CARD
+  144:   ===================================================== */
+  145: 
+  146:   .product-card-tiers {
+  147:     position: absolute;
+  148: 
+  149:     right: 0.75rem;
+  150:     bottom: 0.75rem;
+  151: 
+  152:     z-index: 4;
+  153: 
+  154:     display: flex;
+  155:     flex-direction: column;
+  156:     align-items: flex-end;
+  157:     gap: 0.45rem;
+  158:   }
+  159: 
+  160: }
+
+============================================================
+ARCHIVO: src\modules\product-detail\components\ProductGallery.tsx
+============================================================
+    1: import { useEffect, useMemo, useRef, useState } from "react";
+    2: import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+    3: import type { Product } from "@/shared/types/product";
+    4: import { getProductMedia } from "@/shared/lib/productMedia";
+    5: import { ProductBadgeStack } from "@/modules/catalog/components/ProductBadgeStack";
+    6: 
+    7: interface ProductGalleryProps {
+    8:   product: Product;
+    9:   available: boolean;
+   10:   onZoom: (initialIndex: number) => void;
+   11: }
+   12: 
+   13: export function ProductGallery({
+   14:   product,
+   15:   available,
+   16:   onZoom,
+   17: }: ProductGalleryProps) {
+   18:   const media = useMemo(() => getProductMedia(product), [product]);
+   19:   const [activeIndex, setActiveIndex] = useState(0);
+   20:   const [heroLoaded, setHeroLoaded] = useState(false);
+   21:   const touchStartX = useRef<number | null>(null);
+   22:   const activeMedia = media[activeIndex] ?? media[0];
+   23:   const hasMany = media.length > 1;
+   24: 
+   25:   const maxVisibleThumbs = 5;
+   26:   const visibleMedia = media.slice(0, maxVisibleThumbs);
+   27:   const hiddenCount = Math.max(media.length - maxVisibleThumbs, 0);
+   28: 
+   29:   const goPrev = () =>
+   30:     setActiveIndex((i) => (i === 0 ? media.length - 1 : i - 1));
+   31:   const goNext = () =>
+   32:     setActiveIndex((i) => (i === media.length - 1 ? 0 : i + 1));
+   33: 
+   34:   useEffect(() => {
+   35:     setActiveIndex(0);
+   36:   }, [product.id]);
+   37: 
+   38:   const handleTouchStart = (e: React.TouchEvent) => {
+   39:     touchStartX.current = e.touches[0].clientX;
+   40:   };
+   41: 
+   42:   const handleTouchEnd = (e: React.TouchEvent) => {
+   43:     if (!hasMany || touchStartX.current === null) return;
+   44: 
+   45:     const diff = touchStartX.current - e.changedTouches[0].clientX;
+   46: 
+   47:     if (Math.abs(diff) > 45) {
+   48:       diff > 0 ? goNext() : goPrev();
+   49:     }
+   50: 
+   51:     touchStartX.current = null;
+   52:   };
+   53: 
+   54:   return (
+   55:     <div className="relative flex flex-col gap-3 md:grid md:grid-cols-[96px_minmax(0,1fr)] xl:grid-cols-[100px_minmax(0,1fr)] md:gap-3 xl:gap-5">
+   56:       {hasMany && (
+   57:         <div className="order-2 flex gap-2 overflow-x-auto pb-1 md:order-1 md:flex-col md:max-h-[560px] md:overflow-x-visible md:overflow-y-auto md:pb-0">
+   58:           {visibleMedia.map((item, index) => {
+   59:             const isActive = index === activeIndex;
+   60: 
+   61:             return (
+   62:               <button
+   63:                 key={item.id}
+   64:                 type="button"
+   65:                 onMouseEnter={() => {
+   66:                   if (activeIndex !== index) {
+   67:                     setActiveIndex(index);
+   68:                   }
+   69:                 }}
+   70:                 onClick={() => setActiveIndex(index)}
+   71:                 className={[
+   72:                   "relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl border bg-white transition-all duration-200 md:h-[100px] md:w-[75px] xl:h-[100px] xl:w-[75px]",
+   73:                   isActive
+   74:                     ? "z-10 scale-105 border-[#1d8299] opacity-100 ring-2 ring-[#1d8299]/25 shadow-xl"
+   75:                     : "border-[#e2e8f0] opacity-70 hover:scale-[1.02] hover:opacity-100",
+   76:                 ].join(" ")}
+   77:               >
+   78:                 <img
+   79:                   src={item.thumb || item.src}
+   80:                   alt={item.alt}
+   81:                   className="h-full w-full object-cover object-center"
+   82:                 />
+   83:               </button>
+   84:             );
+   85:           })}
+   86: 
+   87:           {hiddenCount > 0 && (
+   88:             <button
+   89:               type="button"
+   90:               onClick={() => onZoom(maxVisibleThumbs)}
+   91:               className="relative h-20 w-16 shrink-0 overflow-hidden rounded-2xl md:h-[100px] md:w-[75px] xl:h-[100px] xl:w-[75px]"
+   92:             >
+   93:               <img
+   94:                 src={
+   95:                   media[maxVisibleThumbs]?.thumb || media[maxVisibleThumbs]?.src
+   96:                 }
+   97:                 alt="Ver todas"
+   98:                 className="h-full w-full object-cover object-center brightness-50"
+   99:               />
+  100: 
+  101:               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 text-white">
+  102:                 <span className="text-lg font-black">+{hiddenCount}</span>
+  103:                 <span className="text-[10px] font-semibold">Ver todas</span>
+  104:               </div>
+  105:             </button>
+  106:           )}
+  107:         </div>
+  108:       )}
+  109: 
+  110:       <div
+  111:         className="order-1 relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-3xl border border-[#e2e8f0] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.16)] group cursor-zoom-in md:order-2 lg:min-h-[560px] xl:min-h-[620px]"
+  112:         onClick={() => onZoom(activeIndex)}
+  113:         onTouchStart={handleTouchStart}
+  114:         onTouchEnd={handleTouchEnd}
+  115:       >
+  116:         <img
+  117:           key={activeMedia.id}
+  118:           src={activeMedia.src}
+  119:           alt={activeMedia.alt}
+  120:           onLoad={() => setHeroLoaded(true)}
+  121:           className={[
+  122:             "h-full w-full object-cover object-center transition-all duration-300 ease-out group-hover:scale-[1.02]",
+  123:             heroLoaded ? "scale-100 opacity-100" : "scale-[0.985] opacity-0",
+  124:             !available ? "grayscale-[50%]" : "",
+  125:           ].join(" ")}
+  126:         />
+  127: 
+  128:         <ProductBadgeStack
+  129:           product={product}
+  130:           maxVisible={3}
+  131:           includePricingBadges={false}
+  132:           includeSeasonality
+  133:           variant="detail"
+  134:           className="absolute left-4 top-4 z-10 flex max-w-[75%] flex-col items-start gap-2"
+  135:         />
+  136: 
+  137:         {hasMany && (
+  138:           <>
+  139:             <button
+  140:               type="button"
+  141:               onClick={(e) => {
+  142:                 e.stopPropagation();
+  143:                 goPrev();
+  144:               }}
+  145:               className="absolute left-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white group-hover:opacity-100 md:flex"
+  146:               aria-label="Imagen anterior"
+  147:             >
+  148:               <ChevronLeft className="h-6 w-6" />
+  149:             </button>
+  150: 
+  151:             <button
+  152:               type="button"
+  153:               onClick={(e) => {
+  154:                 e.stopPropagation();
+  155:                 goNext();
+  156:               }}
+  157:               className="absolute right-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 shadow-lg backdrop-blur-md transition-all hover:scale-105 hover:bg-white group-hover:opacity-100 md:flex"
+  158:               aria-label="Imagen siguiente"
+  159:             >
+  160:               <ChevronRight className="h-6 w-6" />
+  161:             </button>
+  162:           </>
+  163:         )}
+  164: 
+  165:         <div className="absolute bottom-4 right-4 rounded-2xl border border-[#e2e8f0] bg-white/90 p-2.5 text-[#334155] shadow-lg backdrop-blur-md transition-all group-hover:scale-105">
+  166:           <ZoomIn className="h-5 w-5" />
+  167:         </div>
+  168: 
+  169:         {hasMany && (
+  170:           <div className="absolute bottom-4 left-4 rounded-2xl bg-black/45 px-3 py-2 text-[11px] font-black text-white backdrop-blur-md">
+  171:             📷 {activeIndex + 1} de {media.length}
+  172:           </div>
+  173:         )}
+  174:       </div>
+  175:     </div>
+  176:   );
+  177: }

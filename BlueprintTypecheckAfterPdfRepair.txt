@@ -1,9 +1,0 @@
-src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(69,7): error TS2300: Duplicate identifier 'x'.
-src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(70,7): error TS2300: Duplicate identifier 'y'.
-src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(71,7): error TS2300: Duplicate identifier 'size'.
-src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(72,7): error TS2300: Duplicate identifier 'speedY'.
-src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(73,7): error TS2300: Duplicate identifier 'speedX'.
-src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(74,7): error TS2300: Duplicate identifier 'opacity'.
-src/modules/home/components/CampaignHero/CampaignHeroCyber.tsx(75,7): error TS2300: Duplicate identifier 'color'.
-src/shared/hooks/use-toast.ts(1,15): error TS2300: Duplicate identifier 'ReactNode'.
-src/shared/hooks/use-toast.ts(3,15): error TS2300: Duplicate identifier 'ReactNode'.

@@ -1,0 +1,936 @@
+
+=========================================================
+ARCHIVO: .\src\modules\catalog\components\ProductCardTierBadges.tsx
+=========================================================
+import type { Product } from "@/shared/types/product";
+import { getAvailablePriceTiers } from "@/shared/config/priceTiers";
+
+const CHIP_COLORS: Record<string, string> = {
+  price_3: "wholesale-chip-price-3",
+  price_12: "wholesale-chip-price-12",
+  price_50: "wholesale-chip-price-50",
+  price_100: "wholesale-chip-price-100",
+};
+
+const ICONS: Record<string, string> = {
+  price_3: "🔥",
+  price_12: "⚡",
+  price_50: "🚀",
+  price_100: "💎",
+};
+
+const LABELS: Record<string, string> = {
+  price_3: "Por Mayor",
+  price_12: "Por Docena",
+  price_50: "Medio ciento",
+  price_100: "Por Caja",
+};
+
+interface Props {
+  product: Product;
+  available: boolean;
+  isPreventa: boolean;
+}
+
+export function ProductCardTierBadges({
+  product,
+  available,
+  isPreventa,
+}: Props) {
+  if (!available || isPreventa) return null;
+
+  const tiers = getAvailablePriceTiers(product);
+
+  if (!tiers.length) return null;
+
+  return (
+    <div className="wholesale-list">
+      <div className="wholesale-title mt-1 pt-1.5 border-t border-dashed border-slate-300 flex items-center justify-center gap-1 text-[10px] font-black uppercase tracking-wider text-slate-600">
+        <span>📦</span>
+        <span>PRECIOS MAYORISTA</span>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        {tiers.map((tier) => {
+          const price = Number(product[tier.key]);
+          if (price >= product.price_1) return null;
+
+          const units = parseInt(tier.label, 10);
+          const total = price * units;
+
+          return (
+            <div
+              key={tier.key}
+              className={`wholesale-chip flex justify-center text-center ${
+                CHIP_COLORS[tier.key] ||
+                "border-slate-200 bg-slate-50 text-slate-600"
+              }`}
+            >
+              <span className="block w-full text-center">
+                {LABELS[tier.key]} ({tier.label}) x S/{total.toFixed(0)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+
+=========================================================
+ARCHIVO: .\src\modules\catalog\components\ProductCard.tsx
+=========================================================
+import { useNavigate } from "react-router-dom";
+import { MessageCircle, PlusCircle } from "lucide-react";
+
+import type { Product } from "@/shared/types/product";
+import type { CartItem } from "@/modules/cart/types";
+import { getCategoryColor } from "@/shared/config/categoryColors";
+import { ProductCardBadges } from "@/modules/catalog/components/ProductCardBadges";
+import { ProductCardPrice } from "@/modules/catalog/components/ProductCardPrice";
+import { ProductCardStock } from "@/modules/catalog/components/ProductCardStock";
+import { ProductCardTierBadges } from "@/modules/catalog/components/ProductCardTierBadges";
+import { useProductCard } from "@/modules/product-detail/hooks/useProductCard";
+
+interface Props {
+  product: Product;
+  cart?: CartItem[];
+  onAddToCart: (product: Product) => void;
+  onImageClick?: (product: Product) => void;
+}
+
+export function ProductCard({
+  product: p,
+  cart = [],
+  onAddToCart,
+  onImageClick,
+}: Props) {
+  const navigate = useNavigate();
+
+  const {
+    available,
+    isPreventa,
+    isAgotado,
+    showWhatsAppButton,
+    isInCart,
+    qtyInCart,
+    handleAdd,
+    handleWhatsApp,
+  } = useProductCard(p, cart, onAddToCart);
+
+  const goToDetail = () =>
+    navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const selectedText = window.getSelection()?.toString().trim();
+    if (selectedText) return;
+
+    const target = e.target as HTMLElement;
+    if (target.closest("[data-no-card-click],button,a,input,textarea,select"))
+      return;
+
+    goToDetail();
+  };
+
+  const buttonLabel = isAgotado
+    ? "Consultar reposición"
+    : showWhatsAppButton
+      ? "Consultar"
+      : isInCart
+        ? `Sumar (${qtyInCart})`
+        : "Agregar";
+
+  return (
+    <div
+      onClick={handleCardClick}
+      className="card-product group flex flex-col p-2 text-center md:p-2.5"
+    >
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          onImageClick?.(p);
+        }}
+        className="card-product-image relative mb-2 h-[140px] cursor-zoom-in overflow-hidden rounded-[18px] sm:h-[160px] md:h-[250px] xl:h-[220px]"
+      >
+        <ProductCardBadges product={p} />
+
+        {isInCart && (
+          <div className="absolute right-2 top-2 z-20 rounded-full bg-[#1d8299] px-2.5 py-1 text-[10px] font-black leading-none text-white shadow-[0_6px_16px_rgba(29,130,153,.25)]">
+            +{qtyInCart}
+          </div>
+        )}
+
+        {isAgotado && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
+            <span className="rounded-full border-2 border-white bg-orange-500 px-5 py-2 text-[12px] font-black uppercase tracking-wide text-white shadow-xl">
+              Agotado
+            </span>
+          </div>
+        )}
+
+        <img
+          src={p.img || "/placeholder.svg"}
+          alt={p.title}
+          className={[
+            "h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]",
+            isAgotado ? "opacity-90 saturate-[.9]" : "",
+          ].join(" ")}
+          loading="lazy"
+        />
+      </div>
+
+      <div className="flex flex-1 flex-col justify-between px-1">
+        <div>
+          <div
+            data-no-card-click
+            className="mb-1.5 flex flex-wrap items-center justify-center gap-0.5"
+          >
+            <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[9px] font-black uppercase text-slate-500">
+              {p.id}
+            </span>
+
+            <span
+              className={`rounded-full px-2 py-[3px] text-[9px] font-black uppercase ${getCategoryColor(p.category)}`}
+            >
+              {p.category}
+            </span>
+          </div>
+
+          <h3
+            data-no-card-click
+            className="mb-0.3 card-product-title line-clamp-2"
+          >
+            {p.title}
+          </h3>
+        </div>
+
+        <ProductCardPrice product={p} />
+
+        <ProductCardStock stock={p.stock} price={p.price_1} status={p.status} />
+
+        <ProductCardTierBadges
+          product={p}
+          available={available}
+          isPreventa={isPreventa}
+        />
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+
+            if (isAgotado) return;
+
+            if (showWhatsAppButton) {
+              handleWhatsApp();
+              return;
+            }
+
+            handleAdd();
+          }}
+          disabled={!showWhatsAppButton && !available}
+          className={[
+            "card-product-button mt-2.5 w-full min-h-[36px] rounded-2xl px-2.5 py-2 text-[12px] font-black text-white shadow-md transition-all active:scale-[.98] md:min-h-[38px] md:text-[13px]",
+            isAgotado
+              ? "bg-orange-500 hover:bg-orange-600 hover:scale-[1.01] hover:shadow-lg"
+              : showWhatsAppButton
+                ? "bg-green-600 hover:bg-green-700"
+                : isInCart
+                  ? "bg-gradient-to-r from-[#156f84] to-[#1d8299] hover:shadow-lg"
+                  : "bg-gradient-to-r from-[#1d8299] to-[#156f84] hover:scale-[1.01] hover:shadow-lg",
+            !isAgotado && !available && !showWhatsAppButton
+              ? "cursor-not-allowed opacity-50 shadow-none"
+              : "",
+          ].join(" ")}
+        >
+          <span className="flex items-center justify-center gap-1.5">
+            {showWhatsAppButton ? (
+              <MessageCircle className="h-4 w-4" />
+            ) : (
+              <PlusCircle className="h-4 w-4" />
+            )}
+
+            {buttonLabel}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+=========================================================
+ARCHIVO: .\src\shared\config\priceTiers.ts
+=========================================================
+import type { Product } from "@/shared/types/product";
+
+export const PRICE_TIERS = [
+  {
+    qty: 1,
+    key: "price_1" as const,
+    label: "1u",
+    className: "tier-1",
+  },
+  {
+    qty: 3,
+    key: "price_3" as const,
+    label: "3u",
+    className: "tier-3",
+  },
+  {
+    qty: 12,
+    key: "price_12" as const,
+    label: "12u",
+    className: "tier-12",
+  },
+  {
+    qty: 50,
+    key: "price_50" as const,
+    label: "50u",
+    className: "tier-50",
+  },
+  {
+    qty: 100,
+    key: "price_100" as const,
+    label: "100u",
+    className: "tier-100",
+  },
+] as const;
+
+export const VOLUME_PRICE_TIERS = PRICE_TIERS.filter(
+  (tier) => tier.key !== "price_1",
+);
+
+export function getAvailablePriceTiers(product: Product) {
+  return VOLUME_PRICE_TIERS.filter((tier) => {
+    const value = product[tier.key];
+
+    return (
+      typeof value === "number" &&
+      Number.isFinite(value) &&
+      value > 0
+    );
+  });
+}
+
+export function getUnitPriceByQty(
+  product: Product,
+  qty: number,
+): number {
+  if (qty >= 100 && product.price_100) return product.price_100;
+  if (qty >= 50 && product.price_50) return product.price_50;
+  if (qty >= 12 && product.price_12) return product.price_12;
+  if (qty >= 3 && product.price_3) return product.price_3;
+
+  return product.price_1 || 0;
+}
+
+export function getNextTier(product: Product, qty: number) {
+  if (qty < 3 && product.price_3) {
+    return { qty: 3, price: product.price_3 };
+  }
+
+  if (qty < 12 && product.price_12) {
+    return { qty: 12, price: product.price_12 };
+  }
+
+  if (qty < 50 && product.price_50) {
+    return { qty: 50, price: product.price_50 };
+  }
+
+  if (qty < 100 && product.price_100) {
+    return { qty: 100, price: product.price_100 };
+  }
+
+  return null;
+}
+
+
+=========================================================
+ARCHIVO: .\src\shared\styles\catalog\product-card.css
+=========================================================
+.card-product {
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 28px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.05),
+    0 18px 45px rgba(15, 23, 42, 0.06);
+  transition: 0.28s;
+}
+
+.card-product:hover {
+  transform: translateY(-5px);
+  border-color: rgba(29, 130, 153, 0.22);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.1),
+    0 30px 70px rgba(29, 130, 153, 0.12);
+}
+
+.card-product-image {
+  overflow: hidden;
+  border-radius: 22px;
+  background: #f8fafc;
+}
+
+.card-product-image img {
+  transition: 0.7s;
+}
+
+.card-product:hover .card-product-image img {
+  transform: scale(1.08);
+}
+
+.card-product-title {
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.25;
+  color: #334155;
+  transition: 0.2s;
+}
+
+.card-product-title:hover {
+  color: #1d8299;
+}
+
+.card-product-button {
+  min-height: 40px;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.15px;
+  box-shadow: 0 6px 16px rgba(29, 130, 153, 0.16);
+  transition: 0.18s;
+}
+
+.card-product-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Precio mayorista */
+.wholesale-pricing {
+  margin-top: 10px;
+  border-top: 1px dashed rgba(226, 232, 240, 0.95);
+  padding-top: 9px;
+}
+
+.wholesale-title {
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.wholesale-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wholesale-chip {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+  border: 1px solid;
+  border-radius: 14px;
+  padding: 7px 9px;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+.wholesale-chip span {
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* Colores por tier */
+.wholesale-chip-price-3 {
+  border-color: #f5b025;
+  background: rgba(245, 176, 37, 0.12);
+  color: #92400e;
+}
+
+.wholesale-chip-price-12 {
+  border-color: #f286be;
+  background: rgba(242, 134, 190, 0.13);
+  color: #9d174d;
+}
+
+.wholesale-chip-price-50 {
+  border-color: #7c3aed;
+  background: rgba(124, 58, 237, 0.11);
+  color: #5b21b6;
+}
+
+.wholesale-chip-price-100 {
+  border-color: #22c55e;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.1),
+    rgba(74, 222, 128, 0.18)
+  );
+  color: #15803d;
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.08),
+    0 6px 14px rgba(34, 197, 94, 0.12);
+}
+
+/* ================================
+   Product Card - Selección de texto
+================================ */
+
+.card-product [data-no-card-click] {
+  user-select: text;
+  cursor: text;
+}
+
+.card-product button,
+.card-product img {
+  user-select: none;
+}
+
+@media (max-width: 767px) {
+  .card-product {
+    border-radius: 22px;
+    padding: 8px;
+  }
+
+  .card-product-image {
+    height: 180px !important;
+    border-radius: 18px;
+  }
+
+  .card-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .card-product-title {
+    font-size: 15px;
+    line-height: 1.18;
+  }
+
+  .card-product-button {
+    min-height: 38px;
+    border-radius: 16px;
+    font-size: 12px;
+    line-height: 1;
+    padding: 8px 10px;
+  }
+
+  .card-product-button span {
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .card-product-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .wholesale-pricing {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .wholesale-title {
+    margin-bottom: 6px;
+    font-size: 9px;
+  }
+
+  .wholesale-list {
+    gap: 5px;
+  }
+
+  .wholesale-chip {
+    border-radius: 12px;
+    padding: 7px 8px;
+    font-size: 10px;
+  }
+
+  .wholesale-chip span {
+    font-size: 10px;
+  }
+}
+
+
+=========================================================
+ARCHIVO: .\src\shared\styles\components\badges.css
+=========================================================
+@layer components {
+
+  /* =====================================================
+     WOOLY TIER DESIGN SYSTEM
+  ===================================================== */
+
+  .tier {
+    --tier-color: #1d8299;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--tier-color);
+    background: #ffffff;
+    color: var(--tier-color);
+
+    font-weight: 900;
+    line-height: 1;
+
+    transition:
+      background-color 180ms ease,
+      color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  /* =====================================================
+     IDENTIDAD POR TIER
+  ===================================================== */
+
+  .tier-1 {
+    --tier-color: #1d8299;
+  }
+
+  .tier-3 {
+    --tier-color: #e99518;
+  }
+
+  .tier-12 {
+    --tier-color: #e85ca7;
+  }
+
+  .tier-50 {
+    --tier-color: #7c3aed;
+  }
+
+  .tier-100 {
+    --tier-color: #0f9d7a;
+  }
+
+  /* =====================================================
+     BOTÓN DE SELECCIÓN
+  ===================================================== */
+
+  .tier-button {
+    min-width: 84px;
+    min-height: 30px;
+
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.9rem;
+
+    background: #ffffff;
+    color: var(--tier-color);
+
+    cursor: pointer;
+  }
+
+  .tier-button:hover {
+    background: color-mix(
+      in srgb,
+      var(--tier-color) 8%,
+      white
+    );
+
+    transform: translateY(-1px);
+  }
+
+  /* =====================================================
+     CHIP INFORMATIVO
+  ===================================================== */
+
+  .tier-chip {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+
+    border-radius: 0.75rem;
+
+    background: #ffffff;
+    color: var(--tier-color);
+
+    font-size: 11px;
+  }
+
+  /* =====================================================
+     ESTADO ACTIVO
+  ===================================================== */
+
+  .tier-active {
+    border-color: var(--tier-color);
+    background: var(--tier-color);
+    color: #ffffff;
+
+    box-shadow:
+      0 5px 14px
+      color-mix(
+        in srgb,
+        var(--tier-color) 24%,
+        transparent
+      );
+  }
+
+  .tier-active:hover {
+    background: var(--tier-color);
+    color: #ffffff;
+  }
+
+  /* =====================================================
+     BADGE FLOTANTE
+  ===================================================== */
+
+  .tier-badge {
+    min-width: 50px;
+    min-height: 48px;
+
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+
+    background: var(--tier-color);
+    color: #ffffff;
+
+    box-shadow:
+      0 8px 20px
+      color-mix(
+        in srgb,
+        var(--tier-color) 28%,
+        transparent
+      );
+  }
+
+  /* =====================================================
+     POSICIÓN SOBRE PRODUCT CARD
+  ===================================================== */
+
+  .product-card-tiers {
+    position: absolute;
+
+    right: 0.75rem;
+    bottom: 0.75rem;
+
+    z-index: 4;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.45rem;
+  }
+
+}
+
+
+=========================================================
+ARCHIVO: .\src\shared\styles\cart\cart-item.css
+=========================================================
+@layer components {
+
+  /* ===== CART ITEM CARD ===== */
+
+  .cart-item-card {
+    border-radius: 28px;
+    background: #ffffff;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid #dbe5ee;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  }
+
+  .cart-item-card:hover {
+    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.1);
+  }
+
+  .cart-product-img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+  }
+
+  .cart-product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cart-unit-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 900;
+    background: #f286be;
+    color: #ffffff;
+  }
+
+  .cart-tier-btn {
+    height: 30px;
+    flex: 1 1 0%;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    font-weight: 800;
+    transition: all 0.3s ease;
+  }
+
+  .cart-tier-btn-muted {
+    background: #f8fafc;
+    color: #475569;
+    border-color: #e2e8f0;
+  }
+
+  .cart-tier-btn-muted:hover {
+    background: #e6f2f5;
+    color: #1d8299;
+    border-color: #bfe5ed;
+  }
+
+  .cart-qty-box{
+    display:flex;
+    align-items:center;
+    min-width:108px;
+    border-radius:1rem;
+    padding:.10rem;
+    background:#f8fafc;
+    border:1px solid #dbe5ee;
+    box-shadow:inset 0 0 0 1px rgba(226,232,240,.5);
+  }
+  
+  .cart-qty-btn {
+    width: 1.60rem;
+    height: 1.60rem;
+    border-radius: 0.75rem;
+    background: #ffffff;
+    color: #1d8299;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+  }
+
+  .cart-qty-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .cart-qty-btn:active {
+    transform: scale(0.9);
+  }
+
+  .cart-note {
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    outline: none;
+    border: 1px solid #dbe5ee;
+    background: #f8fafc;
+    color: #334155;
+  }
+
+  .cart-note::placeholder {
+    color: #94a3b8;
+  }
+
+}
+
+
+=========================================================
+ARCHIVO: .\src\shared\styles\components.css
+=========================================================
+/* ===== COMPONENTS.CSS ===== */
+/* Archivo temporal vacío */
+/* Los estilos fueron modularizados */
+
+@layer components {
+
+}
+
+
+=========================================================
+ARCHIVO: .\src\index.css
+=========================================================
+/* ===== INDEX.CSS ===== */
+/* Punto único de carga global */
+
+/* Fuentes */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+
+/* Core */
+@import "./shared/styles/base.css";
+@import "./shared/styles/utilities.css";
+@import "./shared/styles/animations.css";
+
+/* Componentes globales */
+@import "./shared/styles/components/buttons.css";
+@import "./shared/styles/components/cards.css";
+@import "./shared/styles/components/glass.css";
+@import "./shared/styles/components/forms.css";
+@import "./shared/styles/components/modals.css";
+@import "./shared/styles/components/floating-buttons.css";
+@import "./shared/styles/components/recent-activity.css";
+@import "./shared/styles/components/badges.css";
+@import "./shared/styles/components/countdown-timer.css";
+@import "./shared/styles/components/explore.css";
+@import "./shared/styles/components/explore-mobile.css";
+
+/* Catálogo */
+@import "./shared/styles/catalog/product-card.css";
+@import "./shared/styles/catalog/category-filter.css";
+@import "./shared/styles/catalog/category-filter-mobile.css";
+@import "./shared/styles/catalog/header-category-filter.css";
+@import "./shared/styles/catalog/catalog-control-header.css";
+@import "./shared/styles/catalog/search.css";
+@import "./shared/styles/catalog/notifications.css";
+
+/* Carrito */
+@import "./shared/styles/cart/cart-panel.css";
+@import "./shared/styles/cart/cart-sidebar.css";
+@import "./shared/styles/cart/cart-item.css";
+@import "./shared/styles/cart/cart-footer.css";
+
+/* HOME */
+@import "./shared/styles/home/hero.css";
+@import "./shared/styles/home/categories.css";
+@import "./shared/styles/home/shipping.css";
+@import "./shared/styles/home/stats.css";
+@import "./shared/styles/home/vip.css";
+@import "./shared/styles/home/featured-products.css";
+@import "./shared/styles/home/how-to-buy.css";
+@import "./shared/styles/home/benefits.css";
+@import "./shared/styles/home/testimonials.css";
+@import "./shared/styles/home/brand-story.css";
+@import "./shared/styles/home/social.css";
+@import "./shared/styles/home/tiktok.css";
+@import "./shared/styles/home/final-cta.css";
+@import "./shared/styles/home/footer.css";
+@import "./shared/styles/home/growth-center.css";
+
+/* Skeletons */
+@import "./shared/styles/skeletons/catalog-skeleton.css";
+@import "./shared/styles/skeletons/category-skeleton.css";
+@import "./shared/styles/skeletons/product-skeleton.css";
+
+/* Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+

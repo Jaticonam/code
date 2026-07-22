@@ -41,30 +41,7 @@
     background: #f286be;
     color: #ffffff;
   }
-
-  .cart-tier-btn {
-    height: 30px;
-    flex: 1 1 0%;
-    border-radius: 14px;
-    border: 1px solid transparent;
-    font-size: 11px;
-    font-weight: 800;
-    transition: all 0.3s ease;
-  }
-
-  .cart-tier-btn-muted {
-    background: #f8fafc;
-    color: #475569;
-    border-color: #e2e8f0;
-  }
-
-  .cart-tier-btn-muted:hover {
-    background: #e6f2f5;
-    color: #1d8299;
-    border-color: #bfe5ed;
-  }
-
-  .cart-qty-box{
+.cart-qty-box{
     display:flex;
     align-items:center;
     min-width:108px;
@@ -113,3 +90,4 @@
   }
 
 }
+

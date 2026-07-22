@@ -129,7 +129,6 @@ export function ProductGallery({
           product={product}
           maxVisible={3}
           includePricingBadges={false}
-          includeSeasonality
           variant="detail"
           className="absolute left-4 top-4 z-10 flex max-w-[75%] flex-col items-start gap-2"
         />

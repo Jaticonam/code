@@ -1,9 +1,0 @@
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(39,9): error TS1005: ':' expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(39,14): error TS1005: ',' expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(39,25): error TS1005: ',' expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(39,26): error TS1109: Expression expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(39,28): error TS1005: ':' expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(61,4): error TS1005: ',' expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(63,10): error TS1005: ':' expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(63,61): error TS1005: ',' expected.
-src/modules/catalog-export/components/CatalogPdfCard/CatalogPdfCard.tsx(168,1): error TS1005: '}' expected.

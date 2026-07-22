@@ -11,9 +11,11 @@ import { useCartStore } from "@/modules/cart/store";
 import { useProducts } from "@/modules/catalog/hooks/useProducts";
 import type { Product } from "@/shared/types/product";
 import {
+  getNextVolumePrice,
+} from "@/modules/catalog/domain/volumePricing";
+import {
   getUnitPrice,
   getStockPresentation,
-  getNextTier,
 } from "@/shared/lib/product";
 
 import { useProductViewers } from "@/modules/product-detail/hooks/useProductViewers";
@@ -30,12 +32,11 @@ import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 import { ProductDetailHeader } from "@/modules/product-detail/components/ProductDetailHeader";
 import { ProductGallery } from "@/modules/product-detail/components/ProductGallery";
 import { ProductStockInfo } from "@/modules/product-detail/components/ProductStockInfo";
-import { ProductTierSelector } from "@/modules/product-detail/components/ProductTierSelector";
+import { ProductVolumePriceSelector } from "@/modules/product-detail/components/ProductVolumePriceSelector";
 import { ProductPriceBlock } from "@/modules/product-detail/components/ProductPriceBlock";
 import { ProductQuantitySelector } from "@/modules/product-detail/components/ProductQuantitySelector";
 import { ProductPurchaseActions } from "@/modules/product-detail/components/ProductPurchaseActions";
 import { RelatedProducts } from "@/modules/product-detail/components/RelatedProducts";
-import { ProductTierProgress } from "@/modules/product-detail/components/ProductTierProgress";
 import { ProductSeo } from "@/shared/seo/productSeoComponent";
 import { getProductSeo } from "@/shared/seo/productSeo";
 import { getProductMedia } from "@/shared/lib/productMedia";
@@ -66,7 +67,7 @@ const ProductDetailPage = () => {
 
   const [qty, setQty] = useState(1);
   const [qtyInput, setQtyInput] = useState("1");
-  const [lastTier, setLastTier] = useState(1);
+  const [lastVolumePrice, setLastVolumePrice] = useState(1);
   const [showUnlock, setShowUnlock] = useState(false);
   const [pricePulse, setPricePulse] = useState(false);
   const [pageReady, setPageReady] = useState(false);
@@ -109,7 +110,7 @@ const ProductDetailPage = () => {
 
     setQty(1);
     setQtyInput("1");
-    setLastTier(1);
+    setLastVolumePrice(1);
     setShowUnlock(false);
     setPricePulse(false);
 
@@ -136,7 +137,7 @@ const ProductDetailPage = () => {
 
   const unitPrice = product ? getUnitPrice(effectiveQty, product) : 0;
   const total = unitPrice * effectiveQty;
-  const nextTier = product ? getNextTier(effectiveQty, product) : null;
+  const nextVolumePrice = product ? getNextVolumePrice(product, effectiveQty) : null;
 
   const savingsByQty =
     product && product.price_1 > unitPrice
@@ -207,7 +208,7 @@ const ProductDetailPage = () => {
       setQtyInput(String(cleanQty));
 
       const nextUnitPrice = product ? getUnitPrice(cleanQty, product) : 0;
-      const nextTierQty =
+      const nextVolumePriceQty =
         cleanQty >= 100
           ? 100
           : cleanQty >= 50
@@ -218,7 +219,7 @@ const ProductDetailPage = () => {
                 ? 3
                 : 1;
 
-      if (nextTierQty > lastTier) {
+      if (nextVolumePriceQty > lastVolumePrice) {
         setShowUnlock(true);
         window.setTimeout(() => setShowUnlock(false), 1400);
       }
@@ -228,9 +229,9 @@ const ProductDetailPage = () => {
         window.setTimeout(() => setPricePulse(false), 220);
       }
 
-      setLastTier(nextTierQty);
+      setLastVolumePrice(nextVolumePriceQty);
     },
-    [product, lastTier, unitPrice],
+    [product, lastVolumePrice, unitPrice],
   );
 
   const handleQtyInputChange = useCallback((value: string) => {
@@ -385,7 +386,7 @@ const ProductDetailPage = () => {
               stockPresentation={stockPresentation}
             />
 
-            <ProductTierSelector
+            <ProductVolumePriceSelector
               product={product}
               effectiveQty={effectiveQty}
               onSelectQty={updateQty}
@@ -399,15 +400,17 @@ const ProductDetailPage = () => {
               showUnlock={showUnlock}
               savingsByQty={savingsByQty}
               basePrice={product.price_1}
-              nextTier={nextTier}
+              nextVolumePrice={
+                nextVolumePrice
+                  ? {
+                      qty: nextVolumePrice.qty,
+                      price: nextVolumePrice.unitPrice,
+                    }
+                  : null
+              }
               isQtyInputValid={isQtyInputValid}
             />
 
-            <ProductTierProgress
-              product={product}
-              effectiveQty={effectiveQty}
-              nextTier={nextTier}
-            />
 
             {available && (
               <ProductQuantitySelector
@@ -488,3 +491,4 @@ const ProductDetailPage = () => {
 };
 
 export default ProductDetailPage;
+

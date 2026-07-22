@@ -1,0 +1,297 @@
+BLUEPRINT — MAPA ACTUAL DE BADGES Y CAMPAÑAS
+GeneratedAt: 2026-07-21 13:21:50
+
+COMMIT ACTUAL:
+b468485 avances en casa tiers y badges
+
+============================================================
+PATRÓN: interface Campaign
+============================================================
+.\src\shared\config\campaigns.ts:1: export interface CampaignTheme {
+.\src\shared\config\campaigns.ts:8: export interface CampaignConfig {
+.\src\shared\types\product.ts:14: export interface Campaign {
+
+============================================================
+PATRÓN: type Campaign
+============================================================
+.\src\modules\catalog\domain\CampaignRules.ts:7: export type CampaignNameToIdMap =
+.\src\modules\catalog\integrations\googleSheets\normalizeProduct.ts:13: export type CampaignNameToIdMap = Record<string, string>;
+.\src\modules\catalog\services\campaignService.ts:16: type CampaignCacheEntry = {
+.\src\modules\home\components\CampaignHero\ActiveCampaignHero.tsx:7: type CampaignHeroKey =
+.\src\shared\config\campaigns.ts:165: export type CampaignId = (typeof CAMPAIGN_CONFIG)[number]["id"];
+.\src\shared\types\product.ts:7: export type CampaignComputedStatus =
+
+============================================================
+PATRÓN: normalizeCampaign
+============================================================
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:14: normalizeCampaign,
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:15: } from "./normalizeCampaign";
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:76: return rows.map(normalizeCampaign);
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:43: export function normalizeCampaign(
+.\src\shared\config\campaigns.ts:171: export function normalizeCampaignText(value: unknown): string {
+.\src\shared\config\campaigns.ts:180: const normalizedValue = normalizeCampaignText(value);
+.\src\shared\config\campaigns.ts:184: normalizedValue.includes(normalizeCampaignText(keyword)),
+
+============================================================
+PATRÓN: computedStatus
+============================================================
+.\src\modules\catalog\domain\CampaignRules.ts:54: ): Campaign["computedStatus"] {
+.\src\modules\catalog\domain\CampaignRules.ts:59: Campaign["computedStatus"]
+.\src\modules\catalog\domain\CampaignRules.ts:82: export function getCampaignComputedStatus(
+.\src\modules\catalog\domain\CampaignRules.ts:87: ): Campaign["computedStatus"] {
+.\src\modules\catalog\domain\CampaignRules.ts:138: return campaign.computedStatus === "activa";
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:3: import { getCampaignComputedStatus } from "@/modules/catalog/domain/CampaignRules";
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:65: computedStatus: "borrador",
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:71: computedStatus:
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:72: getCampaignComputedStatus(campaign),
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:82: getCampaignComputedStatus,
+.\src\modules\catalog\services\campaignService.ts:70: computedStatus: "activa",
+.\src\shared\types\product.ts:7: export type CampaignComputedStatus =
+.\src\shared\types\product.ts:27: computedStatus: CampaignComputedStatus;
+
+============================================================
+PATRÓN: publicationStatus
+============================================================
+.\src\modules\catalog\domain\CampaignRules.ts:52: function normalizePublicationStatus(
+.\src\modules\catalog\domain\CampaignRules.ts:85: "startDate" | "endDate" | "publicationStatus"
+.\src\modules\catalog\domain\CampaignRules.ts:88: const publicationStatus =
+.\src\modules\catalog\domain\CampaignRules.ts:89: normalizePublicationStatus(
+.\src\modules\catalog\domain\CampaignRules.ts:90: campaign.publicationStatus,
+.\src\modules\catalog\domain\CampaignRules.ts:93: if (publicationStatus === "oculta") {
+.\src\modules\catalog\domain\CampaignRules.ts:97: if (publicationStatus === "borrador") {
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:20: "publicationstatus",
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:61: publicationStatus: cleanText(
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:62: row.publicationstatus,
+.\src\modules\catalog\services\campaignService.ts:69: publicationStatus: "Publicado",
+.\src\shared\types\product.ts:26: publicationStatus: string;
+
+============================================================
+PATRÓN: campaignIds
+============================================================
+[SIN COINCIDENCIAS]
+
+============================================================
+PATRÓN: campaigns
+============================================================
+.\src\app\pages\CatalogPage.tsx:18: import { useCatalogCampaigns } from "@/modules/catalog/hooks/useCatalogCampaigns";
+.\src\app\pages\CatalogPage.tsx:38: const { campaigns: catalogCampaigns } = useCatalogCampaigns();
+.\src\app\pages\CatalogPage.tsx:39: const CATALOG_CAMPAIGNS = catalogCampaigns;
+.\src\app\pages\CatalogPage.tsx:63: !id || CATALOG_CAMPAIGNS.some((campaign) => campaign.id === id),
+.\src\app\pages\CatalogPage.tsx:64: [CATALOG_CAMPAIGNS],
+.\src\app\pages\CatalogPage.tsx:98: if (CATALOG_CAMPAIGNS.length === 0) return;
+.\src\app\pages\CatalogPage.tsx:104: }, [activeCampaign, CATALOG_CAMPAIGNS, isCatalogCampaignId, navigate]);
+.\src\app\pages\CatalogPage.tsx:133: const handleCampaignSelect = useCallback(
+.\src\app\pages\CatalogPage.tsx:174: ? CATALOG_CAMPAIGNS.find((c) => c.id === activeCampaign)
+.\src\app\pages\CatalogPage.tsx:262: campaigns={CATALOG_CAMPAIGNS}
+.\src\app\pages\CatalogPage.tsx:265: showCampaigns={CATALOG_CAMPAIGNS.length > 0}
+.\src\app\pages\CatalogPage.tsx:266: onCampaignSelect={handleCampaignSelect}
+.\src\app\pages\CatalogPage.tsx:374: campaigns={CATALOG_CAMPAIGNS}
+.\src\app\pages\CatalogPage.tsx:381: onCampaignSelect={handleCampaignSelect}
+.\src\modules\blog\components\article\BlogArticleSidebar.tsx:23: const CAMPAIGNS = ["❤️ San Valentín", "🏎️ Hot Wheels", "🌷 Día de la Madre"];
+.\src\modules\blog\components\article\BlogArticleSidebar.tsx:97: <div className="blog-side-campaigns">
+.\src\modules\blog\components\article\BlogArticleSidebar.tsx:98: {CAMPAIGNS.map((c) => (
+.\src\modules\blog\components\products\BlogCatalogProductCard.tsx:33: const campaign = formatBadge(product.campaigns?.[0] || product.badges?.[0]);
+.\src\modules\blog\components\rail\BlogGuidesRail.tsx:14: const CAMPAIGNS = [
+.\src\modules\blog\components\rail\BlogGuidesRail.tsx:64: {CAMPAIGNS.map((item) => (
+.\src\modules\blog\components\sections\CampaignCenterSection.tsx:3: import { FALLBACK_CAMPAIGNS } from "../../data/fallbackCampaigns";
+.\src\modules\blog\components\sections\CampaignCenterSection.tsx:6: const campaigns = [...FALLBACK_CAMPAIGNS].sort(
+.\src\modules\blog\components\sections\CampaignCenterSection.tsx:9: const [main, ...rest] = campaigns;
+.\src\modules\blog\data\fallbackCampaigns.ts:13: export const FALLBACK_CAMPAIGNS: HubCampaign[] = [
+.\src\modules\blog\types\blog.ts:56: relatedCampaigns?: string[];
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:23: campaigns: ReadonlyArray<CatalogExploreCampaign>;
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:29: onCampaignSelect: (id: string) => void;
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:43: campaigns,
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:47: onCampaignSelect,
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:53: const visibleCampaigns = campaigns.filter((campaign) => {
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:69: onCampaignSelect("");
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:104: <button type="button" onClick={() => onCampaignSelect("")}>
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:118: {visibleCampaigns.map((campaign) => {
+.\src\modules\catalog\components\CatalogExploreCenter.tsx:126: onClick={() => onCampaignSelect(isActive ? "" : campaign.id)}
+.\src\modules\catalog\components\CatalogTopNav.tsx:19: campaigns: ReadonlyArray<HeaderCampaignOption>;
+.\src\modules\catalog\components\CatalogTopNav.tsx:22: showCampaigns?: boolean;
+.\src\modules\catalog\components\CatalogTopNav.tsx:23: onCampaignSelect: (id: string) => void;
+.\src\modules\catalog\components\CatalogTopNav.tsx:43: campaigns,
+.\src\modules\catalog\components\CatalogTopNav.tsx:46: showCampaigns = false,
+.\src\modules\catalog\components\CatalogTopNav.tsx:47: onCampaignSelect,
+.\src\modules\catalog\components\CatalogTopNav.tsx:53: const hasCampaignSection = showCampaigns && campaigns.length > 0;
+.\src\modules\catalog\components\CatalogTopNav.tsx:84: {hasCampaignSection && (
+.\src\modules\catalog\components\CatalogTopNav.tsx:86: className="catalogTopNavSection catalogTopNavCampaigns"
+.\src\modules\catalog\components\CatalogTopNav.tsx:90: campaigns={campaigns}
+.\src\modules\catalog\components\CatalogTopNav.tsx:93: show={hasCampaignSection}
+.\src\modules\catalog\components\CatalogTopNav.tsx:94: onSelect={onCampaignSelect}
+.\src\modules\catalog\components\HeaderCampaignFilter.tsx:10: campaigns: ReadonlyArray<HeaderCampaignOption>;
+.\src\modules\catalog\components\HeaderCampaignFilter.tsx:18: campaigns,
+.\src\modules\catalog\components\HeaderCampaignFilter.tsx:24: const visibleCampaigns = campaigns.filter(
+.\src\modules\catalog\components\HeaderCampaignFilter.tsx:28: if (!show || visibleCampaigns.length === 0) {
+.\src\modules\catalog\components\HeaderCampaignFilter.tsx:34: {visibleCampaigns.map((campaign) => {
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:21: campaigns: [],
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:45: const deduplicateCampaigns = (
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:46: campaigns: LegacyCampaignReference[],
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:50: campaigns.forEach((campaign) => {
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:153: deduplicateCampaigns(campaignReferences),
+.\src\modules\catalog\domain\CampaignRules.ts:142: campaigns: Campaign[],
+.\src\modules\catalog\domain\CampaignRules.ts:144: return campaigns.reduce<CampaignNameToIdMap>(
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts:3: import { loadCatalogCampaigns } from "@/modules/catalog/services/campaignService";
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts:4: export function useCatalogCampaigns() {
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts:5: const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts:15: const result = await loadCatalogCampaigns();
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts:18: setCampaigns(result);
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts:24: setCampaigns([]);
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts:41: campaigns,
+.\src\modules\catalog\hooks\useCatalogFilters.ts:34: ? products.filter((p) => p.campaigns?.includes(activeCampaign))
+.\src\modules\catalog\hooks\useCatalogFilters.ts:63: product.campaigns?.forEach((campaign) => {
+.\src\modules\catalog\hooks\useFilteredProducts.ts:31: product.campaigns?.includes(activeCampaign),
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:20: CAMPAIGNS_SHEET_CONFIG,
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:43: "campaigns",
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:70: async loadCampaigns(): Promise<Campaign[]> {
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:72: CAMPAIGNS_SHEET_CONFIG,
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:81: campaigns: readonly Campaign[],
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:95: buildCampaignNameToIdMap([...campaigns]);
+.\src\modules\catalog\integrations\googleSheets\normalizeProduct.ts:7: campaigns: string[];
+.\src\modules\catalog\integrations\googleSheets\normalizeProduct.ts:47: function parseCampaigns(
+.\src\modules\catalog\integrations\googleSheets\normalizeProduct.ts:82: campaigns: parseCampaigns(row.campaigns, campaignNameToIdMap),
+.\src\modules\catalog\integrations\googleSheets\sheetsConfig.ts:49: export const CAMPAIGNS_SHEET_CONFIG = {
+.\src\modules\catalog\integrations\googleSheets\sheetsConfig.ts:50: name: "Campaigns",
+.\src\modules\catalog\providers\CatalogProvider.ts:16: loadCampaigns(): Promise<Campaign[]>;
+.\src\modules\catalog\providers\CatalogProvider.ts:20: campaigns: readonly Campaign[],
+.\src\modules\catalog\services\campaignService.ts:1: import { CAMPAIGN_CONFIG } from "@/shared/config/campaigns";
+.\src\modules\catalog\services\campaignService.ts:21: export interface LoadCatalogCampaignsOptions {
+.\src\modules\catalog\services\campaignService.ts:31: const CAMPAIGNS_CACHE_KEY = "jung_catalog_campaigns_v2";
+.\src\modules\catalog\services\campaignService.ts:37: let campaignsMemoryCache: CampaignCacheEntry | null = null;
+.\src\modules\catalog\services\campaignService.ts:38: let pendingCampaignsRequest: Promise<Campaign[]> | null = null;
+.\src\modules\catalog\services\campaignService.ts:48: const sortCampaigns = (items: Campaign[]) =>
+.\src\modules\catalog\services\campaignService.ts:56: function getFallbackCampaigns(): Campaign[] {
+.\src\modules\catalog\services\campaignService.ts:78: function readStoredCampaigns(): Campaign[] | null {
+.\src\modules\catalog\services\campaignService.ts:84: const raw = localStorage.getItem(CAMPAIGNS_CACHE_KEY);
+.\src\modules\catalog\services\campaignService.ts:100: campaignsMemoryCache = parsed;
+.\src\modules\catalog\services\campaignService.ts:108: function writeCampaignsCache(items: Campaign[]): void {
+.\src\modules\catalog\services\campaignService.ts:114: campaignsMemoryCache = entry;
+.\src\modules\catalog\services\campaignService.ts:121: localStorage.setItem(CAMPAIGNS_CACHE_KEY, JSON.stringify(entry));
+.\src\modules\catalog\services\campaignService.ts:131: async function fetchCampaignsFromProvider(): Promise<Campaign[]> {
+.\src\modules\catalog\services\campaignService.ts:132: const campaigns = await catalogProvider.loadCampaigns();
+.\src\modules\catalog\services\campaignService.ts:134: return sortCampaigns(campaigns);
+.\src\modules\catalog\services\campaignService.ts:141: async function loadAllCatalogCampaigns(
+.\src\modules\catalog\services\campaignService.ts:142: options: Pick<LoadCatalogCampaignsOptions, "forceRefresh"> = {},
+.\src\modules\catalog\services\campaignService.ts:145: if (campaignsMemoryCache && isFresh(campaignsMemoryCache.savedAt)) {
+.\src\modules\catalog\services\campaignService.ts:146: return campaignsMemoryCache.items;
+.\src\modules\catalog\services\campaignService.ts:149: const storedCampaigns = readStoredCampaigns();
+.\src\modules\catalog\services\campaignService.ts:151: if (storedCampaigns) {
+.\src\modules\catalog\services\campaignService.ts:152: return storedCampaigns;
+.\src\modules\catalog\services\campaignService.ts:156: if (pendingCampaignsRequest) {
+.\src\modules\catalog\services\campaignService.ts:157: return pendingCampaignsRequest;
+.\src\modules\catalog\services\campaignService.ts:160: pendingCampaignsRequest = fetchCampaignsFromProvider()
+.\src\modules\catalog\services\campaignService.ts:161: .then((campaigns) => {
+.\src\modules\catalog\services\campaignService.ts:162: writeCampaignsCache(campaigns);
+.\src\modules\catalog\services\campaignService.ts:164: return campaigns;
+.\src\modules\catalog\services\campaignService.ts:169: const fallbackCampaigns = sortCampaigns(getFallbackCampaigns());
+.\src\modules\catalog\services\campaignService.ts:171: writeCampaignsCache(fallbackCampaigns);
+.\src\modules\catalog\services\campaignService.ts:173: return fallbackCampaigns;
+.\src\modules\catalog\services\campaignService.ts:176: pendingCampaignsRequest = null;
+.\src\modules\catalog\services\campaignService.ts:179: return pendingCampaignsRequest;
+.\src\modules\catalog\services\campaignService.ts:186: export async function loadCatalogCampaigns(
+.\src\modules\catalog\services\campaignService.ts:187: options: LoadCatalogCampaignsOptions = {},
+.\src\modules\catalog\services\campaignService.ts:189: const campaigns = await loadAllCatalogCampaigns({
+.\src\modules\catalog\services\campaignService.ts:194: return campaigns;
+.\src\modules\catalog\services\campaignService.ts:197: return campaigns.filter(isCampaignActive);
+.\src\modules\catalog\services\campaignService.ts:201: const campaigns = await loadCatalogCampaigns({
+.\src\modules\catalog\services\campaignService.ts:205: return buildCampaignNameToIdMap(campaigns);
+.\src\modules\catalog\services\productService.ts:6: import { loadCatalogCampaigns } from "./campaignService";
+.\src\modules\catalog\services\productService.ts:166: const campaigns =
+.\src\modules\catalog\services\productService.ts:167: await loadCatalogCampaigns({
+.\src\modules\catalog\services\productService.ts:174: campaigns,
+.\src\modules\catalog-export\components\CatalogPdfPage\CatalogPdfPage.tsx:79: product.campaigns?.some(
+.\src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:179: const campaigns = Array.from(new Set(product.campaigns || []));
+.\src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:181: campaigns.forEach((campaignId) => {
+.\src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:207: const matchesCampaign = product.campaigns?.some(
+.\src\modules\catalog-tools\components\SalesCatalogToolsPage\SalesCatalogToolsPage.tsx:246: product.campaigns?.some(
+.\src\modules\home\components\CampaignHero\CampaignHeroCyber.tsx:140: const campaigns = [
+.\src\modules\home\components\CampaignHero\CampaignHeroCyber.tsx:260: {campaigns.map((camp, index) => (
+.\src\modules\integrations\publication\engine\PublicationEngine.ts:31: items = items.filter((p) => (p.campaigns || []).some((c) => normalize(c) === target));
+.\src\shared\components\layout\HeaderBar.tsx:33: <div className="catalog-header-campaigns">{topContent}</div>
+.\src\shared\config\campaigns.ts:189: export function getCampaignStyle(id: string) {
+.\src\shared\types\product.ts:52: campaigns?: string[];
+
+============================================================
+PATRÓN: campaignColors
+============================================================
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:5: import { getCampaignColorClass } from "./campaignColors";
+.\src\modules\catalog\services\campaignService.ts:4: import { getCampaignColorClass } from "@/modules/catalog/integrations/googleSheets/campaignColors";
+
+============================================================
+PATRÓN: buildCampaignNameToIdMap
+============================================================
+.\src\modules\catalog\domain\CampaignRules.ts:141: export function buildCampaignNameToIdMap(
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:3: import { buildCampaignNameToIdMap } from "@/modules/catalog/domain/CampaignRules";
+.\src\modules\catalog\integrations\googleSheets\GoogleSheetsCatalogProvider.ts:95: buildCampaignNameToIdMap([...campaigns]);
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts:81: buildCampaignNameToIdMap,
+.\src\modules\catalog\services\campaignService.ts:6: buildCampaignNameToIdMap,
+.\src\modules\catalog\services\campaignService.ts:205: return buildCampaignNameToIdMap(campaigns);
+
+============================================================
+PATRÓN: LegacyCampaignReference
+============================================================
+.\src\modules\catalog\domain\badges\BadgeTypes.ts:34: export interface LegacyCampaignReference {
+.\src\modules\catalog\domain\badges\BadgeTypes.ts:51: campaignReferences: LegacyCampaignReference[];
+.\src\modules\catalog\domain\badges\index.ts:5: LegacyCampaignReference,
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:5: LegacyCampaignReference,
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:46: campaigns: LegacyCampaignReference[],
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:47: ): LegacyCampaignReference[] => {
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:48: const byCode = new Map<string, LegacyCampaignReference>();
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:70: const campaignReferences: LegacyCampaignReference[] = [];
+
+============================================================
+PATRÓN: resolveProductCompatibility
+============================================================
+.\src\modules\catalog\components\ProductBadgeStack.tsx:5: resolveProductCompatibility,
+.\src\modules\catalog\components\ProductBadgeStack.tsx:40: const profile = resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\index.ts:18: resolveProductCompatibility,
+.\src\modules\catalog\domain\badges\index.ts:19: type ResolveProductCompatibilityOptions,
+.\src\modules\catalog\domain\badges\index.ts:20: } from "./ResolveProductCompatibility";
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:7: resolveProductCompatibility,
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:25: describe("resolveProductCompatibility", () => {
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:27: const profile = resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:43: const profile = resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:54: const profile = resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:69: const profile = resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:82: const profile = resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:98: const profile = resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:14: export interface ResolveProductCompatibilityOptions {
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:61: export function resolveProductCompatibility(
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts:63: options: ResolveProductCompatibilityOptions = {},
+
+============================================================
+PATRÓN: getProductDisplayIndicators
+============================================================
+.\src\modules\catalog\components\ProductBadgeStack.tsx:4: getProductDisplayIndicators,
+.\src\modules\catalog\components\ProductBadgeStack.tsx:47: const indicators = getProductDisplayIndicators(
+.\src\modules\catalog\domain\badges\BadgeDisplayPolicy.ts:25: export function getProductDisplayIndicators(
+.\src\modules\catalog\domain\badges\index.ts:23: getProductDisplayIndicators,
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:6: getProductDisplayIndicators,
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts:108: const indicators = getProductDisplayIndicators(
+
+============================================================
+ARCHIVOS RELACIONADOS
+============================================================
+.\src\modules\blog\components\sections\CampaignCenterSection.tsx
+.\src\modules\blog\data\fallbackCampaigns.ts
+.\src\modules\catalog\components\HeaderCampaignFilter.tsx
+.\src\modules\catalog\domain\CampaignRules.ts
+.\src\modules\catalog\hooks\useCatalogCampaigns.ts
+.\src\modules\catalog\integrations\googleSheets\campaignColors.ts
+.\src\modules\catalog\integrations\googleSheets\normalizeCampaign.ts
+.\src\modules\catalog\services\campaignService.ts
+.\src\modules\home\components\CampaignHero\ActiveCampaignHero.tsx
+.\src\modules\home\components\CampaignHero\CampaignHeroCyber.tsx
+.\src\modules\home\components\CampaignHero\CampaignHeroDefault.tsx
+.\src\modules\home\components\CampaignHero\CampaignHeroDiaPadre.tsx
+.\src\shared\config\campaigns.ts
+
+============================================================
+ARCHIVOS DE LA CAPA DE BADGES
+============================================================
+.\src\modules\catalog\domain\badges\BadgeDisplayPolicy.ts
+.\src\modules\catalog\domain\badges\BadgeTypes.ts
+.\src\modules\catalog\domain\badges\index.ts
+.\src\modules\catalog\domain\badges\LegacyBadgeAliases.ts
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.test.ts
+.\src\modules\catalog\domain\badges\ResolveProductCompatibility.ts

@@ -1,15 +1,24 @@
 import type { Product } from "@/shared/types/product";
 
-export function getBestProductTier(product: Product) {
-  const tiers = [
-    { qty: 1, price: Number(product.price_1) },
-    { qty: 3, price: Number(product.price_3) },
-    { qty: 12, price: Number(product.price_12) },
-    { qty: 50, price: Number(product.price_50) },
-    { qty: 100, price: Number(product.price_100) },
-  ].filter((tier) => tier.price > 0);
+import {
+  getBestVolumePrice,
+} from "@/modules/catalog/domain/volumePricing";
 
-  if (!tiers.length) return null;
+/**
+ * Compatibilidad temporal.
+ */
+export function getBestProductTier(
+  product: Product,
+) {
+  const bestVolumePrice =
+    getBestVolumePrice(product);
 
-  return [...tiers].sort((a, b) => a.price - b.price || a.qty - b.qty)[0];
+  if (!bestVolumePrice) {
+    return null;
+  }
+
+  return {
+    qty: bestVolumePrice.qty,
+    price: bestVolumePrice.unitPrice,
+  };
 }
