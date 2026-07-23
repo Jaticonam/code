@@ -401,14 +401,7 @@ const ProductDetailPage = () => {
               showUnlock={showUnlock}
               savingsByQty={savingsByQty}
               basePrice={product.price_1}
-              nextVolumePrice={
-                nextVolumePrice
-                  ? {
-                      qty: nextVolumePrice.qty,
-                      price: nextVolumePrice.unitPrice,
-                    }
-                  : null
-              }
+              nextVolumePrice={nextVolumePrice}
               isQtyInputValid={isQtyInputValid}
             />
 
@@ -416,14 +409,7 @@ const ProductDetailPage = () => {
             <ProductVolumePriceProgress
               product={product}
               effectiveQty={effectiveQty}
-              nextVolumePrice={
-                nextVolumePrice
-                  ? {
-                      qty: nextVolumePrice.qty,
-                      price: nextVolumePrice.unitPrice,
-                    }
-                  : null
-              }
+              nextVolumePrice={nextVolumePrice}
             />
 
             {available && (
@@ -505,6 +491,7 @@ const ProductDetailPage = () => {
 };
 
 export default ProductDetailPage;
+
 
 
 

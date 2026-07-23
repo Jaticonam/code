@@ -5,7 +5,7 @@ interface ProductVolumePriceProgressProps {
   effectiveQty: number;
   nextVolumePrice: {
     qty: number;
-    price: number;
+    unitPrice: number;
   } | null;
 }
 
@@ -113,7 +113,7 @@ export function ProductVolumePriceProgress({
             </span>{" "}
             más y baja a{" "}
             <span className="text-[#1d8299]">
-              S/{nextVolumePrice.price.toFixed(2)}
+              S/{nextVolumePrice.unitPrice.toFixed(2)}
             </span>{" "}
             c/u
           </>
@@ -124,5 +124,6 @@ export function ProductVolumePriceProgress({
     </div>
   );
 }
+
 
 

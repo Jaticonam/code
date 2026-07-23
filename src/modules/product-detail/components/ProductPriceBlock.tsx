@@ -83,7 +83,7 @@ export function ProductPriceBlock({
       {nextVolumePrice && !hasOffer && (
         <p className="mt-1 text-sm font-semibold text-[#1d8299]">
           🔥 Agrega {nextVolumePrice.qty - effectiveQty} más y baja a S/{" "}
-          {nextVolumePrice.price.toFixed(2)}
+          {nextVolumePrice.unitPrice.toFixed(2)}
         </p>
       )}
 
@@ -95,6 +95,8 @@ export function ProductPriceBlock({
     </div>
   );
 }
+
+
 
 
 
