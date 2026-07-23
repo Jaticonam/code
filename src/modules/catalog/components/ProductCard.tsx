@@ -7,7 +7,7 @@ import { getCategoryColor } from "@/shared/config/categoryColors";
 import { ProductCardBadges } from "@/modules/catalog/components/ProductCardBadges";
 import { ProductCardPrice } from "@/modules/catalog/components/ProductCardPrice";
 import { ProductCardStock } from "@/modules/catalog/components/ProductCardStock";
-import { ProductCardTierBadges } from "@/modules/catalog/components/ProductCardTierBadges";
+import { ProductVolumePriceBadges } from "@/modules/catalog/components/ProductVolumePriceBadges";
 import { useProductCard } from "@/modules/product-detail/hooks/useProductCard";
 
 interface Props {
@@ -126,7 +126,7 @@ export function ProductCard({
 
         <ProductCardStock stock={p.stock} price={p.price_1} status={p.status} />
 
-        <ProductCardTierBadges
+        <ProductVolumePriceBadges
           product={p}
           available={available}
           isPreventa={isPreventa}
@@ -174,3 +174,4 @@ export function ProductCard({
     </div>
   );
 }
+

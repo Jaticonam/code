@@ -16,7 +16,7 @@ interface Props {
   isPreventa: boolean;
 }
 
-export function ProductCardTierBadges({
+export function ProductVolumePriceBadges({
   product,
   available,
   isPreventa,
@@ -61,4 +61,5 @@ export function ProductCardTierBadges({
     </div>
   );
 }
+
 

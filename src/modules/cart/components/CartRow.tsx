@@ -6,7 +6,7 @@ import { getEffectivePrice } from "@/modules/catalog/utils/products";
 import { getActiveTierQty } from "@/modules/cart/utils/getActiveTierQty";
 import { getTierUnlockMessage } from "@/modules/cart/utils/getTierUnlockMessage";
 
-import { CartTierSelector } from "@/modules/cart/components/CartTierSelector";
+import { CartVolumePriceSelector } from "@/modules/cart/components/CartVolumePriceSelector";
 import { CartQtyControls } from "@/modules/cart/components/CartQtyControls";
 import { CartNoteTextarea } from "@/modules/cart/components/CartNoteTextarea";
 
@@ -120,7 +120,7 @@ export function CartRow({
       </div>
 
       <div className="flex items-center gap-2">
-        <CartTierSelector item={item} onSetQty={onSetQty} />
+        <CartVolumePriceSelector item={item} onSetQty={onSetQty} />
 
         <CartQtyControls
           item={item}
@@ -134,3 +134,4 @@ export function CartRow({
     </div>
   );
 }
+
