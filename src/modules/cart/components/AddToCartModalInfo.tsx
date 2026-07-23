@@ -1,5 +1,5 @@
 import type { Product } from "@/shared/types/product";
-import { PRICE_TIERS } from "@/shared/config/priceTiers";
+import { VOLUME_PRICES } from "@/modules/catalog/domain/volumePricing";
 
 interface Props {
   product: Product;
@@ -14,7 +14,7 @@ export function AddToCartModalInfo({
   pulse,
   nextTier,
 }: Props) {
-  const tiers = PRICE_TIERS.filter((tier) => {
+  const tiers = VOLUME_PRICES.filter((tier) => {
     const price = product[tier.key];
 
     return (
@@ -208,3 +208,4 @@ export function AddToCartModalInfo({
     </div>
   );
 }
+

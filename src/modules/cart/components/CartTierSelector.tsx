@@ -1,5 +1,5 @@
 import type { CartItem } from "@/modules/cart/types";
-import { PRICE_TIERS } from "@/shared/config/priceTiers";
+import { VOLUME_PRICES } from "@/modules/catalog/domain/volumePricing";
 
 interface CartTierSelectorProps {
   item: CartItem;
@@ -10,7 +10,7 @@ export function CartTierSelector({
   item,
   onSetQty,
 }: CartTierSelectorProps) {
-  const itemTiers = PRICE_TIERS.filter((tier) => {
+  const itemTiers = VOLUME_PRICES.filter((tier) => {
     const value = item[tier.key];
 
     return (
@@ -58,3 +58,4 @@ export function CartTierSelector({
     </div>
   );
 }
+

@@ -1,5 +1,7 @@
 import type { Product } from "@/shared/types/product";
-import { getAvailablePriceTiers } from "@/shared/config/priceTiers";
+import {
+  getAvailableVolumePrices,
+} from "@/modules/catalog/domain/volumePricing";
 
 const TIER_LABELS = {
   price_3: "Por Mayor",
@@ -21,7 +23,9 @@ export function ProductCardTierBadges({
 }: Props) {
   if (!available || isPreventa) return null;
 
-  const tiers = getAvailablePriceTiers(product).filter((tier) => {
+  const tiers = getAvailableVolumePrices(product, {
+    includeBasePrice: false,
+  }).filter((tier) => {
     const unitPrice = Number(product[tier.key]);
 
     return unitPrice < product.price_1;
@@ -57,3 +61,4 @@ export function ProductCardTierBadges({
     </div>
   );
 }
+

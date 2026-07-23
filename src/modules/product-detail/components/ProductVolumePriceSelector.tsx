@@ -1,5 +1,5 @@
 import type { Product } from "@/shared/types/product";
-import { PRICE_TIERS } from "@/shared/config/priceTiers";
+import { VOLUME_PRICES } from "@/modules/catalog/domain/volumePricing";
 
 interface ProductVolumePriceSelectorProps {
   product: Product;
@@ -12,7 +12,7 @@ export function ProductVolumePriceSelector({
   effectiveQty,
   onSelectQty,
 }: ProductVolumePriceSelectorProps) {
-  const availableTiers = PRICE_TIERS.filter((tier) => {
+  const availableTiers = VOLUME_PRICES.filter((tier) => {
     const value = product[tier.key];
 
     return (
@@ -62,4 +62,5 @@ export function ProductVolumePriceSelector({
     </div>
   );
 }
+
 
