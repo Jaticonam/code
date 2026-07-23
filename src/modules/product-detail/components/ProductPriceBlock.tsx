@@ -8,7 +8,7 @@ interface ProductPriceBlockProps {
   basePrice: number;
   nextVolumePrice: {
     qty: number;
-    price: number;
+    unitPrice: number;
   } | null;
   isQtyInputValid: boolean;
 }
@@ -95,6 +95,7 @@ export function ProductPriceBlock({
     </div>
   );
 }
+
 
 
 
