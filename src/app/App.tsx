@@ -5,6 +5,7 @@ import {
 
 import {
   BrowserRouter,
+  Navigate,
   Outlet,
   Route,
   Routes,
@@ -99,10 +100,22 @@ export default function App() {
                   }
                 />
 
+                {/* PANEL ADMINISTRATIVO */}
+                <Route
+                  path="/admin"
+                  element={
+                    <SalesCatalogToolsPage />
+                  }
+                />
+
+                {/* REDIRECCIÓN LEGACY */}
                 <Route
                   path="/ventas/catalogos"
                   element={
-                    <SalesCatalogToolsPage />
+                    <Navigate
+                      to="/admin"
+                      replace
+                    />
                   }
                 />
 
