@@ -143,13 +143,161 @@ function productMatchesCampaign(
   );
 }
 
-function sortProductsByPriority(
-  products: readonly Product[],
-): Product[] {
+const catalogTextCollator =
+  new Intl.Collator(
+    "es",
+    {
+      numeric: true,
+      sensitivity: "base",
+    },
+  );
+
+const compareCatalogText = (
+  firstValue: unknown,
+  secondValue: unknown,
+): number =>
+  catalogTextCollator.compare(
+    normalizeCatalogSelectionValue(
+      firstValue,
+    ),
+    normalizeCatalogSelectionValue(
+      secondValue,
+    ),
+  );
+
+const getProductPriority = (
+  product: Product,
+): number => {
+  const priority =
+    Number(product.priority ?? 0);
+
+  return Number.isFinite(priority)
+    ? priority
+    : 0;
+};
+
+function buildCategoryOrderMap(
+  categories:
+    readonly CatalogSelectionCategory[],
+): Map<string, number> {
+  const categoryOrder =
+    new Map<string, number>();
+
+  categories.forEach(
+    (category) => {
+      const categoryId =
+        normalizeCatalogSelectionValue(
+          category.id,
+        );
+
+      if (
+        !categoryId ||
+        categoryId === "todas" ||
+        categoryOrder.has(categoryId)
+      ) {
+        return;
+      }
+
+      categoryOrder.set(
+        categoryId,
+        categoryOrder.size,
+      );
+    },
+  );
+
+  return categoryOrder;
+}
+
+interface SortCatalogProductsParams {
+  products: readonly Product[];
+  categories:
+    readonly CatalogSelectionCategory[];
+  groupByCategory: boolean;
+}
+
+function sortCatalogProducts({
+  products,
+  categories,
+  groupByCategory,
+}: SortCatalogProductsParams): Product[] {
+  const categoryOrder =
+    buildCategoryOrderMap(
+      categories,
+    );
+
   return [...products].sort(
-    (a, b) =>
-      Number(b.priority ?? 0) -
-      Number(a.priority ?? 0),
+    (firstProduct, secondProduct) => {
+      if (groupByCategory) {
+        const firstCategory =
+          normalizeCatalogSelectionValue(
+            firstProduct.category,
+          );
+
+        const secondCategory =
+          normalizeCatalogSelectionValue(
+            secondProduct.category,
+          );
+
+        const firstCategoryOrder =
+          categoryOrder.get(
+            firstCategory,
+          ) ??
+          Number.MAX_SAFE_INTEGER;
+
+        const secondCategoryOrder =
+          categoryOrder.get(
+            secondCategory,
+          ) ??
+          Number.MAX_SAFE_INTEGER;
+
+        if (
+          firstCategoryOrder !==
+          secondCategoryOrder
+        ) {
+          return (
+            firstCategoryOrder -
+            secondCategoryOrder
+          );
+        }
+
+        const categoryComparison =
+          compareCatalogText(
+            firstCategory,
+            secondCategory,
+          );
+
+        if (categoryComparison !== 0) {
+          return categoryComparison;
+        }
+      }
+
+      const priorityComparison =
+        getProductPriority(
+          secondProduct,
+        ) -
+        getProductPriority(
+          firstProduct,
+        );
+
+      if (priorityComparison !== 0) {
+        return priorityComparison;
+      }
+
+      const idComparison =
+        compareCatalogText(
+          firstProduct.id,
+          secondProduct.id,
+        );
+
+      if (idComparison !== 0) {
+        return idComparison;
+      }
+
+      return compareCatalogText(
+        firstProduct.title,
+        secondProduct.title,
+      );
+    },
   );
 }
 
@@ -269,20 +417,36 @@ export function resolveCatalogSelection({
   const selectedProducts =
     hasInvalidFilter
       ? []
-      : sortProductsByPriority(
-          products.filter(
-            (product) =>
-              isSelectableProduct(product) &&
-              productMatchesCategory(
-                product,
-                requestedCategoryId,
-              ) &&
-              productMatchesCampaign(
-                product,
-                requestedCampaignId,
-              ),
-          ),
-        );
+      : sortCatalogProducts({
+          products:
+            products.filter(
+              (product) =>
+                isSelectableProduct(
+                  product,
+                ) &&
+                productMatchesCategory(
+                  product,
+                  requestedCategoryId,
+                ) &&
+                productMatchesCampaign(
+                  product,
+                  requestedCampaignId,
+                ),
+            ),
+
+          categories,
+
+          /**
+           * Catálogo general y campañas completas:
+           * primero se agrupan por categoría oficial.
+           *
+           * Categoría y combinación:
+           * todos los productos ya pertenecen a una
+           * misma categoría.
+           */
+          groupByCategory:
+            !hasCategory,
+        });
 
   if (selectedProducts.length === 0) {
     warnings.push({

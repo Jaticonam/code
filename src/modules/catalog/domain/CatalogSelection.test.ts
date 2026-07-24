@@ -129,8 +129,8 @@ describe(
           (product) => product.id,
         )).toEqual([
           "FLOR-001",
-          "CAJA-001",
           "FLOR-002",
+          "CAJA-001",
           "CAJA-002",
         ]);
       },
@@ -345,6 +345,7 @@ describe(
             ],
             categories,
             campaigns,
+            categoryId: "flores",
           });
 
         expect(result.products.map(
@@ -353,6 +354,193 @@ describe(
           "ALTA",
           "MEDIA",
           "BAJA",
+        ]);
+      },
+    );
+
+    it(
+      "agrupa el catálogo general según el orden oficial de categorías",
+      () => {
+        const result =
+          resolveCatalogSelection({
+            products: [
+              createProduct({
+                id: "CAJA-ALTA",
+                category: "cajas",
+                priority: 1000,
+              }),
+              createProduct({
+                id: "FLOR-BAJA",
+                category: "flores",
+                priority: 1,
+              }),
+            ],
+            categories,
+            campaigns,
+          });
+
+        expect(result.products.map(
+          (product) => product.id,
+        )).toEqual([
+          "FLOR-BAJA",
+          "CAJA-ALTA",
+        ]);
+      },
+    );
+
+    it(
+      "agrupa una campaña completa según el orden oficial de categorías",
+      () => {
+        const result =
+          resolveCatalogSelection({
+            products: [
+              createProduct({
+                id: "CAJA-DIA",
+                category: "cajas",
+                campaigns: ["dia-madre"],
+                priority: 100,
+              }),
+              createProduct({
+                id: "FLOR-DIA",
+                category: "flores",
+                campaigns: ["dia-madre"],
+                priority: 10,
+              }),
+            ],
+            categories,
+            campaigns,
+            campaignId: "dia-madre",
+          });
+
+        expect(result.products.map(
+          (product) => product.id,
+        )).toEqual([
+          "FLOR-DIA",
+          "CAJA-DIA",
+        ]);
+      },
+    );
+
+    it(
+      "desempata productos por código ascendente",
+      () => {
+        const result =
+          resolveCatalogSelection({
+            products: [
+              createProduct({
+                id: "FLOR-010",
+                category: "flores",
+                priority: 50,
+              }),
+              createProduct({
+                id: "FLOR-002",
+                category: "flores",
+                priority: 50,
+              }),
+            ],
+            categories,
+            campaigns,
+            categoryId: "flores",
+          });
+
+        expect(result.products.map(
+          (product) => product.id,
+        )).toEqual([
+          "FLOR-002",
+          "FLOR-010",
+        ]);
+      },
+    );
+    it(
+      "agrupa una campaña completa por categoría oficial",
+      () => {
+        const result =
+          resolveCatalogSelection({
+            products: [
+              createProduct({
+                id: "CAJA-ALTA",
+                category: "cajas",
+                campaigns: [
+                  "dia-madre",
+                ],
+                priority: 100,
+              }),
+              createProduct({
+                id: "FLOR-BAJA",
+                category: "flores",
+                campaigns: [
+                  "dia-madre",
+                ],
+                priority: 10,
+              }),
+              createProduct({
+                id: "CAJA-BAJA",
+                category: "cajas",
+                campaigns: [
+                  "dia-madre",
+                ],
+                priority: 20,
+              }),
+              createProduct({
+                id: "FLOR-ALTA",
+                category: "flores",
+                campaigns: [
+                  "dia-madre",
+                ],
+                priority: 80,
+              }),
+            ],
+            categories,
+            campaigns,
+            campaignId:
+              "dia-madre",
+          });
+
+        expect(
+          result.products.map(
+            (product) =>
+              product.id,
+          ),
+        ).toEqual([
+          "FLOR-ALTA",
+          "FLOR-BAJA",
+          "CAJA-ALTA",
+          "CAJA-BAJA",
+        ]);
+      },
+    );
+
+    it(
+      "ordena una categoría específica solo por prioridad",
+      () => {
+        const result =
+          resolveCatalogSelection({
+            products: [
+              createProduct({
+                id: "FLOR-BAJA",
+                category: "flores",
+                priority: 10,
+              }),
+              createProduct({
+                id: "FLOR-ALTA",
+                category: "flores",
+                priority: 100,
+              }),
+            ],
+            categories,
+            campaigns,
+            categoryId:
+              "flores",
+          });
+
+        expect(
+          result.products.map(
+            (product) =>
+              product.id,
+          ),
+        ).toEqual([
+          "FLOR-ALTA",
+          "FLOR-BAJA",
         ]);
       },
     );

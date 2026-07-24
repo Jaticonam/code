@@ -96,5 +96,4 @@ export const mapProductToPdfProduct = (product: Product): PdfProduct => ({
 export const mapProductsToPdfProducts = (products: Product[]) =>
   products
     .filter((product) => !isHiddenProduct(product))
-    .map(mapProductToPdfProduct)
-    .sort((a, b) => b.priority - a.priority);
+    .map(mapProductToPdfProduct);

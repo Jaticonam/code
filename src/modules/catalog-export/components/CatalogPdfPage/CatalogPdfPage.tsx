@@ -27,8 +27,13 @@ import {
   mapProductsToPdfProducts,
 } from "../../mappers/PdfProductMapper";
 
+import {
+  buildPdfCategorySections,
+} from "../../services/BuildPdfCategorySections";
+
 import CatalogPdfHeader from "../CatalogPdfHeader/CatalogPdfHeader";
 import CatalogPdfGrid from "../CatalogPdfGrid/CatalogPdfGrid";
+import CatalogPdfCategorySection from "../CatalogPdfCategorySection/CatalogPdfCategorySection";
 
 import "./CatalogPdfPage.css";
 
@@ -288,6 +293,18 @@ export default function CatalogPdfPage() {
       [selection.products],
     );
 
+  const categorySections =
+    useMemo(
+      () =>
+        buildPdfCategorySections(
+          products,
+        ),
+      [products],
+    );
+
+  const showCategorySections =
+    !selection.hasCategory;
+
   const selectionIsReady =
     isFullCatalogLoaded &&
     (
@@ -400,9 +417,22 @@ export default function CatalogPdfPage() {
         ) : null}
 
         {hasProducts ? (
-          <CatalogPdfGrid
-            products={products}
-          />
+          showCategorySections ? (
+            <div className="catalog-pdf-categorySections">
+              {categorySections.map(
+                (section) => (
+                  <CatalogPdfCategorySection
+                    key={section.id}
+                    section={section}
+                  />
+                ),
+              )}
+            </div>
+          ) : (
+            <CatalogPdfGrid
+              products={products}
+            />
+          )
         ) : null}
 
         <footer className="catalog-pdf-footer">
