@@ -1,6 +1,10 @@
 import "./CatalogPdfHeader.css";
 
-type CatalogPdfSegmentType = "general" | "category" | "campaign";
+type CatalogPdfSegmentType =
+  | "general"
+  | "category"
+  | "campaign"
+  | "combination";
 
 interface CatalogPdfHeaderProps {
   logoSrc?: string;
@@ -16,9 +20,21 @@ interface CatalogPdfHeaderProps {
   brandFootnote?: string;
 }
 
-const getSegmentLabel = (segmentType: CatalogPdfSegmentType) => {
-  if (segmentType === "campaign") return "Campaña";
-  if (segmentType === "category") return "Categoría";
+const getSegmentLabel = (
+  segmentType: CatalogPdfSegmentType,
+) => {
+  if (segmentType === "combination") {
+    return "Selección";
+  }
+
+  if (segmentType === "campaign") {
+    return "Campaña";
+  }
+
+  if (segmentType === "category") {
+    return "Categoría";
+  }
+
   return "Catálogo";
 };
 
@@ -44,7 +60,8 @@ export default function CatalogPdfHeader({
               src={logoSrc}
               alt="Wooly Imports"
               onError={(event) => {
-                event.currentTarget.style.display = "none";
+                event.currentTarget.style.display =
+                  "none";
               }}
             />
           ) : (
@@ -60,12 +77,17 @@ export default function CatalogPdfHeader({
 
         <div className="catalog-pdf-header__copy">
           <span className="catalog-pdf-header__segment">
-            {getSegmentLabel(segmentType)} · {segmentLabel}
+            {getSegmentLabel(segmentType)} ·{" "}
+            {segmentLabel}
           </span>
 
-          <h1 className="catalog-pdf-header__title">{title}</h1>
+          <h1 className="catalog-pdf-header__title">
+            {title}
+          </h1>
 
-          <p className="catalog-pdf-header__subtitle">{subtitle}</p>
+          <p className="catalog-pdf-header__subtitle">
+            {subtitle}
+          </p>
         </div>
 
         <div className="catalog-pdf-header__metaGrid">

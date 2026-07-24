@@ -1,202 +1,351 @@
-import { useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import {
+  useMemo,
+} from "react";
 
-import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
-import type { Product } from "@/shared/types/product";
-import { mapProductsToPdfProducts } from "../../mappers/PdfProductMapper";
+import {
+  useSearchParams,
+} from "react-router-dom";
+
+import {
+  resolveCatalogSelection,
+  type CatalogSelectionResult,
+} from "@/modules/catalog/domain/CatalogSelection";
+
+import {
+  useCatalogCampaigns,
+} from "@/modules/catalog/hooks/useCatalogCampaigns";
+
+import {
+  useCatalogData,
+} from "@/modules/catalog/hooks/useCatalogData";
+
+import {
+  CATEGORY_CONFIG,
+} from "@/shared/config/categories";
+
+import {
+  mapProductsToPdfProducts,
+} from "../../mappers/PdfProductMapper";
+
 import CatalogPdfHeader from "../CatalogPdfHeader/CatalogPdfHeader";
 import CatalogPdfGrid from "../CatalogPdfGrid/CatalogPdfGrid";
 
 import "./CatalogPdfPage.css";
 
-/*
-  Configuración comercial del PDF.
-  Cambia estos valores cuando tengamos el número/logo oficial final.
-*/
-const PDF_CONTACT_NUMBER = "+51 936 188 636";
-const PDF_LOGO_SRC = "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
-const PDF_VALID_DAYS = 7;
+/* =========================================================
+   CONFIGURACIÓN COMERCIAL
+   ========================================================= */
 
-const formatDate = (date: Date, includeTime = false) =>
-  new Intl.DateTimeFormat("es-PE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    ...(includeTime
-      ? {
-          hour: "2-digit",
-          minute: "2-digit",
-        }
-      : {}),
-  }).format(date);
+const PDF_CONTACT_NUMBER =
+  "+51 936 188 636";
 
-const addDays = (date: Date, days: number) => {
-  const nextDate = new Date(date);
-  nextDate.setDate(nextDate.getDate() + days);
+const PDF_LOGO_SRC =
+  "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
+
+const PDF_VALID_DAYS =
+  7;
+
+/* =========================================================
+   FECHAS
+   ========================================================= */
+
+const formatDate = (
+  date: Date,
+  includeTime = false,
+) =>
+  new Intl.DateTimeFormat(
+    "es-PE",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      ...(includeTime
+        ? {
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        : {}),
+    },
+  ).format(date);
+
+const addDays = (
+  date: Date,
+  days: number,
+) => {
+  const nextDate =
+    new Date(date);
+
+  nextDate.setDate(
+    nextDate.getDate() + days,
+  );
+
   return nextDate;
 };
 
-const cleanParam = (value: string | null) =>
+/* =========================================================
+   PARÁMETROS COMPATIBLES
+   ========================================================= */
+
+const cleanParam = (
+  value: string | null,
+) =>
   String(value || "")
     .trim()
     .toLowerCase();
 
-const normalizeText = (value?: string | null) =>
-  String(value || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-const toDisplayLabel = (value: string) => {
-  const cleanValue = decodeURIComponent(value || "")
-    .replace(/[-_]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (!cleanValue) return "";
-
-  return cleanValue
-    .split(" ")
-    .map((word) =>
-      word.length <= 2
-        ? word.toUpperCase()
-        : `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`,
-    )
-    .join(" ");
-};
-
-const filterProductsBySegment = (
-  products: Product[],
-  categoryId: string,
-  campaignId: string,
-) => {
-  const normalizedCategoryId = normalizeText(categoryId);
-  const normalizedCampaignId = normalizeText(campaignId);
-
-  if (normalizedCampaignId) {
-    return products.filter((product) =>
-      product.campaigns?.some(
-        (campaign) => normalizeText(campaign) === normalizedCampaignId,
-      ),
-    );
-  }
-
-  if (normalizedCategoryId) {
-    return products.filter(
-      (product) => normalizeText(product.category) === normalizedCategoryId,
-    );
-  }
-
-  return products;
-};
-
-const buildCatalogPdfCopy = (categoryId: string, campaignId: string) => {
-  if (campaignId) {
-    const campaignLabel = toDisplayLabel(campaignId);
-
-    return {
-      title: `Catálogo Mayorista · ${campaignLabel}`,
-      subtitle: `Productos seleccionados para la campaña ${campaignLabel}. Precios y productos sujetos a disponibilidad.`,
-      segmentLabel: campaignLabel,
-      segmentType: "campaign" as const,
-    };
-  }
-
-  if (categoryId) {
-    const categoryLabel = toDisplayLabel(categoryId);
-
-    return {
-      title: `Catálogo Mayorista · ${categoryLabel}`,
-      subtitle: `Selección comercial de productos de la categoría ${categoryLabel} para pedidos mayoristas.`,
-      segmentLabel: categoryLabel,
-      segmentType: "category" as const,
-    };
-  }
-
-  return {
-    title: "Catálogo Mayorista",
-    subtitle:
-      "Productos seleccionados para emprendedores, tiendas y ventas por campaña.",
-    segmentLabel: "General",
-    segmentType: "general" as const,
-  };
-};
-
-export default function CatalogPdfPage() {
-  const [searchParams] = useSearchParams();
-
-  const categoryId = cleanParam(
+const getCategoryParam = (
+  searchParams: URLSearchParams,
+) =>
+  cleanParam(
     searchParams.get("categoria") ||
       searchParams.get("category") ||
       searchParams.get("cat"),
   );
 
-  const campaignId = cleanParam(
-    searchParams.get("cpg") || searchParams.get("campania") || searchParams.get("campaign"),
+const getCampaignParam = (
+  searchParams: URLSearchParams,
+) =>
+  cleanParam(
+    searchParams.get("cpg") ||
+      searchParams.get("campania") ||
+      searchParams.get("campaign"),
   );
 
-  const { data, isLoading, isFullCatalogLoaded } = useCatalogData("todas");
+/* =========================================================
+   COPY COMERCIAL
+   ========================================================= */
 
-  const generatedDate = useMemo(() => new Date(), []);
-  const validUntilDate = useMemo(
-    () => addDays(generatedDate, PDF_VALID_DAYS),
-    [generatedDate],
-  );
+const buildCatalogPdfCopy = (
+  selection: CatalogSelectionResult,
+) => {
+  if (selection.isCombination) {
+    return {
+      title:
+        `Catálogo Mayorista · ${selection.categoryLabel} + ${selection.campaignLabel}`,
 
-  const generatedAt = useMemo(
-    () => formatDate(generatedDate, true),
-    [generatedDate],
-  );
+      subtitle:
+        `Selección comercial de ${selection.categoryLabel} para la campaña ${selection.campaignLabel}. Precios y productos sujetos a disponibilidad.`,
 
-  const validUntil = useMemo(
-    () => formatDate(validUntilDate),
-    [validUntilDate],
-  );
+      segmentLabel:
+        `${selection.categoryLabel} · ${selection.campaignLabel}`,
 
-  const copy = useMemo(
-    () => buildCatalogPdfCopy(categoryId, campaignId),
-    [categoryId, campaignId],
-  );
+      segmentType:
+        "combination" as const,
+    };
+  }
 
-  const products = useMemo(() => {
-    const filteredProducts = filterProductsBySegment(
-      data,
-      categoryId,
-      campaignId,
+  if (selection.hasCampaign) {
+    return {
+      title:
+        `Catálogo Mayorista · ${selection.campaignLabel}`,
+
+      subtitle:
+        `Productos seleccionados para la campaña ${selection.campaignLabel}. Precios y productos sujetos a disponibilidad.`,
+
+      segmentLabel:
+        selection.campaignLabel,
+
+      segmentType:
+        "campaign" as const,
+    };
+  }
+
+  if (selection.hasCategory) {
+    return {
+      title:
+        `Catálogo Mayorista · ${selection.categoryLabel}`,
+
+      subtitle:
+        `Selección comercial de productos de la categoría ${selection.categoryLabel} para pedidos mayoristas.`,
+
+      segmentLabel:
+        selection.categoryLabel,
+
+      segmentType:
+        "category" as const,
+    };
+  }
+
+  return {
+    title:
+      "Catálogo Mayorista",
+
+    subtitle:
+      "Productos seleccionados para emprendedores, tiendas y ventas por campaña.",
+
+    segmentLabel:
+      "General",
+
+    segmentType:
+      "general" as const,
+  };
+};
+
+/* =========================================================
+   COMPONENTE
+   ========================================================= */
+
+export default function CatalogPdfPage() {
+  const [
+    searchParams,
+  ] = useSearchParams();
+
+  const categoryId =
+    getCategoryParam(
+      searchParams,
     );
 
-    return mapProductsToPdfProducts(filteredProducts);
-  }, [data, categoryId, campaignId]);
+  const campaignId =
+    getCampaignParam(
+      searchParams,
+    );
+
+  const {
+    data,
+    isLoading,
+    isFullCatalogLoaded,
+  } = useCatalogData(
+    "todas",
+  );
+
+  const {
+    campaigns,
+    isLoading:
+      isCampaignRegistryLoading,
+  } = useCatalogCampaigns({
+    includeInactive: true,
+  });
+
+  const generatedDate =
+    useMemo(
+      () => new Date(),
+      [],
+    );
+
+  const validUntilDate =
+    useMemo(
+      () =>
+        addDays(
+          generatedDate,
+          PDF_VALID_DAYS,
+        ),
+      [generatedDate],
+    );
+
+  const generatedAt =
+    useMemo(
+      () =>
+        formatDate(
+          generatedDate,
+          true,
+        ),
+      [generatedDate],
+    );
+
+  const validUntil =
+    useMemo(
+      () =>
+        formatDate(
+          validUntilDate,
+        ),
+      [validUntilDate],
+    );
+
+  const selection =
+    useMemo(
+      () =>
+        resolveCatalogSelection({
+          products: data,
+          categories:
+            CATEGORY_CONFIG,
+          campaigns,
+          categoryId,
+          campaignId,
+        }),
+      [
+        data,
+        campaigns,
+        categoryId,
+        campaignId,
+      ],
+    );
+
+  const copy =
+    useMemo(
+      () =>
+        buildCatalogPdfCopy(
+          selection,
+        ),
+      [selection],
+    );
+
+  const products =
+    useMemo(
+      () =>
+        mapProductsToPdfProducts(
+          selection.products,
+        ),
+      [selection.products],
+    );
+
+  const selectionIsReady =
+    isFullCatalogLoaded &&
+    (
+      !campaignId ||
+      !isCampaignRegistryLoading
+    );
+
+  const hasProducts =
+    products.length > 0;
+
+  const showLoadingState =
+    !hasProducts &&
+    (
+      isLoading ||
+      !selectionIsReady
+    );
+
+  const showEmptyState =
+    !hasProducts &&
+    !isLoading &&
+    selectionIsReady;
 
   const handlePrint = () => {
     window.print();
   };
 
-  const hasProducts = products.length > 0;
-
   return (
     <main className="catalog-pdf-page">
       <section className="catalog-pdf-toolbar no-print">
         <div>
-          <p className="catalog-pdf-toolbar__eyebrow">PDF MVP</p>
+          <p className="catalog-pdf-toolbar__eyebrow">
+            PDF MVP
+          </p>
+
           <h1 className="catalog-pdf-toolbar__title">
             Catálogo mayorista imprimible
           </h1>
+
           <p className="catalog-pdf-toolbar__description">
-            Vista optimizada para guardar como PDF desde el navegador.
+            Vista optimizada para guardar como PDF
+            desde el navegador.
           </p>
 
-          {!isFullCatalogLoaded && (
+          {!selectionIsReady ? (
             <p className="catalog-pdf-toolbar__warning">
-              El catálogo aún está cargando categorías. Espera unos segundos
-              antes de exportar para evitar un PDF incompleto.
+              El catálogo o el registro de campañas
+              todavía está cargando. Espera unos
+              segundos antes de exportar para evitar
+              un PDF incompleto.
             </p>
-          )}
+          ) : null}
         </div>
 
         <div className="catalog-pdf-toolbar__actions">
-          <a className="catalog-pdf-toolbar__link" href="/catalogo">
+          <a
+            className="catalog-pdf-toolbar__link"
+            href="/catalogo"
+          >
             Volver al catálogo
           </a>
 
@@ -204,7 +353,10 @@ export default function CatalogPdfPage() {
             className="catalog-pdf-toolbar__button"
             type="button"
             onClick={handlePrint}
-            disabled={!hasProducts}
+            disabled={
+              !hasProducts ||
+              !selectionIsReady
+            }
           >
             Exportar PDF
           </button>
@@ -222,35 +374,49 @@ export default function CatalogPdfPage() {
           validUntil={validUntil}
           productCount={products.length}
           contactNumber={PDF_CONTACT_NUMBER}
-          isComplete={isFullCatalogLoaded}
+          isComplete={selectionIsReady}
         />
 
-        {isLoading && !hasProducts ? (
+        {showLoadingState ? (
           <section className="catalog-pdf-state">
             <h2>Cargando catálogo...</h2>
-            <p>Estamos preparando los productos para el PDF.</p>
+
+            <p>
+              Estamos preparando la selección completa
+              para el PDF.
+            </p>
           </section>
         ) : null}
 
-        {!isLoading && !hasProducts ? (
+        {showEmptyState ? (
           <section className="catalog-pdf-state">
             <h2>No hay productos disponibles</h2>
-            <p>Revisa la fuente de datos o los estados de publicación.</p>
+
+            <p>
+              Revisa la categoría, la campaña o sus
+              estados de publicación.
+            </p>
           </section>
         ) : null}
 
-        {hasProducts ? <CatalogPdfGrid products={products} /> : null}
+        {hasProducts ? (
+          <CatalogPdfGrid
+            products={products}
+          />
+        ) : null}
 
         <footer className="catalog-pdf-footer">
           <p>
-            Precios, productos y stock sujetos a confirmación por asesora
-            comercial.
+            Precios, productos y stock sujetos a
+            confirmación por asesora comercial.
           </p>
-          <p>Wooly Imports · Catálogo mayorista para emprendedores</p>
+
+          <p>
+            Wooly Imports · Catálogo mayorista para
+            emprendedores
+          </p>
         </footer>
       </article>
     </main>
   );
 }
-
-
