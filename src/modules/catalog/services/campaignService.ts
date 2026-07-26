@@ -4,7 +4,7 @@ import type {
 
 import {
   buildCampaignNameToIdMap,
-  isCampaignActive,
+  filterActiveCampaigns,
 } from "@/modules/catalog/domain/CampaignRules";
 
 import {
@@ -257,8 +257,8 @@ export async function loadCatalogCampaigns(
     return campaigns;
   }
 
-  return campaigns.filter(
-    isCampaignActive,
+  return filterActiveCampaigns(
+    campaigns,
   );
 }
 

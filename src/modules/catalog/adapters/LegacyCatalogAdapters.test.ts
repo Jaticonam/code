@@ -135,8 +135,8 @@ function createCampaignContract(
     themeToken:
       "campaign.lavanda",
 
-    startsAt: null,
-    endsAt: null,
+    startsAt: "2000-01-01",
+    endsAt: "2999-12-31",
 
     priority: 90,
 

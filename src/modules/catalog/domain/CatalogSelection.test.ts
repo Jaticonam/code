@@ -137,6 +137,76 @@ describe(
       },
     );
 
+    it.each([
+      {
+        label: "vencida",
+        campaign: {
+          ...campaigns[0],
+          startDate: "01/01/2000",
+          endDate: "31/12/2000",
+          computedStatus: "finalizada" as const,
+        },
+      },
+      {
+        label: "no publicada",
+        campaign: {
+          ...campaigns[0],
+          publicationStatus: "borrador",
+          computedStatus: "borrador" as const,
+        },
+      },
+    ])(
+      "mantiene el producto publicado en el catálogo general aunque su campaña esté $label",
+      ({ campaign }) => {
+        const result =
+          resolveCatalogSelection({
+            products: [
+              createProduct({
+                id: "PUBLICO",
+                campaigns: [
+                  campaign.id,
+                ],
+              }),
+            ],
+            categories,
+            campaigns: [
+              campaign,
+            ],
+          });
+
+        expect(
+          result.products.map(
+            (product) => product.id,
+          ),
+        ).toEqual([
+          "PUBLICO",
+        ]);
+      },
+    );
+
+    it(
+      "no eleva a público un producto oculto aunque su campaña esté activa",
+      () => {
+        const result =
+          resolveCatalogSelection({
+            products: [
+              createProduct({
+                id: "OCULTO",
+                status: "oculto",
+                campaigns: [
+                  campaigns[0].id,
+                ],
+              }),
+            ],
+            categories,
+            campaigns,
+          });
+
+        expect(result.products)
+          .toHaveLength(0);
+      },
+    );
+
     it(
       "filtra únicamente por categoría",
       () => {

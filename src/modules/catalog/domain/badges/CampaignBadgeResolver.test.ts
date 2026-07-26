@@ -66,10 +66,10 @@ const createCampaign = (
     "catalog-campaign-lavender",
 
   startDate:
-    "",
+    "01/01/2000",
 
   endDate:
-    "",
+    "31/12/2999",
 
   priority:
     90,

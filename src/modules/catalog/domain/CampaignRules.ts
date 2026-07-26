@@ -26,13 +26,66 @@ export function normalizeCampaignLookupKey(
     .trim();
 }
 
+type CampaignDateKind =
+  | "calendar"
+  | "timestamp";
+
+type ParsedCampaignDate = {
+  date: Date;
+  kind: CampaignDateKind;
+};
+
+function buildLocalCalendarDate(
+  year: number,
+  month: number,
+  day: number,
+): Date | null {
+  const date = new Date(
+    year,
+    month - 1,
+    day,
+  );
+
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+
+  return date;
+}
+
 function parseCampaignDate(
   value: unknown,
-): Date | null {
+): ParsedCampaignDate | null {
   const clean = cleanText(value);
 
   if (!clean) {
     return null;
+  }
+
+  const isoCalendarDate = clean.match(
+    /^(\d{4})-(\d{2})-(\d{2})$/,
+  );
+
+  if (isoCalendarDate) {
+    const [, year, month, day] =
+      isoCalendarDate;
+
+    const date = buildLocalCalendarDate(
+      Number(year),
+      Number(month),
+      Number(day),
+    );
+
+    return date
+      ? {
+          date,
+          kind: "calendar",
+        }
+      : null;
   }
 
   const humanDate = clean.match(
@@ -42,22 +95,28 @@ function parseCampaignDate(
   if (humanDate) {
     const [, day, month, year] = humanDate;
 
-    const date = new Date(
+    const date = buildLocalCalendarDate(
       Number(year),
-      Number(month) - 1,
+      Number(month),
       Number(day),
     );
 
-    return Number.isNaN(date.getTime())
-      ? null
-      : date;
+    return date
+      ? {
+          date,
+          kind: "calendar",
+        }
+      : null;
   }
 
-  const isoDate = new Date(clean);
+  const timestamp = new Date(clean);
 
-  return Number.isNaN(isoDate.getTime())
+  return Number.isNaN(timestamp.getTime())
     ? null
-    : isoDate;
+    : {
+        date: timestamp,
+        kind: "timestamp",
+      };
 }
 
 function normalizePublicationStatus(
@@ -96,6 +155,7 @@ export function getCampaignComputedStatus(
     Campaign,
     "startDate" | "endDate" | "publicationStatus"
   >,
+  now: Date = new Date(),
 ): Campaign["computedStatus"] {
   const publicationStatus =
     normalizePublicationStatus(
@@ -110,30 +170,49 @@ export function getCampaignComputedStatus(
     return "borrador";
   }
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const start = parseCampaignDate(
+  const parsedStart = parseCampaignDate(
     campaign.startDate,
   );
 
-  const end = parseCampaignDate(
+  const parsedEnd = parseCampaignDate(
     campaign.endDate,
   );
 
-  if (start) {
+  if (
+    !parsedStart ||
+    !parsedEnd ||
+    Number.isNaN(now.getTime())
+  ) {
+    return "borrador";
+  }
+
+  const start =
+    new Date(parsedStart.date);
+
+  const end =
+    new Date(parsedEnd.date);
+
+  if (
+    parsedStart.kind === "calendar"
+  ) {
     start.setHours(0, 0, 0, 0);
   }
 
-  if (end) {
+  if (
+    parsedEnd.kind === "calendar"
+  ) {
     end.setHours(23, 59, 59, 999);
   }
 
-  if (start && today < start) {
+  if (start > end) {
+    return "borrador";
+  }
+
+  if (now < start) {
     return "programada";
   }
 
-  if (end && today > end) {
+  if (now > end) {
     return "finalizada";
   }
 
@@ -146,6 +225,16 @@ export function getCampaignComputedStatus(
 
 export function isCampaignActive(
   campaign: Campaign,
+): boolean;
+
+export function isCampaignActive(
+  campaign: Campaign,
+  now: Date,
+): boolean;
+
+export function isCampaignActive(
+  campaign: Campaign,
+  now: Date = new Date(),
 ): boolean {
   /**
    * No se confía únicamente en computedStatus porque una
@@ -153,7 +242,21 @@ export function isCampaignActive(
    */
   return getCampaignComputedStatus(
     campaign,
+    now,
   ) === "activa";
+}
+
+export function filterActiveCampaigns(
+  campaigns: readonly Campaign[],
+  now: Date = new Date(),
+): Campaign[] {
+  return campaigns.filter(
+    (campaign) =>
+      isCampaignActive(
+        campaign,
+        now,
+      ),
+  );
 }
 
 export function buildCampaignNameToIdMap(

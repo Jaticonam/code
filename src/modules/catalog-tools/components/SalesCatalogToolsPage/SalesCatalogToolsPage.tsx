@@ -8,6 +8,10 @@ import {
 } from "@/modules/catalog/domain/CatalogSelection";
 
 import {
+  filterActiveCampaigns,
+} from "@/modules/catalog/domain/CampaignRules";
+
+import {
   useCatalogCampaigns,
 } from "@/modules/catalog/hooks/useCatalogCampaigns";
 
@@ -284,11 +288,9 @@ export default function SalesCatalogToolsPage() {
   const campaignOptions =
     useMemo<Option[]>(
       () =>
-        campaigns
-          .filter(
-            (campaign) =>
-              campaign.computedStatus === "activa",
-          )
+        filterActiveCampaigns(
+          campaigns,
+        )
           .map(
             (campaign) => {
               const selection =
