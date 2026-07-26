@@ -58,7 +58,7 @@ export function CartFooter({cart,totalItems,totalPrice,savings,onClearCart,onClo
       )}
 
       <button
-        onClick={()=>checkout(cart,totalPrice.toFixed(2),savings,onClearCart,onClose)}
+        onClick={()=>checkout(cart,savings,onClearCart,onClose)}
         disabled={disabled}
         className={disabled?"w-full rounded-2xl bg-[#f1f5f9] py-4 text-sm font-black tracking-wide text-[#94a3b8] cursor-not-allowed flex items-center justify-center gap-3":"cart-checkout-btn"}
       >
