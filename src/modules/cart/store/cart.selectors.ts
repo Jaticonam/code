@@ -1,5 +1,7 @@
 import type { CartItem } from "@/modules/cart/types";
-import { getEffectivePrice } from "@/modules/catalog/utils/products";
+import {
+  getCartLinePricing,
+} from "@/modules/cart/domain/CartLinePricing";
 
 function toMoney(value: unknown) {
   const numberValue = Number(value);
@@ -15,19 +17,37 @@ export function getTotalItems(cart: CartItem[]) {
 
 export function getTotalPrice(cart: CartItem[]) {
   return cart.reduce((acc, item) => {
-    const qty = toMoney(item.qty);
-    const price = toMoney(getEffectivePrice(item));
-
-    return acc + price * qty;
+    return (
+      acc +
+      getCartLinePricing(
+        item,
+      ).subtotal
+    );
   }, 0);
 }
 
 export function getTotalOriginal(cart: CartItem[]) {
   return cart.reduce((acc, item) => {
-    const qty = toMoney(item.qty);
-    const basePrice = toMoney(item.price_1);
+    const {
+      quantity,
+    } =
+      getCartLinePricing(
+        item,
+      );
 
-    return acc + basePrice * qty;
+    const basePrice =
+      Number.isFinite(
+        item.price_1,
+      ) &&
+      item.price_1 > 0
+        ? item.price_1
+        : 0;
+
+    return (
+      acc +
+      basePrice *
+        quantity
+    );
   }, 0);
 }
 

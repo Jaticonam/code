@@ -13,8 +13,8 @@ import type {
 } from "@/modules/cart/types";
 
 import {
-  getEffectivePrice,
-} from "@/modules/catalog/utils/products";
+  getCartLinePricing,
+} from "@/modules/cart/domain/CartLinePricing";
 
 import {
   getActiveVolumePriceQty,
@@ -56,23 +56,26 @@ export function CartRow({
   onSetQty,
   onChangeNote,
 }: CartRowProps) {
-  const activePrice =
-    getEffectivePrice(item);
-
-  const subtotal =
-    activePrice * item.qty;
+  const {
+    quantity,
+    unitPrice,
+    subtotal,
+  } =
+    getCartLinePricing(
+      item,
+    );
 
   const activeVolumePriceQty =
     getActiveVolumePriceQty(
       item,
-      item.qty,
+      quantity,
     );
 
   const previousQtyRef =
     useRef(item.qty);
 
   const previousPriceRef =
-    useRef(activePrice);
+    useRef(unitPrice);
 
   const previousVolumePriceQtyRef =
     useRef(activeVolumePriceQty);
@@ -125,7 +128,7 @@ export function CartRow({
     () => {
       if (
         previousPriceRef.current ===
-        activePrice
+        unitPrice
       ) {
         return;
       }
@@ -140,14 +143,14 @@ export function CartRow({
         );
 
       previousPriceRef.current =
-        activePrice;
+        unitPrice;
 
       return () =>
         window.clearTimeout(
           timer,
         );
     },
-    [activePrice],
+    [unitPrice],
   );
 
   useEffect(
@@ -235,8 +238,8 @@ export function CartRow({
                   : "text-[#64748b]",
               ].join(" ")}
             >
-              {item.qty}u × S/{" "}
-              {activePrice.toFixed(2)} c/u
+              {quantity}u × S/{" "}
+              {unitPrice.toFixed(2)} c/u
             </div>
 
             <div className="flex items-baseline gap-1">
