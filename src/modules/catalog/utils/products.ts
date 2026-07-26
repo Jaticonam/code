@@ -219,62 +219,6 @@ export function clearProductsCache() {
    PRECIOS
    ========================================================= */
 
-export function getEffectivePrice(
-  item: {
-    price_1:
-      number;
-
-    price_3?:
-      number |
-      null;
-
-    price_12?:
-      number |
-      null;
-
-    price_50?:
-      number |
-      null;
-
-    price_100?:
-      number |
-      null;
-
-    qty:
-      number;
-  },
-): number {
-  if (
-    item.price_100 &&
-    item.qty >= 100
-  ) {
-    return item.price_100;
-  }
-
-  if (
-    item.price_50 &&
-    item.qty >= 50
-  ) {
-    return item.price_50;
-  }
-
-  if (
-    item.price_12 &&
-    item.qty >= 12
-  ) {
-    return item.price_12;
-  }
-
-  if (
-    item.price_3 &&
-    item.qty >= 3
-  ) {
-    return item.price_3;
-  }
-
-  return item.price_1;
-}
-
 export function getMinPrice(
   product:
     Product,

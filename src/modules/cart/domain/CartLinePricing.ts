@@ -12,20 +12,25 @@ export interface CartLinePricing {
   subtotal: number;
 }
 
+export function normalizeCartQuantity(
+  value: unknown,
+): number {
+  return typeof value === "number" &&
+    Number.isFinite(value)
+    ? Math.max(
+        1,
+        Math.trunc(value),
+      )
+    : 1;
+}
+
 export function getCartLinePricing(
   item: CartItem,
 ): CartLinePricing {
   const quantity =
-    Number.isFinite(
+    normalizeCartQuantity(
       item.qty,
-    )
-      ? Math.max(
-          1,
-          Math.trunc(
-            item.qty,
-          ),
-        )
-      : 1;
+    );
 
   const unitPrice =
     getVolumeUnitPrice(

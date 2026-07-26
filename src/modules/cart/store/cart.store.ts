@@ -19,6 +19,7 @@ import {
 import {
   CART_KEY,
   loadCart,
+  parsePersistedCart,
   saveCart,
 } from "./cart.persistence";
 
@@ -33,11 +34,11 @@ export function useCart() {
     const handler = (e: StorageEvent) => {
       if (e.key !== CART_KEY) return;
 
-      try {
-        setCart(e.newValue ? JSON.parse(e.newValue) : []);
-      } catch {
-        setCart([]);
-      }
+      setCart(
+        parsePersistedCart(
+          e.newValue,
+        ),
+      );
     };
 
     window.addEventListener("storage", handler);
