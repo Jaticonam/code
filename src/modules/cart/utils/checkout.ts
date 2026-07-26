@@ -4,16 +4,25 @@ import {
 } from "@/modules/cart/domain/CartLinePricing";
 import {
   getTotalPrice,
+  getTotalSavings,
 } from "@/modules/cart/store/cart.selectors";
+import {
+  sanitizeCartItems,
+} from "@/modules/cart/store/cart.actions";
 
 export function buildCheckoutMessage(
   cart: CartItem[],
-  savings: number,
+  _savings: number,
 ): string {
+  const eligibleCart =
+    sanitizeCartItems(
+      cart,
+    );
+
   let message = "*NUEVO PEDIDO WOOLY - MAYORISTAS*\n\n";
   message += "Hola, deseo pedir lo siguiente:\n\n";
 
-  cart.forEach((item) => {
+  eligibleCart.forEach((item) => {
     const {
       quantity,
       unitPrice,
@@ -39,7 +48,12 @@ export function buildCheckoutMessage(
 
   const total =
     getTotalPrice(
-      cart,
+      eligibleCart,
+    );
+
+  const savings =
+    getTotalSavings(
+      eligibleCart,
     );
 
   message += "━━━━━━━━━━━━━━━\n";
@@ -60,11 +74,20 @@ export function checkout(
   onClearCart: () => void,
   onClose: () => void
 ) {
-  if (cart.length === 0) return;
+  const eligibleCart =
+    sanitizeCartItems(
+      cart,
+    );
+
+  if (
+    eligibleCart.length === 0
+  ) {
+    return;
+  }
 
   const message =
     buildCheckoutMessage(
-      cart,
+      eligibleCart,
       savings,
     );
 

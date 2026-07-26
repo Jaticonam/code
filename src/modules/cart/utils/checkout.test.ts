@@ -206,20 +206,6 @@ describe(
       },
       {
         name:
-          "producto sin precio válido",
-        overrides: {
-          price_1: 0,
-          price_3: null,
-          price_12: null,
-          price_50: null,
-          price_100: null,
-        },
-        quantity: 1,
-        unitPrice: 0,
-        subtotal: 0,
-      },
-      {
-        name:
           "cantidad cero persistida",
         overrides: {
           qty: 0,
@@ -337,6 +323,55 @@ describe(
         );
       },
     );
+
+    it(
+      "omite líneas inválidas de un carrito mixto y recalcula total y ahorro",
+      () => {
+        const message =
+          buildCheckoutMessage(
+            [
+              createItem({
+                id: "VALIDO",
+                title:
+                  "Producto válido",
+                price_offer: 8,
+              }),
+              createItem({
+                id: "PREVENTA",
+                title:
+                  "Producto preventa",
+                status: "preventa",
+              }),
+              createItem({
+                id: "SIN-STOCK",
+                title:
+                  "Producto sin stock",
+                stock: 0,
+              }),
+            ],
+            999,
+          );
+
+        expect(message).toContain(
+          "Producto válido",
+        );
+        expect(message).not.toContain(
+          "Producto preventa",
+        );
+        expect(message).not.toContain(
+          "Producto sin stock",
+        );
+        expect(message).toContain(
+          "Total estimado: S/8.00",
+        );
+        expect(message).toContain(
+          "Ahorro estimado: S/2.00",
+        );
+        expect(message).not.toContain(
+          "999",
+        );
+      },
+    );
   },
 );
 
@@ -438,6 +473,118 @@ describe(
         expect(
           onClose,
         ).toHaveBeenCalledOnce();
+      },
+    );
+
+    it.each([
+      [
+        "preventa",
+        {
+          status: "preventa",
+        },
+      ],
+      [
+        "agotado",
+        {
+          status: "agotado",
+        },
+      ],
+      [
+        "oculto",
+        {
+          status: "oculto",
+        },
+      ],
+      [
+        "stock cero",
+        {
+          stock: 0,
+        },
+      ],
+    ])(
+      "no abre WhatsApp ni limpia para carrito solo %s",
+      (_label, overrides) => {
+        const open =
+          vi.spyOn(
+            window,
+            "open",
+          )
+            .mockImplementation(
+              () => null,
+            );
+        const onClearCart =
+          vi.fn();
+        const onClose =
+          vi.fn();
+
+        checkout(
+          [
+            createItem(
+              overrides,
+            ),
+          ],
+          0,
+          onClearCart,
+          onClose,
+        );
+
+        expect(
+          open,
+        ).not.toHaveBeenCalled();
+        expect(
+          onClearCart,
+        ).not.toHaveBeenCalled();
+        expect(
+          onClose,
+        ).not.toHaveBeenCalled();
+      },
+    );
+
+    it(
+      "envía solo líneas elegibles de un carrito mixto",
+      () => {
+        const open =
+          vi.spyOn(
+            window,
+            "open",
+          )
+            .mockImplementation(
+              () => null,
+            );
+
+        checkout(
+          [
+            createItem({
+              id: "VALIDO",
+              title: "Producto válido",
+            }),
+            createItem({
+              id: "OCULTO",
+              title: "Producto oculto",
+              status: "oculto",
+            }),
+          ],
+          0,
+          vi.fn(),
+          vi.fn(),
+        );
+
+        const url =
+          String(
+            open.mock.calls[0][0],
+          );
+
+        const message =
+          decodeURIComponent(
+            url.split("?text=")[1],
+          );
+
+        expect(message).toContain(
+          "Producto válido",
+        );
+        expect(message).not.toContain(
+          "Producto oculto",
+        );
       },
     );
   },

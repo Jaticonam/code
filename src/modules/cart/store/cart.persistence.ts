@@ -5,8 +5,8 @@ import {
 } from "@/modules/cart/domain/CartLinePricing";
 
 import {
-  getBaseUnitPrice,
-} from "@/shared/domain/volumePricing/VolumePricing";
+  isCartItemCommerciallyEligible,
+} from "@/modules/cart/domain/CartCommercialEligibility";
 
 export const CART_KEY = "wooly_cart";
 
@@ -76,15 +76,9 @@ export function sanitizePersistedCart(
             : "",
       } as CartItem;
 
-      const baseUnitPrice =
-        getBaseUnitPrice(
-          item,
-        );
-
-      return Number.isFinite(
-        baseUnitPrice,
-      ) &&
-        baseUnitPrice > 0
+      return isCartItemCommerciallyEligible(
+        item,
+      )
         ? [item]
         : [];
     },

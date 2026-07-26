@@ -155,6 +155,70 @@ describe(
       },
     );
 
+    it.each([
+      [
+        "preventa",
+        {
+          status: "preventa",
+          stock: null,
+        },
+      ],
+      [
+        "agotado",
+        { status: "agotado" },
+      ],
+      [
+        "oculto",
+        { status: "oculto" },
+      ],
+      [
+        "borrador",
+        { status: "borrador" },
+      ],
+      [
+        "estado desconocido",
+        { status: "pendiente" },
+      ],
+      [
+        "estado ausente",
+        { status: undefined },
+      ],
+      [
+        "stock cero",
+        { stock: 0 },
+      ],
+      [
+        "stock negativo",
+        { stock: -1 },
+      ],
+      [
+        "stock null",
+        { stock: null },
+      ],
+      [
+        "stock NaN",
+        { stock: Number.NaN },
+      ],
+      [
+        "stock Infinity",
+        {
+          stock:
+            Number.POSITIVE_INFINITY,
+        },
+      ],
+    ])(
+      "descarta snapshot comercialmente inelegible: %s",
+      (_label, overrides) => {
+        expect(
+          sanitizePersistedCart([
+            createCartItem(
+              overrides,
+            ),
+          ]),
+        ).toEqual([]);
+      },
+    );
+
     it(
       "conserva la línea pero no sustituye el precio base con una oferta alta",
       () => {
@@ -272,6 +336,36 @@ describe(
         expect(
           loadCart()[0].qty,
         ).toBe(3);
+      },
+    );
+
+    it(
+      "carga solo líneas comercialmente elegibles",
+      () => {
+        localStorage.setItem(
+          CART_KEY,
+          JSON.stringify([
+            createCartItem({
+              id: "VALIDO",
+            }),
+            createCartItem({
+              id: "PREVENTA",
+              status: "preventa",
+            }),
+            createCartItem({
+              id: "SIN-STOCK",
+              stock: 0,
+            }),
+          ]),
+        );
+
+        expect(
+          loadCart().map(
+            (item) => item.id,
+          ),
+        ).toEqual([
+          "VALIDO",
+        ]);
       },
     );
 

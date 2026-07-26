@@ -1,6 +1,6 @@
 import {
-  isProductPurchasable,
-} from "@/modules/catalog/domain/ProductCommercialPolicy";
+  isCartItemCommerciallyEligible,
+} from "@/modules/cart/domain/CartCommercialEligibility";
 
 import type {
   Product,
@@ -30,7 +30,9 @@ export function sanitizeCartItems(
 ): CartItem[] {
   return cart.filter(
     (item) =>
-      isProductPurchasable(item),
+      isCartItemCommerciallyEligible(
+        item,
+      ),
   );
 }
 
@@ -51,7 +53,11 @@ export function addItemToCart(
    * ninguna superficie puede forzar el ingreso
    * de un producto no comprable.
    */
-  if (!isProductPurchasable(product)) {
+  if (
+    !isCartItemCommerciallyEligible(
+      product,
+    )
+  ) {
     return safeCart;
   }
 
