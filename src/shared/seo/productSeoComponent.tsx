@@ -6,6 +6,10 @@ import {
   resolveProductCommercialPolicy,
 } from "@/modules/catalog/domain/ProductCommercialPolicy";
 
+import {
+  resolveProductCommercialState,
+} from "@/shared/domain/commercialPolicy";
+
 import type {
   Product,
 } from "@/shared/types/product";
@@ -36,6 +40,11 @@ function buildProductSchema(
 ) {
   const policy =
     resolveProductCommercialPolicy(
+      product,
+    );
+
+  const commercialState =
+    resolveProductCommercialState(
       product,
     );
 
@@ -107,8 +116,9 @@ function buildProductSchema(
         ),
 
       availability:
-        policy.status ===
-        "agotado"
+        commercialState
+          .availability ===
+        "OUT_OF_STOCK"
           ? "https://schema.org/OutOfStock"
           : "https://schema.org/InStock",
 

@@ -163,6 +163,76 @@ describe(
     );
 
     it(
+      "publica preventa sin Offer",
+      () => {
+        const schema =
+          renderSchema(
+            createProduct({
+              status: "preventa",
+              price_1: 0,
+              stock: null,
+            }),
+          );
+
+        expect(
+          schema["@type"],
+        ).toBe("Product");
+        expect(
+          schema.offers,
+        ).toBeUndefined();
+      },
+    );
+
+    it(
+      "publica agotado con Offer OutOfStock",
+      () => {
+        const schema =
+          renderSchema(
+            createProduct({
+              status: "agotado",
+              stock: 100,
+            }),
+          );
+
+        expect(
+          schema.offers.price,
+        ).toBe(10);
+        expect(
+          schema.offers.availability,
+        ).toBe(
+          "https://schema.org/OutOfStock",
+        );
+      },
+    );
+
+    it.each([
+      ["oculto", { status: "oculto" }],
+      [
+        "borrador",
+        { status: "borrador" },
+      ],
+      [
+        "desconocido",
+        { status: "pendiente" },
+      ],
+      [
+        "stock cero",
+        { stock: 0 },
+      ],
+    ])(
+      "no emite JSON-LD para %s",
+      (_label, overrides) => {
+        expect(
+          renderSchema(
+            createProduct(
+              overrides,
+            ),
+          ),
+        ).toBeNull();
+      },
+    );
+
+    it(
       "preserva identidad, URL e imagen Schema.org",
       () => {
         const schema =

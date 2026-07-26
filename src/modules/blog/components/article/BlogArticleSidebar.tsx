@@ -16,9 +16,12 @@ import type {
 } from "react";
 
 import {
-  isProductPublicationDataValid,
   resolveProductCommercialPolicy,
 } from "@/modules/catalog/domain/ProductCommercialPolicy";
+
+import {
+  resolveProductCommercialState,
+} from "@/shared/domain/commercialPolicy";
 
 import {
   useProducts,
@@ -140,9 +143,9 @@ export default function BlogArticleSidebar({
             ?.includes(
               product.id,
             ) &&
-          isProductPublicationDataValid(
+          resolveProductCommercialPolicy(
             product,
-          ),
+          ).isPubliclyVisible,
       )
       .slice(
         0,
@@ -167,6 +170,11 @@ export default function BlogArticleSidebar({
                   product,
                 );
 
+              const commercialState =
+                resolveProductCommercialState(
+                  product,
+                );
+
               const primaryPrice =
                 getBaseUnitPrice(
                   product,
@@ -176,11 +184,13 @@ export default function BlogArticleSidebar({
                 `/catalogo/producto.html?id=${product.id}&cat=${product.category}`;
 
               const ctaLabel =
-                policy
-                  .isPurchasable
+                commercialState
+                  .purchaseMode ===
+                "CART"
                   ? "Agregar"
-                  : policy.status ===
-                      "agotado"
+                  : commercialState
+                        .availability ===
+                      "OUT_OF_STOCK"
                     ? "Reposición"
                     : "Consultar";
 

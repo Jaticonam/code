@@ -161,5 +161,81 @@ describe(
         ).toContain("Agregar");
       },
     );
+
+    it.each([
+      [
+        "preventa",
+        {
+          status: "preventa",
+          price_1: 0,
+          stock: null,
+        },
+        "Consultar",
+      ],
+      [
+        "agotado",
+        {
+          status: "agotado",
+          stock: 0,
+        },
+        "Reposición",
+      ],
+    ])(
+      "mantiene %s como consulta",
+      (
+        _label,
+        overrides,
+        expectedCta,
+      ) => {
+        const { container } =
+          renderSidebar(
+            createProduct(
+              overrides,
+            ),
+          );
+
+        expect(
+          container.textContent,
+        ).toContain(
+          expectedCta,
+        );
+      },
+    );
+
+    it.each([
+      ["oculto", { status: "oculto" }],
+      [
+        "borrador",
+        { status: "borrador" },
+      ],
+      [
+        "desconocido",
+        { status: "pendiente" },
+      ],
+      [
+        "stock cero",
+        { stock: 0 },
+      ],
+      [
+        "precio inválido",
+        { price_1: 0 },
+      ],
+    ])(
+      "excluye %s",
+      (_label, overrides) => {
+        const { container } =
+          renderSidebar(
+            createProduct(
+              overrides,
+            ),
+          );
+
+        expect(
+          container.querySelector(
+            ".blog-side-product-card",
+          ),
+        ).not.toBeInTheDocument();
+      },
+    );
   },
 );

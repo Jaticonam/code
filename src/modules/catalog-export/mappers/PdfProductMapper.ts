@@ -1,7 +1,11 @@
 import {
-  isProductPublicationDataValid,
   resolveProductCommercialPolicy,
 } from "@/modules/catalog/domain/ProductCommercialPolicy";
+
+import {
+  resolveProductCommercialState,
+  type CommercialAvailability,
+} from "@/shared/domain/commercialPolicy";
 
 import type {
   Product,
@@ -112,17 +116,18 @@ const getShortDescription = (
 };
 
 const getPresentation = (
-  status:
-    string,
+  availability:
+    CommercialAvailability,
 ): PdfProductPresentation => {
   if (
-    status === "preventa"
+    availability === "PREORDER"
   ) {
     return "preventa";
   }
 
   if (
-    status === "agotado"
+    availability ===
+    "OUT_OF_STOCK"
   ) {
     return "agotado";
   }
@@ -207,16 +212,25 @@ export const mapProductToPdfProduct = (
       product,
     );
 
+  const commercialState =
+    resolveProductCommercialState(
+      product,
+    );
+
   const status =
-    policy.status === "invalid"
-      ? ""
-      : policy.status;
+    policy.isStatusValid
+      ? policy.status
+      : "";
 
   const isPreventa =
-    status === "preventa";
+    commercialState
+      .availability ===
+    "PREORDER";
 
   const isAgotado =
-    status === "agotado";
+    commercialState
+      .availability ===
+    "OUT_OF_STOCK";
 
   const showWholesalePricing =
     policy.isPurchasable;
@@ -301,7 +315,8 @@ export const mapProductToPdfProduct = (
 
     presentation:
       getPresentation(
-        status,
+        commercialState
+          .availability,
       ),
 
     showPricing:
@@ -326,7 +341,10 @@ export const mapProductsToPdfProducts = (
 ): PdfProduct[] =>
   products
     .filter(
-      isProductPublicationDataValid,
+      (product) =>
+        resolveProductCommercialPolicy(
+          product,
+        ).isPubliclyVisible,
     )
     .map(
       mapProductToPdfProduct,

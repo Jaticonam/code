@@ -103,6 +103,80 @@ describe(
       },
     );
 
+    it.each([
+      [
+        "preventa",
+        {
+          status: "preventa",
+          price_1: 0,
+          stock: null,
+        },
+        "Consultar preventa",
+        "Consultar",
+      ],
+      [
+        "agotado",
+        {
+          status: "agotado",
+          stock: 0,
+        },
+        "Consultar reposición",
+        "S/ 10.00",
+      ],
+    ])(
+      "mantiene visible %s con su presentación comercial",
+      (
+        _label,
+        overrides,
+        expectedCta,
+        expectedPrice,
+      ) => {
+        const { container } =
+          renderCard(
+            overrides,
+          );
+
+        expect(
+          container.textContent,
+        ).toContain(
+          expectedCta,
+        );
+        expect(
+          container.textContent,
+        ).toContain(
+          expectedPrice,
+        );
+      },
+    );
+
+    it.each([
+      ["oculto", { status: "oculto" }],
+      [
+        "borrador",
+        { status: "borrador" },
+      ],
+      [
+        "desconocido",
+        { status: "pendiente" },
+      ],
+      [
+        "stock cero",
+        { stock: 0 },
+      ],
+    ])(
+      "excluye producto %s",
+      (_label, overrides) => {
+        const { container } =
+          renderCard(
+            overrides,
+          );
+
+        expect(
+          container.textContent,
+        ).toBe("");
+      },
+    );
+
     it(
       "muestra tiers válidos en orden y conserva sus etiquetas",
       () => {

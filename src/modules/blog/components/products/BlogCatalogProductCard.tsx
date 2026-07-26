@@ -10,6 +10,10 @@ import {
   resolveProductCommercialPolicy,
 } from "@/modules/catalog/domain/ProductCommercialPolicy";
 
+import {
+  resolveProductCommercialState,
+} from "@/shared/domain/commercialPolicy";
+
 import type {
   Product,
 } from "@/shared/types/product";
@@ -113,6 +117,11 @@ export default function BlogCatalogProductCard({
       product,
     );
 
+  const commercialState =
+    resolveProductCommercialState(
+      product,
+    );
+
   if (
     !policy.isPubliclyVisible
   ) {
@@ -120,12 +129,14 @@ export default function BlogCatalogProductCard({
   }
 
   const isPreventa =
-    policy.status ===
-    "preventa";
+    commercialState
+      .availability ===
+    "PREORDER";
 
   const isAgotado =
-    policy.status ===
-    "agotado";
+    commercialState
+      .availability ===
+    "OUT_OF_STOCK";
 
   const campaign =
     isPreventa
