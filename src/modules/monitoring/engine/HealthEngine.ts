@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import type { HealthCollector } from "../contracts/HealthCollector";
 import { HealthCollectorRegistry } from "../registry/HealthCollectorRegistry";
+
+type HealthComponentResult =
+Awaited<ReturnType<HealthCollector["collect"]>>;
 
 const OUTPUT=
 path.resolve(
@@ -13,7 +17,7 @@ export class HealthEngine{
 
 async build(){
 
-const components:any={};
+const components:Record<string,HealthComponentResult>={};
 
 const issues:string[]=[];
 
