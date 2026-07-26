@@ -1,41 +1,50 @@
-import type { Product } from "@/shared/types/product";
+import type {
+  Product,
+} from "@/shared/types/product";
 
+import {
+  buildProductWhatsappMessage,
+  buildProductWhatsappUrl,
+  type ProductWhatsappIntent,
+} from "./BuildProductWhatsappMessage";
+
+export {
+  buildProductWhatsappMessage,
+  buildProductWhatsappUrl,
+};
+
+export type {
+  ProductWhatsappIntent,
+};
+
+/**
+ * Compatibilidad temporal con consumidores legacy.
+ *
+ * No genera %0A. Devuelve texto natural para que la URL
+ * sea codificada una sola vez.
+ */
 export function buildWhatsappMessage(
- product:Product,
- isPreventa:boolean,
- isOutOfStock:boolean
-){
+  product:
+    Product,
 
-if(isPreventa){
+  isPreventa:
+    boolean,
 
-return[
-"Hola, quiero información sobre este producto en preventa:",
-"",
-`ID: ${product.id}`,
-`Producto: ${product.title}`,
-`Categoría: ${product.category}`
-].join("%0A");
+  isOutOfStock:
+    boolean,
+): string {
+  const intent:
+    ProductWhatsappIntent =
+      isPreventa
+        ? "preorder"
+        : isOutOfStock
+          ? "restock"
+          : "information";
 
-}
-
-if(isOutOfStock){
-
-return[
-"Hola, quiero pedir reposición de este producto:",
-"",
-`ID: ${product.id}`,
-`Producto: ${product.title}`,
-`Categoría: ${product.category}`
-].join("%0A");
-
-}
-
-return[
-"Hola, quiero más información sobre este producto:",
-"",
-`ID: ${product.id}`,
-`Producto: ${product.title}`,
-`Categoría: ${product.category}`
-].join("%0A");
-
+  return buildProductWhatsappMessage(
+    product,
+    {
+      intent,
+    },
+  );
 }
