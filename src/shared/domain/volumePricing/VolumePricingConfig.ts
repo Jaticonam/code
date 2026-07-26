@@ -1,6 +1,6 @@
 import type {
   VolumePriceDefinition,
-} from "@/shared/domain/volumePricing/volumePricing.types";
+} from "@/shared/domain/volumePricing/VolumePricingTypes";
 
 export const VOLUME_PRICES = [
   {

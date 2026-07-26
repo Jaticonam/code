@@ -1,14 +1,14 @@
 import {
   DISCOUNT_VOLUME_PRICES,
   VOLUME_PRICES,
-} from "@/shared/domain/volumePricing/volumePricing.config";
+} from "@/shared/domain/volumePricing/VolumePricingConfig";
 
 import type {
   AvailableVolumePrice,
   AvailableVolumePriceOptions,
   NextVolumePrice,
   VolumePriceProduct,
-} from "@/shared/domain/volumePricing/volumePricing.types";
+} from "@/shared/domain/volumePricing/VolumePricingTypes";
 
 function isValidPrice(value: unknown): value is number {
   return (
