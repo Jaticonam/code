@@ -184,6 +184,43 @@ describe(
       },
     );
 
+    it.each([
+      ["igual al base", 10, 10],
+      ["superior al base", 12, 10],
+      ["cero", 0, 10],
+      ["negativa", -2, 10],
+      [
+        "NaN",
+        Number.NaN,
+        10,
+      ],
+      [
+        "Infinity",
+        Number.POSITIVE_INFINITY,
+        10,
+      ],
+      ["sin base válida", 8, 0],
+    ])(
+      "no deriva Promo Flash con oferta %s",
+      (
+        _case,
+        price_offer,
+        price_1,
+      ) => {
+        const profile =
+          resolveProductCompatibility(
+            createProduct({
+              price_1,
+              price_offer,
+            }),
+          );
+
+        expect(
+          profile.badges,
+        ).toHaveLength(0);
+      },
+    );
+
     it(
       "preserva un badge desconocido como legacy",
       () => {

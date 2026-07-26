@@ -2,6 +2,10 @@ import type {
   Product,
 } from "@/shared/types/product";
 
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
 import type {
   CatalogBadge,
   IgnoredLegacyBadgeValue,
@@ -30,11 +34,20 @@ const EMPTY_CAMPAIGN_REGISTRY:
 
 const hasValidOffer = (
   product: Product,
-): boolean =>
-  typeof product.price_offer === "number" &&
-  Number.isFinite(product.price_offer) &&
-  product.price_offer > 0 &&
-  product.price_offer < product.price_1;
+): boolean => {
+  const basePrice =
+    product.price_1;
+
+  return (
+    Number.isFinite(
+      basePrice,
+    ) &&
+    basePrice > 0 &&
+    getBaseUnitPrice(
+      product,
+    ) < basePrice
+  );
+};
 
 const toCodeSegment = (
   value: string,

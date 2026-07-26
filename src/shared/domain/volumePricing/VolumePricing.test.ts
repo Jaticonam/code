@@ -5,17 +5,6 @@ import {
 } from "vitest";
 
 import {
-  DISCOUNT_VOLUME_PRICES as CATALOG_DISCOUNT_VOLUME_PRICES,
-  VOLUME_PRICES as CATALOG_VOLUME_PRICES,
-  getActiveVolumePriceQty as getCatalogActiveVolumePriceQty,
-  getAvailableVolumePrices as getCatalogAvailableVolumePrices,
-  getBaseUnitPrice as getCatalogBaseUnitPrice,
-  getBestVolumePrice as getCatalogBestVolumePrice,
-  getNextVolumePrice as getCatalogNextVolumePrice,
-  getVolumeUnitPrice as getCatalogVolumeUnitPrice,
-} from "@/modules/catalog/domain/volumePricing";
-
-import {
   DISCOUNT_VOLUME_PRICES as SHARED_DISCOUNT_VOLUME_PRICES,
   VOLUME_PRICES as SHARED_VOLUME_PRICES,
   getActiveVolumePriceQty as getSharedActiveVolumePriceQty,
@@ -103,18 +92,14 @@ describe(
     );
 
     it(
-      "mantiene la misma configuración que catalog",
+      "deriva las cuatro escalas de descuento desde la configuración oficial",
       () => {
-        expect(
-          SHARED_VOLUME_PRICES,
-        ).toEqual(
-          CATALOG_VOLUME_PRICES,
-        );
-
         expect(
           SHARED_DISCOUNT_VOLUME_PRICES,
         ).toEqual(
-          CATALOG_DISCOUNT_VOLUME_PRICES,
+          SHARED_VOLUME_PRICES.slice(
+            1,
+          ),
         );
       },
     );
@@ -504,39 +489,25 @@ describe(
 );
 
 /* =========================================================
-   PARIDAD MODULES ↔ SHARED
+   MATRIZ INTEGRAL DEL CONTRATO CANÓNICO
    ========================================================= */
 
 describe(
-  "paridad con la implementación de catalog",
+  "matriz integral del contrato canónico",
   () => {
     it(
-      "produce los mismos resultados en una matriz de escenarios",
+      "preserva invariantes para ofertas, tiers parciales y cantidades límite",
       () => {
-        const products:
-          VolumePriceProduct[] = [
-            createProduct(),
+        const product =
+          createProduct({
+            price_offer: 8.5,
+          });
 
-            createProduct({
-              price_offer: 8.5,
-            }),
-
-            createProduct({
-              price_3: null,
-              price_50: null,
-            }),
-
-            createProduct({
-              price_1: 0,
-              price_3: -1,
-              price_12:
-                Number.NaN,
-              price_50:
-                Number.POSITIVE_INFINITY,
-              price_100: null,
-              price_offer: 4,
-            }),
-          ];
+        expect(
+          getSharedBaseUnitPrice(
+            product,
+          ),
+        ).toBe(8.5);
 
         const quantities = [
           -5,
@@ -553,97 +524,113 @@ describe(
           500,
         ];
 
-        products.forEach(
-          (product) => {
-            expect(
-              getSharedBaseUnitPrice(
+        expect(
+          quantities.map(
+            (quantity) =>
+              getSharedVolumeUnitPrice(
                 product,
+                quantity,
               ),
-            ).toBe(
-              getCatalogBaseUnitPrice(
-                product,
-              ),
-            );
+          ),
+        ).toEqual([
+          8.5,
+          8.5,
+          8.5,
+          8.5,
+          9,
+          9,
+          8,
+          8,
+          7,
+          7,
+          6,
+          6,
+        ]);
 
-            expect(
-              getSharedAvailableVolumePrices(
-                product,
-              ),
-            ).toEqual(
-              getCatalogAvailableVolumePrices(
-                product,
-              ),
-            );
+        expect(
+          getSharedNextVolumePrice(
+            product,
+            2,
+          ),
+        ).toEqual({
+          qty: 3,
+          unitPrice: 9,
+        });
 
-            expect(
-              getSharedAvailableVolumePrices(
-                product,
-                {
-                  includeBasePrice:
-                    false,
-                },
-              ),
-            ).toEqual(
-              getCatalogAvailableVolumePrices(
-                product,
-                {
-                  includeBasePrice:
-                    false,
-                },
-              ),
-            );
+        expect(
+          getSharedNextVolumePrice(
+            product,
+            100,
+          ),
+        ).toBeNull();
 
-            expect(
-              getSharedBestVolumePrice(
-                product,
-              ),
-            ).toEqual(
-              getCatalogBestVolumePrice(
-                product,
-              ),
-            );
+        expect(
+          getSharedActiveVolumePriceQty(
+            product,
+            500,
+          ),
+        ).toBe(100);
 
-            quantities.forEach(
-              (quantity) => {
-                expect(
-                  getSharedVolumeUnitPrice(
-                    product,
-                    quantity,
-                  ),
-                ).toBe(
-                  getCatalogVolumeUnitPrice(
-                    product,
-                    quantity,
-                  ),
-                );
+        expect(
+          getSharedBestVolumePrice(
+            product,
+          ),
+        ).toMatchObject({
+          qty: 100,
+          unitPrice: 6,
+        });
 
-                expect(
-                  getSharedNextVolumePrice(
-                    product,
-                    quantity,
-                  ),
-                ).toEqual(
-                  getCatalogNextVolumePrice(
-                    product,
-                    quantity,
-                  ),
-                );
+        const partialProduct =
+          createProduct({
+            price_3: null,
+            price_50: null,
+          });
 
-                expect(
-                  getSharedActiveVolumePriceQty(
-                    product,
-                    quantity,
-                  ),
-                ).toBe(
-                  getCatalogActiveVolumePriceQty(
-                    product,
-                    quantity,
-                  ),
-                );
-              },
-            );
-          },
-        );
+        expect(
+          getSharedAvailableVolumePrices(
+            partialProduct,
+            {
+              includeBasePrice:
+                false,
+            },
+          ).map(
+            (tier) =>
+              tier.qty,
+          ),
+        ).toEqual([
+          12,
+          100,
+        ]);
+
+        const invalidProduct =
+          createProduct({
+            price_1: 0,
+            price_3: -1,
+            price_12:
+              Number.NaN,
+            price_50:
+              Number.POSITIVE_INFINITY,
+            price_100: null,
+            price_offer: 4,
+          });
+
+        expect(
+          getSharedBaseUnitPrice(
+            invalidProduct,
+          ),
+        ).toBe(0);
+
+        expect(
+          getSharedAvailableVolumePrices(
+            invalidProduct,
+          ),
+        ).toEqual([]);
+
+        expect(
+          getSharedBestVolumePrice(
+            invalidProduct,
+          ),
+        ).toBeNull();
       },
     );
   },

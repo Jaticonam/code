@@ -215,24 +215,6 @@ export function clearProductsCache() {
   }
 }
 
-/* =========================================================
-   PRECIOS
-   ========================================================= */
-
-export function getMinPrice(
-  product:
-    Product,
-): number {
-  return (
-    product.price_100 ||
-    product.price_50 ||
-    product.price_12 ||
-    product.price_3 ||
-    product.price_1 ||
-    0
-  );
-}
-
 /**
  * Compatibilidad legacy.
  *
