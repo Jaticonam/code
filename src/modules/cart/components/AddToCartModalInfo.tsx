@@ -1,11 +1,14 @@
 import type { Product } from "@/shared/types/product";
 import { VOLUME_PRICES } from "@/shared/domain/volumePricing/VolumePricing";
+import type {
+  NextVolumePrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 interface Props {
   product: Product;
   currentQty: number;
   pulse: boolean;
-  nextTier: any;
+  nextTier: NextVolumePrice | null;
 }
 
 export function AddToCartModalInfo({
@@ -35,13 +38,11 @@ export function AddToCartModalInfo({
   const bestTarget = tiers.at(-1)?.qty ?? 1;
 
   const targetQty =
-    nextTier?.targetQty ??
     nextTier?.qty ??
     bestTarget;
 
   const unitPrice =
     nextTier?.unitPrice ??
-    nextTier?.price ??
     product.price_1;
 
   const missingQty = Math.max(targetQty - currentQty, 0);

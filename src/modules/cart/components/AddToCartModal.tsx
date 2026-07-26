@@ -81,15 +81,7 @@ export function AddToCartModal({
           product={product}
           currentQty={currentQty}
           pulse={pulse}
-          nextTier={
-            nextVolumePrice
-              ? {
-                  targetQty: nextVolumePrice.qty,
-                  unitPrice:
-                    nextVolumePrice.unitPrice,
-                }
-              : null
-          }
+          nextTier={nextVolumePrice}
         />
 
         <div className="mt-4 space-y-2">
