@@ -1,7 +1,13 @@
+import type {
+ Dispatch,
+ KeyboardEvent,
+ SetStateAction
+} from "react";
+
 export function useSearchKeyboard(
 
  activeIndex:number,
- setActiveIndex:(cb:any)=>void,
+ setActiveIndex:Dispatch<SetStateAction<number>>,
 
  total:number,
 
@@ -15,7 +21,7 @@ export function useSearchKeyboard(
 ){
 
  function handleKeyDown(
- event:any
+ event:KeyboardEvent<HTMLInputElement>
  ){
 
  if(

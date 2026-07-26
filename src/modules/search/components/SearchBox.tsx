@@ -1,4 +1,22 @@
+import type {
+ ChangeEventHandler,
+ FocusEventHandler,
+ KeyboardEventHandler,
+ RefObject
+} from "react";
 import { Search,X } from "lucide-react";
+
+interface SearchBoxProps {
+ inputRef: RefObject<HTMLInputElement>;
+ value: string;
+ placeholder?: string;
+ hasValue: boolean;
+ onChange: ChangeEventHandler<HTMLInputElement>;
+ onFocus: FocusEventHandler<HTMLInputElement>;
+ onBlur: FocusEventHandler<HTMLInputElement>;
+ onKeyDown: KeyboardEventHandler<HTMLInputElement>;
+ onClear: () => void;
+}
 
 export function SearchBox({
 
@@ -15,7 +33,7 @@ export function SearchBox({
  onKeyDown,
  onClear
 
-}:any){
+}:SearchBoxProps){
 
  return(
 
