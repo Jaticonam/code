@@ -13,24 +13,6 @@ interface CatalogPdfCardProps {
     PdfProduct;
 }
 
-type TierKind =
-  | "price3"
-  | "price12"
-  | "price50"
-  | "price100";
-
-type TierPrice = {
-  kind:
-    TierKind;
-
-  label:
-    string;
-
-  value?:
-    number |
-    null;
-};
-
 const moneyFormatter =
   new Intl.NumberFormat(
     "es-PE",
@@ -52,10 +34,11 @@ const formatMoney = (
     null,
 ) => {
   const amount =
-    Number(
-      value ||
-      0,
-    );
+    typeof value ===
+      "number" &&
+    Number.isFinite(value)
+      ? value
+      : 0;
 
   if (amount <= 0) {
     return "Consultar";
@@ -80,69 +63,14 @@ const formatCategory = (
     )
     .trim();
 
-const getTierPrices = (
-  product:
-    PdfProduct,
-): TierPrice[] => {
-  if (
-    !product
-      .showWholesalePricing
-  ) {
-    return [];
-  }
-
-  const tiers:
-    TierPrice[] = [
-    {
-      kind:
-        "price3",
-      label:
-        "Por Mayor (3u) a",
-      value:
-        product.price3,
-    },
-    {
-      kind:
-        "price12",
-      label:
-        "Por Docena (12u) a",
-      value:
-        product.price12,
-    },
-    {
-      kind:
-        "price50",
-      label:
-        "Por 50 (50u) a",
-      value:
-        product.price50,
-    },
-    {
-      kind:
-        "price100",
-      label:
-        "Por 100 (100u) a",
-      value:
-        product.price100,
-    },
-  ];
-
-  return tiers.filter(
-    (tier) =>
-      Number(
-        tier.value ||
-        0,
-      ) > 0,
-  );
-};
-
 export default function CatalogPdfCard({
   product,
 }: CatalogPdfCardProps) {
   const tierPrices =
-    getTierPrices(
-      product,
-    );
+    product
+      .showWholesalePricing
+      ? product.volumePrices
+      : [];
 
   const isPreventa =
     product.presentation ===
@@ -154,32 +82,19 @@ export default function CatalogPdfCard({
 
   const hasOffer =
     product.showPricing &&
-    Number(
-      product.offerPrice ||
-      0,
-    ) > 0 &&
-    Number(
-      product.offerPrice ||
-      0,
-    ) <
-      Number(
-        product.price1 ||
-        0,
-      );
+    product.offerPrice !==
+      null &&
+    product.offerPrice !==
+      undefined;
 
   const unitPrice =
-    Number(
-      product.price1 ||
-      product.primaryPrice ||
-      0,
-    );
+    hasOffer
+      ? product.price1
+      : product.primaryPrice;
 
   const offerPrice =
     hasOffer
-      ? Number(
-          product.offerPrice ||
-          0,
-        )
+      ? product.primaryPrice
       : 0;
 
   const badgeLabel =
@@ -309,7 +224,7 @@ export default function CatalogPdfCard({
 
                     <strong className="catalog-pdf-card__tierPrice">
                       {formatMoney(
-                        tier.value,
+                        tier.unitPrice,
                       )}
                     </strong>
                   </div>

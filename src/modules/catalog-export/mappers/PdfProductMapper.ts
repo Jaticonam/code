@@ -8,12 +8,18 @@ import type {
 } from "@/shared/types/product";
 
 import {
+  getAvailableVolumePrices,
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
+import {
   PDF_IMAGE_MANIFEST,
 } from "../data/PdfImageManifest";
 
 import type {
   PdfProduct,
   PdfProductPresentation,
+  PdfVolumePrice,
 } from "../types/PdfProduct";
 
 export const PDF_PRODUCT_PLACEHOLDER_IMAGE =
@@ -124,31 +130,72 @@ const getPresentation = (
   return "published";
 };
 
-const getPrimaryPrice = (
+const PDF_TIER_PRESENTATION:
+  Record<
+    Exclude<
+      PdfVolumePrice["qty"],
+      1
+    >,
+    Pick<
+      PdfVolumePrice,
+      "kind" |
+      "label"
+    >
+  > = {
+    3: {
+      kind: "price3",
+      label: "Por Mayor (3u) a",
+    },
+    12: {
+      kind: "price12",
+      label: "Por Docena (12u) a",
+    },
+    50: {
+      kind: "price50",
+      label: "Por 50 (50u) a",
+    },
+    100: {
+      kind: "price100",
+      label: "Por 100 (100u) a",
+    },
+  };
+
+const getPdfVolumePrices = (
   product:
     Product,
-  showPricing:
+  showWholesalePricing:
     boolean,
-): number => {
-  if (!showPricing) {
-    return 0;
+): PdfVolumePrice[] => {
+  if (!showWholesalePricing) {
+    return [];
   }
 
-  const offerPrice =
-    Number(
-      product.price_offer ||
-      0,
-    );
+  return getAvailableVolumePrices(
+    product,
+    {
+      includeBasePrice:
+        false,
+    },
+  ).flatMap(
+    (availablePrice) => {
+      const presentation =
+        PDF_TIER_PRESENTATION[
+          availablePrice.qty
+        ];
 
-  const basePrice =
-    Number(
-      product.price_1 ||
-      0,
-    );
-
-  return offerPrice > 0
-    ? offerPrice
-    : basePrice;
+      return presentation
+        ? [
+            {
+              ...presentation,
+              qty:
+                availablePrice.qty,
+              unitPrice:
+                availablePrice.unitPrice,
+            },
+          ]
+        : [];
+    },
+  );
 };
 
 export const mapProductToPdfProduct = (
@@ -173,6 +220,18 @@ export const mapProductToPdfProduct = (
 
   const showWholesalePricing =
     policy.isPurchasable;
+
+  const primaryPrice =
+    policy.canShowPricing
+      ? getBaseUnitPrice(
+          product,
+        )
+      : 0;
+
+  const hasOffer =
+    policy.canShowPricing &&
+    primaryPrice !==
+      product.price_1;
 
   return {
     id:
@@ -208,41 +267,21 @@ export const mapProductToPdfProduct = (
      */
     price1:
       policy.canShowPricing
-        ? Number(
-            product.price_1 ||
-            0,
-          )
+        ? product.price_1
         : 0,
 
-    price3:
-      showWholesalePricing
-        ? product.price_3
-        : null,
-
-    price12:
-      showWholesalePricing
-        ? product.price_12
-        : null,
-
-    price50:
-      showWholesalePricing
-        ? product.price_50
-        : null,
-
-    price100:
-      showWholesalePricing
-        ? product.price_100
-        : null,
-
     offerPrice:
-      policy.canShowPricing
-        ? product.price_offer
+      hasOffer
+        ? primaryPrice
         : null,
 
     primaryPrice:
-      getPrimaryPrice(
+      primaryPrice,
+
+    volumePrices:
+      getPdfVolumePrices(
         product,
-        policy.canShowPricing,
+        showWholesalePricing,
       ),
 
     stock:

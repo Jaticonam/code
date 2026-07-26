@@ -3,6 +3,26 @@ export type PdfProductPresentation =
   | "preventa"
   | "agotado";
 
+export type PdfVolumePriceKind =
+  | "price3"
+  | "price12"
+  | "price50"
+  | "price100";
+
+export interface PdfVolumePrice {
+  kind:
+    PdfVolumePriceKind;
+
+  qty:
+    number;
+
+  label:
+    string;
+
+  unitPrice:
+    number;
+}
+
 export interface PdfProduct {
   id:
     string;
@@ -22,28 +42,15 @@ export interface PdfProduct {
   price1:
     number;
 
-  price3?:
-    number |
-    null;
-
-  price12?:
-    number |
-    null;
-
-  price50?:
-    number |
-    null;
-
-  price100?:
-    number |
-    null;
-
   offerPrice?:
     number |
     null;
 
   primaryPrice:
     number;
+
+  volumePrices:
+    PdfVolumePrice[];
 
   stock?:
     number |
