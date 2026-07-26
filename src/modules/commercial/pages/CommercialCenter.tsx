@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { Activity, Boxes, History, PlugZap, Rocket, ShieldCheck } from "lucide-react";
 import { getCommercialDashboard } from "../services/getCommercialDashboard";
+
+interface CardProps {
+  icon: ReactNode;
+  title: string;
+  value: ReactNode;
+  detail: string;
+  tone?: string;
+}
+
+interface InfoProps {
+  label: string;
+  value: ReactNode;
+}
 
 export default function CommercialCenter() {
   const [data, setData] = useState<any>(null);
@@ -79,7 +93,7 @@ export default function CommercialCenter() {
   );
 }
 
-function Card({ icon, title, value, detail }: any) {
+function Card({ icon, title, value, detail }: CardProps) {
   return (
     <article className="rounded-3xl border border-white/10 bg-white/10 p-5 shadow-xl backdrop-blur">
       <div className="mb-4 text-pink-300">{icon}</div>
@@ -90,7 +104,7 @@ function Card({ icon, title, value, detail }: any) {
   );
 }
 
-function Info({ label, value }: { label: string; value: any }) {
+function Info({ label, value }: InfoProps) {
   return (
     <div className="rounded-2xl bg-white/10 p-4">
       <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{label}</p>
