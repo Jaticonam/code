@@ -45,7 +45,11 @@ export function ProductGallery({
     const diff = touchStartX.current - e.changedTouches[0].clientX;
 
     if (Math.abs(diff) > 45) {
-      diff > 0 ? goNext() : goPrev();
+      if (diff > 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
     }
 
     touchStartX.current = null;

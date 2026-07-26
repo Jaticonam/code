@@ -36,7 +36,7 @@ function parseCampaignDate(
   }
 
   const humanDate = clean.match(
-    /^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/,
+    /^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/,
   );
 
   if (humanDate) {

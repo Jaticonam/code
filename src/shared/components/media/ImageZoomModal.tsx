@@ -271,7 +271,11 @@ export function ImageZoomModal({
       const diff = touchRef.current.startX - endX;
 
       if (Math.abs(diff) > 45) {
-        diff > 0 ? goNext() : goPrev();
+        if (diff > 0) {
+          goNext();
+        } else {
+          goPrev();
+        }
       }
     }
 
