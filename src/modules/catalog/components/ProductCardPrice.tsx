@@ -1,5 +1,9 @@
 import type { Product } from "@/shared/types/product";
 
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
 interface ProductCardPriceProps {
   product: Product;
   isPreventa?: boolean;
@@ -9,11 +13,22 @@ export function ProductCardPrice({
   product,
   isPreventa = false,
 }: ProductCardPriceProps) {
+  const finalPrice =
+    getBaseUnitPrice(
+      product,
+    );
+
+  /*
+   * El helper canónico solo devuelve un valor distinto de
+   * price_1 cuando existe una oferta válida y menor.
+   */
   const hasOffer =
-    !!product.price_offer &&
-    product.price_offer > 0 &&
-    product.price_offer < product.price_1;
-  const finalPrice = hasOffer ? product.price_offer! : product.price_1;
+    Number.isFinite(
+      product.price_1,
+    ) &&
+    product.price_1 > 0 &&
+    finalPrice !==
+      product.price_1;
 
   if (isPreventa) {
     return (

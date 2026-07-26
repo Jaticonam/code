@@ -26,9 +26,10 @@ export function ProductVolumePriceBadges({
   const tiers = getAvailableVolumePrices(product, {
     includeBasePrice: false,
   }).filter((tier) => {
-    const unitPrice = Number(product[tier.key]);
-
-    return unitPrice < product.price_1;
+    return (
+      tier.unitPrice <
+      product.price_1
+    );
   });
 
   if (!tiers.length) return null;
@@ -42,8 +43,9 @@ export function ProductVolumePriceBadges({
 
       <div className="flex flex-col gap-1.5">
         {tiers.map((tier) => {
-          const unitPrice = Number(product[tier.key]);
-          const totalPrice = unitPrice * tier.qty;
+          const totalPrice =
+            tier.unitPrice *
+            tier.qty;
 
           return (
             <div
