@@ -31,7 +31,7 @@ export function normalizeLegacyBadgeValue(
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[✨⚡🔥🚀💎]/g, "")
+    .replace(/[✨⚡🔥🚀💎]\uFE0F?/gu, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -45,13 +45,25 @@ const BEST_SELLER_ALIASES = new Set([
 ]);
 
 const REDUNDANT_DEFAULT_ALIASES = new Set([
-  "todo el ano",
   "evergreen",
+]);
+
+const OBSOLETE_LEGACY_BADGE_VALUES = new Set([
+  "todo el ano",
+  "todo-el-ano",
 ]);
 
 const CAMPAIGN_VALUE_ALIASES = new Set([
   "dia de la novia",
 ]);
+
+export function isObsoleteLegacyBadgeValue(
+  value: string,
+): boolean {
+  return OBSOLETE_LEGACY_BADGE_VALUES.has(
+    normalizeLegacyBadgeValue(value),
+  );
+}
 
 export function resolveLegacyBadgeValue(
   value: string,

@@ -114,7 +114,7 @@ describe(
     );
 
     it(
-      "ignora Todo el Año",
+      "descarta Todo el Año como valor legacy obsoleto",
       () => {
         const profile =
           resolveProductCompatibility(
@@ -129,10 +129,12 @@ describe(
         ).toHaveLength(0);
 
         expect(
-          profile.ignoredLegacyValues[0].reason,
-        ).toBe(
-          "redundantDefault",
-        );
+          profile.ignoredLegacyValues,
+        ).toHaveLength(0);
+
+        expect(
+          profile.unknownLegacyValues,
+        ).toHaveLength(0);
       },
     );
 

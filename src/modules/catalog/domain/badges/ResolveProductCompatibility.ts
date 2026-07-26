@@ -14,6 +14,7 @@ import {
 } from "./CampaignBadgeResolver";
 
 import {
+  isObsoleteLegacyBadgeValue,
   normalizeLegacyBadgeValue,
   resolveLegacyBadgeValue,
 } from "./LegacyBadgeAliases";
@@ -167,6 +168,14 @@ export function resolveProductCompatibility(
         normalizeLegacyBadgeValue(
           cleanValue,
         );
+
+      if (
+        isObsoleteLegacyBadgeValue(
+          cleanValue,
+        )
+      ) {
+        return;
+      }
 
       const resolution =
         resolveLegacyBadgeValue(
