@@ -14,6 +14,11 @@ import type {
   Product,
 } from "@/shared/types/product";
 
+import {
+  getAvailableVolumePrices,
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
 const BADGE_ICONS:
   Record<
     string,
@@ -69,60 +74,33 @@ const formatBadge = (
   } ${text}`;
 };
 
-const TIERS = [
-  {
-    key:
-      "price_3",
-
-    label:
-      "Mayor",
-
-    qty:
-      "3u",
-
-    icon:
-      "🔥",
-  },
-  {
-    key:
-      "price_12",
-
-    label:
-      "Docena",
-
-    qty:
-      "12u",
-
-    icon:
-      "⚡",
-  },
-  {
-    key:
-      "price_50",
-
-    label:
-      "Medio ciento",
-
-    qty:
-      "50u",
-
-    icon:
-      "🚀",
-  },
-  {
-    key:
-      "price_100",
-
-    label:
-      "Caja",
-
-    qty:
-      "100u",
-
-    icon:
-      "💎",
-  },
-] as const;
+const TIER_PRESENTATION:
+  Record<
+    number,
+    {
+      displayLabel:
+        string;
+      icon:
+        string;
+    }
+  > = {
+    3: {
+      displayLabel: "Mayor",
+      icon: "🔥",
+    },
+    12: {
+      displayLabel: "Docena",
+      icon: "⚡",
+    },
+    50: {
+      displayLabel: "Medio ciento",
+      icon: "🚀",
+    },
+    100: {
+      displayLabel: "Caja",
+      icon: "💎",
+    },
+  };
 
 export default function BlogCatalogProductCard({
   product,
@@ -161,16 +139,35 @@ export default function BlogCatalogProductCard({
               .badges?.[0],
           );
 
+  const primaryPrice =
+    getBaseUnitPrice(
+      product,
+    );
+
   const tiers =
     policy.isPurchasable
-      ? TIERS.filter(
-          (tier) =>
-            Number(
-              product[
-                tier.key
-              ] ||
-              0,
-            ) > 0,
+      ? getAvailableVolumePrices(
+          product,
+          {
+            includeBasePrice:
+              false,
+          },
+        ).flatMap(
+          (tier) => {
+            const presentation =
+              TIER_PRESENTATION[
+                tier.qty
+              ];
+
+            return presentation
+              ? [
+                  {
+                    ...tier,
+                    ...presentation,
+                  },
+                ]
+              : [];
+          },
         )
       : [];
 
@@ -232,9 +229,8 @@ export default function BlogCatalogProductCard({
 
             <strong>
               S/{" "}
-              {Number(
-                product.price_1,
-              ).toFixed(2)}
+              {primaryPrice
+                .toFixed(2)}
             </strong>
           </div>
         ) : (
@@ -259,7 +255,7 @@ export default function BlogCatalogProductCard({
               (tier) => (
                 <span
                   key={
-                    tier.key
+                    tier.qty
                   }
                 >
                   <em>
@@ -267,23 +263,21 @@ export default function BlogCatalogProductCard({
                       tier.icon
                     }{" "}
                     {
-                      tier.label
+                      tier
+                        .displayLabel
                     }{" "}
                     (
                     {
-                      tier.qty
+                      tier
+                        .label
                     })
                   </em>
 
                   <strong>
                     S/
-                    {Number(
-                      product[
-                        tier.key
-                      ],
-                    ).toFixed(
-                      2,
-                    )}
+                    {tier
+                      .unitPrice
+                      .toFixed(2)}
                   </strong>
                 </span>
               ),

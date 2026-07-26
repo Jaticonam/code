@@ -14,6 +14,10 @@ import type {
   ProductSeoData,
 } from "@/shared/seo/productSeo";
 
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
 interface Props {
   seo:
     ProductSeoData;
@@ -21,29 +25,6 @@ interface Props {
   product?:
     Product |
     null;
-}
-
-function getOfferPrice(
-  product:
-    Product,
-): number {
-  const offerPrice =
-    Number(
-      product.price_offer ||
-      0,
-    );
-
-  const basePrice =
-    Number(
-      product.price_1 ||
-      0,
-    );
-
-  return (
-    offerPrice > 0
-      ? offerPrice
-      : basePrice
-  );
 }
 
 function buildProductSchema(
@@ -121,7 +102,7 @@ function buildProductSchema(
         "PEN",
 
       price:
-        getOfferPrice(
+        getBaseUnitPrice(
           product,
         ),
 

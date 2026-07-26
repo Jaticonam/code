@@ -43,6 +43,10 @@ import {
   WhatsAppIcon,
 } from "@/shared/components/ui/SocialIcons";
 
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
 const CAMPAIGNS = [
   "❤️ San Valentín",
   "🏎️ Hot Wheels",
@@ -163,6 +167,11 @@ export default function BlogArticleSidebar({
                   product,
                 );
 
+              const primaryPrice =
+                getBaseUnitPrice(
+                  product,
+                );
+
               const detailUrl =
                 `/catalogo/producto.html?id=${product.id}&cat=${product.category}`;
 
@@ -213,9 +222,7 @@ export default function BlogArticleSidebar({
                       <b>
                         {policy
                           .canShowPricing
-                          ? `S/ ${Number(
-                              product.price_1,
-                            ).toFixed(
+                          ? `S/ ${primaryPrice.toFixed(
                               2,
                             )}`
                           : "Consultar"}
