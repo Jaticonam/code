@@ -3,6 +3,8 @@ import type {
   Product,
 } from "@/shared/types/product";
 
+import { isProductPubliclyVisible } from "@/modules/catalog/domain/ProductCommercialPolicy";
+
 /* =========================================================
    TIPOS DE ENTRADA
    ========================================================= */
@@ -92,14 +94,6 @@ function normalizeCategoryId(
     : normalized;
 }
 
-function normalizeProductStatus(
-  product: Product,
-): string {
-  return normalizeCatalogSelectionValue(
-    product.status,
-  );
-}
-
 /* =========================================================
    REGLAS DE PRODUCTO
    ========================================================= */
@@ -107,7 +101,9 @@ function normalizeProductStatus(
 function isSelectableProduct(
   product: Product,
 ): boolean {
-  return normalizeProductStatus(product) !== "oculto";
+  return isProductPubliclyVisible(
+    product,
+  );
 }
 
 function productMatchesCategory(
@@ -501,3 +497,5 @@ export function resolveCatalogSelection({
     warnings,
   };
 }
+
+

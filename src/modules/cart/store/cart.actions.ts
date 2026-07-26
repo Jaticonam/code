@@ -1,28 +1,90 @@
-import type { Product } from "@/shared/types/product";
-import type { CartItem } from "@/modules/cart/types";
+import {
+  isProductPurchasable,
+} from "@/modules/catalog/domain/ProductCommercialPolicy";
+
+import type {
+  Product,
+} from "@/shared/types/product";
+
+import type {
+  CartItem,
+} from "@/modules/cart/types";
+
+/* =========================================================
+   SANEAMIENTO
+   ========================================================= */
+
+/**
+ * El carrito solamente puede contener productos que continúan
+ * siendo comprables según la política comercial vigente.
+ *
+ * También elimina elementos antiguos que hayan cambiado a:
+ * - preventa
+ * - agotado
+ * - oculto
+ * - borrador
+ * - estado inválido
+ */
+export function sanitizeCartItems(
+  cart: CartItem[],
+): CartItem[] {
+  return cart.filter(
+    (item) =>
+      isProductPurchasable(item),
+  );
+}
+
+/* =========================================================
+   AGREGAR
+   ========================================================= */
 
 export function addItemToCart(
   cart: CartItem[],
   product: Product,
-  qty: number
+  qty: number,
 ): CartItem[] {
-  const safeQty = Math.max(1, Math.floor(Number(qty) || 1));
+  const safeCart =
+    sanitizeCartItems(cart);
 
-  const existing = cart.find((x) => x.id === product.id);
+  /*
+   * Barrera definitiva:
+   * ninguna superficie puede forzar el ingreso
+   * de un producto no comprable.
+   */
+  if (!isProductPurchasable(product)) {
+    return safeCart;
+  }
+
+  const safeQty =
+    Math.max(
+      1,
+      Math.floor(
+        Number(qty) || 1,
+      ),
+    );
+
+  const existing =
+    safeCart.find(
+      (item) =>
+        item.id === product.id,
+    );
 
   if (existing) {
-    return cart.map((x) =>
-      x.id === product.id
-        ? {
-            ...x,
-            qty: x.qty + safeQty,
-          }
-        : x
+    return safeCart.map(
+      (item) =>
+        item.id === product.id
+          ? {
+              ...item,
+              qty:
+                item.qty +
+                safeQty,
+            }
+          : item,
     );
   }
 
   return [
-    ...cart,
+    ...safeCart,
     {
       ...product,
       qty: safeQty,
@@ -31,68 +93,109 @@ export function addItemToCart(
   ];
 }
 
+/* =========================================================
+   ELIMINAR
+   ========================================================= */
+
 export function removeItemFromCart(
   cart: CartItem[],
-  id: string
+  id: string,
 ): CartItem[] {
-  return cart.filter((x) => x.id !== id);
+  return sanitizeCartItems(cart)
+    .filter(
+      (item) =>
+        item.id !== id,
+    );
 }
+
+/* =========================================================
+   CAMBIAR CANTIDAD
+   ========================================================= */
 
 export function changeCartItemQty(
   cart: CartItem[],
   id: string,
-  delta: number
+  delta: number,
 ): CartItem[] {
-  return cart
-    .map((x) => {
-      if (x.id !== id) return x;
+  return sanitizeCartItems(cart)
+    .map((item) => {
+      if (item.id !== id) {
+        return item;
+      }
 
-      const newQty = x.qty + delta;
+      const newQty =
+        item.qty + delta;
 
-      if (newQty <= 0) return null;
+      if (newQty <= 0) {
+        return null;
+      }
 
       return {
-        ...x,
+        ...item,
         qty: newQty,
       };
     })
-    .filter(Boolean) as CartItem[];
+    .filter(
+      Boolean,
+    ) as CartItem[];
 }
+
+/* =========================================================
+   FIJAR CANTIDAD
+   ========================================================= */
 
 export function setCartItemQty(
   cart: CartItem[],
   id: string,
-  qty: number | null
+  qty: number | null,
 ): CartItem[] {
-  return cart
-    .map((x) => {
-      if (x.id !== id) return x;
+  return sanitizeCartItems(cart)
+    .map((item) => {
+      if (item.id !== id) {
+        return item;
+      }
 
-      if (qty === null) return x;
+      if (qty === null) {
+        return item;
+      }
 
-      const safeQty = Math.floor(Number(qty) || 0);
+      const safeQty =
+        Math.floor(
+          Number(qty) || 0,
+        );
 
-      if (safeQty <= 0) return null;
+      if (safeQty <= 0) {
+        return null;
+      }
 
       return {
-        ...x,
+        ...item,
         qty: safeQty,
       };
     })
-    .filter(Boolean) as CartItem[];
+    .filter(
+      Boolean,
+    ) as CartItem[];
 }
+
+/* =========================================================
+   NOTA
+   ========================================================= */
 
 export function setCartItemNote(
   cart: CartItem[],
   id: string,
-  note: string
+  note: string,
 ): CartItem[] {
-  return cart.map((x) =>
-    x.id === id
-      ? {
-          ...x,
-          note: note ?? "",
-        }
-      : x
-  );
+  return sanitizeCartItems(cart)
+    .map(
+      (item) =>
+        item.id === id
+          ? {
+              ...item,
+              note:
+                note ?? "",
+            }
+          : item,
+    );
 }

@@ -1,115 +1,97 @@
-import{
- CheckCircle,
- AlertTriangle,
- Clock,
- XCircle
-}
-from"lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  XCircle,
+} from "lucide-react";
 
-export function
-getStockPresentation(
+import {
+  normalizeProductSheetStatus,
+} from "@/modules/catalog/domain/ProductCommercialPolicy";
 
- product:any,
- isPreventa:boolean,
+import type {
+  Product,
+} from "@/shared/types/product";
 
-){
+export function getStockPresentation(
+  product: Product,
+  legacyIsPreventa = false,
+) {
+  const status =
+    normalizeProductSheetStatus(
+      product.status,
+    );
 
- if(
- isPreventa
- ){
+  /*
+   * legacyIsPreventa se conserva temporalmente
+   * para no romper llamadas antiguas.
+   */
+  if (
+    status === "preventa" ||
+    legacyIsPreventa
+  ) {
+    return {
+      text: "Preventa",
+      icon: Clock,
+      className:
+        "bg-green-50 text-green-700",
+    };
+  }
 
- return{
+  /*
+   * Agotado es autoritativo:
+   * no se consulta la cantidad de stock.
+   */
+  if (status === "agotado") {
+    return {
+      text: "Agotado",
+      icon: XCircle,
+      className:
+        "bg-red-50 text-red-600",
+    };
+  }
 
- text:"Preventa",
- icon:Clock,
- className:
- "bg-green-50 text-green-700"
+  if (
+    !product.price_1 ||
+    product.stock == null ||
+    product.stock <= 0
+  ) {
+    return {
+      text: "No disponible",
+      icon: XCircle,
+      className:
+        "bg-slate-100 text-slate-600",
+    };
+  }
 
- };
+  if (product.stock <= 12) {
+    return {
+      text:
+        `Últimas: ${product.stock}`,
+      icon:
+        AlertTriangle,
+      className:
+        "bg-red-50 text-red-600",
+    };
+  }
 
- }
+  if (product.stock <= 36) {
+    return {
+      text:
+        "Stock limitado",
+      icon:
+        AlertTriangle,
+      className:
+        "bg-orange-50 text-orange-600",
+    };
+  }
 
- if(
- !product?.price_1
- ||
- product.stock===null
- ){
-
- return{
-
- text:"Próximo",
- icon:Clock,
- className:
- "bg-slate-100 text-slate-600"
-
- };
-
- }
-
- if(
- product.stock===0
- ){
-
- return{
-
- text:"Agotado",
- icon:XCircle,
- className:
- "bg-red-50 text-red-600"
-
- };
-
- }
-
- if(
- product.stock<=12
- ){
-
- return{
-
- text:
- `Últimas:${product.stock}`,
-
- icon:
- AlertTriangle,
-
- className:
- "bg-red-50 text-red-600"
-
- };
-
- }
-
- if(
- product.stock<=36
- ){
-
- return{
-
- text:
- "Stock limitado",
-
- icon:
- AlertTriangle,
-
- className:
- "bg-orange-50 text-orange-600"
-
- };
-
- }
-
- return{
-
- text:
- "Disponible",
-
- icon:
- CheckCircle,
-
- className:
- "bg-green-50 text-green-700"
-
- };
-
+  return {
+    text:
+      "Disponible",
+    icon:
+      CheckCircle,
+    className:
+      "bg-green-50 text-green-700",
+  };
 }

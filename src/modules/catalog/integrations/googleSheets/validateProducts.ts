@@ -1,30 +1,32 @@
-import type { SheetProduct } from "./normalizeProduct";
+import {
+  isProductPublicationDataValid,
+} from "@/modules/catalog/domain/ProductCommercialPolicy";
 
-const PUBLIC_STATUSES = new Set([
-  "",
-  "publicado",
-  "publicada",
-  "published",
-  "activo",
-  "activa",
-  "active",
-  "preventa",
-]);
+import type {
+  SheetProduct,
+} from "./normalizeProduct";
 
-function normalizeStatus(status: string | undefined) {
-  return String(status ?? "")
-    .trim()
-    .toLowerCase();
-}
-
-export function validateProducts(products: SheetProduct[]) {
-  return products.filter((product) => {
-    if (!product.id) return false;
-    if (!product.title) return false;
-    if (!product.img) return false;
-
-    const status = normalizeStatus(product.status);
-
-    return PUBLIC_STATUSES.has(status);
-  });
+/**
+ * Devuelve únicamente productos aptos para publicación pública.
+ *
+ * Estados admitidos:
+ * - preventa
+ * - publicado
+ * - agotado
+ *
+ * Estados bloqueados:
+ * - borrador
+ * - oculto
+ * - vacío
+ * - desconocido
+ *
+ * Agotado es autoritativo:
+ * la cantidad almacenada en stock no gobierna su publicación.
+ */
+export function validateProducts(
+  products: SheetProduct[],
+): SheetProduct[] {
+  return products.filter(
+    isProductPublicationDataValid,
+  );
 }

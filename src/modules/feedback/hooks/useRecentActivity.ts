@@ -1,5 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { Product } from "@/shared/types/product";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  isProductPurchasable,
+} from "@/modules/catalog/domain/ProductCommercialPolicy";
+
+import type {
+  Product,
+} from "@/shared/types/product";
 
 import {
   RECENT_ACTIVITY_ACTIONS,
@@ -8,96 +21,259 @@ import {
   RECENT_ACTIVITY_TIMING,
 } from "@/modules/feedback/config/recentActivity";
 
-import { randomDelay, randomItem, randomMinutes } from "@/shared/lib/random";
+import {
+  randomDelay,
+  randomItem,
+  randomMinutes,
+} from "@/shared/lib/random";
 
 export interface RecentActivityData {
-  name: string;
-  place: string;
-  action: string;
-  product: string;
-  time: number;
+  name:
+    string;
+
+  place:
+    string;
+
+  action:
+    string;
+
+  product:
+    string;
+
+  time:
+    number;
 }
 
-const EMPTY_ACTIVITY: RecentActivityData = {
-  name: "",
-  place: "",
-  action: "",
-  product: "",
-  time: 0,
+const EMPTY_ACTIVITY:
+  RecentActivityData = {
+  name:
+    "",
+
+  place:
+    "",
+
+  action:
+    "",
+
+  product:
+    "",
+
+  time:
+    0,
 };
 
-export function useRecentActivity(products: Product[]) {
-  const [visible, setVisible] = useState(false);
-  const [leaving, setLeaving] = useState(false);
-  const [data, setData] = useState<RecentActivityData>(EMPTY_ACTIVITY);
+export function useRecentActivity(
+  products:
+    Product[],
+) {
+  const eligibleProducts =
+    useMemo(
+      () =>
+        products.filter(
+          isProductPurchasable,
+        ),
+      [
+        products,
+      ],
+    );
 
-  const lastProductRef = useRef<string | null>(null);
-  const timersRef = useRef<number[]>([]);
+  const [
+    visible,
+    setVisible,
+  ] = useState(false);
 
-  const clearTimers = useCallback(() => {
-    timersRef.current.forEach(window.clearTimeout);
-    timersRef.current = [];
-  }, []);
+  const [
+    leaving,
+    setLeaving,
+  ] = useState(false);
 
-  const schedule = useCallback((fn: () => void, delay: number) => {
-    const id = window.setTimeout(fn, delay);
-    timersRef.current.push(id);
-  }, []);
+  const [
+    data,
+    setData,
+  ] = useState<RecentActivityData>(
+    EMPTY_ACTIVITY,
+  );
 
-  const pickProduct = useCallback(() => {
-    const available =
-      products.length > 1
-        ? products.filter((p) => p.title !== lastProductRef.current)
-        : products;
+  const lastProductRef =
+    useRef<string | null>(
+      null,
+    );
 
-    const selected = randomItem(available);
-    lastProductRef.current = selected.title;
+  const timersRef =
+    useRef<number[]>(
+      [],
+    );
 
-    return selected;
-  }, [products]);
+  const clearTimers =
+    useCallback(
+      () => {
+        timersRef.current
+          .forEach(
+            window.clearTimeout,
+          );
 
-  const show = useCallback(() => {
-    if (!products.length) return;
+        timersRef.current =
+          [];
+      },
+      [],
+    );
 
-    const selected = pickProduct();
+  const schedule =
+    useCallback(
+      (
+        fn:
+          () => void,
 
-    setData({
-      name: randomItem(RECENT_ACTIVITY_NAMES),
-      place: randomItem(RECENT_ACTIVITY_PLACES),
-      action: randomItem(RECENT_ACTIVITY_ACTIONS),
-      product: selected.title,
-      time: randomMinutes(1, 6),
-    });
+        delay:
+          number,
+      ) => {
+        const id =
+          window.setTimeout(
+            fn,
+            delay,
+          );
 
-    setLeaving(false);
-    setVisible(true);
+        timersRef.current
+          .push(id);
+      },
+      [],
+    );
 
-    schedule(() => {
-      setLeaving(true);
+  const pickProduct =
+    useCallback(
+      () => {
+        const available =
+          eligibleProducts.length >
+          1
+            ? eligibleProducts.filter(
+                (
+                  product,
+                ) =>
+                  product.title !==
+                  lastProductRef.current,
+              )
+            : eligibleProducts;
 
-      schedule(() => {
-        setVisible(false);
+        const selected =
+          randomItem(
+            available,
+          );
+
+        lastProductRef.current =
+          selected.title;
+
+        return selected;
+      },
+      [
+        eligibleProducts,
+      ],
+    );
+
+  const show =
+    useCallback(
+      () => {
+        if (
+          !eligibleProducts.length
+        ) {
+          return;
+        }
+
+        const selected =
+          pickProduct();
+
+        setData({
+          name:
+            randomItem(
+              RECENT_ACTIVITY_NAMES,
+            ),
+
+          place:
+            randomItem(
+              RECENT_ACTIVITY_PLACES,
+            ),
+
+          action:
+            randomItem(
+              RECENT_ACTIVITY_ACTIONS,
+            ),
+
+          product:
+            selected.title,
+
+          time:
+            randomMinutes(
+              1,
+              6,
+            ),
+        });
+
+        setLeaving(
+          false,
+        );
+
+        setVisible(
+          true,
+        );
 
         schedule(
-          show,
-          randomDelay(
-            RECENT_ACTIVITY_TIMING.nextMinDelay,
-            RECENT_ACTIVITY_TIMING.nextMaxExtraDelay
-          )
+          () => {
+            setLeaving(
+              true,
+            );
+
+            schedule(
+              () => {
+                setVisible(
+                  false,
+                );
+
+                schedule(
+                  show,
+                  randomDelay(
+                    RECENT_ACTIVITY_TIMING.nextMinDelay,
+                    RECENT_ACTIVITY_TIMING.nextMaxExtraDelay,
+                  ),
+                );
+              },
+              RECENT_ACTIVITY_TIMING.exitDuration,
+            );
+          },
+          RECENT_ACTIVITY_TIMING.visibleDuration,
         );
-      }, RECENT_ACTIVITY_TIMING.exitDuration);
-    }, RECENT_ACTIVITY_TIMING.visibleDuration);
-  }, [products.length, pickProduct, schedule]);
+      },
+      [
+        eligibleProducts.length,
+        pickProduct,
+        schedule,
+      ],
+    );
 
-  useEffect(() => {
-    clearTimers();
+  useEffect(
+    () => {
+      clearTimers();
 
-    if (products.length) {
-      schedule(show, RECENT_ACTIVITY_TIMING.firstDelay);
-    }
+      if (
+        eligibleProducts.length
+      ) {
+        schedule(
+          show,
+          RECENT_ACTIVITY_TIMING.firstDelay,
+        );
+      }
 
-    return clearTimers;
-  }, [products.length, show, schedule, clearTimers]);
+      return clearTimers;
+    },
+    [
+      eligibleProducts.length,
+      show,
+      schedule,
+      clearTimers,
+    ],
+  );
 
-  return { visible, leaving, data };
+  return {
+    visible,
+    leaving,
+    data,
+  };
 }

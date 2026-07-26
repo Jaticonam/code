@@ -122,7 +122,7 @@ export function ProductCard({
           </h3>
         </div>
 
-        <ProductCardPrice product={p} />
+        <ProductCardPrice product={p} isPreventa={isPreventa} />
 
         <ProductCardStock stock={p.stock} price={p.price_1} status={p.status} />
 
@@ -135,8 +135,6 @@ export function ProductCard({
         <button
           onClick={(e) => {
             e.stopPropagation();
-
-            if (isAgotado) return;
 
             if (showWhatsAppButton) {
               handleWhatsApp();
@@ -174,4 +172,5 @@ export function ProductCard({
     </div>
   );
 }
+
 

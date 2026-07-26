@@ -1,40 +1,66 @@
-import type { Product } from "@/shared/types/product";
-import { loadAllProducts } from "@/modules/catalog/services/fetchProducts";
+import type {
+  Product,
+} from "@/shared/types/product";
 
-const CACHE_KEY = "wooly_products_cache";
-const CACHE_DURATION = 10 * 1000;
+import {
+  isProductPublicationDataValid,
+} from "@/modules/catalog/domain/ProductCommercialPolicy";
+
+import {
+  loadAllProducts,
+} from "@/modules/catalog/services/fetchProducts";
+
+const CACHE_KEY =
+  "wooly_products_cache";
+
+const CACHE_DURATION =
+  10 * 1000;
 
 interface CacheEntry {
-  data: Product[];
-  timestamp: number;
-  source: "sheets" | "fallback";
+  data:
+    Product[];
+
+  timestamp:
+    number;
+
+  source:
+    "sheets" |
+    "fallback";
 }
 
-function getCached(): Product[] | null {
-  try {
-    const raw = sessionStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
+/* =========================================================
+   SANEAMIENTO
+   ========================================================= */
 
-    const entry: CacheEntry = JSON.parse(raw);
-
-    if (Date.now() - entry.timestamp > CACHE_DURATION) {
-      sessionStorage.removeItem(CACHE_KEY);
-      return null;
-    }
-
-    return entry.data;
-  } catch {
-    return null;
-  }
+function sanitizePublicProducts(
+  products:
+    Product[],
+): Product[] {
+  return products.filter(
+    isProductPublicationDataValid,
+  );
 }
 
-function setCache(data: Product[], source: CacheEntry["source"]) {
+/* =========================================================
+   CACHE
+   ========================================================= */
+
+function setCache(
+  data:
+    Product[],
+  source:
+    CacheEntry["source"],
+) {
   try {
     sessionStorage.setItem(
       CACHE_KEY,
       JSON.stringify({
-        data,
-        timestamp: Date.now(),
+        data:
+          sanitizePublicProducts(
+            data,
+          ),
+        timestamp:
+          Date.now(),
         source,
       }),
     );
@@ -43,38 +69,137 @@ function setCache(data: Product[], source: CacheEntry["source"]) {
   }
 }
 
-async function loadFallbackProducts(): Promise<Product[]> {
-  const { FALLBACK_PRODUCTS } =
-    await import("@/modules/catalog/data/fallback-products");
-
-  return FALLBACK_PRODUCTS;
-}
-
-export async function fetchProducts(): Promise<Product[]> {
-  const cached = getCached();
-  if (cached) return cached;
-
+function getCached():
+  Product[] |
+  null {
   try {
-    const products = await loadAllProducts();
+    const raw =
+      sessionStorage.getItem(
+        CACHE_KEY,
+      );
 
-    if (products?.length) {
-      setCache(products, "sheets");
-      return products;
+    if (!raw) {
+      return null;
     }
 
-    console.warn(
-      "Sheets vacío o sin productos publicados. Usando fallback local.",
+    const entry:
+      CacheEntry =
+        JSON.parse(raw);
+
+    if (
+      Date.now() -
+        entry.timestamp >
+      CACHE_DURATION
+    ) {
+      sessionStorage.removeItem(
+        CACHE_KEY,
+      );
+
+      return null;
+    }
+
+    /*
+     * Una caché creada antes de estas reglas también
+     * queda saneada al momento de ser leída.
+     */
+    const sanitized =
+      sanitizePublicProducts(
+        entry.data,
+      );
+
+    if (
+      sanitized.length !==
+      entry.data.length
+    ) {
+      setCache(
+        sanitized,
+        entry.source,
+      );
+    }
+
+    return sanitized;
+  } catch {
+    return null;
+  }
+}
+
+/* =========================================================
+   FALLBACK
+   ========================================================= */
+
+async function loadFallbackProducts():
+  Promise<Product[]> {
+  const {
+    FALLBACK_PRODUCTS,
+  } = await import(
+    "@/modules/catalog/data/fallback-products"
+  );
+
+  return sanitizePublicProducts(
+    FALLBACK_PRODUCTS,
+  );
+}
+
+/* =========================================================
+   CARGA
+   ========================================================= */
+
+export async function fetchProducts():
+  Promise<Product[]> {
+  const cached =
+    getCached();
+
+  if (cached !== null) {
+    return cached;
+  }
+
+  try {
+    const loadedProducts =
+      await loadAllProducts();
+
+    const publicProducts =
+      sanitizePublicProducts(
+        loadedProducts ?? [],
+      );
+
+    /*
+     * Un resultado vacío de Google Sheets no es un error.
+     *
+     * Puede significar que todos los productos fueron
+     * ocultados, están en borrador o fueron bloqueados
+     * correctamente por la política.
+     */
+    setCache(
+      publicProducts,
+      "sheets",
     );
 
-    const fallbackProducts = await loadFallbackProducts();
-    setCache(fallbackProducts, "fallback");
+    if (
+      publicProducts.length === 0
+    ) {
+      console.warn(
+        "Google Sheets respondió correctamente, pero no existen productos aptos para publicación.",
+      );
+    }
 
-    return fallbackProducts;
+    return publicProducts;
   } catch (error) {
-    console.error("Error cargando catálogo desde Sheets:", error);
+    /*
+     * El fallback se utiliza únicamente ante una falla
+     * técnica real de carga.
+     */
+    console.error(
+      "Error técnico cargando catálogo desde Sheets. Usando fallback validado:",
+      error,
+    );
 
-    const fallbackProducts = await loadFallbackProducts();
-    setCache(fallbackProducts, "fallback");
+    const fallbackProducts =
+      await loadFallbackProducts();
+
+    setCache(
+      fallbackProducts,
+      "fallback",
+    );
 
     return fallbackProducts;
   }
@@ -82,29 +207,78 @@ export async function fetchProducts(): Promise<Product[]> {
 
 export function clearProductsCache() {
   try {
-    sessionStorage.removeItem(CACHE_KEY);
+    sessionStorage.removeItem(
+      CACHE_KEY,
+    );
   } catch {
     // Ignorar errores de storage.
   }
 }
 
-export function getEffectivePrice(item: {
-  price_1: number;
-  price_3?: number | null;
-  price_12?: number | null;
-  price_50?: number | null;
-  price_100?: number | null;
-  qty: number;
-}): number {
-  if (item.price_100 && item.qty >= 100) return item.price_100;
-  if (item.price_50 && item.qty >= 50) return item.price_50;
-  if (item.price_12 && item.qty >= 12) return item.price_12;
-  if (item.price_3 && item.qty >= 3) return item.price_3;
+/* =========================================================
+   PRECIOS
+   ========================================================= */
+
+export function getEffectivePrice(
+  item: {
+    price_1:
+      number;
+
+    price_3?:
+      number |
+      null;
+
+    price_12?:
+      number |
+      null;
+
+    price_50?:
+      number |
+      null;
+
+    price_100?:
+      number |
+      null;
+
+    qty:
+      number;
+  },
+): number {
+  if (
+    item.price_100 &&
+    item.qty >= 100
+  ) {
+    return item.price_100;
+  }
+
+  if (
+    item.price_50 &&
+    item.qty >= 50
+  ) {
+    return item.price_50;
+  }
+
+  if (
+    item.price_12 &&
+    item.qty >= 12
+  ) {
+    return item.price_12;
+  }
+
+  if (
+    item.price_3 &&
+    item.qty >= 3
+  ) {
+    return item.price_3;
+  }
 
   return item.price_1;
 }
 
-export function getMinPrice(product: Product): number {
+export function getMinPrice(
+  product:
+    Product,
+): number {
   return (
     product.price_100 ||
     product.price_50 ||
@@ -115,10 +289,21 @@ export function getMinPrice(product: Product): number {
   );
 }
 
-export function isProductAvailable(product: Product): boolean {
-  if (!product.price_1 || product.price_1 <= 0) return false;
-  if (product.stock === 0) return false;
-  if (product.stock === null || product.stock === undefined) return false;
-
-  return true;
+/**
+ * Compatibilidad legacy.
+ *
+ * Desde ahora la disponibilidad comercial se resuelve
+ * mediante la política central, no solamente precio y stock.
+ */
+export function isProductAvailable(
+  product:
+    Product,
+): boolean {
+  return isProductPurchasable(
+    product,
+  );
 }
+
+import {
+  isProductPurchasable,
+} from "@/modules/catalog/domain/ProductCommercialPolicy";

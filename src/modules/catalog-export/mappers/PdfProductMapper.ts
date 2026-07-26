@@ -1,8 +1,23 @@
-import type { Product } from "@/shared/types/product";
-import { PDF_IMAGE_MANIFEST } from "../data/PdfImageManifest";
-import type { PdfProduct } from "../types/PdfProduct";
+import {
+  isProductPublicationDataValid,
+  resolveProductCommercialPolicy,
+} from "@/modules/catalog/domain/ProductCommercialPolicy";
 
-export const PDF_PRODUCT_PLACEHOLDER_IMAGE = `data:image/svg+xml;utf8,${encodeURIComponent(`
+import type {
+  Product,
+} from "@/shared/types/product";
+
+import {
+  PDF_IMAGE_MANIFEST,
+} from "../data/PdfImageManifest";
+
+import type {
+  PdfProduct,
+  PdfProductPresentation,
+} from "../types/PdfProduct";
+
+export const PDF_PRODUCT_PLACEHOLDER_IMAGE =
+  `data:image/svg+xml;utf8,${encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
   <rect width="600" height="600" rx="48" fill="#f8fafc"/>
   <rect x="110" y="145" width="380" height="270" rx="28" fill="#e2e8f0"/>
@@ -14,86 +29,266 @@ export const PDF_PRODUCT_PLACEHOLDER_IMAGE = `data:image/svg+xml;utf8,${encodeUR
 </svg>
 `)}`;
 
-const PDF_DESCRIPTION_MAX_LENGTH = 190;
+const PDF_DESCRIPTION_MAX_LENGTH =
+  190;
 
-const cleanText = (value?: string | null, fallback = "") =>
-  String(value || fallback).replace(/\s+/g, " ").trim();
+const cleanText = (
+  value?:
+    string |
+    null,
+  fallback = "",
+) =>
+  String(
+    value ||
+    fallback,
+  )
+    .replace(
+      /\s+/g,
+      " ",
+    )
+    .trim();
 
-const normalizeStatus = (status?: string) => cleanText(status).toLowerCase();
+const getMainImage = (
+  product:
+    Product,
+) => {
+  const productId =
+    cleanText(
+      product.id,
+    );
 
-const isHiddenProduct = (product: Product) =>
-  normalizeStatus(product.status) === "oculto";
+  const optimizedPdfImage =
+    cleanText(
+      PDF_IMAGE_MANIFEST[
+        productId
+      ],
+    );
 
-const getMainImage = (product: Product) => {
-  const productId = cleanText(product.id);
-  const optimizedPdfImage = cleanText(PDF_IMAGE_MANIFEST[productId]);
-  const catalogImage = cleanText(product.img);
+  const catalogImage =
+    cleanText(
+      product.img,
+    );
 
-  return optimizedPdfImage || catalogImage || PDF_PRODUCT_PLACEHOLDER_IMAGE;
+  return (
+    optimizedPdfImage ||
+    catalogImage ||
+    PDF_PRODUCT_PLACEHOLDER_IMAGE
+  );
 };
 
-const getPrimaryPrice = (product: Product) => {
-  const offerPrice = Number(product.price_offer || 0);
-  const basePrice = Number(product.price_1 || 0);
-
-  return offerPrice > 0 ? offerPrice : basePrice;
-};
-
-const getStockLabel = (product: Product) => {
-  const status = normalizeStatus(product.status);
-
-  if (status === "agotado") {
-    return "Agotado";
-  }
-
-  if (typeof product.stock !== "number") {
-    return "Consultar stock";
-  }
-
-  if (product.stock <= 0) {
-    return "Consultar stock";
-  }
-
-  return `Stock: ${product.stock} und.`;
-};
-
-const getShortDescription = (product: Product) => {
-  const description = cleanText(product.description);
+const getShortDescription = (
+  product:
+    Product,
+) => {
+  const description =
+    cleanText(
+      product.description,
+    );
 
   if (!description) {
     return "";
   }
 
-  if (description.length <= PDF_DESCRIPTION_MAX_LENGTH) {
+  if (
+    description.length <=
+    PDF_DESCRIPTION_MAX_LENGTH
+  ) {
     return description;
   }
 
-  return `${description.slice(0, PDF_DESCRIPTION_MAX_LENGTH - 3).trim()}...`;
+  return `${description
+    .slice(
+      0,
+      PDF_DESCRIPTION_MAX_LENGTH -
+        3,
+    )
+    .trim()}...`;
 };
 
-export const mapProductToPdfProduct = (product: Product): PdfProduct => ({
-  id: cleanText(product.id),
-  title: cleanText(product.title, "Producto Wooly"),
-  description: getShortDescription(product),
-  category: cleanText(product.category, "Sin categoría"),
-  image: getMainImage(product),
+const getPresentation = (
+  status:
+    string,
+): PdfProductPresentation => {
+  if (
+    status === "preventa"
+  ) {
+    return "preventa";
+  }
 
-  price1: Number(product.price_1 || 0),
-  price3: product.price_3,
-  price12: product.price_12,
-  price50: product.price_50,
-  price100: product.price_100,
-  offerPrice: product.price_offer,
+  if (
+    status === "agotado"
+  ) {
+    return "agotado";
+  }
 
-  primaryPrice: getPrimaryPrice(product),
-  stock: product.stock,
-  stockLabel: getStockLabel(product),
+  return "published";
+};
 
-  status: product.status,
-  priority: Number(product.priority || 0),
-});
+const getPrimaryPrice = (
+  product:
+    Product,
+  showPricing:
+    boolean,
+): number => {
+  if (!showPricing) {
+    return 0;
+  }
 
-export const mapProductsToPdfProducts = (products: Product[]) =>
+  const offerPrice =
+    Number(
+      product.price_offer ||
+      0,
+    );
+
+  const basePrice =
+    Number(
+      product.price_1 ||
+      0,
+    );
+
+  return offerPrice > 0
+    ? offerPrice
+    : basePrice;
+};
+
+export const mapProductToPdfProduct = (
+  product:
+    Product,
+): PdfProduct => {
+  const policy =
+    resolveProductCommercialPolicy(
+      product,
+    );
+
+  const status =
+    policy.status === "invalid"
+      ? ""
+      : policy.status;
+
+  const isPreventa =
+    status === "preventa";
+
+  const isAgotado =
+    status === "agotado";
+
+  const showWholesalePricing =
+    policy.isPurchasable;
+
+  return {
+    id:
+      cleanText(
+        product.id,
+      ),
+
+    title:
+      cleanText(
+        product.title,
+        "Producto Wooly",
+      ),
+
+    description:
+      getShortDescription(
+        product,
+      ),
+
+    category:
+      cleanText(
+        product.category,
+        "Sin categoría",
+      ),
+
+    image:
+      getMainImage(
+        product,
+      ),
+
+    /*
+     * Los datos confidenciales de preventa se neutralizan
+     * en el DTO. No basta con esconderlos mediante CSS.
+     */
+    price1:
+      policy.canShowPricing
+        ? Number(
+            product.price_1 ||
+            0,
+          )
+        : 0,
+
+    price3:
+      showWholesalePricing
+        ? product.price_3
+        : null,
+
+    price12:
+      showWholesalePricing
+        ? product.price_12
+        : null,
+
+    price50:
+      showWholesalePricing
+        ? product.price_50
+        : null,
+
+    price100:
+      showWholesalePricing
+        ? product.price_100
+        : null,
+
+    offerPrice:
+      policy.canShowPricing
+        ? product.price_offer
+        : null,
+
+    primaryPrice:
+      getPrimaryPrice(
+        product,
+        policy.canShowPricing,
+      ),
+
+    stock:
+      policy.canShowInventoryQuantity
+        ? product.stock
+        : null,
+
+    stockLabel:
+      isPreventa
+        ? "Preventa · Consultar"
+        : isAgotado
+          ? "Agotado"
+          : typeof product.stock ===
+                "number"
+            ? `Stock: ${product.stock} und.`
+            : "Disponible",
+
+    presentation:
+      getPresentation(
+        status,
+      ),
+
+    showPricing:
+      policy.canShowPricing,
+
+    showWholesalePricing,
+
+    status:
+      status || undefined,
+
+    priority:
+      Number(
+        product.priority ||
+        0,
+      ),
+  };
+};
+
+export const mapProductsToPdfProducts = (
+  products:
+    Product[],
+): PdfProduct[] =>
   products
-    .filter((product) => !isHiddenProduct(product))
-    .map(mapProductToPdfProduct);
+    .filter(
+      isProductPublicationDataValid,
+    )
+    .map(
+      mapProductToPdfProduct,
+    );

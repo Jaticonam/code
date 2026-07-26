@@ -68,6 +68,7 @@ const createProduct = (
   description: "Descripción",
   category: "flores",
   price_1: 10,
+  stock: 20,
   img: "https://example.com/producto.jpg",
   status: "publicado",
   campaigns: [],
