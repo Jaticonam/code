@@ -26,7 +26,8 @@ import {
 
 import {
   getNextVolumePrice,
-} from "@/modules/catalog/domain/volumePricing";
+  getVolumeUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 import {
   useProducts,
@@ -38,7 +39,6 @@ import type {
 
 import {
   getStockPresentation,
-  getUnitPrice,
 } from "@/shared/lib/product";
 
 import {
@@ -476,9 +476,9 @@ const ProductDetailPage =
   const unitPrice =
     product &&
     canShowPricing
-      ? getUnitPrice(
-          pricingQty,
+      ? getVolumeUnitPrice(
           product,
+          pricingQty,
         )
       : 0;
 
@@ -678,9 +678,9 @@ const ProductDetailPage =
         );
 
         const nextUnitPrice =
-          getUnitPrice(
-            cleanQty,
+          getVolumeUnitPrice(
             product,
+            cleanQty,
           );
 
         const nextVolumePriceQty =

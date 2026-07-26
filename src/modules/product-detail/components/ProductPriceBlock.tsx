@@ -1,3 +1,7 @@
+import type {
+  NextVolumePrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
 interface ProductPriceBlockProps {
   unitPrice: number;
   total: number;
@@ -6,10 +10,7 @@ interface ProductPriceBlockProps {
   showUnlock: boolean;
   savingsByQty: number;
   basePrice: number;
-  nextVolumePrice: {
-    qty: number;
-    unitPrice: number;
-  } | null;
+  nextVolumePrice: NextVolumePrice | null;
   isQtyInputValid: boolean;
 }
 

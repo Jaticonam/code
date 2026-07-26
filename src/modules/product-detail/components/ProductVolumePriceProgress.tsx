@@ -5,14 +5,14 @@ import type {
 import {
   getAvailableVolumePrices,
 } from "@/shared/domain/volumePricing/VolumePricing";
+import type {
+  NextVolumePrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 interface ProductVolumePriceProgressProps {
   product: Product;
   effectiveQty: number;
-  nextVolumePrice: {
-    qty: number;
-    unitPrice: number;
-  } | null;
+  nextVolumePrice: NextVolumePrice | null;
 }
 
 export function ProductVolumePriceProgress({
