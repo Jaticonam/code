@@ -1,4 +1,10 @@
-import type { Product } from "@/shared/types/product";
+import type {
+  Product,
+} from "@/shared/types/product";
+
+import {
+  getAvailableVolumePrices,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 interface ProductVolumePriceProgressProps {
   product: Product;
@@ -14,67 +20,116 @@ export function ProductVolumePriceProgress({
   effectiveQty,
   nextVolumePrice,
 }: ProductVolumePriceProgressProps) {
-  const tiers = [
-    { qty: 1, price: product.price_1 },
-    { qty: 3, price: product.price_3 },
-    { qty: 12, price: product.price_12 },
-    { qty: 50, price: product.price_50 },
-    { qty: 100, price: product.price_100 },
-  ].filter(
-    (tier): tier is { qty: number; price: number } =>
-      typeof tier.price === "number" &&
-      Number.isFinite(tier.price) &&
-      tier.price > 0,
-  );
+  const volumePrices =
+    getAvailableVolumePrices(
+      product,
+    );
 
-  const bestTarget = tiers.at(-1)?.qty ?? 1;
-  const activeTiers = tiers.map((tier) => tier.qty);
+  const bestTarget =
+    volumePrices.at(-1)?.qty ??
+    1;
 
-  const currentTierIndex = activeTiers.reduce(
-    (activeIndex, tierQty, index) =>
-      effectiveQty >= tierQty ? index : activeIndex,
-    0,
-  );
+  const availableQuantities =
+    volumePrices.map(
+      (volumePrice) =>
+        volumePrice.qty,
+    );
 
-  const nextVolumePriceIndex = activeTiers.findIndex(
-    (tierQty) => effectiveQty < tierQty,
-  );
+  const currentVolumePriceIndex =
+    availableQuantities.reduce(
+      (
+        activeIndex,
+        volumePriceQty,
+        index,
+      ) =>
+        effectiveQty >=
+        volumePriceQty
+          ? index
+          : activeIndex,
+      0,
+    );
+
+  const nextVolumePriceIndex =
+    availableQuantities.findIndex(
+      (volumePriceQty) =>
+        effectiveQty <
+        volumePriceQty,
+    );
 
   const nextIndex =
     nextVolumePriceIndex === -1
-      ? activeTiers.length - 1
+      ? availableQuantities.length -
+        1
       : nextVolumePriceIndex;
 
-  const previousQty = activeTiers[currentTierIndex] ?? 1;
-  const nextQty = activeTiers[nextIndex] ?? previousQty;
+  const previousQty =
+    availableQuantities[
+      currentVolumePriceIndex
+    ] ?? 1;
+
+  const nextQty =
+    availableQuantities[
+      nextIndex
+    ] ?? previousQty;
 
   const segmentBase =
-    activeTiers.length > 1
-      ? 100 / (activeTiers.length - 1)
+    availableQuantities.length > 1
+      ? 100 /
+        (
+          availableQuantities.length -
+          1
+        )
       : 100;
 
   const segmentProgress =
     nextQty > previousQty
-      ? ((effectiveQty - previousQty) /
-          (nextQty - previousQty)) *
-        segmentBase
+      ? (
+          (
+            effectiveQty -
+            previousQty
+          ) /
+          (
+            nextQty -
+            previousQty
+          )
+        ) * segmentBase
       : 0;
 
-  const rawProgress = Math.min(
-    currentTierIndex * segmentBase + segmentProgress,
-    100,
-  );
+  const rawProgress =
+    Math.min(
+      currentVolumePriceIndex *
+        segmentBase +
+        segmentProgress,
+      100,
+    );
 
   const progress =
     effectiveQty > 0
-      ? Math.max(rawProgress, 10)
+      ? Math.max(
+          rawProgress,
+          10,
+        )
       : 0;
 
-  const unlocked = effectiveQty >= bestTarget;
-  const targetQty = nextVolumePrice?.qty ?? bestTarget;
-  const missingQty = Math.max(targetQty - effectiveQty, 0);
+  const unlocked =
+    effectiveQty >= bestTarget;
 
-  if (tiers.length <= 1) return null;
+  const targetQty =
+    nextVolumePrice?.qty ??
+    bestTarget;
+
+  const missingQty =
+    Math.max(
+      targetQty -
+        effectiveQty,
+      0,
+    );
+
+  if (
+    volumePrices.length <= 1
+  ) {
+    return null;
+  }
 
   return (
     <div className="mt-1">
@@ -86,7 +141,8 @@ export function ProductVolumePriceProgress({
               : "text-orange-500"
           }
         >
-          {effectiveQty}/{bestTarget}
+          {effectiveQty}/
+          {bestTarget}
         </span>
       </div>
 
@@ -98,13 +154,19 @@ export function ProductVolumePriceProgress({
               ? "bg-gradient-to-r from-emerald-500 to-green-600"
               : "bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-500",
           ].join(" ")}
-          style={{ width: `${progress}%` }}
+          style={{
+            width:
+              `${progress}%`,
+          }}
         />
       </div>
 
       <p className="mt-2 text-center text-[14px] font-bold leading-snug text-slate-600">
         {unlocked ? (
-          <>🎉 Mejor precio desbloqueado</>
+          <>
+            🎉 Mejor precio
+            desbloqueado
+          </>
         ) : nextVolumePrice ? (
           <>
             🚀 Agrega{" "}
@@ -113,17 +175,20 @@ export function ProductVolumePriceProgress({
             </span>{" "}
             más y baja a{" "}
             <span className="text-[#1d8299]">
-              S/{nextVolumePrice.unitPrice.toFixed(2)}
+              S/
+              {nextVolumePrice
+                .unitPrice
+                .toFixed(2)}
             </span>{" "}
             c/u
           </>
         ) : (
-          <>✅ Ya tienes el mejor precio disponible</>
+          <>
+            ✅ Ya tienes el mejor
+            precio disponible
+          </>
         )}
       </p>
     </div>
   );
 }
-
-
-

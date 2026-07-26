@@ -1,21 +1,52 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Trash2, Zap } from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-import type { CartItem } from "@/modules/cart/types";
-import { getEffectivePrice } from "@/modules/catalog/utils/products";
-import { getActiveTierQty } from "@/modules/cart/utils/getActiveTierQty";
-import { getTierUnlockMessage } from "@/modules/cart/utils/getTierUnlockMessage";
+import {
+  Trash2,
+} from "lucide-react";
 
-import { CartVolumePriceSelector } from "@/modules/cart/components/CartVolumePriceSelector";
-import { CartQtyControls } from "@/modules/cart/components/CartQtyControls";
-import { CartNoteTextarea } from "@/modules/cart/components/CartNoteTextarea";
+import type {
+  CartItem,
+} from "@/modules/cart/types";
+
+import {
+  getEffectivePrice,
+} from "@/modules/catalog/utils/products";
+
+import {
+  getActiveVolumePriceQty,
+} from "@/shared/domain/volumePricing/VolumePricing";
+
+import {
+  CartVolumePriceSelector,
+} from "@/modules/cart/components/CartVolumePriceSelector";
+
+import {
+  CartQtyControls,
+} from "@/modules/cart/components/CartQtyControls";
+
+import {
+  CartNoteTextarea,
+} from "@/modules/cart/components/CartNoteTextarea";
 
 interface CartRowProps {
   item: CartItem;
   onRemove: (id: string) => void;
-  onChangeQty: (id: string, delta: number) => void;
-  onSetQty: (id: string, qty: number | null) => void;
-  onChangeNote: (id: string, note: string) => void;
+  onChangeQty: (
+    id: string,
+    delta: number,
+  ) => void;
+  onSetQty: (
+    id: string,
+    qty: number | null,
+  ) => void;
+  onChangeNote: (
+    id: string,
+    note: string,
+  ) => void;
 }
 
 export function CartRow({
@@ -25,93 +56,202 @@ export function CartRow({
   onSetQty,
   onChangeNote,
 }: CartRowProps) {
-  const activePrice = getEffectivePrice(item);
-  const subtotal = activePrice * item.qty;
-  const activeTierQty = getActiveTierQty(item);
-  
-  const prevQtyRef = useRef(item.qty);
-  const prevPriceRef = useRef(activePrice);
-  const prevTierRef = useRef(activeTierQty);
+  const activePrice =
+    getEffectivePrice(item);
 
-  const [qtyPulse, setQtyPulse] = useState(false);
-  const [pricePulse, setPricePulse] = useState(false);
-  const [tierFlash, setTierFlash] = useState(false);
+  const subtotal =
+    activePrice * item.qty;
 
-  useEffect(() => {
-    if (prevQtyRef.current !== item.qty) {
+  const activeVolumePriceQty =
+    getActiveVolumePriceQty(
+      item,
+      item.qty,
+    );
+
+  const previousQtyRef =
+    useRef(item.qty);
+
+  const previousPriceRef =
+    useRef(activePrice);
+
+  const previousVolumePriceQtyRef =
+    useRef(activeVolumePriceQty);
+
+  const [
+    qtyPulse,
+    setQtyPulse,
+  ] = useState(false);
+
+  const [
+    pricePulse,
+    setPricePulse,
+  ] = useState(false);
+
+  const [
+    volumePriceFlash,
+    setVolumePriceFlash,
+  ] = useState(false);
+
+  useEffect(
+    () => {
+      if (
+        previousQtyRef.current ===
+        item.qty
+      ) {
+        return;
+      }
+
       setQtyPulse(true);
 
-      const timer = setTimeout(() => setQtyPulse(false), 220);
+      const timer =
+        window.setTimeout(
+          () =>
+            setQtyPulse(false),
+          220,
+        );
 
-      prevQtyRef.current = item.qty;
+      previousQtyRef.current =
+        item.qty;
 
-      return () => clearTimeout(timer);
-    }
-  }, [item.qty]);
+      return () =>
+        window.clearTimeout(
+          timer,
+        );
+    },
+    [item.qty],
+  );
 
-  useEffect(() => {
-    if (prevPriceRef.current !== activePrice) {
+  useEffect(
+    () => {
+      if (
+        previousPriceRef.current ===
+        activePrice
+      ) {
+        return;
+      }
+
       setPricePulse(true);
 
-      const timer = setTimeout(() => setPricePulse(false), 280);
+      const timer =
+        window.setTimeout(
+          () =>
+            setPricePulse(false),
+          280,
+        );
 
-      prevPriceRef.current = activePrice;
+      previousPriceRef.current =
+        activePrice;
 
-      return () => clearTimeout(timer);
-    }
-  }, [activePrice]);
+      return () =>
+        window.clearTimeout(
+          timer,
+        );
+    },
+    [activePrice],
+  );
 
-  useEffect(() => {
-    if (prevTierRef.current !== activeTierQty) {
-      setTierFlash(true);
+  useEffect(
+    () => {
+      if (
+        previousVolumePriceQtyRef
+          .current ===
+        activeVolumePriceQty
+      ) {
+        return;
+      }
 
-      const timer = setTimeout(() => setTierFlash(false), 1500);
+      setVolumePriceFlash(true);
 
-      prevTierRef.current = activeTierQty;
+      const timer =
+        window.setTimeout(
+          () =>
+            setVolumePriceFlash(false),
+          1500,
+        );
 
-      return () => clearTimeout(timer);
-    }
-  }, [activeTierQty]);
+      previousVolumePriceQtyRef
+        .current =
+        activeVolumePriceQty;
+
+      return () =>
+        window.clearTimeout(
+          timer,
+        );
+    },
+    [activeVolumePriceQty],
+  );
 
   return (
-    <div className={`cart-item-card ${qtyPulse ? "scale-[1.01]" : ""}`}>
+    <div
+      className={[
+        "cart-item-card",
+        qtyPulse
+          ? "scale-[1.01]"
+          : "",
+        volumePriceFlash
+          ? "ring-2 ring-[#1d8299]/20"
+          : "",
+      ].join(" ")}
+    >
       <div className="flex gap-4">
         <div className="cart-product-img">
           <img
             src={item.img}
             alt={item.title}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
 
-        <div className="flex-grow text-left min-w-0">
-          <div className="flex justify-between items-start gap-3">
+        <div className="min-w-0 flex-grow text-left">
+          <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="text-[13px] font-extrabold text-[#0f172a] leading-tight tracking-tight capitalize">
+              <h4 className="text-[13px] font-extrabold capitalize leading-tight tracking-tight text-[#0f172a]">
                 {item.title}
               </h4>
 
-              <p className="text-[10px] font-bold text-[#94a3b8] mt-1 uppercase tracking-wide">
+              <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-[#94a3b8]">
                 {item.id}
               </p>
             </div>
 
             <button
-              onClick={() => onRemove(item.id)}
-              className="text-[#cbd5e1] hover:text-[#ef4444] transition-colors flex-shrink-0"
+              type="button"
+              onClick={() =>
+                onRemove(item.id)
+              }
+              className="flex-shrink-0 text-[#cbd5e1] transition-colors hover:text-[#ef4444]"
+              aria-label={`Eliminar ${item.title}`}
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="h-4 w-4" />
             </button>
           </div>
 
           <div className="mt-2 flex items-end justify-between gap-3">
-            <div className={`text-[12px] font-black tracking-tight ${pricePulse?"text-[#1d8299]":"text-[#64748b]"}`}>
-              {item.qty}u  × S/ {activePrice.toFixed(2)} c/u
+            <div
+              className={[
+                "text-[12px] font-black tracking-tight",
+                pricePulse
+                  ? "text-[#1d8299]"
+                  : "text-[#64748b]",
+              ].join(" ")}
+            >
+              {item.qty}u × S/{" "}
+              {activePrice.toFixed(2)} c/u
             </div>
 
             <div className="flex items-baseline gap-1">
-              <span className="text-[10px] font-black text-[#94a3b8]">S/</span>
-              <span className={`text-2xl font-black tracking-tighter transition-all duration-300 ${pricePulse?"scale-105 text-[#1d8299]":"text-[#0f172a]"}`}>
+              <span className="text-[10px] font-black text-[#94a3b8]">
+                S/
+              </span>
+
+              <span
+                className={[
+                  "text-2xl font-black tracking-tighter transition-all duration-300",
+                  pricePulse
+                    ? "scale-105 text-[#1d8299]"
+                    : "text-[#0f172a]",
+                ].join(" ")}
+              >
                 {subtotal.toFixed(2)}
               </span>
             </div>
@@ -120,7 +260,10 @@ export function CartRow({
       </div>
 
       <div className="flex items-center gap-2">
-        <CartVolumePriceSelector item={item} onSetQty={onSetQty} />
+        <CartVolumePriceSelector
+          item={item}
+          onSetQty={onSetQty}
+        />
 
         <CartQtyControls
           item={item}
@@ -130,8 +273,10 @@ export function CartRow({
         />
       </div>
 
-      <CartNoteTextarea item={item} onChangeNote={onChangeNote} />
+      <CartNoteTextarea
+        item={item}
+        onChangeNote={onChangeNote}
+      />
     </div>
   );
 }
-
