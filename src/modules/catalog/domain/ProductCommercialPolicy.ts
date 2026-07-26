@@ -1,3 +1,8 @@
+import {
+  resolveProductCommercialState,
+  type CommercialIssue,
+} from "@/shared/domain/commercialPolicy";
+
 /* =========================================================
    CONTRATO MÍNIMO DE POLÍTICA
    ========================================================= */
@@ -16,6 +21,7 @@ export interface ProductCommercialPolicyInput {
   img?: string | null;
 
   price_1?: number | null;
+  price_offer?: number | null;
   stock?: number | null;
 
   status?: string | null;
@@ -45,27 +51,12 @@ const PRODUCT_SHEET_STATUS_SET =
     PRODUCT_SHEET_STATUSES,
   );
 
-const PUBLIC_PRODUCT_STATUS_SET =
-  new Set<ProductSheetStatus>([
-    "preventa",
-    "publicado",
-    "agotado",
-  ]);
-
 /* =========================================================
    DIAGNÓSTICO
    ========================================================= */
 
 export type ProductCommercialIssue =
-  | "invalid-status"
-  | "non-public-status"
-  | "missing-id"
-  | "missing-title"
-  | "missing-image"
-  | "missing-description"
-  | "invalid-base-price"
-  | "invalid-stock"
-  | "stock-status-mismatch";
+  CommercialIssue;
 
 export interface ProductCommercialPolicy {
   status:
@@ -111,26 +102,6 @@ function cleanText(
   ).trim();
 }
 
-function isPositiveFiniteNumber(
-  value: unknown,
-): value is number {
-  return (
-    typeof value === "number" &&
-    Number.isFinite(value) &&
-    value > 0
-  );
-}
-
-function isFiniteStock(
-  value: unknown,
-): value is number {
-  return (
-    typeof value === "number" &&
-    Number.isFinite(value) &&
-    value >= 0
-  );
-}
-
 export function normalizeProductSheetStatus(
   value: unknown,
 ): ResolvedProductSheetStatus {
@@ -161,40 +132,30 @@ export function resolveProductCommercialPolicy(
       product.status,
     );
 
+  const commercialState =
+    resolveProductCommercialState(
+      product,
+    );
+
   const issues:
-    ProductCommercialIssue[] = [];
+    ProductCommercialIssue[] = [
+      ...commercialState.issues,
+    ];
 
-  if (status === "invalid") {
-    issues.push(
-      "invalid-status",
-    );
+  /*
+   * La fachada legacy conserva las validaciones editoriales
+   * de publicación. El dominio canónico deliberadamente solo
+   * recibe datos comerciales mínimos.
+   */
+  const isPublished =
+    commercialState.publication ===
+    "PUBLISHED";
 
+  if (!isPublished) {
     return {
       status,
-      isStatusValid: false,
-      isPubliclyVisible: false,
-      hasValidPublicationData: false,
-      isPurchasable: false,
-      isConsultOnly: false,
-      canShowPricing: false,
-      canShowInventoryQuantity: false,
-      canExportToTransactionalChannel:
-        false,
-      issues,
-    };
-  }
-
-  if (
-    !PUBLIC_PRODUCT_STATUS_SET
-      .has(status)
-  ) {
-    issues.push(
-      "non-public-status",
-    );
-
-    return {
-      status,
-      isStatusValid: true,
+      isStatusValid:
+        status !== "invalid",
       isPubliclyVisible: false,
       hasValidPublicationData: false,
       isPurchasable: false,
@@ -225,35 +186,6 @@ export function resolveProductCommercialPolicy(
     );
   }
 
-  const hasPublicPresentation =
-    !issues.includes(
-      "missing-id",
-    ) &&
-    !issues.includes(
-      "missing-title",
-    ) &&
-    !issues.includes(
-      "missing-image",
-    );
-
-  const hasValidBasePrice =
-    isPositiveFiniteNumber(
-      product.price_1,
-    );
-
-  const hasValidStock =
-    isFiniteStock(
-      product.stock,
-    );
-
-  const hasAvailableStock =
-    hasValidStock &&
-    product.stock > 0;
-
-  /* ---------------------------------------------------------
-     PREVENTA
-     --------------------------------------------------------- */
-
   if (
     status === "preventa" &&
     !cleanText(
@@ -265,88 +197,39 @@ export function resolveProductCommercialPolicy(
     );
   }
 
-  /* ---------------------------------------------------------
-     PUBLICADO
-     --------------------------------------------------------- */
-
-  if (
-    status === "publicado" &&
-    !hasValidBasePrice
-  ) {
-    issues.push(
-      "invalid-base-price",
-    );
-  }
-
-  if (
-    status === "publicado" &&
-    !hasValidStock
-  ) {
-    issues.push(
-      "invalid-stock",
-    );
-  }
-
-  if (
-    status === "publicado" &&
-    hasValidStock &&
-    !hasAvailableStock
-  ) {
-    issues.push(
-      "stock-status-mismatch",
-    );
-  }
-
-  /* ---------------------------------------------------------
-     AGOTADO
-     ---------------------------------------------------------
-
-     El estado agotado prevalece sobre la cantidad registrada.
-     Solamente necesita precio válido para su presentación.
-     --------------------------------------------------------- */
-
-  if (
-    status === "agotado" &&
-    !hasValidBasePrice
-  ) {
-    issues.push(
-      "invalid-base-price",
-    );
-  }
-
   const hasValidPublicationData =
-    hasPublicPresentation &&
     issues.length === 0;
 
-  /*
-   * Visible significa realmente apto para publicación.
-   * Ya no basta con tener un estado aparentemente público.
-   */
   const isPubliclyVisible =
+    commercialState
+      .isPubliclyVisible &&
     hasValidPublicationData;
 
   const isPurchasable =
-    status === "publicado" &&
-    hasValidPublicationData &&
-    hasValidBasePrice &&
-    hasAvailableStock;
+    commercialState
+      .isPurchasable &&
+    hasValidPublicationData;
 
   const isConsultOnly =
     hasValidPublicationData &&
     (
-      status === "preventa" ||
-      status === "agotado"
+      commercialState
+        .purchaseMode ===
+        "PREORDER" ||
+      commercialState
+        .purchaseMode ===
+        "WHATSAPP"
     );
 
   const canShowPricing =
-    hasValidPublicationData &&
-    status !== "preventa" &&
-    hasValidBasePrice;
+    commercialState
+      .canShowPricing &&
+    hasValidPublicationData;
 
   const canShowInventoryQuantity =
-    hasValidPublicationData &&
-    status === "publicado" &&
-    hasValidStock;
+    commercialState
+      .canShowInventoryQuantity &&
+    hasValidPublicationData;
 
   return {
     status,

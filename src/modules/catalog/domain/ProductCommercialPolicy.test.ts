@@ -13,6 +13,10 @@ import {
   resolveProductCommercialPolicy,
 } from "./ProductCommercialPolicy";
 
+import {
+  resolveProductCommercialState,
+} from "@/shared/domain/commercialPolicy";
+
 function createProduct(
   overrides: Partial<Product> = {},
 ): Product {
@@ -242,6 +246,134 @@ describe(
         expect(
           policy.isPurchasable,
         ).toBe(false);
+      },
+    );
+
+    it.each([
+      ["publicado válido", {}],
+      ["publicado stock 0", { stock: 0 }],
+      ["publicado stock negativo", { stock: -1 }],
+      ["publicado stock null", { stock: null }],
+      [
+        "publicado stock NaN",
+        { stock: Number.NaN },
+      ],
+      [
+        "publicado stock Infinity",
+        {
+          stock:
+            Number.POSITIVE_INFINITY,
+        },
+      ],
+      [
+        "publicado sin precio",
+        { price_1: 0 },
+      ],
+      [
+        "publicado con oferta válida",
+        { price_offer: 8 },
+      ],
+      [
+        "publicado con oferta inválida",
+        { price_offer: 12 },
+      ],
+      [
+        "preventa sin precio",
+        {
+          status: "preventa",
+          price_1: 0,
+        },
+      ],
+      [
+        "preventa con stock null",
+        {
+          status: "preventa",
+          stock: null,
+        },
+      ],
+      [
+        "agotado con precio",
+        { status: "agotado" },
+      ],
+      [
+        "agotado con stock positivo",
+        {
+          status: "agotado",
+          stock: 25,
+        },
+      ],
+      [
+        "agotado sin precio",
+        {
+          status: "agotado",
+          price_1: 0,
+        },
+      ],
+      ["oculto", { status: "oculto" }],
+      [
+        "borrador",
+        { status: "borrador" },
+      ],
+      [
+        "estado ausente",
+        { status: undefined },
+      ],
+      [
+        "estado desconocido",
+        { status: "pendiente" },
+      ],
+    ])(
+      "mantiene paridad canónica para %s",
+      (_label, overrides) => {
+        const product =
+          createProduct(
+            overrides,
+          );
+
+        const legacy =
+          resolveProductCommercialPolicy(
+            product,
+          );
+
+        const canonical =
+          resolveProductCommercialState(
+            product,
+          );
+
+        expect(
+          legacy.isPubliclyVisible,
+        ).toBe(
+          canonical
+            .isPubliclyVisible,
+        );
+
+        expect(
+          legacy.isPurchasable,
+        ).toBe(
+          canonical
+            .isPurchasable,
+        );
+
+        expect(
+          legacy.canShowPricing,
+        ).toBe(
+          canonical
+            .canShowPricing,
+        );
+
+        expect(
+          legacy
+            .canShowInventoryQuantity,
+        ).toBe(
+          canonical
+            .canShowInventoryQuantity,
+        );
+
+        expect(
+          legacy.issues,
+        ).toEqual(
+          canonical.issues,
+        );
       },
     );
   },
