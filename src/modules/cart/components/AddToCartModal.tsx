@@ -5,7 +5,7 @@ import type { Product } from "@/shared/types/product";
 
 import {
   getNextVolumePrice,
-} from "@/modules/catalog/domain/volumePricing";
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 import { AddToCartModalHeader } from "@/modules/cart/components/AddToCartModalHeader";
 import { AddToCartModalInfo } from "@/modules/cart/components/AddToCartModalInfo";

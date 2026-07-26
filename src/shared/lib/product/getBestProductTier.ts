@@ -2,7 +2,7 @@ import type { Product } from "@/shared/types/product";
 
 import {
   getBestVolumePrice,
-} from "@/modules/catalog/domain/volumePricing";
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 /**
  * Compatibilidad temporal.

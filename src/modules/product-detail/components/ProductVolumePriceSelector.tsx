@@ -1,5 +1,5 @@
 import type { Product } from "@/shared/types/product";
-import { VOLUME_PRICES } from "@/modules/catalog/domain/volumePricing";
+import { VOLUME_PRICES } from "@/shared/domain/volumePricing/VolumePricing";
 
 interface ProductVolumePriceSelectorProps {
   product: Product;

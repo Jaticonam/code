@@ -1,5 +1,5 @@
 import type { CartItem } from "@/modules/cart/types";
-import { VOLUME_PRICES } from "@/modules/catalog/domain/volumePricing";
+import { VOLUME_PRICES } from "@/shared/domain/volumePricing/VolumePricing";
 
 interface CartVolumePriceSelectorProps {
   item: CartItem;

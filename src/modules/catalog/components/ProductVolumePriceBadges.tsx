@@ -1,7 +1,7 @@
 import type { Product } from "@/shared/types/product";
 import {
   getAvailableVolumePrices,
-} from "@/modules/catalog/domain/volumePricing";
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 const TIER_LABELS = {
   price_3: "Por Mayor",
