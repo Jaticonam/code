@@ -5,7 +5,12 @@ import type {
 import {
   buildCampaignNameToIdMap,
   filterActiveCampaigns,
+  getCampaignComputedStatus,
 } from "@/modules/catalog/domain/CampaignRules";
+import {
+  readStorageEnvelope,
+  serializeStorageEnvelope,
+} from "@/shared/infrastructure/storage/StorageEnvelope";
 
 import {
   catalogProvider,
@@ -31,6 +36,8 @@ export interface LoadCatalogCampaignsOptions {
 
 const CACHE_TTL =
   1000 * 60 * 5;
+const CAMPAIGN_CACHE_SCHEMA_VERSION =
+  1;
 
 const CAMPAIGNS_CACHE_KEY =
   "jung_catalog_campaigns_v3";
@@ -65,6 +72,54 @@ const sortCampaigns = (
       a.priority,
   );
 
+function sanitizeCachedCampaigns(
+  value: unknown,
+): Campaign[] | null {
+  if (!Array.isArray(value)) return null;
+
+  return value.flatMap((item): Campaign[] => {
+    if (typeof item !== "object" || item === null) return [];
+    const candidate = item as Record<string, unknown>;
+
+    if (
+      typeof candidate.id !== "string" ||
+      !candidate.id.trim() ||
+      typeof candidate.name !== "string" ||
+      !candidate.name.trim() ||
+      typeof candidate.startDate !== "string" ||
+      typeof candidate.endDate !== "string" ||
+      typeof candidate.publicationStatus !== "string" ||
+      typeof candidate.priority !== "number" ||
+      !Number.isFinite(candidate.priority)
+    ) return [];
+
+    const campaign = candidate as unknown as Campaign;
+
+    return [{
+      ...campaign,
+      computedStatus: getCampaignComputedStatus(campaign),
+    }];
+  });
+}
+
+export function readCampaignCachePayload(raw: string | null) {
+  return readStorageEnvelope({
+    raw,
+    schemaVersion: CAMPAIGN_CACHE_SCHEMA_VERSION,
+    requireSavedAt: true,
+    validateData: sanitizeCachedCampaigns,
+    migrateLegacy: (legacy) => {
+      if (typeof legacy !== "object" || legacy === null) return null;
+      const candidate = legacy as Record<string, unknown>;
+      const data = sanitizeCachedCampaigns(candidate.items);
+
+      return data === null
+        ? null
+        : { data, savedAt: candidate.savedAt as number };
+    },
+  });
+}
+
 /* =========================================================
    CACHE LOCAL
    ========================================================= */
@@ -84,36 +139,30 @@ function readStoredCampaigns():
         CAMPAIGNS_CACHE_KEY,
       );
 
-    if (!raw) {
-      return null;
-    }
-
-    const parsed =
-      JSON.parse(
+    const result =
+      readCampaignCachePayload(
         raw,
-      ) as CampaignCacheEntry;
+      );
 
     if (
-      !parsed?.savedAt ||
+      !result.success ||
+      result.savedAt ===
+        undefined ||
       !isFresh(
-        parsed.savedAt,
+        result.savedAt,
       )
     ) {
       return null;
     }
 
-    if (
-      !Array.isArray(
-        parsed.items,
-      )
-    ) {
-      return null;
-    }
+    campaignsMemoryCache = {
+      savedAt:
+        result.savedAt,
+      items:
+        result.data,
+    };
 
-    campaignsMemoryCache =
-      parsed;
-
-    return parsed.items;
+    return result.data;
   } catch {
     return null;
   }
@@ -141,7 +190,14 @@ function writeCampaignsCache(
   try {
     localStorage.setItem(
       CAMPAIGNS_CACHE_KEY,
-      JSON.stringify(entry),
+      serializeStorageEnvelope({
+        schemaVersion:
+          CAMPAIGN_CACHE_SCHEMA_VERSION,
+        savedAt:
+          entry.savedAt,
+        data:
+          entry.items,
+      }),
     );
   } catch {
     // El cache en memoria continúa disponible.

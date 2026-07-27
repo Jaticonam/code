@@ -7,8 +7,14 @@ import {
 import {
   isCartItemCommerciallyEligible,
 } from "@/modules/cart/domain/CartCommercialEligibility";
+import {
+  readStorageEnvelope,
+  serializeStorageEnvelope,
+  type StorageReadResult,
+} from "@/shared/infrastructure/storage/StorageEnvelope";
 
 export const CART_KEY = "wooly_cart";
+export const CART_SCHEMA_VERSION = 1;
 
 interface PersistedCartCandidate
   extends Record<string, unknown> {
@@ -88,40 +94,73 @@ export function sanitizePersistedCart(
 export function parsePersistedCart(
   value: string | null,
 ): CartItem[] {
-  if (!value) {
-    return [];
-  }
+  const result =
+    readPersistedCart(value);
 
-  try {
-    return sanitizePersistedCart(
-      JSON.parse(value),
-    );
-  } catch {
-    return [];
-  }
+  return result.success
+    ? result.data
+    : [];
 }
 
-export function loadCart(): CartItem[] {
+export function readPersistedCart(
+  value: string | null,
+): StorageReadResult<CartItem[]> {
+  return readStorageEnvelope({
+    raw: value,
+    schemaVersion:
+      CART_SCHEMA_VERSION,
+    validateData: (data) =>
+      Array.isArray(data)
+        ? sanitizePersistedCart(data)
+        : null,
+    migrateLegacy: (legacy) =>
+      Array.isArray(legacy)
+        ? {
+            data:
+              sanitizePersistedCart(
+                legacy,
+              ),
+          }
+        : null,
+  });
+}
+
+export function readCartStorage():
+  StorageReadResult<CartItem[]> {
   try {
-    return parsePersistedCart(
+    return readPersistedCart(
       localStorage.getItem(
         CART_KEY,
       ),
     );
   } catch {
-    return [];
+    return {
+      success: false,
+      reason: "MISSING",
+    };
   }
+}
+
+export function loadCart(): CartItem[] {
+  const result = readCartStorage();
+
+  return result.success
+    ? result.data
+    : [];
 }
 
 export function saveCart(cart: CartItem[]) {
   try {
     localStorage.setItem(
       CART_KEY,
-      JSON.stringify(
-        sanitizePersistedCart(
-          cart,
-        ),
-      ),
+      serializeStorageEnvelope({
+        schemaVersion:
+          CART_SCHEMA_VERSION,
+        data:
+          sanitizePersistedCart(
+            cart,
+          ),
+      }),
     );
   } catch {
     // noop

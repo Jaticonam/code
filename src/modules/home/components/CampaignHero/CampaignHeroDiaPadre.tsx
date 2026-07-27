@@ -17,8 +17,19 @@ export default function CampaignHeroDiaPadre() {
 
     const savedDate = localStorage.getItem(COUNTDOWN_KEY);
 
-    if (savedDate) {
-      countdownDate = new Date(savedDate);
+    const parsedSavedDate =
+      savedDate
+        ? new Date(savedDate)
+        : null;
+
+    if (
+      parsedSavedDate &&
+      !Number.isNaN(
+        parsedSavedDate.getTime(),
+      )
+    ) {
+      countdownDate =
+        parsedSavedDate;
     } else {
       countdownDate = new Date();
       countdownDate.setDate(countdownDate.getDate() + 10);

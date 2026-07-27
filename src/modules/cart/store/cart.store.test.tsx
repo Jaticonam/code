@@ -71,20 +71,23 @@ describe(
                   key:
                     CART_KEY,
                   newValue:
-                    JSON.stringify([
-                      createCartItem(),
-                      createCartItem({
-                        id:
-                          "PREVENTA",
-                        status:
-                          "preventa",
-                      }),
-                      createCartItem({
-                        id:
-                          "SIN-STOCK",
-                        stock: 0,
-                      }),
-                    ]),
+                    JSON.stringify({
+                      schemaVersion: 1,
+                      data: [
+                        createCartItem(),
+                        createCartItem({
+                          id:
+                            "PREVENTA",
+                          status:
+                            "preventa",
+                        }),
+                        createCartItem({
+                          id:
+                            "SIN-STOCK",
+                          stock: 0,
+                        }),
+                      ],
+                    }),
                 },
               ),
             );

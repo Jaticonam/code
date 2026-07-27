@@ -12,8 +12,10 @@ import type {
 
 import {
   CART_KEY,
+  CART_SCHEMA_VERSION,
   loadCart,
   parsePersistedCart,
+  readPersistedCart,
   sanitizePersistedCart,
   saveCart,
 } from "./cart.persistence";
@@ -333,9 +335,49 @@ describe(
           ]),
         );
 
-        expect(
+      expect(
           loadCart()[0].qty,
         ).toBe(3);
+      },
+    );
+
+    it(
+      "carga el envelope vigente",
+      () => {
+        localStorage.setItem(
+          CART_KEY,
+          JSON.stringify({
+            schemaVersion:
+              CART_SCHEMA_VERSION,
+            data: [
+              createCartItem({
+                qty: 2,
+              }),
+            ],
+          }),
+        );
+
+        expect(loadCart()[0].qty).toBe(2);
+      },
+    );
+
+    it(
+      "rechaza una versión futura sin interpretarla como carrito",
+      () => {
+        expect(
+          readPersistedCart(
+            JSON.stringify({
+              schemaVersion: 2,
+              data: [
+                createCartItem(),
+              ],
+            }),
+          ),
+        ).toEqual({
+          success: false,
+          reason:
+            "UNSUPPORTED_VERSION",
+        });
       },
     );
 
@@ -406,13 +448,17 @@ describe(
           JSON.parse(
             localStorage.getItem(
               CART_KEY,
-            ) ?? "[]",
+            ) ?? "{}",
           ),
-        ).toEqual([
-          createCartItem({
-            qty: 3,
-          }),
-        ]);
+        ).toEqual({
+          schemaVersion:
+            CART_SCHEMA_VERSION,
+          data: [
+            createCartItem({
+              qty: 3,
+            }),
+          ],
+        });
       },
     );
 

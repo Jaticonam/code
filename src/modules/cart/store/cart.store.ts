@@ -1,4 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import type { Product } from "@/shared/types/product";
 import type { CartItem } from "@/modules/cart/types";
 
@@ -18,15 +23,34 @@ import {
 
 import {
   CART_KEY,
-  loadCart,
-  parsePersistedCart,
+  readCartStorage,
+  readPersistedCart,
   saveCart,
 } from "./cart.persistence";
 
 export function useCart() {
-  const [cart, setCart] = useState<CartItem[]>(() => loadCart());
+  const initialRead = useRef(
+    readCartStorage(),
+  );
+  const persistenceBlocked =
+    useRef(
+      initialRead.current.success ===
+        false &&
+        initialRead.current.reason ===
+          "UNSUPPORTED_VERSION",
+    );
+  const [cart, setCart] =
+    useState<CartItem[]>(() =>
+      initialRead.current.success
+        ? initialRead.current.data
+        : [],
+    );
 
   useEffect(() => {
+    if (persistenceBlocked.current) {
+      return;
+    }
+
     saveCart(cart);
   }, [cart]);
 
@@ -34,11 +58,25 @@ export function useCart() {
     const handler = (e: StorageEvent) => {
       if (e.key !== CART_KEY) return;
 
-      setCart(
-        parsePersistedCart(
+      const result =
+        readPersistedCart(
           e.newValue,
-        ),
-      );
+        );
+
+      if (result.success === false) {
+        if (
+          result.reason ===
+          "UNSUPPORTED_VERSION"
+        ) {
+          persistenceBlocked.current =
+            true;
+        }
+        return;
+      }
+
+      persistenceBlocked.current =
+        false;
+      setCart(result.data);
     };
 
     window.addEventListener("storage", handler);
@@ -48,6 +86,8 @@ export function useCart() {
 
   const addToCart = useCallback(
     (product: Product, qty: number = 1) => {
+      persistenceBlocked.current =
+        false;
       setCart((prev) =>
         addItemToCart(prev, product, qty)
       );
@@ -56,6 +96,8 @@ export function useCart() {
   );
 
   const removeFromCart = useCallback((id: string) => {
+    persistenceBlocked.current =
+      false;
     setCart((prev) =>
       removeItemFromCart(prev, id)
     );
@@ -63,6 +105,8 @@ export function useCart() {
 
   const changeQty = useCallback(
     (id: string, delta: number) => {
+      persistenceBlocked.current =
+        false;
       setCart((prev) =>
         changeCartItemQty(prev, id, delta)
       );
@@ -72,6 +116,8 @@ export function useCart() {
 
   const setExactQty = useCallback(
     (id: string, qty: number | null) => {
+      persistenceBlocked.current =
+        false;
       setCart((prev) =>
         setCartItemQty(prev, id, qty)
       );
@@ -81,6 +127,8 @@ export function useCart() {
 
   const setItemNote = useCallback(
     (id: string, note: string) => {
+      persistenceBlocked.current =
+        false;
       setCart((prev) =>
         setCartItemNote(prev, id, note)
       );
@@ -89,6 +137,8 @@ export function useCart() {
   );
 
   const clearCart = useCallback(() => {
+    persistenceBlocked.current =
+      false;
     setCart([]);
   }, []);
 

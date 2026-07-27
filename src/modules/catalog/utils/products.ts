@@ -9,12 +9,18 @@ import {
 import {
   loadAllProducts,
 } from "@/modules/catalog/services/fetchProducts";
+import {
+  readStorageEnvelope,
+  serializeStorageEnvelope,
+} from "@/shared/infrastructure/storage/StorageEnvelope";
 
 const CACHE_KEY =
   "wooly_products_cache";
 
 const CACHE_DURATION =
   10 * 1000;
+const PRODUCTS_CACHE_SCHEMA_VERSION =
+  1;
 
 interface CacheEntry {
   data:
@@ -26,6 +32,11 @@ interface CacheEntry {
   source:
     "sheets" |
     "fallback";
+}
+
+interface ProductsCacheData {
+  products: Product[];
+  source: CacheEntry["source"];
 }
 
 /* =========================================================
@@ -54,19 +65,68 @@ function setCache(
   try {
     sessionStorage.setItem(
       CACHE_KEY,
-      JSON.stringify({
-        data:
-          sanitizePublicProducts(
-            data,
-          ),
-        timestamp:
+      serializeStorageEnvelope({
+        schemaVersion:
+          PRODUCTS_CACHE_SCHEMA_VERSION,
+        savedAt:
           Date.now(),
-        source,
+        data: {
+          products:
+            sanitizePublicProducts(
+              data,
+            ),
+          source,
+        },
       }),
     );
   } catch {
     // Ignorar errores de storage.
   }
+}
+
+export function readProductsCachePayload(
+  raw: string | null,
+) {
+  return readStorageEnvelope<ProductsCacheData>({
+    raw,
+    schemaVersion:
+      PRODUCTS_CACHE_SCHEMA_VERSION,
+    requireSavedAt: true,
+    validateData: (value) => {
+      if (typeof value !== "object" || value === null) return null;
+      const candidate = value as Record<string, unknown>;
+
+      return (
+        Array.isArray(candidate.products) &&
+        (candidate.source === "sheets" ||
+          candidate.source === "fallback")
+      )
+        ? {
+            products: candidate.products as Product[],
+            source: candidate.source,
+          }
+        : null;
+    },
+    migrateLegacy: (legacy) => {
+      if (typeof legacy !== "object" || legacy === null) return null;
+      const candidate = legacy as Record<string, unknown>;
+
+      return (
+        Array.isArray(candidate.data) &&
+        typeof candidate.timestamp === "number" &&
+        (candidate.source === "sheets" ||
+          candidate.source === "fallback")
+      )
+        ? {
+            data: {
+              products: candidate.data as Product[],
+              source: candidate.source,
+            },
+            savedAt: candidate.timestamp,
+          }
+        : null;
+    },
+  });
 }
 
 function getCached():
@@ -78,17 +138,14 @@ function getCached():
         CACHE_KEY,
       );
 
-    if (!raw) {
-      return null;
-    }
-
-    const entry:
-      CacheEntry =
-        JSON.parse(raw);
+    const result =
+      readProductsCachePayload(raw);
 
     if (
+      !result.success ||
+      result.savedAt === undefined ||
       Date.now() -
-        entry.timestamp >
+        result.savedAt >
       CACHE_DURATION
     ) {
       sessionStorage.removeItem(
@@ -104,16 +161,16 @@ function getCached():
      */
     const sanitized =
       sanitizePublicProducts(
-        entry.data,
+        result.data.products,
       );
 
     if (
       sanitized.length !==
-      entry.data.length
+      result.data.products.length
     ) {
       setCache(
         sanitized,
-        entry.source,
+        result.data.source,
       );
     }
 

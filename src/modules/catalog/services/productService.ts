@@ -2,6 +2,10 @@ import type { Product } from "@/shared/types/product";
 
 import type { CatalogCategoryId } from "@/modules/catalog/providers/CatalogProvider";
 import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
+import {
+  readStorageEnvelope,
+  serializeStorageEnvelope,
+} from "@/shared/infrastructure/storage/StorageEnvelope";
 
 import { loadCatalogCampaigns } from "./campaignService";
 
@@ -21,6 +25,7 @@ export type CatalogCategory = CatalogCategoryId | "todas";
    ========================================================= */
 
 const CACHE_TTL = 1000 * 60 * 5;
+const CATEGORY_CACHE_SCHEMA_VERSION = 1;
 
 /* =========================================================
    CACHE EN MEMORIA
@@ -51,6 +56,46 @@ const flattenByCategory = (
   byCategory: Partial<Record<CatalogCategoryId, Product[]>>,
 ) => sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
 
+function sanitizeCachedProducts(value: unknown): Product[] | null {
+  if (!Array.isArray(value)) return null;
+
+  return value.filter((item): item is Product => {
+    if (typeof item !== "object" || item === null) return false;
+    const candidate = item as Record<string, unknown>;
+
+    return (
+      typeof candidate.id === "string" &&
+      candidate.id.trim().length > 0 &&
+      typeof candidate.title === "string" &&
+      candidate.title.trim().length > 0 &&
+      typeof candidate.category === "string" &&
+      candidate.category.trim().length > 0 &&
+      typeof candidate.img === "string" &&
+      candidate.img.trim().length > 0 &&
+      typeof candidate.price_1 === "number" &&
+      Number.isFinite(candidate.price_1)
+    );
+  });
+}
+
+export function readCategoryCachePayload(raw: string | null) {
+  return readStorageEnvelope({
+    raw,
+    schemaVersion: CATEGORY_CACHE_SCHEMA_VERSION,
+    requireSavedAt: true,
+    validateData: sanitizeCachedProducts,
+    migrateLegacy: (legacy) => {
+      if (typeof legacy !== "object" || legacy === null) return null;
+      const candidate = legacy as Record<string, unknown>;
+      const data = sanitizeCachedProducts(candidate.items);
+
+      return data === null
+        ? null
+        : { data, savedAt: candidate.savedAt as number };
+    },
+  });
+}
+
 /* =========================================================
    CACHE LOCAL DE PRODUCTOS
    ========================================================= */
@@ -63,26 +108,18 @@ function readStorageCache(category: CatalogCategoryId): Product[] | null {
   try {
     const raw = localStorage.getItem(productKey(category));
 
-    if (!raw) {
-      return null;
-    }
+    const result = readCategoryCachePayload(raw);
 
-    const parsed = JSON.parse(raw) as CategoryCacheEntry;
-
-    if (!parsed?.savedAt || !isFresh(parsed.savedAt)) {
-      return null;
-    }
-
-    if (!Array.isArray(parsed.items)) {
+    if (!result.success || result.savedAt === undefined || !isFresh(result.savedAt)) {
       return null;
     }
 
     memoryCache.set(category, {
-      savedAt: parsed.savedAt,
-      items: parsed.items,
+      savedAt: result.savedAt,
+      items: result.data,
     });
 
-    return parsed.items;
+    return result.data;
   } catch {
     return null;
   }
@@ -119,7 +156,14 @@ function writeCache(category: CatalogCategoryId, items: Product[]): void {
   }
 
   try {
-    localStorage.setItem(productKey(category), JSON.stringify(entry));
+    localStorage.setItem(
+      productKey(category),
+      serializeStorageEnvelope({
+        schemaVersion: CATEGORY_CACHE_SCHEMA_VERSION,
+        savedAt: entry.savedAt,
+        data: entry.items,
+      }),
+    );
   } catch {
     // Si localStorage falla, se conserva el cache en memoria.
   }
