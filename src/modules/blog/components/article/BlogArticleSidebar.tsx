@@ -49,6 +49,9 @@ import {
 import {
   getBaseUnitPrice,
 } from "@/shared/domain/volumePricing/VolumePricing";
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
 
 const CAMPAIGNS = [
   "❤️ San Valentín",
@@ -62,7 +65,7 @@ const SOCIALS = [
       "WhatsApp",
 
     href:
-      "https://wa.me/51956762686",
+      buildApplicationWhatsAppUrl(),
 
     Icon:
       WhatsAppIcon,

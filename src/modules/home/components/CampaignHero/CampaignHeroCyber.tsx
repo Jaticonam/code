@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
 
 export default function App() {
   const [timers, setTimers] = useState({});
@@ -339,7 +342,9 @@ export default function App() {
           <button
             onClick={() =>
               window.open(
-                "https://wa.me/51936188636?text=Hola%20Wooly%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20catálogo%20multicampaña%20(Novios%2C%20Flores%2C%20HotWheels)",
+                buildApplicationWhatsAppUrl(
+                  "Hola Wooly, quiero información sobre el catálogo multicampaña (Novios, Flores, HotWheels)",
+                ),
                 "_blank"
               )
             }

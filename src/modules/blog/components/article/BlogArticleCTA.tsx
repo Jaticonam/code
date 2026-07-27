@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { MessageCircle, ShoppingBag } from "lucide-react";
 import type { BlogArticle } from "../../types/blog";
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
 
 export default function BlogArticleCTA({ article }: { article: BlogArticle }) {
-  const msg = encodeURIComponent(
-    `Hola Wooly, leí el artículo "${article.title}" y quiero cotizar insumos relacionados.`,
-  );
+  const message =
+    `Hola Wooly, leí el artículo "${article.title}" y quiero cotizar insumos relacionados.`;
   return (
     <div className="blog-inline-cta">
       <div>
@@ -22,7 +24,7 @@ export default function BlogArticleCTA({ article }: { article: BlogArticle }) {
           <ShoppingBag size={17} /> Ver catálogo
         </Link>
         <a
-          href={`https://wa.me/51956762686?text=${msg}`}
+          href={buildApplicationWhatsAppUrl(message)}
           target="_blank"
           rel="noreferrer"
         >

@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
 
 export default function CampaignHeroDiaPadre() {
   const [timeLeft, setTimeLeft] = useState({
@@ -302,7 +305,9 @@ export default function CampaignHeroDiaPadre() {
               <button
                 onClick={() =>
                   window.open(
-                    "https://wa.me/51936188636?text=Hola%20Wooly%2C%20quiero%20informaci%C3%B3n%20para%20comprar%20por%20mayor",
+                    buildApplicationWhatsAppUrl(
+                      "Hola Wooly, quiero información para comprar por mayor",
+                    ),
                     "_blank",
                   )
                 }

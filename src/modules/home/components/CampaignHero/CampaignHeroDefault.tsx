@@ -1,3 +1,7 @@
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
+
 export default function CampaignHeroDefault() {
   return (
     <main className="relative flex min-h-[720px] items-center justify-center overflow-hidden bg-[#070b14] px-6 py-24 font-sans text-white">
@@ -33,7 +37,9 @@ export default function CampaignHeroDefault() {
             <button
               onClick={() => {
                 window.open(
-                  "https://wa.me/51936188636?text=Hola%20Wooly%2C%20quiero%20informaci%C3%B3n%20para%20comprar%20por%20mayor",
+                  buildApplicationWhatsAppUrl(
+                    "Hola Wooly, quiero información para comprar por mayor",
+                  ),
                   "_blank",
                 );
               }}

@@ -27,6 +27,9 @@ import {
 import {
   CATEGORY_CONFIG,
 } from "@/shared/config/categories";
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
 
 import "./SalesCatalogToolsPage.css";
 
@@ -476,9 +479,9 @@ export default function SalesCatalogToolsPage() {
     );
 
   const whatsappUrl =
-    `https://wa.me/?text=${encodeURIComponent(
+    buildApplicationWhatsAppUrl(
       whatsappMessage,
-    )}`;
+    );
 
   /* =======================================================
      ACCIONES

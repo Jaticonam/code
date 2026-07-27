@@ -10,6 +10,9 @@ import {
   TrendingUp,
 } from "lucide-react";
 import BlogRailCard from "./BlogRailCard";
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
 
 const HOT_PRODUCTS = [
   "Papel coreano premium",
@@ -77,7 +80,7 @@ export default function BlogHubRail() {
 
       <a
         className="blog-rail-whatsapp"
-        href="https://wa.me/51956762686"
+        href={buildApplicationWhatsAppUrl()}
         target="_blank"
         rel="noreferrer"
       >
