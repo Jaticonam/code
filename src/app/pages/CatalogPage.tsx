@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { SearchX } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store";
 import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
-import type { CatalogCategory } from "@/modules/catalog/services/fetchProducts";
 import { Product } from "@/shared/types/product";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
@@ -23,32 +21,27 @@ import { CatalogSeo } from "@/shared/seo/catalogSeoComponent";
 import { getCatalogSeo } from "@/shared/seo/catalogSeo";
 import { getProductMedia, ProductMedia } from "@/shared/lib/productMedia";
 import AOS from "aos";
+import {
+  useCatalogNavigation,
+} from "@/modules/catalog/hooks/useCatalogNavigation";
 
-const getCategoryFromUrl = () =>
-  new URLSearchParams(window.location.search).get("cat") || "todas";
-
-const getCampaignFromUrl = () =>
-  new URLSearchParams(window.location.search).get("cpg") || "";
-
-const isValidCategory = (id: string): id is CatalogCategory =>
-  id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
 const CatalogPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const { activeCampaigns: catalogCampaigns } = useCatalogCampaignRegistry();
   const CATALOG_CAMPAIGNS = catalogCampaigns;
-
-  const [activeCategory, setActiveCategory] = useState<CatalogCategory>(() => {
-    const initialCat = getCategoryFromUrl();
-    return isValidCategory(initialCat) ? initialCat : "todas";
-  });
-
-  const [activeCampaign, setActiveCampaign] = useState(() =>
-    getCampaignFromUrl(),
+  const {
+    activeCategory,
+    activeCampaign,
+    searchQuery,
+    setSearchQuery,
+    selectCategory:
+      handleCategorySelect,
+    selectCampaign:
+      handleCampaignSelect,
+    resetCatalog:
+      handleResetCatalog,
+  } = useCatalogNavigation(
+    CATALOG_CAMPAIGNS,
   );
-
-  const [searchQuery, setSearchQuery] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -58,12 +51,6 @@ const CatalogPage = () => {
     title: string;
   } | null>(null);
   const [exploreOpen, setExploreOpen] = useState(false);
-
-  const isCatalogCampaignId = useCallback(
-    (id: string) =>
-      !id || CATALOG_CAMPAIGNS.some((campaign) => campaign.id === id),
-    [CATALOG_CAMPAIGNS],
-  );
 
   const {
     cart,
@@ -84,74 +71,6 @@ const CatalogPage = () => {
     isFullCatalogLoaded,
     isCategoryLoading,
   } = useCatalogData(activeCategory);
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const cat = params.get("cat") || "todas";
-    const campaign = params.get("cpg") || "";
-
-    setActiveCategory(isValidCategory(cat) ? cat : "todas");
-    setActiveCampaign(campaign);
-  }, [location.search]);
-
-  useEffect(() => {
-    if (!activeCampaign) return;
-    if (CATALOG_CAMPAIGNS.length === 0) return;
-
-    if (!isCatalogCampaignId(activeCampaign)) {
-      setActiveCampaign("");
-      navigate("/catalogo", { replace: true });
-    }
-  }, [activeCampaign, CATALOG_CAMPAIGNS, isCatalogCampaignId, navigate]);
-
-  useEffect(() => {
-    const restored =
-      location.state?.restoreSearch ||
-      sessionStorage.getItem("wooly_restore_search");
-
-    if (!restored) return;
-
-    setSearchQuery(restored);
-    sessionStorage.removeItem("wooly_restore_search");
-    window.history.replaceState({}, document.title);
-  }, [location.state]);
-
-  const handleCategorySelect = useCallback(
-    (id: CatalogCategory) => {
-      setSearchQuery("");
-      setActiveCategory(id);
-
-      const params = new URLSearchParams();
-
-      if (id !== "todas") params.set("cat", id);
-      if (activeCampaign) params.set("cpg", activeCampaign);
-
-      navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
-    },
-    [navigate, activeCampaign],
-  );
-
-  const handleCampaignSelect = useCallback(
-    (campaign: string) => {
-      setSearchQuery("");
-      setActiveCampaign(campaign);
-
-      const params = new URLSearchParams();
-
-      if (activeCategory !== "todas") params.set("cat", activeCategory);
-      if (campaign) params.set("cpg", campaign);
-
-      navigate(`/catalogo${params.toString() ? `?${params}` : ""}`);
-    },
-    [navigate, activeCategory],
-  );
-
-  const handleResetCatalog = useCallback(() => {
-    setSearchQuery("");
-    setActiveCategory("todas");
-    setActiveCampaign("");
-    navigate("/catalogo");
-  }, [navigate]);
 
   const {
     filteredProducts,
