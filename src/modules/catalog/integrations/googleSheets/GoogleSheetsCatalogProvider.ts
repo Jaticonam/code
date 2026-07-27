@@ -101,6 +101,8 @@ function reportSheetIssues(
    ========================================================= */
 
 export const googleSheetsCatalogProvider: CatalogProvider = {
+  source: "google-sheets",
+
   getCategories(): readonly CatalogCategoryId[] {
     return PRODUCT_SHEETS_CONFIG.map(
       (source) => source.category,
