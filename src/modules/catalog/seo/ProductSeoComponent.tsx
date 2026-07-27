@@ -8,11 +8,11 @@ import type {
 
 import type {
   ProductSeoData,
-} from "@/shared/seo/productSeo";
+} from "./productSeo";
 
 import {
   buildProductSeoSchema,
-} from "@/shared/seo/ProductSeoSchema";
+} from "./ProductSeoSchema";
 
 interface Props {
   seo:

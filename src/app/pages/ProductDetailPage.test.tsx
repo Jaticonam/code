@@ -255,15 +255,17 @@ vi.mock(
 );
 
 vi.mock(
-  "@/shared/seo/productSeoComponent",
-  () => ({
-    ProductSeo:
-      () => (
-        <script
-          type="application/ld+json"
-          data-testid="product-json-ld"
-        />
-      ),
+  "@/modules/catalog",
+  async (importOriginal) => ({
+    ...await importOriginal<
+      typeof import("@/modules/catalog")
+    >(),
+    ProductSeo: () => (
+      <script
+        type="application/ld+json"
+        data-testid="product-json-ld"
+      />
+    ),
   }),
 );
 

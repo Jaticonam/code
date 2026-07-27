@@ -93,11 +93,11 @@ import {
 
 import {
   ProductSeo,
-} from "@/shared/seo/productSeoComponent";
+} from "@/modules/catalog";
 
 import {
   getProductSeo,
-} from "@/shared/seo/productSeo";
+} from "@/modules/catalog";
 
 import {
   getProductMedia,

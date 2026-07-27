@@ -23,7 +23,7 @@ import type {
 
 import type {
   ProductSeoData,
-} from "@/shared/seo/productSeo";
+} from "./productSeo";
 
 vi.mock(
   "react-helmet-async",
@@ -39,7 +39,7 @@ vi.mock(
 
 import {
   ProductSeo,
-} from "./productSeoComponent";
+} from "./ProductSeoComponent";
 
 function createProduct(
   overrides: Partial<Product> = {},

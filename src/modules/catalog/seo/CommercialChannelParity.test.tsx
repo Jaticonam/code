@@ -29,7 +29,7 @@ import BlogCatalogProductCard from "@/modules/blog/components/products/BlogCatal
 
 import {
   ProductSeo,
-} from "./productSeoComponent";
+} from "./ProductSeoComponent";
 
 vi.mock(
   "react-helmet-async",
