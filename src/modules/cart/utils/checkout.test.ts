@@ -9,10 +9,14 @@ import {
 import type {
   CartItem,
 } from "@/modules/cart/types";
+import type {
+  CatalogProvider,
+} from "@/modules/catalog/providers/CatalogProvider";
 
 import {
   buildCheckoutMessage,
   checkout,
+  checkoutWithProvider,
 } from "./checkout";
 
 function createItem(
@@ -40,6 +44,25 @@ function createItem(
     qty: 1,
     note: "",
     ...overrides,
+  };
+}
+
+function createProvider():
+  CatalogProvider {
+  return {
+    source:
+      "contract-fixture",
+    getCategories: () => [
+      "pruebas",
+    ],
+    loadCampaigns:
+      vi.fn().mockResolvedValue(
+        [],
+      ),
+    loadCategoryProducts:
+      vi.fn().mockResolvedValue([
+        createItem(),
+      ]),
   };
 }
 
@@ -370,6 +393,90 @@ describe(
         expect(message).not.toContain(
           "999",
         );
+      },
+    );
+  },
+);
+
+describe(
+  "checkoutWithProvider",
+  () => {
+    it(
+      "no abre ni limpia si el provider falla",
+      async () => {
+        const provider =
+          createProvider();
+        vi.mocked(
+          provider.loadCampaigns,
+        ).mockRejectedValue(
+          new Error("offline"),
+        );
+        const open =
+          vi.spyOn(
+            window,
+            "open",
+          );
+        const onClearCart =
+          vi.fn();
+        const onClose =
+          vi.fn();
+
+        const result =
+          await checkoutWithProvider(
+            provider,
+            [createItem()],
+            0,
+            onClearCart,
+            onClose,
+          );
+
+        expect(result.status).toBe(
+          "provider-error",
+        );
+        expect(open).not.toHaveBeenCalled();
+        expect(
+          onClearCart,
+        ).not.toHaveBeenCalled();
+        expect(
+          onClose,
+        ).not.toHaveBeenCalled();
+      },
+    );
+
+    it(
+      "preserva el carrito reconciliado si el popup se bloquea",
+      async () => {
+        vi.useFakeTimers();
+        vi.spyOn(
+          window,
+          "open",
+        ).mockReturnValue(null);
+        const onClearCart =
+          vi.fn();
+        const onClose =
+          vi.fn();
+
+        const result =
+          await checkoutWithProvider(
+            createProvider(),
+            [createItem()],
+            0,
+            onClearCart,
+            onClose,
+          );
+
+        vi.advanceTimersByTime(
+          300,
+        );
+        expect(result.status).toBe(
+          "blocked",
+        );
+        expect(
+          onClearCart,
+        ).not.toHaveBeenCalled();
+        expect(
+          onClose,
+        ).not.toHaveBeenCalled();
       },
     );
   },

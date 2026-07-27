@@ -1,6 +1,11 @@
 import { MessageCircle,Sparkles } from "lucide-react";
 import type { CartItem } from "@/modules/cart/types";
-import { checkout } from "@/modules/cart/utils/checkout";
+import {
+  checkoutWithProvider,
+} from "@/modules/cart/utils/checkout";
+import {
+  catalogProvider,
+} from "@/modules/catalog/providers/DefaultCatalogProvider";
 
 interface CartFooterProps{
   cart:CartItem[];
@@ -58,7 +63,15 @@ export function CartFooter({cart,totalItems,totalPrice,savings,onClearCart,onClo
       )}
 
       <button
-        onClick={()=>checkout(cart,savings,onClearCart,onClose)}
+        onClick={() => {
+          void checkoutWithProvider(
+            catalogProvider,
+            cart,
+            savings,
+            onClearCart,
+            onClose,
+          );
+        }}
         disabled={disabled}
         className={disabled?"w-full rounded-2xl bg-[#f1f5f9] py-4 text-sm font-black tracking-wide text-[#94a3b8] cursor-not-allowed flex items-center justify-center gap-3":"cart-checkout-btn"}
       >

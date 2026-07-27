@@ -14,6 +14,13 @@ import {
   openWhatsAppUrl,
   type WhatsAppOpenResult,
 } from "@/modules/product-detail/utils/WhatsAppLink";
+import type {
+  CatalogProvider,
+} from "@/modules/catalog/providers/CatalogProvider";
+import {
+  reconcileCartWithProvider,
+  type CartReconciliationResult,
+} from "@/modules/cart/domain/CartReconciliation";
 
 export function buildCheckoutMessage(
   cart: CartItem[],
@@ -117,4 +124,61 @@ export function checkout(
   }, 300);
 
   return openResult;
+}
+
+export type ProviderCheckoutResult =
+  | {
+      status: "provider-error";
+      reconciliation:
+        Extract<
+          CartReconciliationResult,
+          {
+            ok: false;
+          }
+        >;
+    }
+  | (
+      WhatsAppOpenResult & {
+        reconciliation:
+          Extract<
+            CartReconciliationResult,
+            {
+              ok: true;
+            }
+          >;
+      }
+    );
+
+export async function checkoutWithProvider(
+  provider: CatalogProvider,
+  cart: CartItem[],
+  savings: number,
+  onClearCart: () => void,
+  onClose: () => void,
+): Promise<ProviderCheckoutResult> {
+  const reconciliation =
+    await reconcileCartWithProvider(
+      cart,
+      provider,
+    );
+
+  if (reconciliation.ok === false) {
+    return {
+      status:
+        "provider-error",
+      reconciliation,
+    };
+  }
+
+  const result = checkout(
+    reconciliation.items,
+    savings,
+    onClearCart,
+    onClose,
+  );
+
+  return {
+    ...result,
+    reconciliation,
+  };
 }
