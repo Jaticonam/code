@@ -1,173 +1,206 @@
 import {
   resolveProductCommercialPolicy,
 } from "@/modules/catalog/domain/ProductCommercialPolicy";
+import {
+  resolveProductCommercialState,
+} from "@/shared/domain/commercialPolicy";
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricingHelpers";
 
 import type {
   FeedProduct,
   MetaFeedItem,
 } from "../../types/feed";
+import type {
+  MetaFeedIssue,
+  MetaMappingResult,
+} from "./types";
 
-const SITE =
+export const META_SITE_URL =
   "https://www.woolyimports.com";
+export const META_BRAND = "Wooly Imports";
+export const META_CURRENCY = "PEN";
 
-const clean = (
-  value?:
-    string,
-) =>
-  String(
-    value ||
-    "",
-  )
-    .replace(
-      /\s+/g,
-      " ",
-    )
-    .trim();
+export interface MetaMapperOptions {
+  siteUrl?: string;
+}
 
-const money = (
-  price?:
-    number |
-    null,
-) =>
-  `${Number(
-    price ||
-    0,
-  ).toFixed(2)} PEN`;
-
-const availability = (
-  product:
-    FeedProduct,
-) => {
-  const policy =
-    resolveProductCommercialPolicy(
-      product,
-    );
-
-  return policy
-    .isPurchasable
-    ? "in stock"
-    : "out of stock";
+const categoryMap: Record<string, string> = {
+  flores: "Home & Garden > Decor",
+  peluches: "Toys & Games > Toys > Dolls, Playsets & Toy Figures",
+  papeles: "Arts & Entertainment > Party & Celebration",
+  cajas: "Arts & Entertainment > Gift Giving",
+  cintas: "Arts & Entertainment > Crafts & Hobbies",
+  globos: "Arts & Entertainment > Party & Celebration",
+  accesorios: "Arts & Entertainment > Party & Celebration",
+  hotwheels: "Toys & Games > Toys > Toy Vehicles",
 };
 
-const imageUrl = (
-  product:
-    FeedProduct,
-) => {
-  const src =
-    clean(
-      product.img,
+function clean(value: unknown): string {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
+}
+
+function cleanDescription(value: unknown): string {
+  return String(value ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[^\S\n]+/g, " ")
+    .trim();
+}
+
+function validHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function issue(
+  code: MetaFeedIssue["code"],
+  message: string,
+  field?: MetaFeedIssue["field"],
+): MetaFeedIssue {
+  return { code, field, message };
+}
+
+export function isMetaExportEligible(
+  product: FeedProduct,
+): boolean {
+  const policy = resolveProductCommercialPolicy(product);
+  const commercial = resolveProductCommercialState(product);
+  const price = getBaseUnitPrice(product);
+  const availabilityMatchesStatus =
+    (
+      policy.status === "publicado" &&
+      commercial.availability === "AVAILABLE"
+    ) ||
+    (
+      policy.status === "agotado" &&
+      commercial.availability === "OUT_OF_STOCK"
     );
 
-  if (
-    src.startsWith(
-      "http",
-    )
-  ) {
-    return src;
+  return (
+    policy.isPubliclyVisible &&
+    policy.canShowPricing &&
+    availabilityMatchesStatus &&
+    Number.isFinite(price) &&
+    price > 0
+  );
+}
+
+export function mapProductToMetaDetailed(
+  product: FeedProduct,
+  options: MetaMapperOptions = {},
+): MetaMappingResult {
+  const policy = resolveProductCommercialPolicy(product);
+  const commercial = resolveProductCommercialState(product);
+  const issues: MetaFeedIssue[] = [];
+  const id = clean(product.id);
+  const title = clean(product.title).slice(0, 150);
+  const description = cleanDescription(product.description).slice(0, 5000);
+  const imageLink = clean(product.img);
+  const price = getBaseUnitPrice(product);
+  const siteUrl = options.siteUrl ?? META_SITE_URL;
+  const link =
+    `${siteUrl}/catalogo/producto.html?id=${encodeURIComponent(id)}`;
+
+  if (!policy.isPubliclyVisible) {
+    issues.push(issue(
+      "PRODUCT_NOT_PUBLIC",
+      "El producto no es públicamente visible.",
+    ));
+  }
+  if (!isMetaExportEligible(product)) {
+    issues.push(issue(
+      "PRODUCT_NOT_EXPORTABLE",
+      "El producto no cumple la política de exportación Meta.",
+    ));
+  }
+  if (!Number.isFinite(price) || price <= 0) {
+    issues.push(issue(
+      "INVALID_PRICE",
+      "El precio canónico debe ser finito y positivo.",
+      "price",
+    ));
+  }
+  if (!id) {
+    issues.push(issue("MISSING_REQUIRED_FIELD", "Falta el ID.", "id"));
+  }
+  if (!title) {
+    issues.push(issue("MISSING_REQUIRED_FIELD", "Falta el título.", "title"));
+  }
+  if (!description) {
+    issues.push(issue(
+      "MISSING_REQUIRED_FIELD",
+      "Falta la descripción.",
+      "description",
+    ));
+  }
+  if (!validHttpUrl(link)) {
+    issues.push(issue(
+      "INVALID_PRODUCT_URL",
+      "La URL de producto debe ser HTTP(S) absoluta.",
+      "link",
+    ));
+  }
+  if (!validHttpUrl(imageLink)) {
+    issues.push(issue(
+      "INVALID_IMAGE_URL",
+      "La URL de imagen debe ser HTTP(S) absoluta.",
+      "image_link",
+    ));
   }
 
-  return `${SITE}${
-    src.startsWith("/")
-      ? src
-      : `/${src}`
-  }`;
-};
+  const availability =
+    commercial.availability === "AVAILABLE"
+      ? "in stock"
+      : commercial.availability === "OUT_OF_STOCK"
+        ? "out of stock"
+        : null;
 
-const productLink = (
-  product:
-    FeedProduct,
-) =>
-  `${SITE}/catalogo/producto.html?id=${encodeURIComponent(
-    product.id,
-  )}`;
+  if (!availability) {
+    issues.push(issue(
+      "UNSUPPORTED_AVAILABILITY",
+      "La disponibilidad comercial no es exportable a Meta.",
+      "availability",
+    ));
+  }
 
-const categoryMap:
-  Record<
-    string,
-    string
-  > = {
-  flores:
-    "Home & Garden > Decor",
+  if (issues.length) {
+    return { ok: false, issues };
+  }
 
-  peluches:
-    "Toys & Games > Toys > Dolls, Playsets & Toy Figures",
+  return {
+    ok: true,
+    item: {
+      id,
+      title,
+      description,
+      availability,
+      condition: "new",
+      price: `${price.toFixed(2)} ${META_CURRENCY}`,
+      link,
+      image_link: imageLink,
+      brand: META_BRAND,
+      google_product_category:
+        categoryMap[clean(product.category).toLowerCase()] ||
+        "Arts & Entertainment > Party & Celebration",
+    },
+  };
+}
 
-  papeles:
-    "Arts & Entertainment > Party & Celebration",
-
-  cajas:
-    "Arts & Entertainment > Gift Giving",
-
-  cintas:
-    "Arts & Entertainment > Crafts & Hobbies",
-
-  globos:
-    "Arts & Entertainment > Party & Celebration",
-
-  accesorios:
-    "Arts & Entertainment > Party & Celebration",
-
-  hotwheels:
-    "Toys & Games > Toys > Toy Vehicles",
-};
-
-export const mapProductToMeta = (
-  product:
-    FeedProduct,
-): MetaFeedItem => ({
-  id:
-    product.id,
-
-  title:
-    clean(
-      product.title,
-    ).slice(
-      0,
-      150,
-    ),
-
-  description:
-    clean(
-      product.description ||
-      product.title ||
-      "Producto mayorista Wooly Imports",
-    ).slice(
-      0,
-      5000,
-    ),
-
-  availability:
-    availability(
-      product,
-    ),
-
-  condition:
-    "new",
-
-  price:
-    money(
-      product.price_offer ||
-      product.price_1,
-    ),
-
-  link:
-    productLink(
-      product,
-    ),
-
-  image_link:
-    imageUrl(
-      product,
-    ),
-
-  brand:
-    "Wooly Imports",
-
-  google_product_category:
-    categoryMap[
-      clean(
-        product.category,
-      ).toLowerCase()
-    ] ||
-    "Arts & Entertainment > Party & Celebration",
-});
+/**
+ * Fachada compatible para el motor administrativo, que invoca
+ * validate antes de map. Los exportadores usan el resultado detallado.
+ */
+export function mapProductToMeta(
+  product: FeedProduct,
+): MetaFeedItem {
+  const result = mapProductToMetaDetailed(product);
+  if (result.ok === false) {
+    throw new Error("Producto no exportable a Meta.");
+  }
+  return result.item;
+}

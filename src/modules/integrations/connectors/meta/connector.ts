@@ -4,6 +4,11 @@ import { exportMetaCsv } from "./exporter";
 import { mapProductToMeta } from "./mapper";
 import { validateMetaProduct } from "./validator";
 
+export * from "./exporter";
+export * from "./mapper";
+export * from "./types";
+export * from "./validator";
+
 export const MetaConnector: IntegrationConnector<FeedProduct, MetaFeedItem> = {
   key: "meta",
   name: "Meta Commerce",
