@@ -29,7 +29,7 @@ export function useSearchNavigation(
     closeSearch();
 
     navigate(
-      `/catalogo/producto.html?id=${product.id}&cat=${product.category}`,
+      buildProductPublicPath(product.id, product.category),
       {
         state: {
           fromSearch: true,
@@ -46,3 +46,4 @@ export function useSearchNavigation(
 
   return { goToProduct, goToCategory };
 }
+import { buildProductPublicPath } from "@/shared/config/application";

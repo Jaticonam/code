@@ -70,7 +70,7 @@ export default function BlogRelatedProducts({
               key={
                 product.id
               }
-              to={`/catalogo/producto.html?id=${product.id}&cat=${product.category}`}
+              to={buildProductPublicPath(product.id, product.category)}
               className="blog-related-product"
             >
               <img
@@ -111,3 +111,4 @@ export default function BlogRelatedProducts({
     </section>
   );
 }
+import { buildProductPublicPath } from "@/shared/config/application";

@@ -19,6 +19,17 @@ export function buildProductPublicUrl(
   return url.toString();
 }
 
+export function buildProductPublicPath(
+  productId: string,
+  category?: string,
+  config: ApplicationConfig = getApplicationConfig(),
+): string {
+  const params = new URLSearchParams();
+  params.set("id", productId);
+  if (category) params.set("cat", category);
+  return `${config.routes.productDetail}?${params.toString()}`;
+}
+
 export function buildCatalogPublicUrl(
   config: ApplicationConfig = getApplicationConfig(),
 ): string {

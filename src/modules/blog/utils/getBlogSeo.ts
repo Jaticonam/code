@@ -1,9 +1,8 @@
 import type { BlogArticle, BlogSeo } from "../types/blog";
-
-const SITE_URL = "https://www.woolyimports.com";
+import { buildPublicUrl } from "@/shared/config/application";
 
 export function getBlogSeo(article: BlogArticle): BlogSeo {
-  const url = `${SITE_URL}/blog/${article.slug}`;
+  const url = buildPublicUrl(`/blog/${article.slug}`);
 
   return {
     metaTitle: article.seo?.metaTitle || `${article.title} | Wooly Hub`,

@@ -8,7 +8,7 @@ const categories = [
     tag: "Alta demanda",
     description: "Ideales para ramos, campañas y ventas rápidas",
     slug: "flores",
-    image: "https://woolyimports.com/og/flores.jpg",
+    image: buildPublicUrl("/og/flores.jpg"),
     priority: 100,
   },
   {
@@ -16,7 +16,7 @@ const categories = [
     tag: "Sube ticket",
     description: "Perfectos para aumentar el valor del pedido",
     slug: "peluches",
-    image: "https://woolyimports.com/og/peluches.jpg",
+    image: buildPublicUrl("/og/peluches.jpg"),
     priority: 90,
   },
   {
@@ -24,7 +24,7 @@ const categories = [
     tag: "Acabado premium",
     description: "Eleva la presentación de cualquier detalle",
     slug: "papeles",
-    image: "https://woolyimports.com/og/papeles.jpg",
+    image: buildPublicUrl("/og/papeles.jpg"),
     priority: 85,
   },
   {
@@ -32,7 +32,7 @@ const categories = [
     tag: "Empaque listo",
     description: "Solución directa para empaquetar y vender",
     slug: "cajas",
-    image: "https://woolyimports.com/og/cajas.jpg",
+    image: buildPublicUrl("/og/cajas.jpg"),
     priority: 95,
   },
   {
@@ -40,7 +40,7 @@ const categories = [
     tag: "Detalle clave",
     description: "El toque final que hace destacar el producto",
     slug: "cintas",
-    image: "https://woolyimports.com/og/cintas.jpg",
+    image: buildPublicUrl("/og/cintas.jpg"),
     priority: 80,
   },
   {
@@ -48,7 +48,7 @@ const categories = [
     tag: "Venta rápida",
     description: "Alta rotación en fechas y campañas",
     slug: "globos",
-    image: "https://woolyimports.com/og/globos.jpg",
+    image: buildPublicUrl("/og/globos.jpg"),
     priority: 88,
   },
   {
@@ -56,7 +56,7 @@ const categories = [
     tag: "Producción total",
     description: "Complementos para armar pedidos completos",
     slug: "accesorios",
-    image: "https://woolyimports.com/og/accesorios.jpg",
+    image: buildPublicUrl("/og/accesorios.jpg"),
     priority: 75,
   },
   {
@@ -64,7 +64,7 @@ const categories = [
     tag: "Alta rotación",
     description: "Producto coleccionable con alta demanda",
     slug: "hotwheels",
-    image: "https://woolyimports.com/og/hotwheels.jpg",
+    image: buildPublicUrl("/og/hotwheels.jpg"),
     priority: 92,
   },
 ];
@@ -120,3 +120,4 @@ export default function CategoriesSection() {
     </section>
   );
 }
+import { buildPublicUrl } from "@/shared/config/application";

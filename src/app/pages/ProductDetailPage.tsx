@@ -1243,9 +1243,10 @@ const ProductDetailPage =
             relatedProduct,
           ) => {
             navigate(
-              `/catalogo/producto.html?id=${relatedProduct.id}&cat=${encodeURIComponent(
+              buildProductPublicPath(
+                relatedProduct.id,
                 relatedProduct.category,
-              )}`,
+              ),
             );
           }}
         />
@@ -1363,3 +1364,4 @@ const ProductDetailPage =
 };
 
 export default ProductDetailPage;
+import { buildProductPublicPath } from "@/shared/config/application";

@@ -13,6 +13,7 @@ import type {
 import type {
   ProductSeoData,
 } from "./productSeo";
+import { getApplicationConfig } from "@/shared/config/application";
 
 export type SeoSchemaIssueCode =
   | "PRODUCT_NOT_PUBLIC"
@@ -51,6 +52,7 @@ export function buildProductSeoSchema(
   product: Product,
   seo: ProductSeoData,
 ): SeoSchemaResult<ProductJsonLdSchema> {
+  const config = getApplicationConfig();
   const policy = resolveProductCommercialPolicy(product);
   const commercial = resolveProductCommercialState(product);
   const issues: SeoSchemaIssue[] = [];
@@ -104,7 +106,7 @@ export function buildProductSeoSchema(
     category: clean(product.category),
     brand: {
       "@type": "Brand",
-      name: "Wooly Import Store",
+      name: config.app.name,
     },
   };
 
@@ -139,7 +141,7 @@ export function buildProductSeoSchema(
     schema.offers = {
       "@type": "Offer",
       url: seo.canonical,
-      priceCurrency: "PEN",
+      priceCurrency: config.locale.currency,
       price,
       availability,
       itemCondition: "https://schema.org/NewCondition",

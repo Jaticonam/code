@@ -1,9 +1,13 @@
 import { useEffect } from "react";
 import type { BlogArticle } from "../types/blog";
 import { getBlogSeo } from "../utils/getBlogSeo";
+import {
+  buildPublicUrl,
+  getApplicationConfig,
+} from "@/shared/config/application";
 
-const SITE_URL = "https://www.woolyimports.com";
 const SITE_NAME = "Wooly Hub";
+const applicationConfig = getApplicationConfig();
 
 const setMeta = (
   key: string,
@@ -100,10 +104,13 @@ export function useBlogSeo(article?: BlogArticle) {
       },
       publisher: {
         "@type": "Organization",
-        name: "Wooly Import Store",
+        name: applicationConfig.app.name,
         logo: {
           "@type": "ImageObject",
-          url: `${SITE_URL}/logo.png`,
+          url: buildPublicUrl(
+            applicationConfig.assets.logoUrl,
+            applicationConfig,
+          ),
         },
       },
       mainEntityOfPage: url,

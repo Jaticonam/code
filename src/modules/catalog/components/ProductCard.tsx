@@ -37,7 +37,7 @@ export function ProductCard({
   } = useProductCard(p, cart, onAddToCart);
 
   const goToDetail = () =>
-    navigate(`/catalogo/producto.html?id=${p.id}&cat=${p.category}`);
+    navigate(buildProductPublicPath(p.id, p.category));
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const selectedText = window.getSelection()?.toString().trim();
@@ -174,3 +174,4 @@ export function ProductCard({
 }
 
 
+import { buildProductPublicPath } from "@/shared/config/application";

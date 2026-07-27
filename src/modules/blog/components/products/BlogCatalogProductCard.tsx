@@ -191,7 +191,7 @@ export default function BlogCatalogProductCard({
 
   return (
     <Link
-      to={`/catalogo/producto.html?id=${product.id}&cat=${product.category}`}
+      to={buildProductPublicPath(product.id, product.category)}
       className="hub-card blog-catalog-product-card"
     >
       <div className="blog-catalog-product-image">
@@ -306,3 +306,4 @@ export default function BlogCatalogProductCard({
     </Link>
   );
 }
+import { buildProductPublicPath } from "@/shared/config/application";

@@ -90,7 +90,7 @@ export function useProductCard(
 
   function goToDetail() {
     navigate(
-      `/catalogo/producto.html?id=${product.id}&cat=${product.category}`,
+      buildProductPublicPath(product.id, product.category),
     );
   }
 
@@ -145,3 +145,4 @@ export function useProductCard(
     handleWhatsApp,
   };
 }
+import { buildProductPublicPath } from "@/shared/config/application";

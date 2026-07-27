@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { buildPublicUrl } from "@/shared/config/application";
 
 export function useBreadcrumbSchema(title:string,slug:string){
   useEffect(()=>{
@@ -8,9 +9,9 @@ export function useBreadcrumbSchema(title:string,slug:string){
       "@context":"https://schema.org",
       "@type":"BreadcrumbList",
       itemListElement:[
-        {"@type":"ListItem",position:1,name:"Inicio",item:"https://www.woolyimports.com/"},
-        {"@type":"ListItem",position:2,name:"Blog",item:"https://www.woolyimports.com/blog"},
-        {"@type":"ListItem",position:3,name:title,item:`https://www.woolyimports.com/blog/${slug}`}
+        {"@type":"ListItem",position:1,name:"Inicio",item:buildPublicUrl("/")},
+        {"@type":"ListItem",position:2,name:"Blog",item:buildPublicUrl("/blog")},
+        {"@type":"ListItem",position:3,name:title,item:buildPublicUrl(`/blog/${slug}`)}
       ]
     };
 

@@ -181,7 +181,7 @@ export default function BlogArticleSidebar({
                 );
 
               const detailUrl =
-                `/catalogo/producto.html?id=${product.id}&cat=${product.category}`;
+                buildProductPublicPath(product.id, product.category);
 
               const ctaLabel =
                 commercialState
@@ -417,3 +417,4 @@ function Card({
     </div>
   );
 }
+import { buildProductPublicPath } from "@/shared/config/application";
