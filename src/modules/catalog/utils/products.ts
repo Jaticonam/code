@@ -33,7 +33,6 @@ interface CacheEntry {
     "sheets" |
     "fallback";
 }
-
 interface ProductsCacheData {
   products: Product[];
   source: CacheEntry["source"];
@@ -261,32 +260,3 @@ export async function fetchProducts():
     return fallbackProducts;
   }
 }
-
-export function clearProductsCache() {
-  try {
-    sessionStorage.removeItem(
-      CACHE_KEY,
-    );
-  } catch {
-    // Ignorar errores de storage.
-  }
-}
-
-/**
- * Compatibilidad legacy.
- *
- * Desde ahora la disponibilidad comercial se resuelve
- * mediante la política central, no solamente precio y stock.
- */
-export function isProductAvailable(
-  product:
-    Product,
-): boolean {
-  return isProductPurchasable(
-    product,
-  );
-}
-
-import {
-  isProductPurchasable,
-} from "@/modules/catalog/domain/ProductCommercialPolicy";
