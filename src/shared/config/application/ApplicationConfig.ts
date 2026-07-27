@@ -1,0 +1,55 @@
+import type { CatalogProviderSource } from "@/modules/catalog/providers/CatalogProvider";
+
+export interface ApplicationConfig {
+  readonly app: {
+    readonly id: string;
+    readonly brandId: string;
+    readonly name: string;
+    readonly shortName: string;
+  };
+  readonly locale: {
+    readonly language: string;
+    readonly country: string;
+    readonly locale: string;
+    readonly currency: string;
+    readonly currencyLocale: string;
+  };
+  readonly publicSite: {
+    readonly origin: string;
+    readonly domain: string;
+  };
+  readonly contact: {
+    readonly whatsappNumber: string;
+  };
+  readonly assets: {
+    readonly logoUrl: string;
+    readonly pdfLogoUrl: string;
+    readonly defaultSeoImageUrl: string;
+  };
+  readonly routes: {
+    readonly catalog: string;
+    readonly productDetail: string;
+    readonly catalogPdf: string;
+  };
+  readonly commerce: {
+    readonly pdfValidityDays: number;
+  };
+  readonly catalog: {
+    readonly source: CatalogProviderSource;
+  };
+  readonly integrations: {
+    readonly meta: {
+      readonly brandName: string;
+    };
+  };
+}
+
+export type ApplicationRuntimeMode =
+  | "development"
+  | "test"
+  | "production";
+
+export interface ApplicationPublicOverrides {
+  readonly catalogSource?: unknown;
+  readonly publicSiteOrigin?: unknown;
+}
