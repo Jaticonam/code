@@ -1,6 +1,12 @@
 import { IntegrationEngine } from "../../engine/IntegrationEngine";
 import { ConnectorRegistry } from "../../registry/ConnectorRegistry";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
+import type {
+  Product,
+} from "@/shared/types/product";
+import type {
+  IntegrationConnector,
+} from "../../types/connector";
 
 export const IntegrationStep: WorkflowStep = {
   key: "integration",
@@ -15,7 +21,15 @@ export const IntegrationStep: WorkflowStep = {
       throw new Error(`No se encontró el conector: ${connectorKey}`);
     }
 
-    const result = await IntegrationEngine.publish(context.data as any[], connector as any);
+    const result =
+      await IntegrationEngine.publish(
+        context.data as Product[],
+        connector as
+          IntegrationConnector<
+            Product,
+            unknown
+          >,
+      );
 
     context.state.integration = result;
     context.logs.push(`✅ Feed generado: ${result.outputFile}`);

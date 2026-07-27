@@ -236,7 +236,7 @@ export const IntegrationEngine = {
       const result =
         await this.publish(
           data,
-          connector as IntegrationConnector<
+          connector as unknown as IntegrationConnector<
             TInput,
             unknown
           >,

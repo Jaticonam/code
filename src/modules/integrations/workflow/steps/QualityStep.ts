@@ -1,5 +1,8 @@
 import { QualityEngine } from "../../quality";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
+import type {
+  Product,
+} from "@/shared/types/product";
 
 export const QualityStep: WorkflowStep = {
   key: "quality",
@@ -7,7 +10,8 @@ export const QualityStep: WorkflowStep = {
   enabled: true,
 
   async execute(context) {
-    const products = context.data as any[];
+    const products =
+      context.data as Product[];
     const quality = QualityEngine.evaluate(products);
 
     context.state.quality = quality;

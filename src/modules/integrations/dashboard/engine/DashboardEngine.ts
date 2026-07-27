@@ -13,7 +13,8 @@ export class DashboardEngine{
 
 async build(){
 
-const result:any={
+const result:
+  Record<string, unknown> = {
 
 generatedAt:
 new Date().toISOString()

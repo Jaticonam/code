@@ -1,16 +1,31 @@
 import { MetaConnector } from "../connectors/meta/connector";
 import type { IntegrationConnector } from "../types/connector";
+import type {
+  Product,
+} from "@/shared/types/product";
 
 class Registry {
-  private connectors: IntegrationConnector<any, any>[] = [];
+  private connectors:
+    IntegrationConnector<
+      Product,
+      unknown
+    >[] = [];
 
-  register(connector: IntegrationConnector<any, any>) {
+  register(
+    connector:
+      IntegrationConnector<
+        Product,
+        unknown
+      >,
+  ) {
     const exists = this.connectors.some((item) => item.key === connector.key);
     if (!exists) this.connectors.push(connector);
   }
 
   getAll() {
-    return this.connectors;
+    return [
+      ...this.connectors,
+    ];
   }
 
   getByKey(key: string) {

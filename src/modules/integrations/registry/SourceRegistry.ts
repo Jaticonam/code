@@ -1,16 +1,25 @@
 import type { IntegrationSource } from "../types/source";
 import { CatalogSource } from "../sources/catalog/source";
+import type {
+  Product,
+} from "@/shared/types/product";
 
 class Registry {
-  private sources: IntegrationSource<any>[] = [];
+  private sources:
+    IntegrationSource<Product>[] = [];
 
-  register(source: IntegrationSource<any>) {
+  register(
+    source:
+      IntegrationSource<Product>,
+  ) {
     const exists = this.sources.some((item) => item.key === source.key);
     if (!exists) this.sources.push(source);
   }
 
   getAll() {
-    return this.sources;
+    return [
+      ...this.sources,
+    ];
   }
 
   getByKey(key: string) {

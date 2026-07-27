@@ -1,6 +1,9 @@
 import type { Product } from "@/shared/types/product";
 import type { QualityIssue } from "../models";
 import type { QualityRule } from "../contracts/QualityRule";
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 export const PriceRule: QualityRule<Product> = {
   key: "price",
@@ -13,7 +16,10 @@ export const PriceRule: QualityRule<Product> = {
 
   validate(product) {
     const issues: QualityIssue[] = [];
-    const price = Number(product.price_offer || product.price_1 || 0);
+    const price =
+      getBaseUnitPrice(
+        product,
+      );
 
     if (!price || price <= 0) {
       issues.push({ level: "error", code: "PRICE_INVALID", field: "price_1", message: "El producto debe tener un precio mayor a cero." });

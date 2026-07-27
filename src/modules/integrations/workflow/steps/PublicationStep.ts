@@ -4,6 +4,9 @@ import path from "node:path";
 import { PublicationEngine } from "../../publication";
 import type { PublicationPlan } from "../../publication";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
+import type {
+  Product,
+} from "@/shared/types/product";
 
 const PLANS_FILE = path.resolve(process.cwd(), "public/config/publication-plans.json");
 
@@ -23,7 +26,11 @@ export const PublicationStep: WorkflowStep = {
   async execute(context) {
     const planId = String(context.metadata.plan || "meta-all");
     const plan = await loadPlan(planId);
-    const publication = PublicationEngine.apply(context.data as any[], plan);
+    const publication =
+      PublicationEngine.apply(
+        context.data as Product[],
+        plan,
+      );
 
     context.data = publication.items;
     context.state.plan = plan;

@@ -1,6 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
+import type {
+  Product,
+} from "@/shared/types/product";
+import type {
+  PublicationResult,
+} from "../../publication";
+import type {
+  QualityReport,
+} from "../../quality";
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 const OUT_DIR = path.resolve(process.cwd(), "public/api/previews");
 const OUT_FILE = path.join(OUT_DIR, "publication-preview.json");
@@ -11,8 +23,14 @@ export const PreviewStep: WorkflowStep = {
   enabled: true,
 
   async execute(context) {
-    const publication = context.state.publication as any;
-    const quality = context.state.quality as any;
+    const publication =
+      context.state.publication as
+        PublicationResult<Product> |
+        undefined;
+    const quality =
+      context.state.quality as
+        QualityReport |
+        undefined;
 
     const preview = {
       plan: publication?.plan,
@@ -30,14 +48,19 @@ export const PreviewStep: WorkflowStep = {
         errors: quality?.errors,
         warnings: quality?.warnings,
       },
-      items: (context.data as any[]).map((product) => ({
+      items: (
+        context.data as Product[]
+      ).map((product) => ({
         id: product.id,
         title: product.title,
         category: product.category,
         status: product.status,
         stock: product.stock,
         priority: product.priority,
-        price: product.price_offer || product.price_1,
+        price:
+          getBaseUnitPrice(
+            product,
+          ),
       })),
       issues: quality?.issues?.slice(0, 100) ?? [],
     };

@@ -1,6 +1,24 @@
 import { savePublicationHistory } from "../../publication";
 import type { PublicationExecution, PublicationSnapshot } from "../../publication";
 import type { WorkflowStep } from "../contracts/WorkflowStep";
+import type {
+  Product,
+} from "@/shared/types/product";
+import type {
+  PublicationPlan,
+  PublicationResult,
+} from "../../publication";
+import type {
+  QualityReport,
+} from "../../quality";
+
+interface IntegrationState {
+  status: {
+    items_exported: number;
+    items_invalid: number;
+    stable_feed: string;
+  };
+}
 
 const stamp = () => new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "").replace("T", "-");
 
@@ -18,10 +36,18 @@ export const HistoryStep: WorkflowStep = {
   enabled: true,
 
   async execute(context) {
-    const plan = context.state.plan as any;
-    const publication = context.state.publication as any;
-    const integration = context.state.integration as any;
-    const quality = context.state.quality as any;
+    const plan =
+      context.state.plan as
+        PublicationPlan;
+    const publication =
+      context.state.publication as
+        PublicationResult<Product>;
+    const integration =
+      context.state.integration as
+        IntegrationState;
+    const quality =
+      context.state.quality as
+        QualityReport;
     const connector = String(context.metadata.connector || "meta");
 
     const executionId = `pub-${connector}-${slug(plan.id)}-${stamp()}`;
@@ -47,7 +73,12 @@ export const HistoryStep: WorkflowStep = {
       executionId,
       connector,
       planId: plan.id,
-      productIds: (context.data as any[]).map((product) => product.id),
+      productIds: (
+        context.data as Product[]
+      ).map(
+        (product) =>
+          product.id,
+      ),
       createdAt: new Date().toISOString(),
     };
 

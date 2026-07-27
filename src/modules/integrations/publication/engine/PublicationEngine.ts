@@ -13,6 +13,9 @@ import type {
 import type {
   PublicationResult,
 } from "../models/PublicationResult";
+import {
+  getBaseUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 const normalize = (
   value?:
@@ -81,14 +84,14 @@ const sortProducts = (
       ) {
         return (
           (
-            a.price_offer ||
-            a.price_1 ||
-            0
+            getBaseUnitPrice(
+              a,
+            )
           ) -
           (
-            b.price_offer ||
-            b.price_1 ||
-            0
+            getBaseUnitPrice(
+              b,
+            )
           )
         ) *
           direction;

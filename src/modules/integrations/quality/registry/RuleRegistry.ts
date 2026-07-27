@@ -1,15 +1,24 @@
 import type { QualityRule } from "../contracts/QualityRule";
+import type {
+  Product,
+} from "@/shared/types/product";
 
 class Registry {
-  private rules: QualityRule<any>[] = [];
+  private rules:
+    QualityRule<Product>[] = [];
 
-  register(rule: QualityRule<any>) {
+  register(
+    rule:
+      QualityRule<Product>,
+  ) {
     const exists = this.rules.some((item) => item.key === rule.key);
     if (!exists) this.rules.push(rule);
   }
 
   getAll() {
-    return this.rules.filter((rule) => rule.enabled);
+    return this.rules.filter(
+      (rule) => rule.enabled,
+    );
   }
 
   getByKey(key: string) {

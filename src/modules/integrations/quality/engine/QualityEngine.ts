@@ -1,9 +1,14 @@
 import type { QualityIssue, QualityReport } from "../models";
 import { RuleRegistry } from "../registry";
 import { getQualityGrade } from "../utils/score";
+import type {
+  Product,
+} from "@/shared/types/product";
 
 export const QualityEngine = {
-  evaluate<T extends { id?: string; title?: string }>(items: T[]): QualityReport {
+  evaluate(
+    items: Product[],
+  ): QualityReport {
     const rules = RuleRegistry.getAll();
     const issues: QualityIssue[] = [];
 
