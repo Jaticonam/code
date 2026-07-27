@@ -60,7 +60,9 @@ export default function BrandStorySection() {
           </div>
 
           <a
-            href="https://wa.me/51936188636?text=Hola,%20quiero%20información%20sobre%20Wooly%20Import"
+            href={buildApplicationWhatsAppUrl(
+              "Hola, quiero información sobre Wooly Import",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="brand-story-cta"
@@ -75,3 +77,4 @@ export default function BrandStorySection() {
     </section>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

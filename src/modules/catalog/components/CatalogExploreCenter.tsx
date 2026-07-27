@@ -201,7 +201,7 @@ export function CatalogExploreCenter({
           </button>
 
           <a
-            href="https://wa.me/51936188636"
+            href={buildApplicationWhatsAppUrl()}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -212,3 +212,4 @@ export function CatalogExploreCenter({
     </div>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

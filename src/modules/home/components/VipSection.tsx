@@ -109,7 +109,7 @@ export default function VipSection() {
 
       <div className="vip-cta-wrapper" data-aos="zoom-in" data-aos-delay="160">
         <a
-          href="https://wa.me/51936188636"
+          href={buildApplicationWhatsAppUrl()}
           target="_blank"
           rel="noopener noreferrer"
           className="vip-cta-btn"
@@ -125,3 +125,4 @@ export default function VipSection() {
     </section>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

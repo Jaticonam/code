@@ -16,7 +16,9 @@ export default function FinalCTASection() {
 
         <div className="final-cta-actions">
           <a
-            href="https://wa.me/51936188636?text=Hola,%20quiero%20comprar%20por%20mayor"
+            href={buildApplicationWhatsAppUrl(
+              "Hola, quiero comprar por mayor",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="final-cta-whatsapp"
@@ -38,3 +40,4 @@ export default function FinalCTASection() {
     </section>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

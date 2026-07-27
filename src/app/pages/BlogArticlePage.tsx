@@ -85,7 +85,7 @@ export default function BlogArticlePage() {
             </div>
 
             <a
-              href="https://wa.me/51936188636"
+              href={buildApplicationWhatsAppUrl()}
               target="_blank"
               rel="noreferrer"
             >
@@ -99,3 +99,4 @@ export default function BlogArticlePage() {
     </main>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

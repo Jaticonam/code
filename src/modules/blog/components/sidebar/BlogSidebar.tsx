@@ -47,7 +47,7 @@ export default function BlogSidebar({ q, setQ }: Props) {
 
       <a
         className="blog-sales"
-        href="https://wa.me/51936188636"
+        href={buildApplicationWhatsAppUrl()}
         target="_blank"
         rel="noreferrer"
       >
@@ -56,3 +56,4 @@ export default function BlogSidebar({ q, setQ }: Props) {
     </aside>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

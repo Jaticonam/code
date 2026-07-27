@@ -38,7 +38,7 @@ export default function HomeFooter() {
           </a>
 
           <a
-            href="https://wa.me/51936188636"
+            href={buildApplicationWhatsAppUrl()}
             target="_blank"
             rel="noopener noreferrer"
             className="home-footer-link"
@@ -64,3 +64,4 @@ export default function HomeFooter() {
     </footer>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

@@ -300,7 +300,9 @@ export default function HeroSlider() {
               <button
                 onClick={() =>
                   window.open(
-                    "https://wa.me/51936188636?text=Hola%20Wooly%2C%20quiero%20informaci%C3%B3n%20para%20comprar%20por%20mayor",
+                    buildApplicationWhatsAppUrl(
+                      "Hola Wooly, quiero información para comprar por mayor",
+                    ),
                     "_blank",
                   )
                 }
@@ -413,3 +415,4 @@ export default function HeroSlider() {
     </main>
   );
 }
+import { buildApplicationWhatsAppUrl } from "@/shared/config/application";
