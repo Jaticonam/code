@@ -24,7 +24,8 @@ export const woolyApplicationConfig = {
   assets: {
     logoUrl:
       "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1",
-    pdfLogoUrl: "/logo-wooly.png",
+    pdfLogoUrl:
+      "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1",
     defaultSeoImageUrl: "/og/og-catalogo.jpg",
   },
   routes: {

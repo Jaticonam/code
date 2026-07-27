@@ -7,21 +7,23 @@ import {
 } from "../../mappers/PdfProductMapper";
 
 import "./CatalogPdfCard.css";
+import { getApplicationConfig } from "@/shared/config/application";
 
 interface CatalogPdfCardProps {
   product:
     PdfProduct;
 }
 
+const applicationConfig = getApplicationConfig();
 const moneyFormatter =
   new Intl.NumberFormat(
-    "es-PE",
+    applicationConfig.locale.currencyLocale,
     {
       style:
         "currency",
 
       currency:
-        "PEN",
+        applicationConfig.locale.currency,
 
       minimumFractionDigits:
         2,

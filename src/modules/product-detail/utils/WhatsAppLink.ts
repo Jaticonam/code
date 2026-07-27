@@ -38,6 +38,13 @@ export function normalizeWhatsAppPhone(
   return String(phone ?? "").replace(/\D/g, "");
 }
 
+export function formatWhatsAppPhone(phone: unknown): string {
+  const value = normalizeWhatsAppPhone(phone);
+  return value.length === 11
+    ? `+${value.slice(0, 2)} ${value.slice(2, 5)} ${value.slice(5, 8)} ${value.slice(8)}`
+    : value;
+}
+
 export function buildWhatsAppLink(
   message: unknown,
   phone: unknown = WOOLY_WHATSAPP_NUMBER,

@@ -1,6 +1,10 @@
 import {
   CATALOG_PDF_LINK_VERSION,
 } from "./CatalogPdfLinkContract";
+import {
+  buildCatalogPdfPublicUrl,
+  getApplicationConfig,
+} from "@/shared/config/application";
 
 export interface BuildCatalogPdfUrlParams {
   categoryId?: string;
@@ -31,7 +35,7 @@ export const buildCatalogPdfPath = ({
 
   const query = params.toString();
 
-  return `/catalogo/pdf?${query}`;
+  return `${getApplicationConfig().routes.catalogPdf}?${query}`;
 };
 
 export const buildCatalogPdfUrl = ({
@@ -39,7 +43,13 @@ export const buildCatalogPdfUrl = ({
   ...params
 }: BuildCatalogPdfUrlParams) => {
   const path = buildCatalogPdfPath(params);
-  const cleanOrigin = String(origin || "").replace(/\/$/, "");
-
-  return cleanOrigin ? `${cleanOrigin}${path}` : path;
+  if (!origin) return path;
+  const config = getApplicationConfig();
+  return buildCatalogPdfPublicUrl({
+    ...config,
+    publicSite: {
+      ...config.publicSite,
+      origin: String(origin).replace(/\/+$/, ""),
+    },
+  }) + path.slice(config.routes.catalogPdf.length);
 };

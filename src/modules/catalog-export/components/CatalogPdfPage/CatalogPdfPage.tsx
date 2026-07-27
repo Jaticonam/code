@@ -26,6 +26,9 @@ import {
   getApplicationConfig,
 } from "@/shared/config/application";
 import {
+  formatWhatsAppPhone,
+} from "@/modules/product-detail/utils/WhatsAppLink";
+import {
   parseCatalogPdfLink,
 } from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
 
@@ -46,15 +49,6 @@ import "./CatalogPdfPage.css";
 /* =========================================================
    CONFIGURACIÓN COMERCIAL
    ========================================================= */
-
-const PDF_CONTACT_NUMBER =
-  "+51 936 188 636";
-
-const PDF_LOGO_SRC =
-  "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
-
-const PDF_VALID_DAYS =
-  7;
 
 /* =========================================================
    FECHAS
@@ -213,7 +207,7 @@ export default function CatalogPdfPage() {
       () =>
         addDays(
           generatedDate,
-          PDF_VALID_DAYS,
+          applicationConfig.commerce.pdfValidityDays,
         ),
       [generatedDate],
     );
@@ -363,7 +357,7 @@ export default function CatalogPdfPage() {
 
       <article className="catalog-pdf-sheet">
         <CatalogPdfHeader
-          logoSrc={PDF_LOGO_SRC}
+          logoSrc={applicationConfig.assets.pdfLogoUrl}
           title={copy.title}
           subtitle={copy.subtitle}
           segmentLabel={copy.segmentLabel}
@@ -371,7 +365,9 @@ export default function CatalogPdfPage() {
           generatedAt={generatedAt}
           validUntil={validUntil}
           productCount={products.length}
-          contactNumber={PDF_CONTACT_NUMBER}
+          contactNumber={formatWhatsAppPhone(
+            applicationConfig.contact.whatsappNumber,
+          )}
           isComplete={selectionIsReady}
         />
 
