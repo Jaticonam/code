@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useMemo,
   useState,
 } from "react";
 
@@ -18,10 +17,6 @@ import {
 import {
   isProductPurchasable,
 } from "@/modules/catalog/domain/ProductCommercialPolicy";
-
-import {
-  useProducts,
-} from "@/modules/catalog/hooks/useProducts";
 
 import {
   ProductCard,
@@ -48,77 +43,18 @@ import type {
 } from "@/shared/types/product";
 
 import HomeSectionHeader from "./HomeSectionHeader";
-
-const HOME_MIN_PRIORITY =
-  80;
-
-const HOME_LIMIT =
-  8;
-
-const getFeatured = (
-  products:
-    Product[],
-) =>
-  products
-    .filter(
-      (
-        product,
-      ) =>
-        isProductPurchasable(
-          product,
-        ) &&
-        (
-          product.priority ||
-          0
-        ) >=
-          HOME_MIN_PRIORITY,
-    )
-    .map(
-      (product) => ({
-        product,
-
-        score:
-          (
-            product.priority ||
-            0
-          ) *
-            10 +
-          Math.random() *
-            100,
-      }),
-    )
-    .sort(
-      (
-        a,
-        b,
-      ) =>
-        b.score -
-        a.score,
-    )
-    .slice(
-      0,
-      HOME_LIMIT,
-    )
-    .map(
-      (
-        item,
-      ) =>
-        item.product,
-    );
+import {
+  FEATURED_PRODUCTS_LIMIT,
+  useFeaturedProducts,
+} from "@/modules/home/hooks/useFeaturedProducts";
 
 export default function FeaturedProductsSection() {
   const {
-    data:
-      products = [],
-
-    isLoading:
-      loading,
-  } = useProducts();
-
-  const [
-    shuffleKey,
-    setShuffleKey,
-  ] = useState(0);
+    featuredProducts,
+    loading,
+    reshuffle:
+      handleShuffle,
+  } = useFeaturedProducts();
 
   const [
     cartOpen,
@@ -163,22 +99,6 @@ export default function FeaturedProductsSection() {
     clearCart,
   } = useCartStore();
 
-  const featuredProducts =
-    useMemo(
-      () => {
-        // La clave fuerza una nueva selección aleatoria a petición del usuario.
-        void shuffleKey;
-
-        return getFeatured(
-          products,
-        );
-      },
-      [
-        products,
-        shuffleKey,
-      ],
-    );
-
   const currentQtyInCart =
     selectedProduct
       ? (
@@ -192,16 +112,6 @@ export default function FeaturedProductsSection() {
           0
         )
       : 0;
-
-  const handleShuffle =
-    () =>
-      setShuffleKey(
-        (
-          value,
-        ) =>
-          value +
-          1,
-      );
 
   const handleAddToCart =
     useCallback(
@@ -305,7 +215,7 @@ export default function FeaturedProductsSection() {
         <div className="featured-products-grid">
           {Array.from({
             length:
-              HOME_LIMIT,
+              FEATURED_PRODUCTS_LIMIT,
           }).map(
             (
               _,
