@@ -1,5 +1,7 @@
+import { getApplicationConfig } from "@/shared/config/application";
+
 export const WOOLY_WHATSAPP_NUMBER =
-  "51936188636";
+  getApplicationConfig().contact.whatsappNumber;
 
 export type WhatsAppIssueCode =
   | "EMPTY_PHONE"

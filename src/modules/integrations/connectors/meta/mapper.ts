@@ -7,6 +7,11 @@ import {
 import {
   getBaseUnitPrice,
 } from "@/shared/domain/volumePricing/VolumePricingHelpers";
+import {
+  buildProductPublicUrl,
+  getApplicationConfig,
+  type ApplicationConfig,
+} from "@/shared/config/application";
 
 import type {
   FeedProduct,
@@ -17,13 +22,14 @@ import type {
   MetaMappingResult,
 } from "./types";
 
-export const META_SITE_URL =
-  "https://www.woolyimports.com";
-export const META_BRAND = "Wooly Imports";
-export const META_CURRENCY = "PEN";
+const defaultConfig = getApplicationConfig();
+export const META_SITE_URL = defaultConfig.publicSite.origin;
+export const META_BRAND = defaultConfig.integrations.meta.brandName;
+export const META_CURRENCY = defaultConfig.locale.currency;
 
 export interface MetaMapperOptions {
   siteUrl?: string;
+  config?: ApplicationConfig;
 }
 
 const categoryMap: Record<string, string> = {
@@ -102,9 +108,13 @@ export function mapProductToMetaDetailed(
   const description = cleanDescription(product.description).slice(0, 5000);
   const imageLink = clean(product.img);
   const price = getBaseUnitPrice(product);
-  const siteUrl = options.siteUrl ?? META_SITE_URL;
-  const link =
-    `${siteUrl}/catalogo/producto.html?id=${encodeURIComponent(id)}`;
+  const config = options.config ?? getApplicationConfig();
+  const link = options.siteUrl
+    ? buildProductPublicUrl(id, undefined, {
+        ...config,
+        publicSite: { ...config.publicSite, origin: options.siteUrl },
+      })
+    : buildProductPublicUrl(id, undefined, config);
 
   if (!policy.isPubliclyVisible) {
     issues.push(issue(
@@ -180,10 +190,10 @@ export function mapProductToMetaDetailed(
       description,
       availability,
       condition: "new",
-      price: `${price.toFixed(2)} ${META_CURRENCY}`,
+      price: `${price.toFixed(2)} ${config.locale.currency}`,
       link,
       image_link: imageLink,
-      brand: META_BRAND,
+      brand: config.integrations.meta.brandName,
       google_product_category:
         categoryMap[clean(product.category).toLowerCase()] ||
         "Arts & Entertainment > Party & Celebration",
