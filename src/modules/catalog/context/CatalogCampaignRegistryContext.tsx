@@ -87,7 +87,10 @@ export function CatalogCampaignRegistryProvider({
       () =>
         allCampaigns
           .filter(
-            isCampaignActive,
+            (campaign) =>
+              isCampaignActive(
+                campaign,
+              ),
           )
           .sort(
             (a, b) =>

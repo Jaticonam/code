@@ -178,6 +178,34 @@ describe("validación de SheetProduct", () => {
       }),
     ]);
   });
+
+  it("omite una fila de producto completamente vacía", () => {
+    const result = validateProductRows(
+      productDocument(`${header}\n,,,,,,,,,,`).rows,
+      SOURCE,
+    );
+    expect(result).toMatchObject({
+      ok: true,
+      data: [],
+      rejected: [],
+    });
+  });
+
+  it("mantiene issues en una fila de producto parcialmente vacía", () => {
+    const result = validateProductRows(
+      productDocument(`${header}\n1,,,,,,,,,,`).rows,
+      SOURCE,
+    );
+    expect(result).toMatchObject({
+      ok: true,
+      rejected: expect.arrayContaining([
+        expect.objectContaining({
+          code: "EMPTY_REQUIRED_FIELD",
+          column: "title",
+        }),
+      ]),
+    });
+  });
 });
 
 describe("validación de SheetCampaign", () => {
@@ -221,6 +249,24 @@ describe("validación de SheetCampaign", () => {
     expect(result).toMatchObject({
       ok: true,
       rejected: [{ code: "EMPTY_REQUIRED_FIELD", column: "id" }],
+    });
+  });
+
+  it("omite fila de campaña completamente vacía y conserva la válida", () => {
+    const result = validateCampaignRows(
+      productDocument(
+        `${header}\n,,,,,,,\nc1,Campaña,*,rosa,2026-01-01,2026-12-31,1,publicado`,
+      ).rows,
+      "Campañas",
+    );
+    expect(result).toMatchObject({
+      ok: true,
+      data: [
+        expect.objectContaining({
+          raw: expect.objectContaining({ id: "c1" }),
+        }),
+      ],
+      rejected: [],
     });
   });
 });

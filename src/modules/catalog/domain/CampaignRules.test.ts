@@ -313,5 +313,44 @@ describe(
         ]);
       },
     );
+
+    it(
+      "tolera el índice runtime y recomienda wrapper explícito en filter",
+      () => {
+        const campaign =
+          createCampaign();
+
+        expect(
+          [campaign].filter(
+            (item) =>
+              isCampaignActive(
+                item,
+                NOW,
+              ),
+          ),
+        ).toEqual([
+          campaign,
+        ]);
+
+        expect(() =>
+          isCampaignActive(
+            campaign,
+            0 as unknown as Date,
+          ),
+        ).not.toThrow();
+      },
+    );
+
+    it(
+      "una fecha de referencia Date inválida no provoca crash",
+      () => {
+        expect(() =>
+          getCampaignComputedStatus(
+            createCampaign(),
+            new Date("invalid"),
+          ),
+        ).not.toThrow();
+      },
+    );
   },
 );

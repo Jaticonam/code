@@ -155,8 +155,13 @@ export function getCampaignComputedStatus(
     Campaign,
     "startDate" | "endDate" | "publicationStatus"
   >,
-  now: Date = new Date(),
+  now: unknown = new Date(),
 ): Campaign["computedStatus"] {
+  const referenceNow =
+    now instanceof Date &&
+    Number.isFinite(now.getTime())
+      ? now
+      : new Date();
   const publicationStatus =
     normalizePublicationStatus(
       campaign.publicationStatus,
@@ -181,7 +186,7 @@ export function getCampaignComputedStatus(
   if (
     !parsedStart ||
     !parsedEnd ||
-    Number.isNaN(now.getTime())
+    !Number.isFinite(referenceNow.getTime())
   ) {
     return "borrador";
   }
@@ -208,11 +213,11 @@ export function getCampaignComputedStatus(
     return "borrador";
   }
 
-  if (now < start) {
+  if (referenceNow < start) {
     return "programada";
   }
 
-  if (now > end) {
+  if (referenceNow > end) {
     return "finalizada";
   }
 
@@ -234,7 +239,7 @@ export function isCampaignActive(
 
 export function isCampaignActive(
   campaign: Campaign,
-  now: Date = new Date(),
+  now: unknown = new Date(),
 ): boolean {
   /**
    * No se confía únicamente en computedStatus porque una

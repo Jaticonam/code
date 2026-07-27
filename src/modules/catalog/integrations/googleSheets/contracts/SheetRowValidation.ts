@@ -49,6 +49,14 @@ function clean(value: unknown): string {
   return String(value ?? "").trim();
 }
 
+function isCompletelyEmptyRow(
+  row: ParsedSheetRow,
+): boolean {
+  return Object.values(row.data).every(
+    (value) => !clean(value),
+  );
+}
+
 export function parseSheetNumber(
   row: Record<string, string>,
   column: string,
@@ -217,6 +225,10 @@ export function validateProductRows(
   const ids = new Set<string>();
 
   for (const row of rows) {
+    if (isCompletelyEmptyRow(row)) {
+      continue;
+    }
+
     const rowErrors = requiredTextIssues(
       row,
       source,
@@ -326,6 +338,10 @@ export function validateCampaignRows(
   const ids = new Set<string>();
 
   for (const row of rows) {
+    if (isCompletelyEmptyRow(row)) {
+      continue;
+    }
+
     const rowErrors = requiredTextIssues(row, source, ["id"]);
     const id = clean(row.data.id);
     if (id && ids.has(id)) {
