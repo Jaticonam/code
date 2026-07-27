@@ -385,9 +385,9 @@ describe(
           vi.spyOn(
             window,
             "open",
-          )
+            )
             .mockImplementation(
-              () => null,
+              () => ({} as Window),
             );
 
         checkout(
@@ -412,9 +412,9 @@ describe(
           vi.spyOn(
             window,
             "open",
-          )
+            )
             .mockImplementation(
-              () => null,
+              () => ({} as Window),
             );
         const onClearCart =
           vi.fn();
@@ -473,6 +473,28 @@ describe(
         expect(
           onClose,
         ).toHaveBeenCalledOnce();
+      },
+    );
+
+    it(
+      "conserva el carrito cuando el popup está bloqueado",
+      () => {
+        vi.useFakeTimers();
+        vi.spyOn(window, "open").mockImplementation(() => null);
+        const onClearCart = vi.fn();
+        const onClose = vi.fn();
+
+        const result = checkout(
+          [createItem()],
+          0,
+          onClearCart,
+          onClose,
+        );
+
+        vi.advanceTimersByTime(300);
+        expect(result.status).toBe("blocked");
+        expect(onClearCart).not.toHaveBeenCalled();
+        expect(onClose).not.toHaveBeenCalled();
       },
     );
 

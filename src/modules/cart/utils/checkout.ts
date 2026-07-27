@@ -9,6 +9,11 @@ import {
 import {
   sanitizeCartItems,
 } from "@/modules/cart/store/cart.actions";
+import {
+  buildWhatsAppLink,
+  openWhatsAppUrl,
+  type WhatsAppOpenResult,
+} from "@/modules/product-detail/utils/WhatsAppLink";
 
 export function buildCheckoutMessage(
   cart: CartItem[],
@@ -72,8 +77,8 @@ export function checkout(
   cart: CartItem[],
   savings: number,
   onClearCart: () => void,
-  onClose: () => void
-) {
+  onClose: () => void,
+): WhatsAppOpenResult {
   const eligibleCart =
     sanitizeCartItems(
       cart,
@@ -82,7 +87,13 @@ export function checkout(
   if (
     eligibleCart.length === 0
   ) {
-    return;
+    return {
+      status: "invalid",
+      issues: [{
+        code: "NO_ELIGIBLE_ITEMS",
+        message: "No hay líneas elegibles para enviar.",
+      }],
+    };
   }
 
   const message =
@@ -91,11 +102,19 @@ export function checkout(
       savings,
     );
 
-  const url = `https://wa.me/51936188636?text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank");
+  const link = buildWhatsAppLink(message);
+  if (link.ok === false) {
+    return { status: "invalid", issues: link.issues };
+  }
+  const openResult = openWhatsAppUrl(link.url);
+  if (openResult.status !== "opened") {
+    return openResult;
+  }
 
   setTimeout(() => {
     onClearCart();
     onClose();
   }, 300);
+
+  return openResult;
 }

@@ -1,3 +1,7 @@
+import {
+  CATALOG_PDF_LINK_VERSION,
+} from "./CatalogPdfLinkContract";
+
 export interface BuildCatalogPdfUrlParams {
   categoryId?: string;
   campaignId?: string;
@@ -15,6 +19,7 @@ export const buildCatalogPdfPath = ({
   const cleanCampaignId = cleanValue(campaignId);
 
   const params = new URLSearchParams();
+  params.set("v", CATALOG_PDF_LINK_VERSION);
 
   if (cleanCategoryId && cleanCategoryId !== "todas") {
     params.set("cat", cleanCategoryId);
@@ -26,7 +31,7 @@ export const buildCatalogPdfPath = ({
 
   const query = params.toString();
 
-  return query ? `/catalogo/pdf?${query}` : "/catalogo/pdf";
+  return `/catalogo/pdf?${query}`;
 };
 
 export const buildCatalogPdfUrl = ({

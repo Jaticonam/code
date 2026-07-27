@@ -2,14 +2,6 @@ import {
   Helmet,
 } from "react-helmet-async";
 
-import {
-  resolveProductCommercialPolicy,
-} from "@/modules/catalog/domain/ProductCommercialPolicy";
-
-import {
-  resolveProductCommercialState,
-} from "@/shared/domain/commercialPolicy";
-
 import type {
   Product,
 } from "@/shared/types/product";
@@ -19,8 +11,8 @@ import type {
 } from "@/shared/seo/productSeo";
 
 import {
-  getBaseUnitPrice,
-} from "@/shared/domain/volumePricing/VolumePricing";
+  buildProductSeoSchema,
+} from "@/shared/seo/ProductSeoSchema";
 
 interface Props {
   seo:
@@ -31,110 +23,13 @@ interface Props {
     null;
 }
 
-function buildProductSchema(
-  product:
-    Product,
-
-  seo:
-    ProductSeoData,
-) {
-  const policy =
-    resolveProductCommercialPolicy(
-      product,
-    );
-
-  const commercialState =
-    resolveProductCommercialState(
-      product,
-    );
-
-  if (
-    !policy.isPubliclyVisible
-  ) {
-    return null;
-  }
-
-  const productSchema = {
-    "@context":
-      "https://schema.org",
-
-    "@type":
-      "Product",
-
-    name:
-      product.title,
-
-    description:
-      product.description,
-
-    sku:
-      product.id,
-
-    image:
-      [
-        product.img,
-      ],
-
-    category:
-      product.category,
-
-    brand: {
-      "@type":
-        "Brand",
-
-      name:
-        "Wooly Import Store",
-    },
-  };
-
-  /*
-   * Preventa Wooly es consulta anticipada, no reserva.
-   * Por tanto no se genera Offer ni PreOrder.
-   */
-  if (
-    !policy.canShowPricing
-  ) {
-    return productSchema;
-  }
-
-  return {
-    ...productSchema,
-
-    offers: {
-      "@type":
-        "Offer",
-
-      url:
-        seo.canonical,
-
-      priceCurrency:
-        "PEN",
-
-      price:
-        getBaseUnitPrice(
-          product,
-        ),
-
-      availability:
-        commercialState
-          .availability ===
-        "OUT_OF_STOCK"
-          ? "https://schema.org/OutOfStock"
-          : "https://schema.org/InStock",
-
-      itemCondition:
-        "https://schema.org/NewCondition",
-    },
-  };
-}
-
 export function ProductSeo({
   seo,
   product,
 }: Props) {
-  const schema =
+  const schemaResult =
     product
-      ? buildProductSchema(
+      ? buildProductSeoSchema(
           product,
           seo,
         )
@@ -214,11 +109,9 @@ export function ProductSeo({
         }
       />
 
-      {schema && (
+      {schemaResult?.ok && (
         <script type="application/ld+json">
-          {JSON.stringify(
-            schema,
-          )}
+          {schemaResult.json}
         </script>
       )}
     </Helmet>

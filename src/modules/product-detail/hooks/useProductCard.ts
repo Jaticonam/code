@@ -19,6 +19,9 @@ import {
   buildProductWhatsappUrl,
   type ProductWhatsappIntent,
 } from "@/modules/product-detail/utils/BuildProductWhatsappMessage";
+import {
+  openWhatsAppUrl,
+} from "@/modules/product-detail/utils/WhatsAppLink";
 
 export function useProductCard(
   product:
@@ -123,11 +126,8 @@ export function useProductCard(
         },
       );
 
-    window.open(
-      buildProductWhatsappUrl(
-        message,
-      ),
-      "_blank",
+    openWhatsAppUrl(
+      buildProductWhatsappUrl(message),
     );
   }
 

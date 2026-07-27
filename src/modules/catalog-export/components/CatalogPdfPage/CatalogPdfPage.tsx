@@ -22,6 +22,9 @@ import {
 import {
   CATEGORY_CONFIG,
 } from "@/shared/config/categories";
+import {
+  parseCatalogPdfLink,
+} from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
 
 import {
   mapProductsToPdfProducts,
@@ -86,35 +89,6 @@ const addDays = (
 
   return nextDate;
 };
-
-/* =========================================================
-   PARÁMETROS COMPATIBLES
-   ========================================================= */
-
-const cleanParam = (
-  value: string | null,
-) =>
-  String(value || "")
-    .trim()
-    .toLowerCase();
-
-const getCategoryParam = (
-  searchParams: URLSearchParams,
-) =>
-  cleanParam(
-    searchParams.get("categoria") ||
-      searchParams.get("category") ||
-      searchParams.get("cat"),
-  );
-
-const getCampaignParam = (
-  searchParams: URLSearchParams,
-) =>
-  cleanParam(
-    searchParams.get("cpg") ||
-      searchParams.get("campania") ||
-      searchParams.get("campaign"),
-  );
 
 /* =========================================================
    COPY COMERCIAL
@@ -195,15 +169,16 @@ export default function CatalogPdfPage() {
     searchParams,
   ] = useSearchParams();
 
-  const categoryId =
-    getCategoryParam(
-      searchParams,
-    );
-
-  const campaignId =
-    getCampaignParam(
-      searchParams,
-    );
+  const linkContract = useMemo(
+    () => parseCatalogPdfLink(searchParams),
+    [searchParams],
+  );
+  const categoryId = linkContract.ok
+    ? linkContract.contract.categoryId ?? ""
+    : "__invalid_pdf_link__";
+  const campaignId = linkContract.ok
+    ? linkContract.contract.campaignId ?? ""
+    : "__invalid_pdf_link__";
 
   const {
     data,

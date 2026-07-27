@@ -1,13 +1,17 @@
 import type {
   Product,
 } from "@/shared/types/product";
+import {
+  buildWhatsAppLink,
+  WOOLY_WHATSAPP_NUMBER,
+} from "./WhatsAppLink";
 
 /* =========================================================
    CONFIGURACIÓN
    ========================================================= */
 
 export const WOOLY_PRODUCT_WHATSAPP_NUMBER =
-  "51936188636";
+  WOOLY_WHATSAPP_NUMBER;
 
 export type ProductWhatsappIntent =
   | "information"
@@ -126,15 +130,6 @@ export function buildProductWhatsappUrl(
   phone =
     WOOLY_PRODUCT_WHATSAPP_NUMBER,
 ): string {
-  const cleanPhone =
-    cleanText(phone)
-      .replace(
-        /\D/g,
-        "",
-      ) ||
-    WOOLY_PRODUCT_WHATSAPP_NUMBER;
-
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(
-    message,
-  )}`;
+  const result = buildWhatsAppLink(message, phone);
+  return result.ok ? result.url : "";
 }
