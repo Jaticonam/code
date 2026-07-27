@@ -3,9 +3,29 @@ import {
   requestJson,
 } from "@/shared/infrastructure/http";
 
-export async function getCommercialDashboard() {
+import type {
+  PublicationExecution,
+} from "@/modules/integrations/publication/models/PublicationExecution";
+
+export interface CommercialConnectorSummary {
+  key: string;
+  status: string;
+  products: number;
+}
+
+export interface CommercialDashboard {
+  connectors?: CommercialConnectorSummary[];
+  publication?: {
+    total?: number;
+    last?: PublicationExecution | null;
+  };
+  status?: string;
+}
+
+export async function getCommercialDashboard():
+  Promise<CommercialDashboard> {
   const result =
-    await requestJson<unknown>(
+    await requestJson<CommercialDashboard>(
       "/api/dashboard/commercial.json",
       {
         source:

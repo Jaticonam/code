@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { SearchX } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store";
 import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
+import type { CatalogCategory } from "@/modules/catalog/services/fetchProducts";
 import { Product } from "@/shared/types/product";
 import { CATEGORY_CONFIG } from "@/shared/config/categories";
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
@@ -29,7 +30,7 @@ const getCategoryFromUrl = () =>
 const getCampaignFromUrl = () =>
   new URLSearchParams(window.location.search).get("cpg") || "";
 
-const isValidCategory = (id: string) =>
+const isValidCategory = (id: string): id is CatalogCategory =>
   id === "todas" || CATEGORY_CONFIG.some((cat) => cat.id === id);
 const CatalogPage = () => {
   const location = useLocation();
@@ -38,7 +39,7 @@ const CatalogPage = () => {
   const { activeCampaigns: catalogCampaigns } = useCatalogCampaignRegistry();
   const CATALOG_CAMPAIGNS = catalogCampaigns;
 
-  const [activeCategory, setActiveCategory] = useState(() => {
+  const [activeCategory, setActiveCategory] = useState<CatalogCategory>(() => {
     const initialCat = getCategoryFromUrl();
     return isValidCategory(initialCat) ? initialCat : "todas";
   });
@@ -82,7 +83,7 @@ const CatalogPage = () => {
     isLoading: loading,
     isFullCatalogLoaded,
     isCategoryLoading,
-  } = useCatalogData(activeCategory as any);
+  } = useCatalogData(activeCategory);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -116,7 +117,7 @@ const CatalogPage = () => {
   }, [location.state]);
 
   const handleCategorySelect = useCallback(
-    (id: string) => {
+    (id: CatalogCategory) => {
       setSearchQuery("");
       setActiveCategory(id);
 

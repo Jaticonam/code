@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Activity, Boxes, History, PlugZap, Rocket, ShieldCheck } from "lucide-react";
-import { getCommercialDashboard } from "../services/getCommercialDashboard";
+import {
+  getCommercialDashboard,
+  type CommercialDashboard,
+} from "../services/getCommercialDashboard";
 
 interface CardProps {
   icon: ReactNode;
@@ -17,7 +20,8 @@ interface InfoProps {
 }
 
 export default function CommercialCenter() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] =
+    useState<CommercialDashboard | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -74,7 +78,7 @@ export default function CommercialCenter() {
             </div>
 
             <div className="mt-5 grid gap-3">
-              {(data?.connectors || []).map((c: any) => (
+              {(data?.connectors || []).map((c) => (
                 <div key={c.key} className="rounded-2xl bg-white/10 p-4">
                   <div className="flex justify-between">
                     <strong className="uppercase">{c.key}</strong>
