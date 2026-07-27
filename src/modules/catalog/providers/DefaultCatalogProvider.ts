@@ -1,9 +1,20 @@
-import { googleSheetsCatalogProvider } from "@/modules/catalog/integrations/googleSheets/GoogleSheetsCatalogProvider";
-
 import type { CatalogProvider } from "./CatalogProvider";
+import {
+  createCatalogProvider,
+} from "./CatalogProviderFactory";
 
 /* =========================================================
    PROVIDER ACTIVO
    ========================================================= */
 
-export const catalogProvider: CatalogProvider = googleSheetsCatalogProvider;
+const configuredSource =
+  import.meta.env.DEV
+    ? import.meta.env
+        .VITE_CATALOG_SOURCE
+    : undefined;
+
+export const catalogProvider:
+  CatalogProvider =
+    createCatalogProvider(
+      configuredSource,
+    );
