@@ -13,6 +13,7 @@ import {
 } from "./campaignColors";
 
 import type { CsvRow } from "./fetchSheets";
+import type { SheetCampaignTransport } from "./contracts";
 
 /* =========================================================
    SCHEMA DE GOOGLE SHEETS
@@ -86,6 +87,18 @@ export function normalizeCampaign(
         campaign,
       ),
   };
+}
+
+export function normalizeCampaignTransport(
+  transport: SheetCampaignTransport,
+): Campaign {
+  return normalizeCampaign({
+    ...transport.raw,
+    priority:
+      transport.priority.value === null
+        ? transport.raw.priority
+        : String(transport.priority.value),
+  });
 }
 
 /* =========================================================

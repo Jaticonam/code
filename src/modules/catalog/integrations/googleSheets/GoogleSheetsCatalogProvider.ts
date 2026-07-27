@@ -7,14 +7,25 @@ import type {
   CatalogProvider,
 } from "@/modules/catalog/providers/CatalogProvider";
 
-import { fetchSheetRows } from "./fetchSheets";
+import {
+  fetchSheetDocument,
+} from "./fetchSheets";
+
+import {
+  validateCampaignRows,
+  validateProductRows,
+  type SheetHeaderSchema,
+  type SheetValidationIssue,
+} from "./contracts";
 
 import {
   CAMPAIGN_REQUIRED_HEADERS,
-  normalizeCampaign,
+  normalizeCampaignTransport,
 } from "./normalizeCampaign";
 
-import { normalizeProduct } from "./normalizeProduct";
+import {
+  normalizeProductTransport,
+} from "./normalizeProduct";
 
 import {
   CAMPAIGNS_SHEET_CONFIG,
@@ -31,20 +42,37 @@ const PRODUCT_REQUIRED_HEADERS = [
   "id",
   "title",
   "description",
-  "category",
   "price_1",
-  "price_3",
-  "price_12",
-  "price_50",
-  "price_100",
   "stock",
-  "img",
-  "badge",
-  "campaigns",
-  "priority",
   "status",
-  "updated_at",
 ] as const;
+
+const PRODUCT_HEADER_SCHEMA: SheetHeaderSchema = {
+  required: PRODUCT_REQUIRED_HEADERS,
+  optional: [
+    "category",
+    "price_3",
+    "price_12",
+    "price_50",
+    "price_100",
+    "price_offer",
+    "img",
+    "cover",
+    "gallery",
+    "images",
+    "badge",
+    "campaigns",
+    "priority",
+    "updated_at",
+  ],
+  allowUnknown: true,
+};
+
+const CAMPAIGN_HEADER_SCHEMA: SheetHeaderSchema = {
+  required: CAMPAIGN_REQUIRED_HEADERS,
+  optional: [],
+  allowUnknown: true,
+};
 
 /* =========================================================
    HELPERS
@@ -54,6 +82,18 @@ function getProductSource(category: CatalogCategoryId) {
   return PRODUCT_SHEETS_CONFIG.find(
     (source) => source.category === category,
   );
+}
+
+function reportSheetIssues(
+  issues: readonly SheetValidationIssue[],
+): void {
+  for (const issue of issues) {
+    console.warn(
+      `[Google Sheets] ${issue.code} source=${issue.source}` +
+      `${issue.row ? ` row=${issue.row}` : ""}` +
+      `${issue.column ? ` column=${issue.column}` : ""}: ${issue.message}`,
+    );
+  }
 }
 
 /* =========================================================
@@ -68,12 +108,23 @@ export const googleSheetsCatalogProvider: CatalogProvider = {
   },
 
   async loadCampaigns(): Promise<Campaign[]> {
-    const rows = await fetchSheetRows(
+    const document = await fetchSheetDocument(
       CAMPAIGNS_SHEET_CONFIG,
-      CAMPAIGN_REQUIRED_HEADERS,
+      CAMPAIGN_HEADER_SCHEMA,
     );
+    const validated = validateCampaignRows(
+      document.data.rows,
+      CAMPAIGNS_SHEET_CONFIG.name || "Campañas",
+    );
+    if (validated.ok === false) return [];
 
-    return rows.map(normalizeCampaign);
+    reportSheetIssues([
+      ...document.warnings,
+      ...document.rejected,
+      ...validated.warnings,
+      ...validated.rejected,
+    ]);
+    return validated.data.map(normalizeCampaignTransport);
   },
 
   async loadCategoryProducts(
@@ -86,16 +137,30 @@ export const googleSheetsCatalogProvider: CatalogProvider = {
       return [];
     }
 
-    const rows = await fetchSheetRows(
+    const document = await fetchSheetDocument(
       source,
-      PRODUCT_REQUIRED_HEADERS,
+      PRODUCT_HEADER_SCHEMA,
     );
 
     const campaignNameToIdMap =
       buildCampaignNameToIdMap([...campaigns]);
 
-    const normalizedProducts = rows.map((row) =>
-      normalizeProduct(
+    const validated = validateProductRows(
+      document.data.rows,
+      source.category,
+      campaignNameToIdMap,
+    );
+    if (validated.ok === false) return [];
+
+    reportSheetIssues([
+      ...document.warnings,
+      ...document.rejected,
+      ...validated.warnings,
+      ...validated.rejected,
+    ]);
+
+    const normalizedProducts = validated.data.map((row) =>
+      normalizeProductTransport(
         row,
         source.category,
         campaignNameToIdMap,

@@ -13,6 +13,10 @@ import type {
   CsvRow,
 } from "./fetchSheets";
 
+import type {
+  SheetProductTransport,
+} from "./contracts";
+
 export interface SheetProduct extends Product {
   badges: string[];
   campaigns: string[];
@@ -179,5 +183,29 @@ export function normalizeProduct(
 
     updated_at:
       cleanText(row.updated_at),
+  };
+}
+
+export function normalizeProductTransport(
+  transport: SheetProductTransport,
+  categoryFromConfig: CatalogCategoryId,
+  campaignNameToIdMap: CampaignNameToIdMap = {},
+): SheetProduct {
+  const product = normalizeProduct(
+    transport.raw,
+    categoryFromConfig,
+    campaignNameToIdMap,
+  );
+
+  return {
+    ...product,
+    price_1: transport.numeric.price_1.value ?? 0,
+    price_3: transport.numeric.price_3.value,
+    price_12: transport.numeric.price_12.value,
+    price_50: transport.numeric.price_50.value,
+    price_100: transport.numeric.price_100.value,
+    price_offer: transport.numeric.price_offer.value,
+    stock: transport.numeric.stock.value,
+    priority: transport.numeric.priority.value ?? 0,
   };
 }
