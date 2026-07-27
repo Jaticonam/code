@@ -1,30 +1,44 @@
-import type { HealthCollector } from "../contracts/HealthCollector";
+import type {
+  HealthCollector,
+} from "../contracts/HealthCollector";
 
-class Registry{
+class Registry {
+  private collectors:
+    HealthCollector[] = [];
 
-    private collectors:HealthCollector[]=[];
+  register(
+    collector: HealthCollector,
+  ): void {
+    const collectorId =
+      collector.id.trim();
 
-    register(c:HealthCollector){
-
-        if(
-            this.collectors.some(
-                x=>x.key===c.key
-            )
-        ){
-            return;
-        }
-
-        this.collectors.push(c);
-
+    if (!collectorId) {
+      throw new Error(
+        "Health collector id must not be empty.",
+      );
     }
 
-    getAll(){
-
-        return this.collectors;
-
+    if (
+      this.collectors.some(
+        (registered) =>
+          registered.id.trim() ===
+          collectorId,
+      )
+    ) {
+      return;
     }
 
+    this.collectors.push(
+      collector,
+    );
+  }
+
+  getAll(): readonly HealthCollector[] {
+    return [
+      ...this.collectors,
+    ];
+  }
 }
 
-export const HealthCollectorRegistry=
-new Registry();
+export const HealthCollectorRegistry =
+  new Registry();

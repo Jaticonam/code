@@ -1,13 +1,30 @@
-export interface HealthReport{
+import type {
+  HealthCollectorResult,
+  HealthComponentData,
+} from "../contracts/HealthCollector";
 
-    generatedAt:string;
+export type HealthOverallStatus =
+  | "healthy"
+  | "degraded"
+  | "unhealthy";
 
-    status:"healthy"|"warning"|"critical";
+export interface HealthIssue {
+  collectorId: string;
+  code:
+    | "COLLECTOR_WARNING"
+    | "COLLECTOR_ERROR"
+    | "COLLECTOR_FAILED"
+    | "INVALID_COLLECTOR_RESULT";
+  message: string;
+  retryable: boolean;
+  durationMs: number;
+}
 
-    score:number;
-
-    components:Record<string,unknown>;
-
-    issues:string[];
-
+export interface HealthReport {
+  generatedAt: string;
+  overallStatus: HealthOverallStatus;
+  score: number;
+  collectors:
+    HealthCollectorResult<HealthComponentData>[];
+  issues: HealthIssue[];
 }
