@@ -3,7 +3,7 @@ import { SearchX } from "lucide-react";
 import { useCartStore } from "@/modules/cart/store";
 import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
 import { Product } from "@/shared/types/product";
-import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { CATEGORY_CONFIG } from "@/modules/catalog";
 import { CountdownTimer } from "@/shared/components/commerce/CountdownTimer";
 import { CatalogTopNav } from "@/modules/catalog/components/CatalogTopNav";
 import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";

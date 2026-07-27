@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { Product, Category } from "@/shared/types/product";
-import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { CATEGORY_CONFIG } from "../config/categories";
 import { useFilteredProducts } from "@/modules/catalog/hooks/useFilteredProducts";
 
 interface Params {

@@ -16,7 +16,7 @@ import type {
 } from "@/modules/catalog/services/fetchProducts";
 import {
   CATEGORY_CONFIG,
-} from "@/shared/config/categories";
+} from "../config/categories";
 
 export const isCatalogCategory = (
   id: string,

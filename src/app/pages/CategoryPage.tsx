@@ -16,7 +16,7 @@ import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
 import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
 import { CategorySkeleton } from "@/shared/components/skeletons/CategorySkeleton";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
-import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { CATEGORY_CONFIG } from "@/modules/catalog";
 import { getProductMedia, type ProductMedia } from "@/shared/lib/productMedia";
 
 const CategoryPage = () => {

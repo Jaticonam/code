@@ -12,7 +12,7 @@ import type {
 
 import {
   getStockPresentation,
-} from "@/shared/lib/product";
+} from "@/modules/catalog";
 
 import {
   ProductPriceBlock,

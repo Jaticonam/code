@@ -4,7 +4,7 @@ import {
 
 import {
   CATEGORY_CONFIG,
-} from "@/shared/config/categories";
+} from "@/modules/catalog";
 
 import type {
   PdfProduct,

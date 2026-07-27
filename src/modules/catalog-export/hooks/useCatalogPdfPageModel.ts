@@ -8,7 +8,7 @@ import {
 import { useCatalogCampaigns } from "@/modules/catalog/hooks/useCatalogCampaigns";
 import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
 import { parseCatalogPdfLink } from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
-import { CATEGORY_CONFIG } from "@/shared/config/categories";
+import { CATEGORY_CONFIG } from "@/modules/catalog";
 
 import { mapProductsToPdfProducts } from "../mappers/PdfProductMapper";
 import { buildPdfCategorySections } from "../services/BuildPdfCategorySections";

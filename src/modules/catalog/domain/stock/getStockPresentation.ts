@@ -7,7 +7,7 @@ import {
 
 import {
   normalizeProductSheetStatus,
-} from "@/modules/catalog/domain/ProductCommercialPolicy";
+} from "../ProductCommercialPolicy";
 
 import type {
   Product,
