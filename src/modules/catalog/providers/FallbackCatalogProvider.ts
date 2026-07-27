@@ -7,7 +7,7 @@ import type {
   CatalogCategoryId,
   CatalogProvider,
 } from "./CatalogProvider";
-import type { CatalogSourceMode } from "@/shared/config/application";
+import type { CatalogSourceMode } from "@/shared/config/application/CatalogSourceMode";
 
 export interface CatalogSourceMetadata {
   requestedSource:

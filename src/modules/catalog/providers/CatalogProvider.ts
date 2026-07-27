@@ -1,5 +1,5 @@
 import type { Campaign, Product } from "@/shared/types/product";
-import type { CatalogSourceMode } from "@/shared/config/application";
+import type { CatalogSourceMode } from "@/shared/config/application/CatalogSourceMode";
 
 /* =========================================================
    TIPOS DEL PROVIDER

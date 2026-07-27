@@ -2,7 +2,7 @@ import type {
   CatalogProvider,
   CatalogProviderResult,
 } from "@/modules/catalog/providers/CatalogProvider";
-import type { CatalogSourceMode } from "@/shared/config/application";
+import type { CatalogSourceMode } from "@/shared/config/application/CatalogSourceMode";
 import type {
   CatalogSourceMetadata,
 } from "@/modules/catalog/providers/FallbackCatalogProvider";

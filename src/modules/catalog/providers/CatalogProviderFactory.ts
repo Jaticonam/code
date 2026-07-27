@@ -8,7 +8,7 @@ import {
 import type {
   CatalogProvider,
 } from "./CatalogProvider";
-import type { CatalogSourceMode } from "@/shared/config/application";
+import type { CatalogSourceMode } from "@/shared/config/application/CatalogSourceMode";
 
 export interface CatalogProviderDependencies {
   googleSheets:
