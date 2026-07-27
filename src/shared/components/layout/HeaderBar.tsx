@@ -1,6 +1,7 @@
 import { SearchInput } from "@/modules/search/components/SearchInput";
 import type { Product } from "@/shared/types/product";
 import type { ReactNode } from "react";
+import { getApplicationConfig } from "@/shared/config/application";
 
 interface HeaderBarProps {
   searchQuery: string;
@@ -10,8 +11,7 @@ interface HeaderBarProps {
   bottomContent?: ReactNode;
 }
 
-const LOGO_URL =
-  "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
+const applicationConfig = getApplicationConfig();
 
 export function HeaderBar({
   searchQuery,
@@ -27,7 +27,10 @@ export function HeaderBar({
           onClick={() => window.location.reload()}
           className="catalog-header-logo"
         >
-          <img src={LOGO_URL} alt="Wooly" />
+          <img
+            src={applicationConfig.assets.logoUrl}
+            alt={applicationConfig.app.shortName}
+          />
         </div>
 
         <div className="catalog-header-campaigns">{topContent}</div>

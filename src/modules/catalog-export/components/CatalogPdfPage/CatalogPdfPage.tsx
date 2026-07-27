@@ -23,6 +23,9 @@ import {
   CATEGORY_CONFIG,
 } from "@/shared/config/categories";
 import {
+  getApplicationConfig,
+} from "@/shared/config/application";
+import {
   parseCatalogPdfLink,
 } from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
 
@@ -163,6 +166,9 @@ const buildCatalogPdfCopy = (
 /* =========================================================
    COMPONENTE
    ========================================================= */
+
+const applicationConfig =
+  getApplicationConfig();
 
 export default function CatalogPdfPage() {
   const [
@@ -417,8 +423,8 @@ export default function CatalogPdfPage() {
           </p>
 
           <p>
-            Wooly Imports · Catálogo mayorista para
-            emprendedores
+            {applicationConfig.app.name} · Catálogo
+            mayorista para emprendedores
           </p>
         </footer>
       </article>

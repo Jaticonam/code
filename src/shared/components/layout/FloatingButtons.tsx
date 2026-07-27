@@ -1,4 +1,7 @@
 import { Grid3X3, Package, MessageCircle, LayoutGrid } from "lucide-react";
+import { getApplicationConfig } from "@/shared/config/application";
+
+const applicationConfig = getApplicationConfig();
 
 interface FloatingButtonsProps {
   cartCount: number;
@@ -48,14 +51,17 @@ export function FloatingButtons({
       )}
 
       {showCatalog && (
-        <a href="/catalogo" className="floating-btn floating-btn-catalog">
+        <a
+          href={applicationConfig.routes.catalog}
+          className="floating-btn floating-btn-catalog"
+        >
           <LayoutGrid className="floating-btn-icon" />
           <span className="floating-btn-label">Catálogo</span>
         </a>
       )}
 
       <a
-        href="https://wa.me/51936188636"
+        href={`https://wa.me/${applicationConfig.contact.whatsappNumber}`}
         target="_blank"
         rel="noopener noreferrer"
         className="floating-btn floating-btn-whatsapp"

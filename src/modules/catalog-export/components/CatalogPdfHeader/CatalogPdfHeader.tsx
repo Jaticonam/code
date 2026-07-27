@@ -1,4 +1,7 @@
 import "./CatalogPdfHeader.css";
+import { getApplicationConfig } from "@/shared/config/application";
+
+const applicationConfig = getApplicationConfig();
 
 type CatalogPdfSegmentType =
   | "general"
@@ -58,7 +61,7 @@ export default function CatalogPdfHeader({
             <img
               className="catalog-pdf-header__logoImage"
               src={logoSrc}
-              alt="Wooly Imports"
+              alt={applicationConfig.app.name}
               onError={(event) => {
                 event.currentTarget.style.display =
                   "none";
@@ -66,7 +69,7 @@ export default function CatalogPdfHeader({
             />
           ) : (
             <span className="catalog-pdf-header__logoFallback">
-              Wooly Imports
+              {applicationConfig.app.name}
             </span>
           )}
 
