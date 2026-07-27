@@ -9,6 +9,9 @@ import type {
   CatalogProvider,
 } from "./CatalogProvider";
 import {
+  isCatalogCacheSourceCompatible,
+} from "./CatalogProvider";
+import {
   createCatalogProvider,
   resolveCatalogSourceMode,
 } from "./CatalogProviderFactory";
@@ -55,6 +58,29 @@ describe(
         expect(
           resolveCatalogSourceMode(
             value,
+          ),
+        ).toBe(expected);
+      },
+    );
+
+    it.each([
+      ["google-sheets", "google-sheets", true],
+      ["contract-fixture", "contract-fixture", true],
+      ["google-sheets", "contract-fixture", false],
+      ["contract-fixture", "google-sheets", false],
+      [undefined, "google-sheets", true],
+      [undefined, "contract-fixture", false],
+    ] as const)(
+      "compatibilidad de caché %s -> %s: %s",
+      (
+        storedSource,
+        activeSource,
+        expected,
+      ) => {
+        expect(
+          isCatalogCacheSourceCompatible(
+            storedSource,
+            activeSource,
           ),
         ).toBe(expected);
       },

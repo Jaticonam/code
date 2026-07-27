@@ -2,6 +2,7 @@ export interface StorageEnvelope<T> {
   schemaVersion: number;
   data: T;
   savedAt?: number;
+  source?: string;
 }
 
 export type StorageReadFailureReason =
@@ -17,6 +18,7 @@ export type StorageReadResult<T> =
       migrated: boolean;
       sourceVersion: number;
       savedAt?: number;
+      source?: string;
     }
   | {
       success: false;
@@ -140,6 +142,13 @@ export function readStorageEnvelope<T>({
         parsed.savedAt,
       )
         ? { savedAt: parsed.savedAt }
+        : {}),
+      ...(typeof parsed.source ===
+      "string"
+        ? {
+            source:
+              parsed.source,
+          }
         : {}),
     };
   }

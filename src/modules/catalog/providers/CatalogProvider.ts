@@ -10,6 +10,17 @@ export type CatalogProviderSource =
   | "google-sheets"
   | "contract-fixture";
 
+export function isCatalogCacheSourceCompatible(
+  storedSource: string | undefined,
+  activeSource: CatalogProviderSource,
+): boolean {
+  return (
+    storedSource === activeSource ||
+    (storedSource === undefined &&
+      activeSource === "google-sheets")
+  );
+}
+
 export interface CatalogProviderIssue {
   code: string;
   message: string;

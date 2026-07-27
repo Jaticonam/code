@@ -15,6 +15,9 @@ import {
 import {
   catalogProvider,
 } from "@/modules/catalog/providers/DefaultCatalogProvider";
+import {
+  isCatalogCacheSourceCompatible,
+} from "@/modules/catalog/providers/CatalogProvider";
 
 /* =========================================================
    TIPOS
@@ -155,6 +158,15 @@ function readStoredCampaigns():
       return null;
     }
 
+    if (
+      !isCatalogCacheSourceCompatible(
+        result.source,
+        catalogProvider.source,
+      )
+    ) {
+      return null;
+    }
+
     campaignsMemoryCache = {
       savedAt:
         result.savedAt,
@@ -197,6 +209,8 @@ function writeCampaignsCache(
           entry.savedAt,
         data:
           entry.items,
+        source:
+          catalogProvider.source,
       }),
     );
   } catch {

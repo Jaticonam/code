@@ -29,6 +29,8 @@ describe("StorageEnvelope", () => {
             schemaVersion: 1,
             data: ["uno"],
             savedAt: 10,
+            source:
+              "contract-fixture",
           }),
         schemaVersion: 1,
         validateData:
@@ -42,6 +44,8 @@ describe("StorageEnvelope", () => {
       migrated: false,
       sourceVersion: 1,
       savedAt: 10,
+      source:
+        "contract-fixture",
     });
   });
 

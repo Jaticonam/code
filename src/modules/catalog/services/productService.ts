@@ -1,6 +1,9 @@
 import type { Product } from "@/shared/types/product";
 
-import type { CatalogCategoryId } from "@/modules/catalog/providers/CatalogProvider";
+import {
+  isCatalogCacheSourceCompatible,
+  type CatalogCategoryId,
+} from "@/modules/catalog/providers/CatalogProvider";
 import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
 import {
   readStorageEnvelope,
@@ -114,6 +117,15 @@ function readStorageCache(category: CatalogCategoryId): Product[] | null {
       return null;
     }
 
+    if (
+      !isCatalogCacheSourceCompatible(
+        result.source,
+        catalogProvider.source,
+      )
+    ) {
+      return null;
+    }
+
     memoryCache.set(category, {
       savedAt: result.savedAt,
       items: result.data,
@@ -162,6 +174,8 @@ function writeCache(category: CatalogCategoryId, items: Product[]): void {
         schemaVersion: CATEGORY_CACHE_SCHEMA_VERSION,
         savedAt: entry.savedAt,
         data: entry.items,
+        source:
+          catalogProvider.source,
       }),
     );
   } catch {
