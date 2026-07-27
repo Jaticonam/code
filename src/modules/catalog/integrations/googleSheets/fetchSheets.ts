@@ -1,3 +1,9 @@
+import {
+  ExternalHttpRequestError,
+  requestText,
+  type ExternalRequestOptions,
+} from "@/shared/infrastructure/http";
+
 export type CsvRow = Record<string, string>;
 
 export interface GoogleSheetSource {
@@ -91,20 +97,41 @@ export function validateSheetHeaders(
 export async function fetchSheetRows(
   source: GoogleSheetSource,
   requiredHeaders: readonly string[],
+  requestOptions: Pick<
+    ExternalRequestOptions,
+    "signal" | "timeoutMs"
+  > = {},
 ): Promise<CsvRow[]> {
   const url = `https://docs.google.com/spreadsheets/d/${source.docId}/export?format=csv&gid=${source.gid}`;
 
-  const response = await fetch(url);
+  const label =
+    source.category ||
+    source.name ||
+    "Google Sheet";
 
-  if (!response.ok) {
-    const label = source.category || source.name || "Google Sheet";
+  const result =
+    await requestText(
+      url,
+      {
+        source:
+          `Google Sheets: ${label}`,
+        expectedContentTypes: [
+          "text/csv",
+          "text/plain",
+          "application/csv",
+        ],
+        ...requestOptions,
+      },
+    );
 
-    throw new Error(
-      `Error cargando "${label}" docId="${source.docId}" gid="${source.gid}": HTTP ${response.status}`,
+  if (result.ok === false) {
+    throw new ExternalHttpRequestError(
+      result.error,
     );
   }
 
-  const csvText = await response.text();
+  const csvText =
+    result.data;
   const { headers, rows } = parseCSV(csvText);
 
   validateSheetHeaders(headers, requiredHeaders, source);

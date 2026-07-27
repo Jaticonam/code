@@ -1,5 +1,23 @@
+import {
+  ExternalHttpRequestError,
+  requestJson,
+} from "@/shared/infrastructure/http";
+
 export async function getCommercialDashboard() {
-  const res = await fetch("/api/dashboard/commercial.json");
-  if (!res.ok) throw new Error("No se pudo cargar commercial.json");
-  return res.json();
+  const result =
+    await requestJson<unknown>(
+      "/api/dashboard/commercial.json",
+      {
+        source:
+          "Commercial Dashboard",
+      },
+    );
+
+  if (result.ok === false) {
+    throw new ExternalHttpRequestError(
+      result.error,
+    );
+  }
+
+  return result.data;
 }

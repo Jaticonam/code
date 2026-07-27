@@ -1,9 +1,27 @@
 import type { PublicationPlan } from "../models";
 
+import {
+  ExternalHttpRequestError,
+  requestJson,
+} from "@/shared/infrastructure/http";
+
 export async function loadPublicationPlans(): Promise<PublicationPlan[]> {
-  const res = await fetch("/config/publication-plans.json");
-  if (!res.ok) throw new Error("No se pudieron cargar los planes de publicación.");
-  return res.json();
+  const result =
+    await requestJson<PublicationPlan[]>(
+      "/config/publication-plans.json",
+      {
+        source:
+          "Publication Plans",
+      },
+    );
+
+  if (result.ok === false) {
+    throw new ExternalHttpRequestError(
+      result.error,
+    );
+  }
+
+  return result.data;
 }
 
 export async function loadPublicationPlan(planId: string): Promise<PublicationPlan> {
