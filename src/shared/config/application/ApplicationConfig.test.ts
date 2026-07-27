@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  buildApplicationWhatsAppUrl,
+  buildProductPublicPath,
+  buildPublicUrl,
   resolveApplicationConfig,
   validateApplicationConfig,
   woolyApplicationConfig,
@@ -50,5 +53,23 @@ describe("ApplicationConfig", () => {
     const result = resolveApplicationConfig({ publicSiteOrigin: "javascript:alert(1)" });
     expect(result.config.publicSite.origin).toBe(woolyApplicationConfig.publicSite.origin);
     expect(result.issues.map((item) => item.code)).toContain("INVALID_ORIGIN");
+  });
+
+  it("construye URLs públicas sin duplicar slash", () => {
+    expect(buildPublicUrl("/catalogo")).toBe(
+      "https://www.woolyimports.com/catalogo",
+    );
+  });
+
+  it("construye la ruta productiva escapando parámetros", () => {
+    expect(buildProductPublicPath("A B", "flores finas")).toBe(
+      "/catalogo/producto.html?id=A+B&cat=flores+finas",
+    );
+  });
+
+  it("construye WhatsApp con teléfono configurado y copy intacto", () => {
+    expect(buildApplicationWhatsAppUrl("Hola Wooly")).toBe(
+      "https://wa.me/51936188636?text=Hola+Wooly",
+    );
   });
 });
