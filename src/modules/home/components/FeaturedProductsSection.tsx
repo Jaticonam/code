@@ -165,10 +165,14 @@ export default function FeaturedProductsSection() {
 
   const featuredProducts =
     useMemo(
-      () =>
-        getFeatured(
+      () => {
+        // La clave fuerza una nueva selección aleatoria a petición del usuario.
+        void shuffleKey;
+
+        return getFeatured(
           products,
-        ),
+        );
+      },
       [
         products,
         shuffleKey,

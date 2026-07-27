@@ -33,8 +33,26 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": [
+        "warn",
+        {
+          allowConstantExport: true,
+          allowExportNames: [
+            "getRelatedArticles",
+            "showNotification",
+            "useCartStore",
+            "useCatalogCampaignRegistry",
+          ],
+        },
+      ],
       "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+  {
+    files: ["src/shared/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      // Componentes base de shadcn exportan variantes junto al componente.
+      "react-refresh/only-export-components": "off",
     },
   },
 );
