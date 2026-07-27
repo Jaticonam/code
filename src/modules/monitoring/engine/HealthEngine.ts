@@ -251,10 +251,18 @@ function getOverallStatus(
     results.filter(
       (result) => result.ok,
     ).length;
+  const hasCriticalResult =
+    results.some(
+      (result) =>
+        result.ok &&
+        result.data.status ===
+          "error",
+    );
 
   if (
     results.length === 0 ||
     successful === 0 ||
+    hasCriticalResult ||
     score < 60
   ) {
     return "unhealthy";
