@@ -6,10 +6,6 @@ import {
 } from "react";
 
 import {
-  ArrowLeft,
-} from "lucide-react";
-
-import {
   useLocation,
   useNavigate,
   useParams,
@@ -92,32 +88,8 @@ import {
 } from "@/modules/product-detail/components/ProductGallery";
 
 import {
-  ProductStockInfo,
-} from "@/modules/product-detail/components/ProductStockInfo";
-
-import {
-  ProductVolumePriceSelector,
-} from "@/modules/product-detail/components/ProductVolumePriceSelector";
-
-import {
-  ProductPriceBlock,
-} from "@/modules/product-detail/components/ProductPriceBlock";
-
-import {
-  ProductQuantitySelector,
-} from "@/modules/product-detail/components/ProductQuantitySelector";
-
-import {
-  ProductPurchaseActions,
-} from "@/modules/product-detail/components/ProductPurchaseActions";
-
-import {
   RelatedProducts,
 } from "@/modules/product-detail/components/RelatedProducts";
-
-import {
-  ProductVolumePriceProgress,
-} from "@/modules/product-detail/components/ProductVolumePriceProgress";
 
 import {
   ProductSeo,
@@ -130,6 +102,12 @@ import {
 import {
   getProductMedia,
 } from "@/shared/lib/productMedia";
+import {
+  ProductDetailCommercialSection,
+} from "@/modules/product-detail/components/ProductDetailCommercialSection";
+import {
+  ProductDetailNotFound,
+} from "@/modules/product-detail/components/ProductDetailNotFound";
 
 const ProductDetailPage =
   () => {
@@ -983,13 +961,8 @@ const ProductDetailPage =
       ?.isPubliclyVisible
   ) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground font-black text-lg">
-          Producto no encontrado
-        </p>
-
-        <button
-          onClick={() => {
+      <ProductDetailNotFound
+        onBack={() => {
             if (
               window.history.length >
               1
@@ -1008,13 +981,8 @@ const ProductDetailPage =
                   )}`
                 : "/catalogo",
             );
-          }}
-          className="flex h-11 w-11 items-center justify-center rounded-2xl bg-muted text-muted-foreground shadow-sm transition-all hover:bg-accent hover:text-foreground active:scale-95"
-          aria-label="Volver"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-      </div>
+        }}
+      />
     );
   }
   return (
@@ -1059,177 +1027,32 @@ const ProductDetailPage =
             }
           />
 
-          <div className="flex flex-col gap-4 md:gap-6 card-shop p-4 md:p-7 bg-white">
-            <div className="mb-2 flex flex-wrap justify-center gap-2 md:justify-start">
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-black text-slate-600">
-                Código:{" "}
-                {
-                  product.id
-                }
-              </span>
-
-              <span className="rounded-full bg-[#e6f6f8] px-3 py-1 text-[11px] font-black capitalize text-[#1d8299]">
-                {
-                  product.category
-                }
-              </span>
-            </div>
-
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl md:text-[28px] tracking-tight font-black text-foreground leading-tight mb-3">
-                {
-                  product.title
-                }
-              </h2>
-
-              <p className="text-sm md:text-base text-[#64748b] leading-relaxed">
-                {
-                  product.description
-                }
-              </p>
-            </div>
-
-            <ProductStockInfo
-              product={
-                product
-              }
-              available={
-                available
-              }
-              viewers={
-                viewers
-              }
-              stockPresentation={
-                stockPresentation
-              }
-            />
-
-            {canShowVolumePricing && (
-              <ProductVolumePriceSelector
-                product={
-                  product
-                }
-                effectiveQty={
-                  effectiveQty
-                }
-                onSelectQty={
-                  updateQty
-                }
-              />
-            )}
-
-            {canShowPricing && (
-              <ProductPriceBlock
-                unitPrice={
-                  unitPrice
-                }
-                total={
-                  total
-                }
-                effectiveQty={
-                  available
-                    ? effectiveQty
-                    : 1
-                }
-                pricePulse={
-                  available &&
-                  pricePulse
-                }
-                showUnlock={
-                  available &&
-                  showUnlock
-                }
-                savingsByQty={
-                  available
-                    ? savingsByQty
-                    : 0
-                }
-                basePrice={
-                  product.price_1
-                }
-                nextVolumePrice={
-                  available
-                    ? nextVolumePrice
-                    : null
-                }
-                isQtyInputValid={
-                  available
-                    ? isQtyInputValid
-                    : true
-                }
-              />
-            )}
-
-            {canShowVolumePricing && (
-              <ProductVolumePriceProgress
-                product={
-                  product
-                }
-                effectiveQty={
-                  effectiveQty
-                }
-                nextVolumePrice={
-                  nextVolumePrice
-                }
-              />
-            )}
-
-            {canSelectQuantity && (
-              <ProductQuantitySelector
-                value={
-                  qtyInput
-                }
-                effectiveQty={
-                  effectiveQty
-                }
-                onDecrease={() =>
-                  updateQty(
-                    effectiveQty -
-                      1,
-                  )
-                }
-                onIncrease={() =>
-                  updateQty(
-                    effectiveQty +
-                      1,
-                  )
-                }
-                onChange={
-                  handleQtyInputChange
-                }
-                onBlur={
-                  handleQtyInputBlur
-                }
-                onKeyDown={
-                  handleQtyInputKeyDown
-                }
-              />
-            )}
-
-            <ProductPurchaseActions
-              showWhatsAppButton={
-                showWhatsAppButton
-              }
-              isPreventa={
-                isPreventa
-              }
-              available={
-                available
-              }
-              isQtyInputValid={
-                isQtyInputValid
-              }
-              total={
-                total
-              }
-              onWhatsApp={
-                handleWhatsApp
-              }
-              onAddToCart={
-                handleAddToCart
-              }
-            />
-          </div>
+          <ProductDetailCommercialSection
+            product={product}
+            available={available}
+            viewers={viewers}
+            stockPresentation={stockPresentation}
+            canShowVolumePricing={canShowVolumePricing}
+            canShowPricing={canShowPricing}
+            canSelectQuantity={canSelectQuantity}
+            effectiveQty={effectiveQty}
+            qtyInput={qtyInput}
+            unitPrice={unitPrice}
+            total={total}
+            pricePulse={pricePulse}
+            showUnlock={showUnlock}
+            savingsByQty={savingsByQty}
+            nextVolumePrice={nextVolumePrice}
+            isQtyInputValid={isQtyInputValid}
+            showWhatsAppButton={showWhatsAppButton}
+            isPreventa={isPreventa}
+            onSelectQty={updateQty}
+            onQtyInputChange={handleQtyInputChange}
+            onQtyInputBlur={handleQtyInputBlur}
+            onQtyInputKeyDown={handleQtyInputKeyDown}
+            onWhatsApp={handleWhatsApp}
+            onAddToCart={handleAddToCart}
+          />
         </div>
 
         <RelatedProducts
