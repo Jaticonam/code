@@ -1,4 +1,4 @@
-import type { CatalogProviderSource } from "@/modules/catalog/providers/CatalogProvider";
+import type { CatalogSourceMode } from "./CatalogSourceMode";
 
 export interface ApplicationConfig {
   readonly app: {
@@ -35,7 +35,7 @@ export interface ApplicationConfig {
     readonly pdfValidityDays: number;
   };
   readonly catalog: {
-    readonly source: CatalogProviderSource;
+    readonly source: CatalogSourceMode;
   };
   readonly integrations: {
     readonly meta: {

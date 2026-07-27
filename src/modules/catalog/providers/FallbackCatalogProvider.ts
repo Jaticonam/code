@@ -6,14 +6,14 @@ import type {
 import type {
   CatalogCategoryId,
   CatalogProvider,
-  CatalogProviderSource,
 } from "./CatalogProvider";
+import type { CatalogSourceMode } from "@/shared/config/application";
 
 export interface CatalogSourceMetadata {
   requestedSource:
-    CatalogProviderSource;
+    CatalogSourceMode;
   resolvedSource:
-    CatalogProviderSource;
+    CatalogSourceMode;
   fallbackUsed: boolean;
   fallbackReason?: string;
 }
@@ -36,7 +36,7 @@ function failureReason(
 export class FallbackCatalogProvider
   implements CatalogProvider {
   readonly source:
-    CatalogProviderSource;
+    CatalogSourceMode;
 
   constructor(
     private readonly primary:

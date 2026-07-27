@@ -1,4 +1,5 @@
 import type { Campaign, Product } from "@/shared/types/product";
+import type { CatalogSourceMode } from "@/shared/config/application";
 
 /* =========================================================
    TIPOS DEL PROVIDER
@@ -6,13 +7,9 @@ import type { Campaign, Product } from "@/shared/types/product";
 
 export type CatalogCategoryId = NonNullable<Product["category"]>;
 
-export type CatalogProviderSource =
-  | "google-sheets"
-  | "contract-fixture";
-
 export function isCatalogCacheSourceCompatible(
   storedSource: string | undefined,
-  activeSource: CatalogProviderSource,
+  activeSource: CatalogSourceMode,
 ): boolean {
   return (
     storedSource === activeSource ||
@@ -29,7 +26,7 @@ export interface CatalogProviderIssue {
 
 export interface CatalogProviderResult<T> {
   data: T;
-  source: CatalogProviderSource;
+  source: CatalogSourceMode;
   issues:
     readonly CatalogProviderIssue[];
 }
@@ -40,7 +37,7 @@ export interface CatalogProviderResult<T> {
 
 export interface CatalogProvider {
   readonly source:
-    CatalogProviderSource;
+    CatalogSourceMode;
 
   getCategories(): readonly CatalogCategoryId[];
 

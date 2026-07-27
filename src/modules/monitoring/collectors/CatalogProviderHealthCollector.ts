@@ -1,8 +1,8 @@
 import type {
   CatalogProvider,
   CatalogProviderResult,
-  CatalogProviderSource,
 } from "@/modules/catalog/providers/CatalogProvider";
+import type { CatalogSourceMode } from "@/shared/config/application";
 import type {
   CatalogSourceMetadata,
 } from "@/modules/catalog/providers/FallbackCatalogProvider";
@@ -76,7 +76,7 @@ function incrementIssue(
 export async function collectCatalogProviderHealth(
   provider: CatalogProvider,
   requestedSource:
-    CatalogProviderSource =
+    CatalogSourceMode =
       provider.source,
   now: () => number =
     Date.now,
@@ -85,7 +85,7 @@ export async function collectCatalogProviderHealth(
 > {
   const startedAt = now();
   let resolvedSource:
-    CatalogProviderSource =
+    CatalogSourceMode =
       provider.source;
   let fallbackUsed = false;
   let receivedCount = 0;
@@ -216,7 +216,7 @@ export class CatalogProviderHealthCollector
     private readonly provider:
       CatalogProvider,
     private readonly requestedSource:
-      CatalogProviderSource =
+      CatalogSourceMode =
         provider.source,
     private readonly now:
       () => number =
