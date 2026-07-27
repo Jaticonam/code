@@ -8,6 +8,9 @@ import type {
   CatalogCampaignContract,
   CatalogProductContract,
 } from "@/shared/contracts/catalog";
+import {
+  CATALOG_PRODUCT_CONTRACT_VERSION,
+} from "@/shared/contracts/catalog";
 
 import {
   adaptCatalogProductToLegacyProduct,
@@ -23,6 +26,9 @@ function createProductContract(
     Partial<CatalogProductContract> = {},
 ): CatalogProductContract {
   return {
+    contractVersion:
+      CATALOG_PRODUCT_CONTRACT_VERSION,
+
     id: "core-product-1",
     sku: "WLY-001",
     slug: "producto-prueba",

@@ -17,6 +17,12 @@ export type CatalogProductPublicationStatus =
   | "preorder"
   | "archived";
 
+export const CATALOG_PRODUCT_CONTRACT_VERSION =
+  "catalog-product.v1" as const;
+
+export type CatalogProductContractVersion =
+  typeof CATALOG_PRODUCT_CONTRACT_VERSION;
+
 /**
  * Contrato canónico de producto.
  *
@@ -25,6 +31,9 @@ export type CatalogProductPublicationStatus =
  * proveedores externos, JUNG CORE y adaptadores web.
  */
 export interface CatalogProductContract {
+  contractVersion:
+    CatalogProductContractVersion;
+
   id: string;
   sku: string;
   slug: string;

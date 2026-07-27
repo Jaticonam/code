@@ -1,4 +1,5 @@
 export * from "./CampaignContract";
+export * from "./CatalogProductContractValidation";
 export * from "./CategoryContract";
 export * from "./DraftOrderContract";
 export * from "./InventoryContract";
