@@ -501,7 +501,7 @@
   }
 
   .catalog-pdf-card__media {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 10 / 10;
     border-radius: 11px;
   }
 

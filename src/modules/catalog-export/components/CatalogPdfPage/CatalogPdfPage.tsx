@@ -63,23 +63,13 @@ export default function CatalogPdfPage() {
         </div>
 
         <div className="catalog-pdf-toolbar__actions">
-          <a
-            className="catalog-pdf-toolbar__link"
-            href="/catalogo"
-          >
-            Volver al catálogo
-          </a>
-
           <button
             className="catalog-pdf-toolbar__button"
             type="button"
             onClick={handlePrint}
-            disabled={
-              !hasProducts ||
-              !selectionIsReady
-            }
+            disabled={!hasProducts || !selectionIsReady}
           >
-            Exportar PDF
+            Imprimir PDF
           </button>
         </div>
       </section>

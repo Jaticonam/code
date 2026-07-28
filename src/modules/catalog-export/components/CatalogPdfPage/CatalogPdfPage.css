@@ -67,9 +67,8 @@
 
 .catalog-pdf-toolbar__actions {
   display: flex;
-  flex-shrink: 0;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
 }
 
 .catalog-pdf-toolbar__link,
