@@ -178,7 +178,7 @@ export function mapProductToMetaDetailed(
     ));
   }
 
-  if (issues.length) {
+  if (issues.length || !availability) {
     return { ok: false, issues };
   }
 
