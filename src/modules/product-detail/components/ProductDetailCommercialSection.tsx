@@ -37,7 +37,7 @@ interface ProductDetailCommercialSectionProps {
   product: Product;
   available: boolean;
   viewers: number;
-  stockPresentation: ReturnType<typeof getStockPresentation>;
+  stockPresentation: ReturnType<typeof getStockPresentation> | null;
   canShowVolumePricing: boolean;
   canShowPricing: boolean;
   canSelectQuantity: boolean;
