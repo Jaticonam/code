@@ -226,8 +226,7 @@ export const IntegrationEngine = {
       ConnectorRegistry
         .getAll();
 
-    const results =
-      [];
+    const results: Array<Awaited<ReturnType<typeof this.publish>>> = [];
 
     for (
       const connector
