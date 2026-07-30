@@ -47,7 +47,6 @@ export function ImageZoomModal({
   const isOpen = open ?? !!src;
 
   const [activeIndex, setActiveIndex] = useState(initialIndex);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -103,10 +102,6 @@ export function ImageZoomModal({
     setActiveIndex(initialIndex);
     reset();
   }, [open, initialIndex, reset]);
-
-  useEffect(() => {
-    setImageLoaded(false);
-  }, [activeIndex]);
 
   useEffect(() => {
     if (!open) return;

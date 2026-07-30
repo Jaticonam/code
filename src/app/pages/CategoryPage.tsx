@@ -6,7 +6,6 @@ import { useCategoryProducts } from "@/modules/category/hooks/useCategoryProduct
 import { filterCategoryProducts } from "@/modules/category/utils/filterCategoryProducts";
 import { Product } from "@/shared/types/product";
 
-import { CategoryFilter } from "@/modules/catalog/components/CategoryFilter";
 import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { CategoryHeader } from "@/modules/category/components/CategoryHeader";
@@ -71,17 +70,6 @@ const CategoryPage = () => {
   );
 
   const hasSearch = categorySearch.trim().length > 0;
-
-  const handleCategorySelect = useCallback(
-    (id: string) => {
-      if (id === activeCategory) return;
-
-      navigate(
-        id === "todas" ? "/catalogo" : `/catalogo/categoria.html?cat=${id}`,
-      );
-    },
-    [navigate, activeCategory],
-  );
 
   const handleAddToCart = useCallback(
     (product: Product) => {
