@@ -22,13 +22,8 @@ interface CatalogTopNavProps {
   showCampaigns?: boolean;
   onCampaignSelect: (id: string) => void;
 
-  logoUrl?: string;
   searchPlaceholder?: string;
-  onLogoClick?: () => void;
 }
-
-const DEFAULT_LOGO_URL =
-  "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1";
 
 export function CatalogTopNav({
   products,
@@ -46,9 +41,7 @@ export function CatalogTopNav({
   showCampaigns = false,
   onCampaignSelect,
 
-  logoUrl = DEFAULT_LOGO_URL,
   searchPlaceholder = "Busca flores, cajas, peluches o código...",
-  onLogoClick,
 }: CatalogTopNavProps) {
   const hasCampaignSection = showCampaigns && campaigns.length > 0;
 
@@ -58,17 +51,6 @@ export function CatalogTopNav({
       aria-label="Navegación principal del catálogo"
     >
       <div className="catalogTopNavInner">
-        {/*
-        <button
-          type="button"
-          className="catalogTopNavLogo"
-          onClick={onLogoClick}
-          aria-label="Volver al catálogo completo"
-        >
-          <img src={logoUrl} alt="Wooly" />
-        </button>
-        */}
-
         <section
           className="catalogTopNavSection catalogTopNavCategories"
           aria-label="Categorías del catálogo"

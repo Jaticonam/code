@@ -184,7 +184,6 @@ const CatalogPage = () => {
           campaignCounts={campaignCounts}
           showCampaigns={CATALOG_CAMPAIGNS.length > 0}
           onCampaignSelect={handleCampaignSelect}
-          onLogoClick={handleResetCatalog}
         />
       </header>
 

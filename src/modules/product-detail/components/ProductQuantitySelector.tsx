@@ -2,7 +2,6 @@ import { Minus, Plus } from "lucide-react";
 
 interface ProductQuantitySelectorProps {
   value: string;
-  effectiveQty: number;
   onDecrease: () => void;
   onIncrease: () => void;
   onChange: (value: string) => void;
@@ -12,7 +11,6 @@ interface ProductQuantitySelectorProps {
 
 export function ProductQuantitySelector({
   value,
-  effectiveQty,
   onDecrease,
   onIncrease,
   onChange,

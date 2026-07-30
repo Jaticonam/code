@@ -148,7 +148,6 @@ export function ProductDetailCommercialSection({
       {canSelectQuantity && (
         <ProductQuantitySelector
           value={qtyInput}
-          effectiveQty={effectiveQty}
           onDecrease={() => onSelectQty(effectiveQty - 1)}
           onIncrease={() => onSelectQty(effectiveQty + 1)}
           onChange={onQtyInputChange}
