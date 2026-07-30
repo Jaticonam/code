@@ -1,4 +1,4 @@
-import { ChevronRight, Clock, Star } from "lucide-react";
+import { ChevronRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { BlogArticle } from "../../types/blog";
 import { Sparkles } from "lucide-react";

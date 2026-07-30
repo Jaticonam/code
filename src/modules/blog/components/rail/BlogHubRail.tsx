@@ -1,13 +1,9 @@
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
-  CalendarDays,
-  Calculator,
-  Flame,
   MessageCircle,
   Rocket,
   ShoppingBag,
-  TrendingUp,
 } from "lucide-react";
 import BlogRailCard from "./BlogRailCard";
 import {

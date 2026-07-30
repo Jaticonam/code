@@ -1,7 +1,6 @@
 import { BlogFeatured, BlogGrid } from "../cards";
 import type { BlogArticle } from "../../types/blog";
-import { BookOpen, Sparkles, Tags } from "lucide-react";
-import { ArrowRight, Package } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 export default function BlogArticlesSection({
   featured,

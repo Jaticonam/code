@@ -1,7 +1,7 @@
 import TopBar from "@/modules/home/components/TopBar";
 import HomeHeader from "@/modules/home/components/HomeHeader";
 import ActiveCampaignHero from "@/modules/home/components/CampaignHero/ActiveCampaignHero";
-import TikTokSection from "@/modules/home/components/TikTokSection";
+
 import FeaturedProductsSection from "@/modules/home/components/FeaturedProductsSection";
 import GrowthCenterSection from "@/modules/home/components/GrowthCenterSection";
 import CategoriesSection from "@/modules/home/components/CategoriesSection";
