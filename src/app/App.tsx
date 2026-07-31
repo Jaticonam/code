@@ -1,3 +1,5 @@
+import { lazy, Suspense } from "react";
+
 import {
   QueryClient,
   QueryClientProvider,
@@ -27,19 +29,53 @@ import {
   TooltipProvider,
 } from "@/shared/components/ui/tooltip";
 
-import HomePage from "@/app/pages/HomePage";
-import CatalogPage from "@/app/pages/CatalogPage";
-import CatalogPdfPage from "@/app/pages/CatalogPdfPage";
-import SalesCatalogToolsPage from "@/app/pages/SalesCatalogToolsPage";
-import ProductDetailPage from "@/app/pages/ProductDetailPage";
-import CategoryPage from "@/app/pages/CategoryPage";
-import BlogPage from "@/app/pages/BlogPage";
-import BlogArticlePage from "@/app/pages/BlogArticlePage";
-import BlogSectionPage from "@/app/pages/BlogSectionPage";
-import NotFound from "@/app/pages/NotFound";
+const HomePage = lazy(
+  () => import("@/app/pages/HomePage"),
+);
 
-import IntegrationsPage from "@/modules/integrations/pages/IntegrationsPage";
-import CommercialCenter from "@/modules/commercial/pages/CommercialCenter";
+const CatalogPage = lazy(
+  () => import("@/app/pages/CatalogPage"),
+);
+
+const CatalogPdfPage = lazy(
+  () => import("@/app/pages/CatalogPdfPage"),
+);
+
+const SalesCatalogToolsPage = lazy(
+  () => import("@/app/pages/SalesCatalogToolsPage"),
+);
+
+const ProductDetailPage = lazy(
+  () => import("@/app/pages/ProductDetailPage"),
+);
+
+const CategoryPage = lazy(
+  () => import("@/app/pages/CategoryPage"),
+);
+
+const BlogPage = lazy(
+  () => import("@/app/pages/BlogPage"),
+);
+
+const BlogArticlePage = lazy(
+  () => import("@/app/pages/BlogArticlePage"),
+);
+
+const BlogSectionPage = lazy(
+  () => import("@/app/pages/BlogSectionPage"),
+);
+
+const NotFound = lazy(
+  () => import("@/app/pages/NotFound"),
+);
+
+const IntegrationsPage = lazy(
+  () => import("@/modules/integrations/pages/IntegrationsPage"),
+);
+
+const CommercialCenter = lazy(
+  () => import("@/modules/commercial/pages/CommercialCenter"),
+);
 
 import {
   CatalogCampaignRegistryProvider,
@@ -47,6 +83,18 @@ import {
 
 const queryClient =
   new QueryClient();
+
+function RouteLoadingFallback() {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex min-h-[40vh] items-center justify-center px-6 text-center text-sm text-slate-500"
+    >
+      Cargando contenido…
+    </div>
+  );
+}
 
 function CommerceCampaignScope() {
   return (
@@ -72,7 +120,12 @@ export default function App() {
                 true,
             }}
           >
-            <Routes>
+            <Suspense
+              fallback={
+                <RouteLoadingFallback />
+              }
+            >
+              <Routes>
               {/* SUPERFICIES COMERCIALES */}
               <Route
                 element={
@@ -250,7 +303,8 @@ export default function App() {
                   <NotFound />
                 }
               />
-            </Routes>
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </TooltipProvider>
       </HelmetProvider>
