@@ -305,6 +305,10 @@ async function renderDetail(
       initialEntries={[
         "/catalogo/producto.html?id=TEST-001&cat=flores",
       ]}
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
     >
       <Routes>
         <Route

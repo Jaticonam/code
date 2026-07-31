@@ -51,7 +51,12 @@ describe(
       () => {
         const { container } =
           render(
-            <MemoryRouter>
+            <MemoryRouter
+              future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+              }}
+            >
               <ProductCard
                 product={createProduct()}
                 onAddToCart={vi.fn()}
@@ -89,7 +94,12 @@ describe(
       () => {
         const { container } =
           render(
-            <MemoryRouter>
+            <MemoryRouter
+              future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+              }}
+            >
               <ProductCard
                 product={createProduct({
                   price_offer: 12,
