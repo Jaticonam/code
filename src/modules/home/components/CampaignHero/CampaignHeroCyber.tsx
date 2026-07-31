@@ -3,8 +3,26 @@ import {
   buildApplicationWhatsAppUrl,
 } from "@/shared/config/application";
 
+type CampaignTimerStatus =
+  | "red"
+  | "yellow"
+  | "green";
+
+interface CampaignTimer {
+  days: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+  status: CampaignTimerStatus;
+}
+
+type CampaignTimers = Record<
+  string,
+  CampaignTimer
+>;
+
 export default function App() {
-  const [timers, setTimers] = useState({});
+  const [timers, setTimers] = useState<CampaignTimers>({});
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -19,7 +37,7 @@ export default function App() {
 
     const updateTimers = () => {
       const now = new Date().getTime();
-      const newTimers = {};
+      const newTimers: CampaignTimers = {};
 
       for (const [key, target] of Object.entries(targetDates)) {
         const distance = target - now;
@@ -30,7 +48,7 @@ export default function App() {
           const days = Math.floor(distance / (1000 * 60 * 60 * 24));
           
           // Lógica del Semáforo
-          let status = "green";
+          let status: CampaignTimerStatus = "green";
           if (days <= 10) status = "red";
           else if (days <= 20) status = "yellow";
 

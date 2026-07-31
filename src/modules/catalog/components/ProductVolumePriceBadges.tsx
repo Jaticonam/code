@@ -4,6 +4,7 @@ import {
 } from "@/shared/domain/volumePricing/VolumePricing";
 
 const TIER_LABELS = {
+  price_1: "Unidad",
   price_3: "Por Mayor",
   price_12: "Por Docena",
   price_50: "Medio ciento",

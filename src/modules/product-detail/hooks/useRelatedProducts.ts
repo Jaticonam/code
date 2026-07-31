@@ -1,73 +1,29 @@
-import{
- useMemo
-}
-from"react";
+import { useMemo } from "react";
 
-export function
-useRelatedProducts(
+import type { Product } from "@/shared/types/product";
 
- products,
- product
+export function useRelatedProducts(
+  products: readonly Product[],
+  product: Product | null | undefined,
+): Product[] {
+  return useMemo(() => {
+    if (!product) return [];
 
-){
+    const sameCategory = products.filter(
+      (item) =>
+        item.category === product.category &&
+        item.id !== product.id,
+    );
 
- return useMemo(()=>{
+    const otherCategories = products.filter(
+      (item) =>
+        item.category !== product.category &&
+        item.id !== product.id,
+    );
 
- if(
- !product
- ){
-
- return[];
-
- }
-
- const same=
-
- products.filter(
-
- item=>
-
- item.category===
- product.category
- &&
-
- item.id!==
- product.id
-
- );
-
- const other=
-
- products.filter(
-
- item=>
-
- item.category!==
- product.category
- &&
-
- item.id!==
- product.id
-
- );
-
- return[
-
- ...same.slice(
- 0,
- 4
- ),
-
- ...other.slice(
- 0,
- 4
- )
-
- ];
-
- },[
- products,
- product
- ]);
-
+    return [
+      ...sameCategory.slice(0, 4),
+      ...otherCategories.slice(0, 4),
+    ];
+  }, [products, product]);
 }
