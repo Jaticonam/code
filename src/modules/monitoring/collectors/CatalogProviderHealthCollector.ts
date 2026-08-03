@@ -1,186 +1,209 @@
+import {
+  loadCatalogCampaignsDetailed,
+  loadCatalogCategoryProductsDetailed,
+} from "@/modules/catalog/providers/CatalogProvider";
+
 import type {
   CatalogProvider,
-  CatalogProviderResult,
+  ResolvedCatalogProviderResult,
 } from "@/modules/catalog/providers/CatalogProvider";
-import type { CatalogSourceMode } from "@/shared/config/application/CatalogSourceMode";
+
 import type {
-  CatalogSourceMetadata,
-} from "@/modules/catalog/providers/FallbackCatalogProvider";
+  CatalogSourceMode,
+} from "@/shared/config/application/CatalogSourceMode";
+
 import type {
   Product,
 } from "@/shared/types/product";
+
 import type {
   HealthCollector,
   HealthComponentData,
 } from "../contracts/HealthCollector";
 
 export interface CatalogProviderHealthSnapshot {
-  requestedSource: string;
-  resolvedSource: string;
-  fallbackUsed: boolean;
-  receivedCount: number;
-  validCount: number;
-  rejectedCount: number;
+  requestedSource:
+    string;
+
+  resolvedSource:
+    string;
+
+  fallbackUsed:
+    boolean;
+
+  receivedCount:
+    number;
+
+  validCount:
+    number;
+
+  rejectedCount:
+    number;
+
   issueCounts:
     Readonly<
       Record<string, number>
     >;
-  unsupportedTierCount: number;
-  durationMs: number;
+
+  unsupportedTierCount:
+    number;
+
+  durationMs:
+    number;
 }
 
-interface DetailedProviderResult
-  extends CatalogProviderResult<Product[]> {
+interface DetailedProductResult
+  extends
+    ResolvedCatalogProviderResult<Product[]> {
   diagnostics?: {
-    receivedCount?: number;
-    validCount?: number;
-    rejectedCount?: number;
-    unsupportedTierCount?: number;
+    receivedCount?:
+      number;
+
+    validCount?:
+      number;
+
+    rejectedCount?:
+      number;
+
+    unsupportedTierCount?:
+      number;
   };
 }
 
-interface ProviderWithMetadata {
-  loadCategoryProductsWithMetadata(
-    category: string,
-    campaigns:
-      readonly unknown[],
-  ): Promise<{
-    data: Product[];
-    metadata:
-      CatalogSourceMetadata;
-  }>;
-}
-
-function hasMetadataLoader(
-  provider: CatalogProvider,
-): provider is
-  CatalogProvider &
-  ProviderWithMetadata {
-  return (
-    "loadCategoryProductsWithMetadata" in
-      provider &&
-    typeof provider
-      .loadCategoryProductsWithMetadata ===
-      "function"
-  );
-}
-
 function incrementIssue(
-  counts: Record<string, number>,
-  code: string,
+  counts:
+    Record<string, number>,
+
+  code:
+    string,
 ): void {
   counts[code] =
     (counts[code] ?? 0) + 1;
 }
 
 export async function collectCatalogProviderHealth(
-  provider: CatalogProvider,
+  provider:
+    CatalogProvider,
+
   requestedSource:
     CatalogSourceMode =
       provider.source,
-  now: () => number =
-    Date.now,
+
+  now:
+    () => number =
+      Date.now,
 ): Promise<
   CatalogProviderHealthSnapshot
 > {
-  const startedAt = now();
+  const startedAt =
+    now();
+
   let resolvedSource:
     CatalogSourceMode =
       provider.source;
-  let fallbackUsed = false;
-  let receivedCount = 0;
-  let validCount = 0;
-  let rejectedCount = 0;
-  let unsupportedTierCount = 0;
+
+  let fallbackUsed =
+    false;
+
+  let receivedCount =
+    0;
+
+  let validCount =
+    0;
+
+  let rejectedCount =
+    0;
+
+  let unsupportedTierCount =
+    0;
+
   const issueCounts:
     Record<string, number> = {};
 
   try {
+    const campaignResult =
+      await loadCatalogCampaignsDetailed(
+        provider,
+      );
+
     const campaigns =
-      await provider
-        .loadCampaigns();
+      campaignResult.data;
+
+    resolvedSource =
+      campaignResult
+        .metadata
+        .resolvedSource;
+
+    fallbackUsed =
+      campaignResult
+        .metadata
+        .fallbackUsed;
+
+    campaignResult
+      .issues
+      .forEach(
+        (issue) =>
+          incrementIssue(
+            issueCounts,
+            issue.code,
+          ),
+      );
 
     for (
       const category of
       provider.getCategories()
     ) {
-      if (
-        provider
-          .loadCategoryProductsDetailed
-      ) {
-        const result =
-          await provider
-            .loadCategoryProductsDetailed(
-              category,
-              campaigns,
-            ) as
-              DetailedProviderResult;
-        const diagnostics =
-          result.diagnostics;
+      const result =
+        await loadCatalogCategoryProductsDetailed(
+          provider,
+          category,
+          campaigns,
+        ) as
+          DetailedProductResult;
 
-        receivedCount +=
-          diagnostics
-            ?.receivedCount ??
-          result.data.length;
-        validCount +=
-          diagnostics
-            ?.validCount ??
-          result.data.length;
-        rejectedCount +=
-          diagnostics
-            ?.rejectedCount ??
-          0;
-        unsupportedTierCount +=
-          diagnostics
-            ?.unsupportedTierCount ??
-          0;
-        result.issues.forEach(
+      const diagnostics =
+        result.diagnostics;
+
+      resolvedSource =
+        result
+          .metadata
+          .resolvedSource;
+
+      fallbackUsed =
+        fallbackUsed ||
+        result
+          .metadata
+          .fallbackUsed;
+
+      receivedCount +=
+        diagnostics
+          ?.receivedCount ??
+        result.data.length;
+
+      validCount +=
+        diagnostics
+          ?.validCount ??
+        result.data.length;
+
+      rejectedCount +=
+        diagnostics
+          ?.rejectedCount ??
+        0;
+
+      unsupportedTierCount +=
+        diagnostics
+          ?.unsupportedTierCount ??
+        0;
+
+      result
+        .issues
+        .forEach(
           (issue) =>
             incrementIssue(
               issueCounts,
               issue.code,
             ),
         );
-        continue;
-      }
-
-      if (
-        hasMetadataLoader(
-          provider,
-        )
-      ) {
-        const result =
-          await provider
-            .loadCategoryProductsWithMetadata(
-              category,
-              campaigns,
-            );
-
-        receivedCount +=
-          result.data.length;
-        validCount +=
-          result.data.length;
-        resolvedSource =
-          result.metadata
-            .resolvedSource;
-        fallbackUsed =
-          fallbackUsed ||
-          result.metadata
-            .fallbackUsed;
-        continue;
-      }
-
-      const products =
-        await provider
-          .loadCategoryProducts(
-            category,
-            campaigns,
-          );
-
-      receivedCount +=
-        products.length;
-      validCount +=
-        products.length;
     }
   } catch {
     incrementIssue(
@@ -198,6 +221,7 @@ export async function collectCatalogProviderHealth(
     rejectedCount,
     issueCounts,
     unsupportedTierCount,
+
     durationMs:
       Math.max(
         0,
@@ -215,9 +239,11 @@ export class CatalogProviderHealthCollector
   constructor(
     private readonly provider:
       CatalogProvider,
+
     private readonly requestedSource:
       CatalogSourceMode =
         provider.source,
+
     private readonly now:
       () => number =
         Date.now,
@@ -231,11 +257,14 @@ export class CatalogProviderHealthCollector
         this.requestedSource,
         this.now,
       );
+
     const providerFailed =
       Boolean(
-        snapshot.issueCounts
+        snapshot
+          .issueCounts
           .PROVIDER_ERROR,
       );
+
     const degraded =
       snapshot.fallbackUsed ||
       snapshot.rejectedCount > 0;
@@ -247,12 +276,14 @@ export class CatalogProviderHealthCollector
           : degraded
             ? "warning"
             : "ok",
+
       score:
         providerFailed
           ? 0
           : degraded
             ? 80
             : 100,
+
       details:
         snapshot,
     };

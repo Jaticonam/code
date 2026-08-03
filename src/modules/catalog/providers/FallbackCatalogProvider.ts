@@ -6,41 +6,114 @@ import type {
 import type {
   CatalogCategoryId,
   CatalogProvider,
+  CatalogProviderLoad,
+  CatalogProviderResult,
+  CatalogSourceMetadata,
+  ResolvedCatalogProviderResult,
 } from "./CatalogProvider";
-import type { CatalogSourceMode } from "@/shared/config/application/CatalogSourceMode";
 
-export interface CatalogSourceMetadata {
-  requestedSource:
-    CatalogSourceMode;
-  resolvedSource:
-    CatalogSourceMode;
-  fallbackUsed: boolean;
-  fallbackReason?: string;
-}
+import {
+  createCatalogSourceMetadata,
+  loadCatalogCampaignsDetailed,
+  loadCatalogCategoryProductsDetailed,
+} from "./CatalogProvider";
 
-export interface CatalogProviderLoad<T> {
-  data: T;
-  metadata:
-    CatalogSourceMetadata;
-}
+export type {
+  CatalogProviderLoad,
+  CatalogSourceMetadata,
+} from "./CatalogProvider";
 
 function failureReason(
-  cause: unknown,
+  cause:
+    unknown,
 ): string {
-  return cause instanceof Error &&
+  return (
+    cause instanceof Error &&
     cause.name
-    ? cause.name
-    : "PROVIDER_ERROR";
+      ? cause.name
+      : "PROVIDER_ERROR"
+  );
+}
+
+function composeMetadata<T>(
+  requestedSource:
+    CatalogProvider["source"],
+
+  result:
+    ResolvedCatalogProviderResult<T>,
+
+  options: {
+    fallbackUsed?:
+      boolean;
+
+    fallbackReason?:
+      string;
+  } = {},
+): CatalogSourceMetadata {
+  return createCatalogSourceMetadata(
+    requestedSource,
+    result.metadata
+      .resolvedSource,
+
+    {
+      fallbackUsed:
+        options.fallbackUsed ||
+        result.metadata
+          .fallbackUsed,
+
+      fallbackReason:
+        options.fallbackReason ??
+        result.metadata
+          .fallbackReason,
+    },
+  );
+}
+
+function composeResult<T>(
+  requestedSource:
+    CatalogProvider["source"],
+
+  result:
+    ResolvedCatalogProviderResult<T>,
+
+  options: {
+    fallbackUsed?:
+      boolean;
+
+    fallbackReason?:
+      string;
+  } = {},
+): ResolvedCatalogProviderResult<T> {
+  const metadata =
+    composeMetadata(
+      requestedSource,
+      result,
+      options,
+    );
+
+  return {
+    data:
+      result.data,
+
+    source:
+      metadata.resolvedSource,
+
+    issues:
+      result.issues,
+
+    metadata,
+  };
 }
 
 export class FallbackCatalogProvider
   implements CatalogProvider {
   readonly source:
-    CatalogSourceMode;
+    CatalogProvider["source"];
 
   constructor(
     private readonly primary:
       CatalogProvider,
+
     private readonly fallback:
       CatalogProvider,
   ) {
@@ -56,76 +129,137 @@ export class FallbackCatalogProvider
 
   async loadCampaigns():
     Promise<Campaign[]> {
+    return (
+      await this
+        .loadCampaignsDetailed()
+    ).data;
+  }
+
+  async loadCampaignsDetailed():
+    Promise<
+      CatalogProviderResult<Campaign[]>
+    > {
     try {
-      return await this.primary
-        .loadCampaigns();
-    } catch {
-      return this.fallback
-        .loadCampaigns();
+      const result =
+        await loadCatalogCampaignsDetailed(
+          this.primary,
+        );
+
+      return composeResult(
+        this.primary.source,
+        result,
+      );
+    } catch (cause: unknown) {
+      const result =
+        await loadCatalogCampaignsDetailed(
+          this.fallback,
+        );
+
+      return composeResult(
+        this.primary.source,
+        result,
+
+        {
+          fallbackUsed:
+            true,
+
+          fallbackReason:
+            failureReason(
+              cause,
+            ),
+        },
+      );
     }
   }
 
   async loadCategoryProducts(
     category:
       CatalogCategoryId,
+
     campaigns:
       readonly Campaign[],
   ): Promise<Product[]> {
     return (
       await this
-        .loadCategoryProductsWithMetadata(
+        .loadCategoryProductsDetailed(
           category,
           campaigns,
         )
     ).data;
   }
 
+  async loadCategoryProductsDetailed(
+    category:
+      CatalogCategoryId,
+
+    campaigns:
+      readonly Campaign[],
+  ): Promise<
+    CatalogProviderResult<Product[]>
+  > {
+    try {
+      const result =
+        await loadCatalogCategoryProductsDetailed(
+          this.primary,
+          category,
+          campaigns,
+        );
+
+      return composeResult(
+        this.primary.source,
+        result,
+      );
+    } catch (cause: unknown) {
+      const result =
+        await loadCatalogCategoryProductsDetailed(
+          this.fallback,
+          category,
+          campaigns,
+        );
+
+      return composeResult(
+        this.primary.source,
+        result,
+
+        {
+          fallbackUsed:
+            true,
+
+          fallbackReason:
+            failureReason(
+              cause,
+            ),
+        },
+      );
+    }
+  }
+
   async loadCategoryProductsWithMetadata(
     category:
       CatalogCategoryId,
+
     campaigns:
       readonly Campaign[],
   ): Promise<
     CatalogProviderLoad<Product[]>
   > {
-    try {
-      const data =
-        await this.primary
-          .loadCategoryProducts(
-            category,
-            campaigns,
-          );
+    const result =
+      await this
+        .loadCategoryProductsDetailed(
+          category,
+          campaigns,
+        );
 
-      return {
-        data,
-        metadata: {
-          requestedSource:
-            this.primary.source,
-          resolvedSource:
-            this.primary.source,
-          fallbackUsed: false,
-        },
-      };
-    } catch (cause: unknown) {
-      const data =
-        await this.fallback
-          .loadCategoryProducts(
-            category,
-            campaigns,
-          );
+    return {
+      data:
+        result.data,
 
-      return {
-        data,
-        metadata: {
-          requestedSource:
-            this.primary.source,
-          resolvedSource:
-            this.fallback.source,
-          fallbackUsed: true,
-          fallbackReason:
-            failureReason(cause),
-        },
-      };
-    }
+      metadata:
+        result.metadata ??
+        createCatalogSourceMetadata(
+          this.source,
+          result.source,
+        ),
+    };
   }
 }
