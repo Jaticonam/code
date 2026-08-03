@@ -25,6 +25,8 @@ export interface ApplicationConfig {
     readonly logoUrl: string;
     readonly pdfLogoUrl: string;
     readonly defaultSeoImageUrl: string;
+    readonly brandStoryImageUrl: string;
+    readonly shippingImageUrl: string;
   };
   readonly routes: {
     readonly catalog: string;

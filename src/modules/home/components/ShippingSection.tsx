@@ -7,7 +7,11 @@ import {
   MapPin,
   Truck,
 } from "lucide-react";
+
+import { getApplicationConfig } from "@/shared/config/application";
 import HomeSectionHeader from "./HomeSectionHeader";
+
+const applicationConfig = getApplicationConfig();
 
 const features = [
   {
@@ -137,7 +141,7 @@ export default function ShippingSection() {
         >
           <div className="shipping-image-card group">
             <img
-              src="https://scontent.faqp5-1.fna.fbcdn.net/v/t1.6435-9/118468095_3836541133040959_3203898273981614328_n.jpg"
+              src={applicationConfig.assets.shippingImageUrl}
               alt="logística y despacho wooly"
               className="shipping-image"
               loading="lazy"

@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { Menu, Search, ShoppingBag, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+import { getApplicationConfig } from "@/shared/config/application";
+
+const applicationConfig = getApplicationConfig();
+
 const categories = [
   { name: "Flores", slug: "flores" },
   { name: "Peluches", slug: "peluches" },
@@ -23,7 +27,7 @@ export default function HomeHeader() {
         {/* LOGO */}
         <Link to="/" className="group">
           <img
-            src="https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1"
+            src={applicationConfig.assets.logoUrl}
             alt="Wooly Import"
             className="h-10 md:h-12 transition-transform group-hover:scale-105"
           />

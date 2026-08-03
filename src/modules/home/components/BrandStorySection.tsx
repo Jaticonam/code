@@ -1,6 +1,12 @@
 import { Store, MapPin } from "lucide-react";
 import { WhatsAppIcon } from "@/shared/components/ui/SocialIcons";
+import {
+  buildApplicationWhatsAppUrl,
+  getApplicationConfig,
+} from "@/shared/config/application";
 import HomeSectionHeader from "./HomeSectionHeader";
+
+const applicationConfig = getApplicationConfig();
 
 export default function BrandStorySection() {
   return (
@@ -10,7 +16,7 @@ export default function BrandStorySection() {
           <div className="brand-story-image-bg" />
 
           <img
-            src="https://dl.dropboxusercontent.com/scl/fi/ixrlm1m9hoia84zuuoef5/NAT_AMA_001.jpg?rlkey=07e39hpq6i8hogrdxi6stcqvu&st=o4fc1nh4&raw=1"
+            src={applicationConfig.assets.brandStoryImageUrl}
             alt="wooly import peru"
             className="brand-story-image"
             loading="lazy"
@@ -77,4 +83,3 @@ export default function BrandStorySection() {
     </section>
   );
 }
-import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

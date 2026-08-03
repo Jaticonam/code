@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
 
+import {
+  buildApplicationWhatsAppUrl,
+  getApplicationConfig,
+} from "@/shared/config/application";
+
+const applicationConfig = getApplicationConfig();
+
 export default function HomeFooter() {
   return (
     <footer className="home-footer">
@@ -8,7 +15,7 @@ export default function HomeFooter() {
       <div className="home-footer-inner">
         <Link to="/" className="home-footer-logo-link">
           <img
-            src="https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1"
+            src={applicationConfig.assets.logoUrl}
             alt="wooly import peru"
             className="home-footer-logo"
           />
@@ -64,4 +71,3 @@ export default function HomeFooter() {
     </footer>
   );
 }
-import { buildApplicationWhatsAppUrl } from "@/shared/config/application";

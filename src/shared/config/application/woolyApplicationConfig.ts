@@ -27,6 +27,10 @@ export const woolyApplicationConfig = {
     pdfLogoUrl:
       "https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1",
     defaultSeoImageUrl: "/og/og-catalogo.jpg",
+    brandStoryImageUrl:
+      "https://dl.dropboxusercontent.com/scl/fi/ixrlm1m9hoia84zuuoef5/NAT_AMA_001.jpg?rlkey=07e39hpq6i8hogrdxi6stcqvu&st=o4fc1nh4&raw=1",
+    shippingImageUrl:
+      "https://scontent.faqp5-1.fna.fbcdn.net/v/t1.6435-9/118468095_3836541133040959_3203898273981614328_n.jpg",
   },
   routes: {
     catalog: "/catalogo",

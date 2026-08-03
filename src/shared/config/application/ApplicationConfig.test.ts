@@ -17,6 +17,13 @@ describe("ApplicationConfig", () => {
       expect(result.config.app.id).toBe("wooly-web");
       expect(Object.isFrozen(result.config)).toBe(true);
       expect(Object.isFrozen(result.config.app)).toBe(true);
+      expect(Object.isFrozen(result.config.assets)).toBe(true);
+      expect(result.config.assets.brandStoryImageUrl).toContain(
+        "NAT_AMA_001.jpg",
+      );
+      expect(result.config.assets.shippingImageUrl).toContain(
+        "118468095_3836541133040959_3203898273981614328_n.jpg",
+      );
     }
   });
 
@@ -29,6 +36,7 @@ describe("ApplicationConfig", () => {
     ["phone", { contact: { whatsappNumber: "+51 936" } }, "INVALID_PHONE"],
     ["route", { routes: { ...woolyApplicationConfig.routes, catalog: "catalogo" } }, "INVALID_ROUTE"],
     ["asset", { assets: { ...woolyApplicationConfig.assets, logoUrl: "javascript:alert(1)" } }, "INVALID_ASSET_URL"],
+    ["homepage asset", { assets: { ...woolyApplicationConfig.assets, shippingImageUrl: "javascript:alert(1)" } }, "INVALID_ASSET_URL"],
     ["validity", { commerce: { pdfValidityDays: 0 } }, "INVALID_NUMBER"],
     ["source", { catalog: { source: "unknown" } }, "UNKNOWN_CATALOG_SOURCE"],
   ])("rechaza %s", (_label, patch, code) => {
