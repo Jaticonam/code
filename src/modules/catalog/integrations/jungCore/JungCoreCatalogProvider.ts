@@ -20,6 +20,11 @@ import type {
   JungCoreSnapshotLoader,
 } from "./JungCoreSnapshotLoader";
 
+import {
+  HttpJungCoreSnapshotLoaderError,
+  type HttpJungCoreSnapshotLoaderErrorCode,
+} from "./HttpJungCoreSnapshotLoader";
+
 export type JungCoreCatalogProviderStatus =
   | "idle"
   | "loading"
@@ -29,7 +34,8 @@ export type JungCoreCatalogProviderStatus =
 export type JungCoreCatalogProviderErrorCode =
   | "JUNG_CORE_SNAPSHOT_LOAD_FAILED"
   | "JUNG_CORE_SNAPSHOT_INVALID"
-  | "JUNG_CORE_BRAND_MISMATCH";
+  | "JUNG_CORE_BRAND_MISMATCH"
+  | HttpJungCoreSnapshotLoaderErrorCode;
 
 export interface JungCoreCatalogProviderState {
   status:
@@ -508,6 +514,17 @@ export class JungCoreCatalogProvider
         await this.loader
           .loadSnapshot();
     } catch (cause: unknown) {
+      if (
+        cause instanceof
+          HttpJungCoreSnapshotLoaderError
+      ) {
+        throw new JungCoreCatalogProviderError(
+          cause.code,
+          cause.message,
+          cause,
+        );
+      }
+
       throw new JungCoreCatalogProviderError(
         "JUNG_CORE_SNAPSHOT_LOAD_FAILED",
 

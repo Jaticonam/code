@@ -788,3 +788,97 @@ describe(
     );
   },
 );
+
+describe(
+  "JungCoreCatalogProvider preserva errores HTTP tipados",
+  () => {
+    it.each([
+      [
+        "HTTP_503",
+        503,
+        true,
+      ],
+      [
+        "HTTP_401",
+        401,
+        false,
+      ],
+      [
+        "JUNG_CORE_SNAPSHOT_INVALID",
+        undefined,
+        false,
+      ],
+    ] as const)(
+      "conserva %s desde el loader hasta el estado",
+
+      async (
+        code,
+        status,
+        retryable,
+      ) => {
+        const {
+          HttpJungCoreSnapshotLoaderError,
+        } =
+          await import(
+            "./HttpJungCoreSnapshotLoader"
+          );
+
+        const transportError =
+          new HttpJungCoreSnapshotLoaderError(
+            code,
+            "Error de transporte controlado.",
+
+            {
+              status,
+              retryable,
+            },
+          );
+
+        const loader:
+          JungCoreSnapshotLoader = {
+            loadSnapshot:
+              async () => {
+                throw transportError;
+              },
+          };
+
+        const provider =
+          new JungCoreCatalogProvider({
+            loader,
+
+            expectedBrandId:
+              "wooly",
+
+            bootstrapCategories: [
+              "flores",
+            ],
+
+            resolveColorClass:
+              () => "lavanda",
+          });
+
+        await expect(
+          provider.loadCampaigns(),
+        ).rejects.toMatchObject({
+          name:
+            "JungCoreCatalogProviderError",
+
+          code,
+
+          providerCause:
+            expect.objectContaining({
+              code,
+            }),
+        });
+
+        expect(
+          provider
+            .getState()
+            .lastErrorCode,
+        ).toBe(
+          code,
+        );
+      },
+    );
+  },
+);
