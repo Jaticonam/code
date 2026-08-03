@@ -8,6 +8,10 @@ import type {
   ResolvedCatalogProviderResult,
 } from "@/modules/catalog/providers/CatalogProvider";
 
+import {
+  getCatalogFallbackErrorCode,
+} from "@/modules/catalog/providers/CatalogFallbackPolicy";
+
 import type {
   CatalogSourceMode,
 } from "@/shared/config/application/CatalogSourceMode";
@@ -30,6 +34,11 @@ export interface CatalogProviderHealthSnapshot {
 
   fallbackUsed:
     boolean;
+
+  fallbackReasonCounts:
+    Readonly<
+      Record<string, number>
+    >;
 
   receivedCount:
     number;
@@ -87,6 +96,36 @@ function incrementIssue(
     (counts[code] ?? 0) + 1;
 }
 
+function trackFallbackReason(
+  fallbackReasonCounts:
+    Record<string, number>,
+
+  issueCounts:
+    Record<string, number>,
+
+  reason:
+    string | undefined,
+): void {
+  if (!reason) {
+    return;
+  }
+
+  incrementIssue(
+    fallbackReasonCounts,
+    reason,
+  );
+
+  if (
+    reason ===
+      "JUNG_CORE_CIRCUIT_OPEN"
+  ) {
+    incrementIssue(
+      issueCounts,
+      reason,
+    );
+  }
+}
+
 export async function collectCatalogProviderHealth(
   provider:
     CatalogProvider,
@@ -109,6 +148,9 @@ export async function collectCatalogProviderHealth(
 
   let fallbackUsed =
     false;
+
+  const fallbackReasonCounts:
+    Record<string, number> = {};
 
   let receivedCount =
     0;
@@ -144,6 +186,14 @@ export async function collectCatalogProviderHealth(
       campaignResult
         .metadata
         .fallbackUsed;
+
+    trackFallbackReason(
+      fallbackReasonCounts,
+      issueCounts,
+      campaignResult
+        .metadata
+        .fallbackReason,
+    );
 
     campaignResult
       .issues
@@ -182,6 +232,14 @@ export async function collectCatalogProviderHealth(
           .metadata
           .fallbackUsed;
 
+      trackFallbackReason(
+        fallbackReasonCounts,
+        issueCounts,
+        result
+          .metadata
+          .fallbackReason,
+      );
+
       receivedCount +=
         diagnostics
           ?.receivedCount ??
@@ -212,11 +270,27 @@ export async function collectCatalogProviderHealth(
             ),
         );
     }
-  } catch {
+  } catch (cause: unknown) {
     incrementIssue(
       issueCounts,
       "PROVIDER_ERROR",
     );
+
+    const errorCode =
+      getCatalogFallbackErrorCode(
+        cause,
+      );
+
+    if (
+      errorCode &&
+      errorCode !==
+        "PROVIDER_ERROR"
+    ) {
+      incrementIssue(
+        issueCounts,
+        errorCode,
+      );
+    }
   }
 
   const resolvedSources =
@@ -243,6 +317,7 @@ export async function collectCatalogProviderHealth(
         : resolvedSources[0],
 
     fallbackUsed,
+    fallbackReasonCounts,
     receivedCount,
     validCount,
     rejectedCount,

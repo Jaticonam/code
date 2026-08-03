@@ -25,6 +25,13 @@ import {
   type HttpJungCoreSnapshotLoaderErrorCode,
 } from "./HttpJungCoreSnapshotLoader";
 
+import {
+  JungCoreCircuitBreaker,
+  JungCoreCircuitOpenError,
+  type JungCoreCircuitBreakerOptions,
+  type JungCoreCircuitBreakerState,
+} from "./JungCoreCircuitBreaker";
+
 export type JungCoreCatalogProviderStatus =
   | "idle"
   | "loading"
@@ -35,6 +42,7 @@ export type JungCoreCatalogProviderErrorCode =
   | "JUNG_CORE_SNAPSHOT_LOAD_FAILED"
   | "JUNG_CORE_SNAPSHOT_INVALID"
   | "JUNG_CORE_BRAND_MISMATCH"
+  | "JUNG_CORE_CIRCUIT_OPEN"
   | HttpJungCoreSnapshotLoaderErrorCode;
 
 export interface JungCoreCatalogProviderState {
@@ -58,6 +66,9 @@ export interface JungCoreCatalogProviderState {
 
   lastErrorCode:
     JungCoreCatalogProviderErrorCode | null;
+
+  circuitBreaker:
+    JungCoreCircuitBreakerState;
 }
 
 export interface JungCoreCatalogProviderDiagnostics {
@@ -86,6 +97,13 @@ export interface JungCoreCatalogProviderOptions
 
   now?:
     () => number;
+
+  circuitBreaker?:
+    Omit<
+      JungCoreCircuitBreakerOptions,
+      "now" |
+      "shouldCountFailure"
+    >;
 }
 
 export class JungCoreCatalogProviderError
@@ -185,6 +203,9 @@ export class JungCoreCatalogProvider
   private readonly now:
     () => number;
 
+  private readonly circuitBreaker:
+    JungCoreCircuitBreaker;
+
   private snapshotCache:
     CatalogSnapshotCompatibilityResult | null =
       null;
@@ -215,6 +236,20 @@ export class JungCoreCatalogProvider
 
       lastErrorCode:
         null,
+
+      circuitBreaker: {
+        status:
+          "disabled",
+
+        consecutiveFailures:
+          0,
+
+        openedAt:
+          null,
+
+        nextAttemptAt:
+          null,
+      },
     };
 
   constructor(
@@ -243,6 +278,22 @@ export class JungCoreCatalogProvider
     this.now =
       options.now ??
       Date.now;
+
+    this.circuitBreaker =
+      new JungCoreCircuitBreaker({
+        ...options.circuitBreaker,
+
+        now:
+          this.now,
+      });
+
+    this.state = {
+      ...this.state,
+
+      circuitBreaker:
+        this.circuitBreaker
+          .getState(),
+    };
   }
 
   getCategories():
@@ -260,6 +311,11 @@ export class JungCoreCatalogProvider
     JungCoreCatalogProviderState {
     return {
       ...this.state,
+
+      circuitBreaker: {
+        ...this.state
+          .circuitBreaker,
+      },
     };
   }
 
@@ -384,6 +440,56 @@ export class JungCoreCatalogProvider
       return this.pendingSnapshot;
     }
 
+    try {
+      this.circuitBreaker
+        .beforeRequest();
+    } catch (cause: unknown) {
+      const error =
+        cause instanceof
+          JungCoreCircuitOpenError
+          ? new JungCoreCatalogProviderError(
+              cause.code,
+              cause.message,
+              cause,
+            )
+          : new JungCoreCatalogProviderError(
+              "JUNG_CORE_SNAPSHOT_LOAD_FAILED",
+
+              "No se pudo evaluar el circuito de JUNG CORE.",
+
+              cause,
+            );
+
+      this.state = {
+        status:
+          "error",
+
+        revision:
+          null,
+
+        generatedAt:
+          null,
+
+        loadedAt:
+          null,
+
+        productIssueCount:
+          0,
+
+        unsupportedTierCount:
+          0,
+
+        lastErrorCode:
+          error.code,
+
+        circuitBreaker:
+          this.circuitBreaker
+            .getState(),
+      };
+
+      throw error;
+    }
+
     this.state = {
       status:
         "loading",
@@ -405,6 +511,10 @@ export class JungCoreCatalogProvider
 
       lastErrorCode:
         null,
+
+      circuitBreaker:
+        this.circuitBreaker
+          .getState(),
     };
 
     const request =
@@ -413,6 +523,9 @@ export class JungCoreCatalogProvider
           (snapshot) => {
             this.snapshotCache =
               snapshot;
+
+            this.circuitBreaker
+              .recordSuccess();
 
             this.state = {
               status:
@@ -439,6 +552,10 @@ export class JungCoreCatalogProvider
 
               lastErrorCode:
                 null,
+
+              circuitBreaker:
+                this.circuitBreaker
+                  .getState(),
             };
 
             return snapshot;
@@ -457,6 +574,11 @@ export class JungCoreCatalogProvider
 
                     cause,
                   );
+
+            this.circuitBreaker
+              .recordFailure(
+                error,
+              );
 
             this.state = {
               status:
@@ -479,6 +601,10 @@ export class JungCoreCatalogProvider
 
               lastErrorCode:
                 error.code,
+
+              circuitBreaker:
+                this.circuitBreaker
+                  .getState(),
             };
 
             throw error;

@@ -321,6 +321,20 @@ describe(
 
           lastErrorCode:
             null,
+
+          circuitBreaker: {
+            status:
+              "disabled",
+
+            consecutiveFailures:
+              0,
+
+            openedAt:
+              null,
+
+            nextAttemptAt:
+              null,
+          },
         });
       },
     );
