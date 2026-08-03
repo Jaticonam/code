@@ -1,3 +1,4 @@
 export type CatalogSourceMode =
   | "google-sheets"
-  | "contract-fixture";
+  | "contract-fixture"
+  | "jung-core";
