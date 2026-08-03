@@ -41,7 +41,7 @@ export function useSearchNavigation(
 
   const goToCategory = (category: string) => {
     reset();
-    navigate(`/catalogo/categoria.html?cat=${category}`);
+    navigate(`/catalogo/categoria.html?cat=${encodeURIComponent(category)}`);
   };
 
   return { goToProduct, goToCategory };
