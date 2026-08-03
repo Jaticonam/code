@@ -104,16 +104,17 @@ npm run feed:mercadolibre
 
 ---
 
-### Prepare
+### Prepare integrations and build
 
-npm run prepare
+npm run prepare:integrations
+npm run build
 
 Responsibilities:
 
-- Generate feeds
-- Validate catalog
-- Generate status files
-- Build the app
+- Load catalog data and prepare registered integrations
+- Generate integration feeds and status files
+- Type-check and build the app
+- Run explicitly; these commands are not npm lifecycle hooks
 
 ---
 

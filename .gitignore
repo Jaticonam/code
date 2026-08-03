@@ -49,3 +49,7 @@ backups/
 
 # Generated catalog image reports
 reports/catalog/pdf-images-report.json
+
+# npm is the canonical package manager
+bun.lock
+bun.lockb
