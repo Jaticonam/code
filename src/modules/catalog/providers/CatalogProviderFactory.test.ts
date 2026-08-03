@@ -16,6 +16,10 @@ import {
   resolveCatalogSourceMode,
 } from "./CatalogProviderFactory";
 import {
+  developmentJungCoreCatalogProvider,
+} from "@/modules/catalog/integrations/jungCore/DevelopmentJungCoreCatalogProvider";
+
+import {
   FallbackCatalogProvider,
 } from "./FallbackCatalogProvider";
 
@@ -52,6 +56,7 @@ describe(
       ["google-sheets", "google-sheets"],
       ["desconocido", "google-sheets"],
       ["contract-fixture", "contract-fixture"],
+      ["jung-core", "jung-core"],
     ])(
       "resuelve %s como %s",
       (value, expected) => {
@@ -68,8 +73,12 @@ describe(
       ["contract-fixture", "contract-fixture", true],
       ["google-sheets", "contract-fixture", false],
       ["contract-fixture", "google-sheets", false],
+      ["jung-core", "jung-core", true],
+      ["google-sheets", "jung-core", false],
+      ["jung-core", "google-sheets", false],
       [undefined, "google-sheets", true],
       [undefined, "contract-fixture", false],
+      [undefined, "jung-core", false],
     ] as const)(
       "compatibilidad de caché %s -> %s: %s",
       (
@@ -97,9 +106,16 @@ describe(
           provider(
             "contract-fixture",
           );
+
+        const jungCore =
+          provider(
+            "jung-core",
+          );
+
         const dependencies = {
           googleSheets,
           contractFixture,
+          jungCore,
         };
 
         expect(
@@ -116,12 +132,96 @@ describe(
         ).toBe(
           contractFixture,
         );
+
+        expect(
+          createCatalogProvider(
+            "jung-core",
+            dependencies,
+          ),
+        ).toBe(
+          jungCore,
+        );
         expect(
           dependencies,
         ).toEqual({
           googleSheets,
           contractFixture,
+          jungCore,
         });
+      },
+    );
+
+    it(
+      "compone el provider simulado de JUNG CORE sin fallback ni HTTP",
+      async () => {
+        const selected =
+          createCatalogProvider(
+            "jung-core",
+
+            {
+              googleSheets:
+                provider(
+                  "google-sheets",
+                ),
+
+              contractFixture:
+                provider(
+                  "contract-fixture",
+                ),
+
+              jungCore:
+                developmentJungCoreCatalogProvider,
+            },
+          );
+
+        expect(
+          selected.source,
+        ).toBe(
+          "jung-core",
+        );
+
+        expect(
+          selected.getCategories(),
+        ).toEqual([
+          "flores",
+          "peluches",
+          "papeles",
+          "cajas",
+          "cintas",
+          "globos",
+          "accesorios",
+          "llaveros",
+          "hotwheels",
+        ]);
+
+        const campaigns =
+          await selected
+            .loadCampaigns();
+
+        const products =
+          await selected
+            .loadCategoryProducts(
+              "flores",
+              campaigns,
+            );
+
+        expect(
+          campaigns.map(
+            (campaign) =>
+              campaign.id,
+          ),
+        ).toEqual([
+          "jung-core-simulation",
+        ]);
+
+        expect(
+          products.map(
+            (product) =>
+              product.id,
+          ),
+        ).toEqual([
+          "SIM-WLY-001",
+        ]);
       },
     );
   },

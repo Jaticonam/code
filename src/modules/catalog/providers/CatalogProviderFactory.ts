@@ -1,50 +1,71 @@
-import {
-  contractFixtureCatalogProvider,
-} from "@/modules/catalog/integrations/contractFixtures/ContractFixtureCatalogProvider";
-import {
-  googleSheetsCatalogProvider,
-} from "@/modules/catalog/integrations/googleSheets/GoogleSheetsCatalogProvider";
+import type {
+  CatalogSourceMode,
+} from "@/shared/config/application/CatalogSourceMode";
 
 import type {
   CatalogProvider,
 } from "./CatalogProvider";
-import type { CatalogSourceMode } from "@/shared/config/application/CatalogSourceMode";
 
 export interface CatalogProviderDependencies {
   googleSheets:
     CatalogProvider;
+
   contractFixture:
+    CatalogProvider;
+
+  jungCore:
     CatalogProvider;
 }
 
-const DEFAULT_DEPENDENCIES:
-  CatalogProviderDependencies = {
-    googleSheets:
-      googleSheetsCatalogProvider,
-    contractFixture:
-      contractFixtureCatalogProvider,
-  };
-
 export function resolveCatalogSourceMode(
-  value: unknown,
+  value:
+    unknown,
 ): CatalogSourceMode {
-  return value ===
-    "contract-fixture"
-    ? "contract-fixture"
-    : "google-sheets";
+  if (
+    value ===
+      "contract-fixture"
+  ) {
+    return "contract-fixture";
+  }
+
+  if (
+    value ===
+      "jung-core"
+  ) {
+    return "jung-core";
+  }
+
+  return "google-sheets";
 }
 
 export function createCatalogProvider(
-  value: unknown,
+  value:
+    unknown,
+
   dependencies:
-    CatalogProviderDependencies =
-      DEFAULT_DEPENDENCIES,
+    CatalogProviderDependencies,
 ): CatalogProvider {
   const mode =
-    resolveCatalogSourceMode(value);
+    resolveCatalogSourceMode(
+      value,
+    );
 
-  return mode ===
-    "contract-fixture"
-    ? dependencies.contractFixture
-    : dependencies.googleSheets;
+  if (
+    mode ===
+      "contract-fixture"
+  ) {
+    return dependencies
+      .contractFixture;
+  }
+
+  if (
+    mode ===
+      "jung-core"
+  ) {
+    return dependencies
+      .jungCore;
+  }
+
+  return dependencies
+    .googleSheets;
 }

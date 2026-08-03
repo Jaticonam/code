@@ -21,11 +21,12 @@ export function resolveApplicationConfig(
   const issues: ApplicationConfigIssue[] = [];
   const requestedSource = overrides.catalogSource;
   const source =
-    requestedSource === "contract-fixture" && mode !== "production"
+    requestedSource === "google-sheets" ||
+    ((requestedSource === "contract-fixture" ||
+      requestedSource === "jung-core") &&
+      mode !== "production")
       ? requestedSource
-      : requestedSource === "google-sheets"
-        ? requestedSource
-        : woolyApplicationConfig.catalog.source;
+      : woolyApplicationConfig.catalog.source;
   if (
     requestedSource !== undefined &&
     source !== requestedSource

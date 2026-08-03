@@ -50,11 +50,114 @@ describe("ApplicationConfig", () => {
     expect(result.errors.map((item) => item.code)).toContain(code);
   });
 
-  it("protege producción y permite fixture solo en desarrollo", () => {
-    expect(resolveApplicationConfig({ catalogSource: "contract-fixture" }, "production").config.catalog.source)
-      .toBe("google-sheets");
-    expect(resolveApplicationConfig({ catalogSource: "contract-fixture" }, "development").config.catalog.source)
-      .toBe("contract-fixture");
+  it("protege producción y permite fuentes simuladas solo fuera de producción", () => {
+    const productionFixture =
+      resolveApplicationConfig(
+        {
+          catalogSource:
+            "contract-fixture",
+        },
+        "production",
+      );
+
+    const productionJungCore =
+      resolveApplicationConfig(
+        {
+          catalogSource:
+            "jung-core",
+        },
+        "production",
+      );
+
+    expect(
+      productionFixture
+        .config.catalog.source,
+    ).toBe("google-sheets");
+
+    expect(
+      productionJungCore
+        .config.catalog.source,
+    ).toBe("google-sheets");
+
+    expect(
+      productionJungCore
+        .issues.map(
+          (item) =>
+            item.code,
+        ),
+    ).toContain(
+      "UNKNOWN_CATALOG_SOURCE",
+    );
+
+    expect(
+      resolveApplicationConfig(
+        {
+          catalogSource:
+            "contract-fixture",
+        },
+        "development",
+      ).config.catalog.source,
+    ).toBe(
+      "contract-fixture",
+    );
+
+    expect(
+      resolveApplicationConfig(
+        {
+          catalogSource:
+            "jung-core",
+        },
+        "development",
+      ).config.catalog.source,
+    ).toBe(
+      "jung-core",
+    );
+
+    expect(
+      resolveApplicationConfig(
+        {
+          catalogSource:
+            "jung-core",
+        },
+        "test",
+      ).config.catalog.source,
+    ).toBe(
+      "jung-core",
+    );
+
+    const productionValidation =
+      validateApplicationConfig(
+        {
+          ...woolyApplicationConfig,
+
+          catalog: {
+            source:
+              "jung-core",
+          },
+        },
+        "production",
+      );
+
+    const developmentValidation =
+      validateApplicationConfig(
+        {
+          ...woolyApplicationConfig,
+
+          catalog: {
+            source:
+              "jung-core",
+          },
+        },
+        "development",
+      );
+
+    expect(
+      productionValidation.ok,
+    ).toBe(false);
+
+    expect(
+      developmentValidation.ok,
+    ).toBe(true);
   });
 
   it("descarta origin inválido y conserva el default seguro", () => {

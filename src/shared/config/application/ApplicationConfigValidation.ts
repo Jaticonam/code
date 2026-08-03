@@ -111,7 +111,14 @@ export function validateApplicationConfig(
     !Number.isInteger(config.commerce?.pdfValidityDays) ||
     config.commerce.pdfValidityDays <= 0
   ) issue("INVALID_NUMBER", "commerce.pdfValidityDays");
-  if (!["google-sheets", "contract-fixture"].includes(config.catalog?.source))
+  const catalogSource =
+    config.catalog?.source;
+  const catalogSourceAllowed =
+    catalogSource === "google-sheets" ||
+    (mode !== "production" &&
+      (catalogSource === "contract-fixture" ||
+        catalogSource === "jung-core"));
+  if (!catalogSourceAllowed)
     issue("UNKNOWN_CATALOG_SOURCE", "catalog.source");
   if (errors.length) return { ok: false, errors, warnings: [] };
   return {
