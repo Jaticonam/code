@@ -50,6 +50,12 @@ export interface CatalogProviderHealthSnapshot {
 
   durationMs:
     number;
+
+  resolvedSources?:
+    readonly CatalogSourceMode[];
+
+  mixedSources?:
+    true;
 }
 
 interface DetailedProductResult
@@ -98,9 +104,8 @@ export async function collectCatalogProviderHealth(
   const startedAt =
     now();
 
-  let resolvedSource:
-    CatalogSourceMode =
-      provider.source;
+  const resolvedSourceSet =
+    new Set<CatalogSourceMode>();
 
   let fallbackUsed =
     false;
@@ -129,10 +134,11 @@ export async function collectCatalogProviderHealth(
     const campaigns =
       campaignResult.data;
 
-    resolvedSource =
+    resolvedSourceSet.add(
       campaignResult
         .metadata
-        .resolvedSource;
+        .resolvedSource,
+    );
 
     fallbackUsed =
       campaignResult
@@ -164,10 +170,11 @@ export async function collectCatalogProviderHealth(
       const diagnostics =
         result.diagnostics;
 
-      resolvedSource =
+      resolvedSourceSet.add(
         result
           .metadata
-          .resolvedSource;
+          .resolvedSource,
+      );
 
       fallbackUsed =
         fallbackUsed ||
@@ -212,9 +219,29 @@ export async function collectCatalogProviderHealth(
     );
   }
 
+  const resolvedSources =
+    resolvedSourceSet.size > 0
+      ? [...resolvedSourceSet]
+      : [provider.source];
+
+  const mixedSources =
+    resolvedSources.length > 1;
+
+  if (mixedSources) {
+    incrementIssue(
+      issueCounts,
+      "MIXED_SOURCES",
+    );
+  }
+
   return {
     requestedSource,
-    resolvedSource,
+
+    resolvedSource:
+      mixedSources
+        ? "mixed"
+        : resolvedSources[0],
+
     fallbackUsed,
     receivedCount,
     validCount,
@@ -227,6 +254,16 @@ export async function collectCatalogProviderHealth(
         0,
         now() - startedAt,
       ),
+
+    ...(
+      mixedSources
+        ? {
+            resolvedSources,
+            mixedSources:
+              true as const,
+          }
+        : {}
+    ),
   };
 }
 
@@ -267,7 +304,9 @@ export class CatalogProviderHealthCollector
 
     const degraded =
       snapshot.fallbackUsed ||
-      snapshot.rejectedCount > 0;
+      snapshot.rejectedCount > 0 ||
+      snapshot.mixedSources ===
+        true;
 
     return {
       status:

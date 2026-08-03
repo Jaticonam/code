@@ -14,6 +14,7 @@ import type {
 
 import {
   createCatalogSourceMetadata,
+  getCatalogCacheCompatibleSources,
   loadCatalogCampaignsDetailed,
   loadCatalogCategoryProductsDetailed,
 } from "./CatalogProvider";
@@ -110,6 +111,11 @@ export class FallbackCatalogProvider
   readonly source:
     CatalogProvider["source"];
 
+  readonly cacheCompatibleSources:
+    ReadonlyArray<
+      CatalogProvider["source"]
+    >;
+
   constructor(
     private readonly primary:
       CatalogProvider,
@@ -119,6 +125,18 @@ export class FallbackCatalogProvider
   ) {
     this.source =
       primary.source;
+
+    this.cacheCompatibleSources = [
+      ...new Set([
+        ...getCatalogCacheCompatibleSources(
+          primary,
+        ),
+
+        ...getCatalogCacheCompatibleSources(
+          fallback,
+        ),
+      ]),
+    ];
   }
 
   getCategories():

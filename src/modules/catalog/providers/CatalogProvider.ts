@@ -14,23 +14,69 @@ import type {
 export type CatalogCategoryId =
   NonNullable<Product["category"]>;
 
+function normalizeCatalogCacheSources(
+  activeSources:
+    CatalogSourceMode |
+    readonly CatalogSourceMode[],
+): readonly CatalogSourceMode[] {
+  const sources =
+    typeof activeSources === "string"
+      ? [activeSources]
+      : [...activeSources];
+
+  return [
+    ...new Set(sources),
+  ];
+}
+
+export function resolveCatalogCacheSource(
+  storedSource:
+    string |
+    undefined,
+
+  activeSources:
+    CatalogSourceMode |
+    readonly CatalogSourceMode[],
+): CatalogSourceMode | null {
+  const compatibleSources =
+    normalizeCatalogCacheSources(
+      activeSources,
+    );
+
+  if (
+    storedSource ===
+    undefined
+  ) {
+    return compatibleSources.includes(
+      "google-sheets",
+    )
+      ? "google-sheets"
+      : null;
+  }
+
+  return (
+    compatibleSources.find(
+      (source) =>
+        source === storedSource,
+    ) ??
+    null
+  );
+}
+
 export function isCatalogCacheSourceCompatible(
   storedSource:
     string |
     undefined,
 
-  activeSource:
-    CatalogSourceMode,
+  activeSources:
+    CatalogSourceMode |
+    readonly CatalogSourceMode[],
 ): boolean {
   return (
-    storedSource ===
-      activeSource ||
-    (
-      storedSource ===
-        undefined &&
-      activeSource ===
-        "google-sheets"
-    )
+    resolveCatalogCacheSource(
+      storedSource,
+      activeSources,
+    ) !== null
   );
 }
 
@@ -159,6 +205,9 @@ export interface CatalogProvider {
   readonly source:
     CatalogSourceMode;
 
+  readonly cacheCompatibleSources?:
+    readonly CatalogSourceMode[];
+
   getCategories():
     readonly CatalogCategoryId[];
 
@@ -187,6 +236,16 @@ export interface CatalogProvider {
   ): Promise<
     CatalogProviderResult<Product[]>
   >;
+}
+
+export function getCatalogCacheCompatibleSources(
+  provider:
+    CatalogProvider,
+): readonly CatalogSourceMode[] {
+  return normalizeCatalogCacheSources(
+    provider.cacheCompatibleSources ??
+    provider.source,
+  );
 }
 
 export async function loadCatalogCampaignsDetailed(

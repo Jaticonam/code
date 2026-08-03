@@ -2,11 +2,16 @@ import type {
   Campaign,
 } from "@/shared/types/product";
 
+import type {
+  CatalogSourceMode,
+} from "@/shared/config/application/CatalogSourceMode";
+
 import {
   buildCampaignNameToIdMap,
   filterActiveCampaigns,
   getCampaignComputedStatus,
 } from "@/modules/catalog/domain/CampaignRules";
+
 import {
   readStorageEnvelope,
   serializeStorageEnvelope,
@@ -15,8 +20,12 @@ import {
 import {
   catalogProvider,
 } from "@/modules/catalog/providers/DefaultCatalogProvider";
+
 import {
+  getCatalogCacheCompatibleSources,
   isCatalogCacheSourceCompatible,
+  loadCatalogCampaignsDetailed,
+  resolveCatalogCacheSource,
 } from "@/modules/catalog/providers/CatalogProvider";
 
 /* =========================================================
@@ -24,13 +33,30 @@ import {
    ========================================================= */
 
 type CampaignCacheEntry = {
-  savedAt: number;
-  items: Campaign[];
+  savedAt:
+    number;
+
+  items:
+    Campaign[];
+
+  source:
+    CatalogSourceMode;
+};
+
+type CampaignProviderLoad = {
+  items:
+    Campaign[];
+
+  source:
+    CatalogSourceMode;
 };
 
 export interface LoadCatalogCampaignsOptions {
-  includeInactive?: boolean;
-  forceRefresh?: boolean;
+  includeInactive?:
+    boolean;
+
+  forceRefresh?:
+    boolean;
 }
 
 /* =========================================================
@@ -39,6 +65,7 @@ export interface LoadCatalogCampaignsOptions {
 
 const CACHE_TTL =
   1000 * 60 * 5;
+
 const CAMPAIGN_CACHE_SCHEMA_VERSION =
   1;
 
@@ -61,13 +88,20 @@ const now = () =>
   Date.now();
 
 const isFresh = (
-  savedAt: number,
+  savedAt:
+    number,
 ): boolean =>
   now() - savedAt <=
   CACHE_TTL;
 
+const compatibleSources = () =>
+  getCatalogCacheCompatibleSources(
+    catalogProvider,
+  );
+
 const sortCampaigns = (
-  campaigns: Campaign[],
+  campaigns:
+    Campaign[],
 ): Campaign[] =>
   [...campaigns].sort(
     (a, b) =>
@@ -76,50 +110,102 @@ const sortCampaigns = (
   );
 
 function sanitizeCachedCampaigns(
-  value: unknown,
+  value:
+    unknown,
 ): Campaign[] | null {
-  if (!Array.isArray(value)) return null;
+  if (!Array.isArray(value)) {
+    return null;
+  }
 
-  return value.flatMap((item): Campaign[] => {
-    if (typeof item !== "object" || item === null) return [];
-    const candidate = item as Record<string, unknown>;
+  return value.flatMap(
+    (item): Campaign[] => {
+      if (
+        typeof item !== "object" ||
+        item === null
+      ) {
+        return [];
+      }
 
-    if (
-      typeof candidate.id !== "string" ||
-      !candidate.id.trim() ||
-      typeof candidate.name !== "string" ||
-      !candidate.name.trim() ||
-      typeof candidate.startDate !== "string" ||
-      typeof candidate.endDate !== "string" ||
-      typeof candidate.publicationStatus !== "string" ||
-      typeof candidate.priority !== "number" ||
-      !Number.isFinite(candidate.priority)
-    ) return [];
+      const candidate =
+        item as
+          Record<string, unknown>;
 
-    const campaign = candidate as unknown as Campaign;
+      if (
+        typeof candidate.id !== "string" ||
+        !candidate.id.trim() ||
+        typeof candidate.name !== "string" ||
+        !candidate.name.trim() ||
+        typeof candidate.startDate !== "string" ||
+        typeof candidate.endDate !== "string" ||
+        typeof candidate.publicationStatus !== "string" ||
+        typeof candidate.priority !== "number" ||
+        !Number.isFinite(
+          candidate.priority,
+        )
+      ) {
+        return [];
+      }
 
-    return [{
-      ...campaign,
-      computedStatus: getCampaignComputedStatus(campaign),
-    }];
-  });
+      const campaign =
+        candidate as
+          unknown as Campaign;
+
+      return [{
+        ...campaign,
+
+        computedStatus:
+          getCampaignComputedStatus(
+            campaign,
+          ),
+      }];
+    },
+  );
 }
 
-export function readCampaignCachePayload(raw: string | null) {
+export function readCampaignCachePayload(
+  raw:
+    string | null,
+) {
   return readStorageEnvelope({
     raw,
-    schemaVersion: CAMPAIGN_CACHE_SCHEMA_VERSION,
-    requireSavedAt: true,
-    validateData: sanitizeCachedCampaigns,
-    migrateLegacy: (legacy) => {
-      if (typeof legacy !== "object" || legacy === null) return null;
-      const candidate = legacy as Record<string, unknown>;
-      const data = sanitizeCachedCampaigns(candidate.items);
 
-      return data === null
-        ? null
-        : { data, savedAt: candidate.savedAt as number };
-    },
+    schemaVersion:
+      CAMPAIGN_CACHE_SCHEMA_VERSION,
+
+    requireSavedAt:
+      true,
+
+    validateData:
+      sanitizeCachedCampaigns,
+
+    migrateLegacy:
+      (legacy) => {
+        if (
+          typeof legacy !== "object" ||
+          legacy === null
+        ) {
+          return null;
+        }
+
+        const candidate =
+          legacy as
+            Record<string, unknown>;
+
+        const data =
+          sanitizeCachedCampaigns(
+            candidate.items,
+          );
+
+        return data === null
+          ? null
+          : {
+              data,
+
+              savedAt:
+                candidate.savedAt as
+                  number,
+            };
+      },
   });
 }
 
@@ -128,7 +214,7 @@ export function readCampaignCachePayload(raw: string | null) {
    ========================================================= */
 
 function readStoredCampaigns():
-  Campaign[] | null {
+  CampaignCacheEntry | null {
   if (
     typeof window ===
     "undefined"
@@ -158,36 +244,53 @@ function readStoredCampaigns():
       return null;
     }
 
-    if (
-      !isCatalogCacheSourceCompatible(
+    const source =
+      resolveCatalogCacheSource(
         result.source,
-        catalogProvider.source,
-      )
-    ) {
+        compatibleSources(),
+      );
+
+    if (!source) {
       return null;
     }
 
-    campaignsMemoryCache = {
+    const entry:
+      CampaignCacheEntry = {
       savedAt:
         result.savedAt,
+
       items:
         result.data,
+
+      source,
     };
 
-    return result.data;
+    campaignsMemoryCache =
+      entry;
+
+    return entry;
   } catch {
     return null;
   }
 }
 
 function writeCampaignsCache(
-  campaigns: Campaign[],
+  campaigns:
+    Campaign[],
+
+  source:
+    CatalogSourceMode,
 ): void {
   const entry:
     CampaignCacheEntry = {
-      savedAt: now(),
-      items: campaigns,
-    };
+    savedAt:
+      now(),
+
+    items:
+      campaigns,
+
+    source,
+  };
 
   campaignsMemoryCache =
     entry;
@@ -202,19 +305,23 @@ function writeCampaignsCache(
   try {
     localStorage.setItem(
       CAMPAIGNS_CACHE_KEY,
+
       serializeStorageEnvelope({
         schemaVersion:
           CAMPAIGN_CACHE_SCHEMA_VERSION,
+
         savedAt:
           entry.savedAt,
+
         data:
           entry.items,
+
         source:
-          catalogProvider.source,
+          entry.source,
       }),
     );
   } catch {
-    // El cache en memoria continúa disponible.
+    // La caché en memoria continúa disponible.
   }
 }
 
@@ -223,14 +330,22 @@ function writeCampaignsCache(
    ========================================================= */
 
 async function fetchCampaignsFromProvider():
-  Promise<Campaign[]> {
-  const campaigns =
-    await catalogProvider
-      .loadCampaigns();
+  Promise<CampaignProviderLoad> {
+  const result =
+    await loadCatalogCampaignsDetailed(
+      catalogProvider,
+    );
 
-  return sortCampaigns(
-    campaigns,
-  );
+  return {
+    items:
+      sortCampaigns(
+        result.data,
+      ),
+
+    source:
+      result.metadata
+        .resolvedSource,
+  };
 }
 
 /* =========================================================
@@ -249,17 +364,29 @@ async function loadAllCatalogCampaigns(
     if (
       campaignsMemoryCache &&
       isFresh(
-        campaignsMemoryCache.savedAt,
+        campaignsMemoryCache
+          .savedAt,
+      ) &&
+      isCatalogCacheSourceCompatible(
+        campaignsMemoryCache
+          .source,
+
+        compatibleSources(),
       )
     ) {
-      return campaignsMemoryCache.items;
+      return campaignsMemoryCache
+        .items;
     }
+
+    campaignsMemoryCache =
+      null;
 
     const storedCampaigns =
       readStoredCampaigns();
 
     if (storedCampaigns) {
-      return storedCampaigns;
+      return storedCampaigns
+        .items;
     }
   }
 
@@ -271,32 +398,27 @@ async function loadAllCatalogCampaigns(
 
   pendingCampaignsRequest =
     fetchCampaignsFromProvider()
-      .then((campaigns) => {
+      .then((result) => {
         writeCampaignsCache(
-          campaigns,
+          result.items,
+          result.source,
         );
 
-        return campaigns;
+        return result.items;
       })
       .catch(
         (error: unknown) => {
           console.error(
-            "No se pudieron cargar las campañas oficiales de Google Sheets:",
+            "No se pudieron cargar las campañas del provider de catálogo:",
+
             error,
           );
 
           /**
            * No se inventan campañas.
-           * Si la fuente falla, se devuelve un registro vacío.
+           * Tampoco se persiste un vacío originado por un error.
            */
-          const emptyCampaigns:
-            Campaign[] = [];
-
-          writeCampaignsCache(
-            emptyCampaigns,
-          );
-
-          return emptyCampaigns;
+          return [];
         },
       )
       .finally(() => {
@@ -335,7 +457,8 @@ export async function loadCatalogCampaigns(
 export async function getCampaignNameToIdMap() {
   const campaigns =
     await loadCatalogCampaigns({
-      includeInactive: true,
+      includeInactive:
+        true,
     });
 
   return buildCampaignNameToIdMap(

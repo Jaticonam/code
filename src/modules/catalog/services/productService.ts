@@ -1,101 +1,219 @@
-import type { Product } from "@/shared/types/product";
+import type {
+  Product,
+} from "@/shared/types/product";
+
+import type {
+  CatalogSourceMode,
+} from "@/shared/config/application/CatalogSourceMode";
 
 import {
+  getCatalogCacheCompatibleSources,
   isCatalogCacheSourceCompatible,
+  loadCatalogCategoryProductsDetailed,
+  resolveCatalogCacheSource,
   type CatalogCategoryId,
 } from "@/modules/catalog/providers/CatalogProvider";
-import { catalogProvider } from "@/modules/catalog/providers/DefaultCatalogProvider";
+
+import {
+  catalogProvider,
+} from "@/modules/catalog/providers/DefaultCatalogProvider";
+
 import {
   readStorageEnvelope,
   serializeStorageEnvelope,
 } from "@/shared/infrastructure/storage/StorageEnvelope";
 
-import { loadCatalogCampaigns } from "./campaignService";
+import {
+  loadCatalogCampaigns,
+} from "./campaignService";
 
 /* =========================================================
    TIPOS INTERNOS
    ========================================================= */
 
 type CategoryCacheEntry = {
-  savedAt: number;
-  items: Product[];
+  savedAt:
+    number;
+
+  items:
+    Product[];
+
+  source:
+    CatalogSourceMode;
 };
 
-export type CatalogCategory = CatalogCategoryId | "todas";
+export type CatalogCategory =
+  CatalogCategoryId |
+  "todas";
 
 /* =========================================================
    CONFIGURACIÓN
    ========================================================= */
 
-const CACHE_TTL = 1000 * 60 * 5;
-const CATEGORY_CACHE_SCHEMA_VERSION = 1;
+const CACHE_TTL =
+  1000 * 60 * 5;
+
+const CATEGORY_CACHE_SCHEMA_VERSION =
+  1;
 
 /* =========================================================
    CACHE EN MEMORIA
    ========================================================= */
 
-const memoryCache = new Map<CatalogCategoryId, CategoryCacheEntry>();
+const memoryCache =
+  new Map<
+    CatalogCategoryId,
+    CategoryCacheEntry
+  >();
 
-const pendingRequests = new Map<CatalogCategoryId, Promise<Product[]>>();
+const pendingRequests =
+  new Map<
+    CatalogCategoryId,
+    Promise<Product[]>
+  >();
 
 /* =========================================================
    HELPERS
    ========================================================= */
 
-const productKey = (category: string) => `jung_catalog_v3_${category}`;
+const productKey = (
+  category:
+    string,
+) =>
+  `jung_catalog_v3_${category}`;
 
-const now = () => Date.now();
+const now = () =>
+  Date.now();
 
-const isFresh = (savedAt: number) => now() - savedAt <= CACHE_TTL;
+const isFresh = (
+  savedAt:
+    number,
+) =>
+  now() - savedAt <=
+  CACHE_TTL;
 
-export const getCatalogCategories = (): CatalogCategoryId[] => [
-  ...catalogProvider.getCategories(),
-];
+const compatibleSources = () =>
+  getCatalogCacheCompatibleSources(
+    catalogProvider,
+  );
 
-const sortProducts = (items: Product[]) =>
-  [...items].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+export const getCatalogCategories =
+  (): CatalogCategoryId[] => [
+    ...catalogProvider
+      .getCategories(),
+  ];
+
+const sortProducts = (
+  items:
+    Product[],
+) =>
+  [...items].sort(
+    (a, b) =>
+      (b.priority ?? 0) -
+      (a.priority ?? 0),
+  );
 
 const flattenByCategory = (
-  byCategory: Partial<Record<CatalogCategoryId, Product[]>>,
-) => sortProducts(Object.values(byCategory).flatMap((items) => items ?? []));
+  byCategory:
+    Partial<
+      Record<
+        CatalogCategoryId,
+        Product[]
+      >
+    >,
+) =>
+  sortProducts(
+    Object.values(
+      byCategory,
+    ).flatMap(
+      (items) =>
+        items ?? [],
+    ),
+  );
 
-function sanitizeCachedProducts(value: unknown): Product[] | null {
-  if (!Array.isArray(value)) return null;
+function sanitizeCachedProducts(
+  value:
+    unknown,
+): Product[] | null {
+  if (!Array.isArray(value)) {
+    return null;
+  }
 
-  return value.filter((item): item is Product => {
-    if (typeof item !== "object" || item === null) return false;
-    const candidate = item as Record<string, unknown>;
+  return value.filter(
+    (item): item is Product => {
+      if (
+        typeof item !== "object" ||
+        item === null
+      ) {
+        return false;
+      }
 
-    return (
-      typeof candidate.id === "string" &&
-      candidate.id.trim().length > 0 &&
-      typeof candidate.title === "string" &&
-      candidate.title.trim().length > 0 &&
-      typeof candidate.category === "string" &&
-      candidate.category.trim().length > 0 &&
-      typeof candidate.img === "string" &&
-      candidate.img.trim().length > 0 &&
-      typeof candidate.price_1 === "number" &&
-      Number.isFinite(candidate.price_1)
-    );
-  });
+      const candidate =
+        item as
+          Record<string, unknown>;
+
+      return (
+        typeof candidate.id === "string" &&
+        candidate.id.trim().length > 0 &&
+        typeof candidate.title === "string" &&
+        candidate.title.trim().length > 0 &&
+        typeof candidate.category === "string" &&
+        candidate.category.trim().length > 0 &&
+        typeof candidate.img === "string" &&
+        candidate.img.trim().length > 0 &&
+        typeof candidate.price_1 === "number" &&
+        Number.isFinite(
+          candidate.price_1,
+        )
+      );
+    },
+  );
 }
 
-export function readCategoryCachePayload(raw: string | null) {
+export function readCategoryCachePayload(
+  raw:
+    string | null,
+) {
   return readStorageEnvelope({
     raw,
-    schemaVersion: CATEGORY_CACHE_SCHEMA_VERSION,
-    requireSavedAt: true,
-    validateData: sanitizeCachedProducts,
-    migrateLegacy: (legacy) => {
-      if (typeof legacy !== "object" || legacy === null) return null;
-      const candidate = legacy as Record<string, unknown>;
-      const data = sanitizeCachedProducts(candidate.items);
 
-      return data === null
-        ? null
-        : { data, savedAt: candidate.savedAt as number };
-    },
+    schemaVersion:
+      CATEGORY_CACHE_SCHEMA_VERSION,
+
+    requireSavedAt:
+      true,
+
+    validateData:
+      sanitizeCachedProducts,
+
+    migrateLegacy:
+      (legacy) => {
+        if (
+          typeof legacy !== "object" ||
+          legacy === null
+        ) {
+          return null;
+        }
+
+        const candidate =
+          legacy as
+            Record<string, unknown>;
+
+        const data =
+          sanitizeCachedProducts(
+            candidate.items,
+          );
+
+        return data === null
+          ? null
+          : {
+              data,
+
+              savedAt:
+                candidate.savedAt as
+                  number,
+            };
+      },
   });
 }
 
@@ -103,83 +221,169 @@ export function readCategoryCachePayload(raw: string | null) {
    CACHE LOCAL DE PRODUCTOS
    ========================================================= */
 
-function readStorageCache(category: CatalogCategoryId): Product[] | null {
-  if (typeof window === "undefined") {
+function readStorageCache(
+  category:
+    CatalogCategoryId,
+): CategoryCacheEntry | null {
+  if (
+    typeof window ===
+    "undefined"
+  ) {
     return null;
   }
 
   try {
-    const raw = localStorage.getItem(productKey(category));
+    const raw =
+      localStorage.getItem(
+        productKey(
+          category,
+        ),
+      );
 
-    const result = readCategoryCachePayload(raw);
-
-    if (!result.success || result.savedAt === undefined || !isFresh(result.savedAt)) {
-      return null;
-    }
+    const result =
+      readCategoryCachePayload(
+        raw,
+      );
 
     if (
-      !isCatalogCacheSourceCompatible(
-        result.source,
-        catalogProvider.source,
+      !result.success ||
+      result.savedAt ===
+        undefined ||
+      !isFresh(
+        result.savedAt,
       )
     ) {
       return null;
     }
 
-    memoryCache.set(category, {
-      savedAt: result.savedAt,
-      items: result.data,
-    });
+    const source =
+      resolveCatalogCacheSource(
+        result.source,
+        compatibleSources(),
+      );
 
-    return result.data;
+    if (!source) {
+      return null;
+    }
+
+    const entry:
+      CategoryCacheEntry = {
+      savedAt:
+        result.savedAt,
+
+      items:
+        result.data,
+
+      source,
+    };
+
+    memoryCache.set(
+      category,
+      entry,
+    );
+
+    return entry;
   } catch {
     return null;
   }
 }
 
 export function readCachedCategoryProducts(
-  category: CatalogCategoryId,
+  category:
+    CatalogCategoryId,
 ): Product[] | null {
-  const memoryEntry = memoryCache.get(category);
+  const memoryEntry =
+    memoryCache.get(
+      category,
+    );
 
-  if (memoryEntry && isFresh(memoryEntry.savedAt)) {
-    return sortProducts(memoryEntry.items);
+  if (
+    memoryEntry &&
+    isFresh(
+      memoryEntry.savedAt,
+    ) &&
+    isCatalogCacheSourceCompatible(
+      memoryEntry.source,
+      compatibleSources(),
+    )
+  ) {
+    return sortProducts(
+      memoryEntry.items,
+    );
   }
 
-  if (memoryEntry && !isFresh(memoryEntry.savedAt)) {
-    memoryCache.delete(category);
+  if (memoryEntry) {
+    memoryCache.delete(
+      category,
+    );
   }
 
-  const storageItems = readStorageCache(category);
+  const storageEntry =
+    readStorageCache(
+      category,
+    );
 
-  return storageItems ? sortProducts(storageItems) : null;
+  return storageEntry
+    ? sortProducts(
+        storageEntry.items,
+      )
+    : null;
 }
 
-function writeCache(category: CatalogCategoryId, items: Product[]): void {
-  const entry: CategoryCacheEntry = {
-    savedAt: now(),
+function writeCache(
+  category:
+    CatalogCategoryId,
+
+  items:
+    Product[],
+
+  source:
+    CatalogSourceMode,
+): void {
+  const entry:
+    CategoryCacheEntry = {
+    savedAt:
+      now(),
+
     items,
+
+    source,
   };
 
-  memoryCache.set(category, entry);
+  memoryCache.set(
+    category,
+    entry,
+  );
 
-  if (typeof window === "undefined") {
+  if (
+    typeof window ===
+    "undefined"
+  ) {
     return;
   }
 
   try {
     localStorage.setItem(
-      productKey(category),
+      productKey(
+        category,
+      ),
+
       serializeStorageEnvelope({
-        schemaVersion: CATEGORY_CACHE_SCHEMA_VERSION,
-        savedAt: entry.savedAt,
-        data: entry.items,
+        schemaVersion:
+          CATEGORY_CACHE_SCHEMA_VERSION,
+
+        savedAt:
+          entry.savedAt,
+
+        data:
+          entry.items,
+
         source:
-          catalogProvider.source,
+          entry.source,
       }),
     );
   } catch {
-    // Si localStorage falla, se conserva el cache en memoria.
+    // Si localStorage falla, se conserva la caché en memoria.
   }
 }
 
@@ -188,27 +392,49 @@ function writeCache(category: CatalogCategoryId, items: Product[]): void {
    ========================================================= */
 
 export function getCachedCatalogSnapshot() {
-  const categories = getCatalogCategories();
+  const categories =
+    getCatalogCategories();
 
-  const byCategory: Partial<Record<CatalogCategoryId, Product[]>> = {};
+  const byCategory:
+    Partial<
+      Record<
+        CatalogCategoryId,
+        Product[]
+      >
+    > = {};
 
-  categories.forEach((category) => {
-    const cached = readCachedCategoryProducts(category);
+  categories.forEach(
+    (category) => {
+      const cached =
+        readCachedCategoryProducts(
+          category,
+        );
 
-    if (cached) {
-      byCategory[category] = cached;
-    }
-  });
-
-  const loadedCategories = categories.filter(
-    (category) => byCategory[category],
+      if (cached) {
+        byCategory[category] =
+          cached;
+      }
+    },
   );
 
-  const isFullCatalogLoaded = loadedCategories.length === categories.length;
+  const loadedCategories =
+    categories.filter(
+      (category) =>
+        byCategory[category],
+    );
+
+  const isFullCatalogLoaded =
+    loadedCategories.length ===
+    categories.length;
 
   return {
     byCategory,
-    products: flattenByCategory(byCategory),
+
+    products:
+      flattenByCategory(
+        byCategory,
+      ),
+
     loadedCategories,
     isFullCatalogLoaded,
   };
@@ -219,74 +445,117 @@ export function getCachedCatalogSnapshot() {
    ========================================================= */
 
 async function fetchCategoryProducts(
-  category: CatalogCategoryId,
+  category:
+    CatalogCategoryId,
 ): Promise<Product[]> {
   const campaigns =
     await loadCatalogCampaigns({
-      includeInactive: true,
+      includeInactive:
+        true,
     });
 
-  const products =
-    await catalogProvider.loadCategoryProducts(
+  const result =
+    await loadCatalogCategoryProductsDetailed(
+      catalogProvider,
       category,
       campaigns,
     );
 
   const sortedProducts =
-    sortProducts(products);
+    sortProducts(
+      result.data,
+    );
 
   writeCache(
     category,
     sortedProducts,
+    result.metadata
+      .resolvedSource,
   );
 
   return sortedProducts;
 }
+
 /* =========================================================
    API DE CARGA POR CATEGORÍA
    ========================================================= */
 
 export async function loadCategoryProducts(
-  category: CatalogCategoryId,
-  options: { forceRefresh?: boolean } = {},
+  category:
+    CatalogCategoryId,
+
+  options: {
+    forceRefresh?:
+      boolean;
+  } = {},
 ): Promise<Product[]> {
-  if (!options.forceRefresh) {
-    const cached = readCachedCategoryProducts(category);
+  if (
+    !options.forceRefresh
+  ) {
+    const cached =
+      readCachedCategoryProducts(
+        category,
+      );
 
     if (cached) {
       return cached;
     }
   }
 
-  const pendingRequest = pendingRequests.get(category);
+  const pendingRequest =
+    pendingRequests.get(
+      category,
+    );
 
   if (pendingRequest) {
     return pendingRequest;
   }
 
-  const request = fetchCategoryProducts(category).finally(() => {
-    pendingRequests.delete(category);
-  });
+  const request =
+    fetchCategoryProducts(
+      category,
+    ).finally(() => {
+      pendingRequests.delete(
+        category,
+      );
+    });
 
-  pendingRequests.set(category, request);
+  pendingRequests.set(
+    category,
+    request,
+  );
 
   return request;
 }
 
-export async function loadAllProducts(): Promise<Product[]> {
-  const categories = getCatalogCategories();
+export async function loadAllProducts():
+  Promise<Product[]> {
+  const categories =
+    getCatalogCategories();
 
-  const results = await Promise.all(
-    categories.map((category) =>
-      loadCategoryProducts(category).catch((error: unknown) => {
-        console.error(`Error en categoría "${category}":`, error);
+  const results =
+    await Promise.all(
+      categories.map(
+        (category) =>
+          loadCategoryProducts(
+            category,
+          ).catch(
+            (error: unknown) => {
+              console.error(
+                `Error en categoría "${category}":`,
 
-        return [];
-      }),
-    ),
+                error,
+              );
+
+              return [];
+            },
+          ),
+      ),
+    );
+
+  return sortProducts(
+    results.flat(),
   );
-
-  return sortProducts(results.flat());
 }
 
 /* =========================================================
@@ -294,46 +563,88 @@ export async function loadAllProducts(): Promise<Product[]> {
    ========================================================= */
 
 export async function loadCatalogProgressive(
-  activeCategory: CatalogCategory,
-  onUpdate: (products: Product[], isFullCatalogLoaded: boolean) => void,
+  activeCategory:
+    CatalogCategory,
+
+  onUpdate: (
+    products:
+      Product[],
+
+    isFullCatalogLoaded:
+      boolean,
+  ) => void,
 ): Promise<void> {
-  const categories = getCatalogCategories();
+  const categories =
+    getCatalogCategories();
 
-  const preferredCategory = activeCategory !== "todas" ? activeCategory : null;
+  const preferredCategory =
+    activeCategory !== "todas"
+      ? activeCategory
+      : null;
 
-  const categoryOrder = preferredCategory
-    ? [
-        preferredCategory,
-        ...categories.filter((category) => category !== preferredCategory),
-      ]
-    : categories;
+  const categoryOrder =
+    preferredCategory
+      ? [
+          preferredCategory,
 
-  const byCategory = getCachedCatalogSnapshot().byCategory;
+          ...categories.filter(
+            (category) =>
+              category !==
+              preferredCategory,
+          ),
+        ]
+      : categories;
+
+  const byCategory =
+    getCachedCatalogSnapshot()
+      .byCategory;
 
   onUpdate(
-    flattenByCategory(byCategory),
-    Object.keys(byCategory).length === categories.length,
+    flattenByCategory(
+      byCategory,
+    ),
+
+    Object.keys(
+      byCategory,
+    ).length ===
+      categories.length,
   );
 
-  for (const category of categoryOrder) {
-    if (byCategory[category]) {
+  for (
+    const category of
+    categoryOrder
+  ) {
+    if (
+      byCategory[category]
+    ) {
       continue;
     }
 
     try {
-      byCategory[category] = await loadCategoryProducts(category);
+      byCategory[category] =
+        await loadCategoryProducts(
+          category,
+        );
     } catch (error: unknown) {
-      console.error(`Error cargando "${category}":`, error);
+      console.error(
+        `Error cargando "${category}":`,
 
-      byCategory[category] = [];
+        error,
+      );
+
+      byCategory[category] =
+        [];
     }
 
     onUpdate(
-      flattenByCategory(byCategory),
-      Object.keys(byCategory).length === categories.length,
+      flattenByCategory(
+        byCategory,
+      ),
+
+      Object.keys(
+        byCategory,
+      ).length ===
+        categories.length,
     );
   }
 }
-
-
-
