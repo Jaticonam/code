@@ -19,22 +19,30 @@ import {
   loadCatalogCategoryProductsDetailed,
 } from "./CatalogProvider";
 
+import {
+  getCatalogFallbackReason,
+  type CatalogFallbackPredicate,
+} from "./CatalogFallbackPolicy";
+
 export type {
   CatalogProviderLoad,
   CatalogSourceMetadata,
 } from "./CatalogProvider";
 
-function failureReason(
-  cause:
-    unknown,
-): string {
-  return (
-    cause instanceof Error &&
-    cause.name
-      ? cause.name
-      : "PROVIDER_ERROR"
-  );
+export interface FallbackCatalogProviderOptions {
+  readonly shouldFallback?:
+    CatalogFallbackPredicate;
 }
+
+/**
+ * Compatibilidad transitoria para instancias manuales existentes.
+ *
+ * La composicion realizada por CatalogProviderFactory siempre inyecta
+ * la politica segura shouldUseCatalogFallback.
+ */
+const allowLegacyFallback:
+  CatalogFallbackPredicate =
+    () => true;
 
 function composeMetadata<T>(
   requestedSource:
@@ -116,15 +124,25 @@ export class FallbackCatalogProvider
       CatalogProvider["source"]
     >;
 
+  private readonly shouldFallback:
+    CatalogFallbackPredicate;
+
   constructor(
     private readonly primary:
       CatalogProvider,
 
     private readonly fallback:
       CatalogProvider,
+
+    options:
+      FallbackCatalogProviderOptions = {},
   ) {
     this.source =
       primary.source;
+
+    this.shouldFallback =
+      options.shouldFallback ??
+      allowLegacyFallback;
 
     this.cacheCompatibleSources = [
       ...new Set([
@@ -168,6 +186,14 @@ export class FallbackCatalogProvider
         result,
       );
     } catch (cause: unknown) {
+      if (
+        !this.shouldFallback(
+          cause,
+        )
+      ) {
+        throw cause;
+      }
+
       const result =
         await loadCatalogCampaignsDetailed(
           this.fallback,
@@ -182,7 +208,7 @@ export class FallbackCatalogProvider
             true,
 
           fallbackReason:
-            failureReason(
+            getCatalogFallbackReason(
               cause,
             ),
         },
@@ -228,6 +254,14 @@ export class FallbackCatalogProvider
         result,
       );
     } catch (cause: unknown) {
+      if (
+        !this.shouldFallback(
+          cause,
+        )
+      ) {
+        throw cause;
+      }
+
       const result =
         await loadCatalogCategoryProductsDetailed(
           this.fallback,
@@ -244,7 +278,7 @@ export class FallbackCatalogProvider
             true,
 
           fallbackReason:
-            failureReason(
+            getCatalogFallbackReason(
               cause,
             ),
         },

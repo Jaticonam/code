@@ -6,6 +6,14 @@ import type {
   CatalogProvider,
 } from "./CatalogProvider";
 
+import {
+  shouldUseCatalogFallback,
+} from "./CatalogFallbackPolicy";
+
+import {
+  FallbackCatalogProvider,
+} from "./FallbackCatalogProvider";
+
 export interface CatalogProviderDependencies {
   googleSheets:
     CatalogProvider;
@@ -15,6 +23,22 @@ export interface CatalogProviderDependencies {
 
   jungCore:
     CatalogProvider;
+}
+
+export type CatalogFallbackSourceMode =
+  "google-sheets";
+
+export interface CatalogProviderFallbackOptions {
+  readonly enabled:
+    boolean;
+
+  readonly source?:
+    CatalogFallbackSourceMode;
+}
+
+export interface CatalogProviderFactoryOptions {
+  readonly fallback?:
+    CatalogProviderFallbackOptions;
 }
 
 export function resolveCatalogSourceMode(
@@ -38,18 +62,13 @@ export function resolveCatalogSourceMode(
   return "google-sheets";
 }
 
-export function createCatalogProvider(
-  value:
-    unknown,
+function selectCatalogProvider(
+  mode:
+    CatalogSourceMode,
 
   dependencies:
     CatalogProviderDependencies,
 ): CatalogProvider {
-  const mode =
-    resolveCatalogSourceMode(
-      value,
-    );
-
   if (
     mode ===
       "contract-fixture"
@@ -68,4 +87,66 @@ export function createCatalogProvider(
 
   return dependencies
     .googleSheets;
+}
+
+export function createCatalogProvider(
+  value:
+    unknown,
+
+  dependencies:
+    CatalogProviderDependencies,
+
+  options:
+    CatalogProviderFactoryOptions = {},
+): CatalogProvider {
+  const mode =
+    resolveCatalogSourceMode(
+      value,
+    );
+
+  const primary =
+    selectCatalogProvider(
+      mode,
+      dependencies,
+    );
+
+  const fallbackOptions =
+    options.fallback;
+
+  if (
+    !fallbackOptions
+      ?.enabled ||
+    mode !==
+      "jung-core"
+  ) {
+    return primary;
+  }
+
+  const fallbackSource =
+    fallbackOptions.source ??
+    "google-sheets";
+
+  const fallback =
+    fallbackSource ===
+      "google-sheets"
+      ? dependencies
+          .googleSheets
+      : null;
+
+  if (
+    !fallback ||
+    fallback === primary
+  ) {
+    return primary;
+  }
+
+  return new FallbackCatalogProvider(
+    primary,
+    fallback,
+
+    {
+      shouldFallback:
+        shouldUseCatalogFallback,
+    },
+  );
 }
