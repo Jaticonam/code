@@ -11,7 +11,12 @@ import {
 } from "@/modules/catalog/integrations/jungCore/DevelopmentJungCoreCatalogProvider";
 
 import {
+  HealthCollectorRegistry,
+} from "@/modules/monitoring/registry/HealthCollectorRegistry";
+
+import {
   getApplicationConfig,
+  type ApplicationRuntimeMode,
 } from "@/shared/config/application";
 
 import type {
@@ -19,30 +24,49 @@ import type {
 } from "./CatalogProvider";
 
 import {
-  createCatalogProvider,
-} from "./CatalogProviderFactory";
+  createCatalogRuntimeComposition,
+} from "./CatalogRuntimeComposition";
 
 /* =========================================================
-   PROVIDER ACTIVO
+   COMPOSICION RUNTIME DEL CATALOGO
    ========================================================= */
 
-const configuredSource =
-  getApplicationConfig()
-    .catalog.source;
+const runtimeMode:
+  ApplicationRuntimeMode =
+    import.meta.env.PROD
+      ? "production"
+      : "development";
+
+export const catalogRuntimeComposition =
+  createCatalogRuntimeComposition(
+    getApplicationConfig(),
+    runtimeMode,
+    {},
+
+    {
+      googleSheets:
+        googleSheetsCatalogProvider,
+
+      contractFixture:
+        contractFixtureCatalogProvider,
+
+      developmentJungCore:
+        developmentJungCoreCatalogProvider,
+    },
+  );
 
 export const catalogProvider:
   CatalogProvider =
-    createCatalogProvider(
-      configuredSource,
+    catalogRuntimeComposition
+      .provider;
 
-      {
-        googleSheets:
-          googleSheetsCatalogProvider,
+export const catalogProviderHealthCollector =
+  catalogRuntimeComposition
+    .healthCollector;
 
-        contractFixture:
-          contractFixtureCatalogProvider,
-
-        jungCore:
-          developmentJungCoreCatalogProvider,
-      },
-    );
+export function registerCatalogProviderHealthCollector():
+  void {
+  HealthCollectorRegistry.register(
+    catalogProviderHealthCollector,
+  );
+}
