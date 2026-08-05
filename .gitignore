@@ -53,3 +53,9 @@ reports/catalog/pdf-images-report.json
 # npm is the canonical package manager
 bun.lock
 bun.lockb
+
+# Backups locales de trabajo
+/.backup/
+/BACKUP_*/
+/BlueprintBackups/
+/TierDesignSystemBackup_*/
