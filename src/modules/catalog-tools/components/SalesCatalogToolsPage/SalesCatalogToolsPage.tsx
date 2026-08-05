@@ -19,6 +19,8 @@ import {
   useCatalogData,
 } from "@/modules/catalog/hooks/useCatalogData";
 
+import CatalogSyncPanel from "@/modules/catalog-tools/components/CatalogSyncPanel/CatalogSyncPanel";
+
 import {
   buildCatalogPdfPath,
   buildCatalogPdfUrl,
@@ -614,6 +616,18 @@ export default function SalesCatalogToolsPage() {
           </button>
         </div>
       </section>
+
+      <CatalogSyncPanel
+        currentProductCount={
+          data.length
+        }
+        campaignCount={
+          campaigns.length
+        }
+        isReady={
+          isPanelReady
+        }
+      />
 
       {!isPanelReady ? (
         <section className="sales-catalog-tools__notice">

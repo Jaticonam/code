@@ -453,6 +453,30 @@ export async function loadCatalogCampaigns(
     campaigns,
   );
 }
+export async function refreshCatalogCampaigns(
+  options: Pick<
+    LoadCatalogCampaignsOptions,
+    "includeInactive"
+  > = {},
+): Promise<Campaign[]> {
+  const result =
+    await fetchCampaignsFromProvider();
+
+  writeCampaignsCache(
+    result.items,
+    result.source,
+  );
+
+  if (
+    options.includeInactive
+  ) {
+    return result.items;
+  }
+
+  return filterActiveCampaigns(
+    result.items,
+  );
+}
 
 export async function getCampaignNameToIdMap() {
   const campaigns =
