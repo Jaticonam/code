@@ -1,6 +1,6 @@
 import {
-  contractFixtureCatalogProvider,
-} from "@/modules/catalog/integrations/contractFixtures/ContractFixtureCatalogProvider";
+  developmentContractFixtureCatalogProvider,
+} from "@/modules/catalog/integrations/contractFixtures/DevelopmentContractFixtureCatalogProvider";
 
 import {
   googleSheetsCatalogProvider,
@@ -48,7 +48,7 @@ export const catalogRuntimeComposition =
         googleSheetsCatalogProvider,
 
       contractFixture:
-        contractFixtureCatalogProvider,
+        developmentContractFixtureCatalogProvider,
 
       developmentJungCore:
         developmentJungCoreCatalogProvider,
