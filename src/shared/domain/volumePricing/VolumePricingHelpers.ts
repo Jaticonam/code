@@ -18,6 +18,16 @@ function isValidPrice(value: unknown): value is number {
   );
 }
 
+export function hasValidOfferPrice(
+  product: VolumePriceProduct,
+): boolean {
+  return (
+    isValidPrice(product.price_1) &&
+    isValidPrice(product.price_offer) &&
+    product.price_offer < product.price_1
+  );
+}
+
 export function getBaseUnitPrice(
   product: VolumePriceProduct,
 ): number {
@@ -25,13 +35,9 @@ export function getBaseUnitPrice(
     ? product.price_1
     : 0;
 
-  const offerPrice = product.price_offer;
-
-  const hasValidOffer =
-    isValidPrice(offerPrice) &&
-    offerPrice < basePrice;
-
-  return hasValidOffer ? offerPrice : basePrice;
+  return hasValidOfferPrice(product)
+    ? Number(product.price_offer)
+    : basePrice;
 }
 
 export function getAvailableVolumePrices(
@@ -39,6 +45,26 @@ export function getAvailableVolumePrices(
   options: AvailableVolumePriceOptions = {},
 ): AvailableVolumePrice[] {
   const { includeBasePrice = true } = options;
+
+  /*
+   * Una oferta válida reemplaza temporalmente toda la tabla
+   * mayorista. No se deben exponer tiers alternativos porque
+   * comercialmente no compiten con el precio de oferta.
+   */
+  if (hasValidOfferPrice(product)) {
+    if (!includeBasePrice) {
+      return [];
+    }
+
+    const baseDefinition = VOLUME_PRICES[0];
+
+    return [
+      {
+        ...baseDefinition,
+        unitPrice: Number(product.price_offer),
+      },
+    ];
+  }
 
   const definitions = includeBasePrice
     ? VOLUME_PRICES
@@ -67,6 +93,15 @@ export function getVolumeUnitPrice(
   product: VolumePriceProduct,
   qty: number,
 ): number {
+  /*
+   * La oferta domina cualquier cantidad acumulada.
+   * El límite 1–12 pertenece únicamente al AddModal y no
+   * modifica la regla comercial del producto.
+   */
+  if (hasValidOfferPrice(product)) {
+    return getBaseUnitPrice(product);
+  }
+
   const safeQty = Math.max(1, qty);
 
   const applicableVolumePrice =
@@ -92,6 +127,10 @@ export function getNextVolumePrice(
   product: VolumePriceProduct,
   qty: number,
 ): NextVolumePrice | null {
+  if (hasValidOfferPrice(product)) {
+    return null;
+  }
+
   const safeQty = Math.max(0, qty);
 
   const nextVolumePrice =
@@ -118,6 +157,10 @@ export function getActiveVolumePriceQty(
   product: VolumePriceProduct,
   qty: number,
 ): number {
+  if (hasValidOfferPrice(product)) {
+    return 1;
+  }
+
   const safeQty = Math.max(1, qty);
 
   const activeVolumePrice =

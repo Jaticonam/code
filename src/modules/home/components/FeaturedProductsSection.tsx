@@ -96,6 +96,7 @@ export default function FeaturedProductsSection() {
     changeQty,
     setExactQty,
     setItemNote,
+    replaceCart,
     clearCart,
   } = useCartStore();
 
@@ -127,11 +128,6 @@ export default function FeaturedProductsSection() {
           return;
         }
 
-        addToCart(
-          product,
-          1,
-        );
-
         setSelectedProduct(
           product,
         );
@@ -140,9 +136,7 @@ export default function FeaturedProductsSection() {
           true,
         );
       },
-      [
-        addToCart,
-      ],
+      [],
     );
 
   const handleAddExtra =
@@ -331,6 +325,9 @@ export default function FeaturedProductsSection() {
         onClearCart={
           clearCart
         }
+        onReplaceCart={
+          replaceCart
+        }
       />
 
       <ImageZoomModal
@@ -364,7 +361,7 @@ export default function FeaturedProductsSection() {
             false,
           )
         }
-        onAddExtra={
+        onConfirmQuantity={
           handleAddExtra
         }
         onOpenCart={() => {

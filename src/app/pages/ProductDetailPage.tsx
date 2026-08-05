@@ -243,6 +243,7 @@ const ProductDetailPage =
     changeQty,
     setExactQty,
     setItemNote,
+    replaceCart,
     clearCart,
     totalItems,
     totalPrice,
@@ -844,11 +845,6 @@ const ProductDetailPage =
           return;
         }
 
-        addToCart(
-          relatedProduct,
-          1,
-        );
-
         setSelectedRelated(
           relatedProduct,
         );
@@ -857,9 +853,7 @@ const ProductDetailPage =
           true,
         );
       },
-      [
-        addToCart,
-      ],
+      [],
     );
 
   const handleRelatedExtra =
@@ -1128,6 +1122,9 @@ const ProductDetailPage =
         onClearCart={
           clearCart
         }
+        onReplaceCart={
+          replaceCart
+        }
       />
 
       <ImageZoomModal
@@ -1169,7 +1166,7 @@ const ProductDetailPage =
             false,
           )
         }
-        onAddExtra={
+        onConfirmQuantity={
           handleRelatedExtra
         }
         onOpenCart={

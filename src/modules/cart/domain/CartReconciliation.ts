@@ -1,18 +1,26 @@
 import type {
   CartItem,
 } from "@/modules/cart/types";
+
 import type {
   Product,
 } from "@/shared/types/product";
+
 import type {
   CatalogProvider,
 } from "@/modules/catalog/providers/CatalogProvider";
+
 import {
   normalizeCartQuantity,
 } from "./CartLinePricing";
+
 import {
   isCartItemCommerciallyEligible,
 } from "./CartCommercialEligibility";
+
+import {
+  getVolumeUnitPrice,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 export type CartReconciliationChangeCode =
   | "PRODUCT_NOT_FOUND"
@@ -25,25 +33,46 @@ export type CartReconciliationChangeCode =
 export interface CartReconciliationChange {
   code:
     CartReconciliationChangeCode;
-  productId: string;
+
+  productId:
+    string;
+
+  productTitle?:
+    string;
+
+  previousUnitPrice?:
+    number;
+
+  currentUnitPrice?:
+    number;
 }
 
 export type CartReconciliationResult =
   | {
       ok: true;
-      items: CartItem[];
+
+      items:
+        CartItem[];
+
       changes:
         readonly CartReconciliationChange[];
     }
   | {
       ok: false;
-      reason: "PROVIDER_ERROR";
-      originalItems: CartItem[];
+
+      reason:
+        "PROVIDER_ERROR";
+
+      originalItems:
+        CartItem[];
     };
 
-function hasPriceChanged(
-  current: CartItem,
-  product: Product,
+function hasPricingDataChanged(
+  current:
+    CartItem,
+
+  product:
+    Product,
 ): boolean {
   return (
     current.price_1 !==
@@ -62,7 +91,8 @@ function hasPriceChanged(
 }
 
 function unavailableCode(
-  product: Product,
+  product:
+    Product,
 ): CartReconciliationChangeCode {
   const status =
     String(
@@ -86,6 +116,7 @@ function unavailableCode(
 export async function reconcileCartWithProvider(
   originalItems:
     readonly CartItem[],
+
   provider:
     CatalogProvider,
 ): Promise<
@@ -95,6 +126,7 @@ export async function reconcileCartWithProvider(
     const campaigns =
       await provider
         .loadCampaigns();
+
     const categoryProducts =
       await Promise.all(
         provider
@@ -108,6 +140,7 @@ export async function reconcileCartWithProvider(
                 ),
           ),
       );
+
     const productsById =
       new Map(
         categoryProducts
@@ -119,8 +152,10 @@ export async function reconcileCartWithProvider(
             ],
           ),
       );
+
     const items:
       CartItem[] = [];
+
     const changes:
       CartReconciliationChange[] = [];
 
@@ -135,9 +170,14 @@ export async function reconcileCartWithProvider(
           changes.push({
             code:
               "PRODUCT_NOT_FOUND",
+
             productId:
               current.id,
+
+            productTitle:
+              current.title,
           });
+
           return;
         }
 
@@ -145,10 +185,13 @@ export async function reconcileCartWithProvider(
           normalizeCartQuantity(
             current.qty,
           );
+
         const refreshed:
           CartItem = {
           ...product,
+
           qty,
+
           note:
             typeof current.note ===
               "string"
@@ -166,14 +209,19 @@ export async function reconcileCartWithProvider(
               unavailableCode(
                 product,
               ),
+
             productId:
               current.id,
+
+            productTitle:
+              product.title,
           });
+
           return;
         }
 
         if (
-          hasPriceChanged(
+          hasPricingDataChanged(
             current,
             product,
           )
@@ -181,19 +229,40 @@ export async function reconcileCartWithProvider(
           changes.push({
             code:
               "PRICE_CHANGED",
+
             productId:
               current.id,
+
+            productTitle:
+              product.title,
+
+            previousUnitPrice:
+              getVolumeUnitPrice(
+                current,
+                qty,
+              ),
+
+            currentUnitPrice:
+              getVolumeUnitPrice(
+                refreshed,
+                qty,
+              ),
           });
         }
 
         if (
-          qty !== current.qty
+          qty !==
+          current.qty
         ) {
           changes.push({
             code:
               "QUANTITY_NORMALIZED",
+
             productId:
               current.id,
+
+            productTitle:
+              product.title,
           });
         }
 
@@ -208,12 +277,18 @@ export async function reconcileCartWithProvider(
           changes.push({
             code:
               "PRODUCT_DATA_REFRESHED",
+
             productId:
               current.id,
+
+            productTitle:
+              product.title,
           });
         }
 
-        items.push(refreshed);
+        items.push(
+          refreshed,
+        );
       },
     );
 
@@ -225,8 +300,10 @@ export async function reconcileCartWithProvider(
   } catch {
     return {
       ok: false,
+
       reason:
         "PROVIDER_ERROR",
+
       originalItems: [
         ...originalItems,
       ],

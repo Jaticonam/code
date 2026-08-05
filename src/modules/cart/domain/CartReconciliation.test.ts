@@ -224,7 +224,12 @@ describe(
           {
             code:
               "QUANTITY_NORMALIZED",
-            productId: "P-1",
+
+            productId:
+              "P-1",
+
+            productTitle:
+              "Producto vigente",
           },
         ]);
       },

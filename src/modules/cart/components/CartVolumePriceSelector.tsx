@@ -1,62 +1,108 @@
-import type { CartItem } from "@/modules/cart/types";
-import { VOLUME_PRICES } from "@/shared/domain/volumePricing/VolumePricing";
+import type {
+  CartItem,
+} from "@/modules/cart/types";
+
+import {
+  hasValidOfferPrice,
+  VOLUME_PRICES,
+} from "@/shared/domain/volumePricing/VolumePricing";
 
 interface CartVolumePriceSelectorProps {
   item: CartItem;
-  onSetQty: (id: string, qty: number | null) => void;
+  onSetQty: (
+    id: string,
+    qty: number | null,
+  ) => void;
 }
 
 export function CartVolumePriceSelector({
   item,
   onSetQty,
 }: CartVolumePriceSelectorProps) {
-  const itemTiers = VOLUME_PRICES.filter((tier) => {
-    const value = item[tier.key];
+  /*
+   * La oferta es un régimen comercial exclusivo.
+   * Mientras esté activa, este selector no debe exponer
+   * ni permitir seleccionar cantidades de tiers.
+   */
+  if (
+    hasValidOfferPrice(
+      item,
+    )
+  ) {
+    return null;
+  }
 
-    return (
-      typeof value === "number" &&
-      Number.isFinite(value) &&
-      value > 0
+  const itemTiers =
+    VOLUME_PRICES.filter(
+      (tier) => {
+        const value =
+          item[tier.key];
+
+        return (
+          typeof value ===
+            "number" &&
+          Number.isFinite(
+            value,
+          ) &&
+          value > 0
+        );
+      },
     );
-  });
 
   const gridCols =
     itemTiers.length <= 1
       ? "grid-cols-1"
-      : itemTiers.length === 2
+      : itemTiers.length ===
+          2
         ? "grid-cols-2"
         : "grid-cols-3";
 
   return (
-    <div className={`grid ${gridCols} flex-1 gap-1`}>
-      {itemTiers.map((tier, index) => {
-        const nextTier = itemTiers[index + 1];
+    <div
+      className={`grid ${gridCols} flex-1 gap-1`}
+    >
+      {itemTiers.map(
+        (
+          tier,
+          index,
+        ) => {
+          const nextTier =
+            itemTiers[
+              index + 1
+            ];
 
-        const active =
-          item.qty >= tier.qty &&
-          (!nextTier || item.qty < nextTier.qty);
+          const active =
+            item.qty >=
+              tier.qty &&
+            (!nextTier ||
+              item.qty <
+                nextTier.qty);
 
-        return (
-          <button
-            key={tier.key}
-            type="button"
-            onClick={() => onSetQty(item.id, tier.qty)}
-            className={[
-              "tier",
-              "tier-button",
-              tier.className,
-              "w-full py-1.5",
-              active
-                ? "tier-active scale-[1.02]"
-                : "hover:scale-[1.02]",
-            ].join(" ")}
-          >
-            {tier.label}
-          </button>
-        );
-      })}
+          return (
+            <button
+              key={tier.key}
+              type="button"
+              onClick={() =>
+                onSetQty(
+                  item.id,
+                  tier.qty,
+                )
+              }
+              className={[
+                "tier",
+                "tier-button",
+                tier.className,
+                "w-full py-1.5",
+                active
+                  ? "tier-active scale-[1.02]"
+                  : "hover:scale-[1.02]",
+              ].join(" ")}
+            >
+              {tier.label}
+            </button>
+          );
+        },
+      )}
     </div>
   );
 }
-
-

@@ -4,8 +4,14 @@ import {
   useCallback,
   useRef,
 } from "react";
-import type { Product } from "@/shared/types/product";
-import type { CartItem } from "@/modules/cart/types";
+
+import type {
+  Product,
+} from "@/shared/types/product";
+
+import type {
+  CartItem,
+} from "@/modules/cart/types";
 
 import {
   getTotalItems,
@@ -19,6 +25,7 @@ import {
   changeCartItemQty,
   setCartItemQty,
   setCartItemNote,
+  replaceCartItems,
 } from "./cart.actions";
 
 import {
@@ -32,6 +39,7 @@ export function useCart() {
   const initialRead = useRef(
     readCartStorage(),
   );
+
   const persistenceBlocked =
     useRef(
       initialRead.current.success ===
@@ -39,114 +47,246 @@ export function useCart() {
         initialRead.current.reason ===
           "UNSUPPORTED_VERSION",
     );
-  const [cart, setCart] =
+
+  const [
+    cart,
+    setCart,
+  ] =
     useState<CartItem[]>(() =>
       initialRead.current.success
         ? initialRead.current.data
         : [],
     );
 
-  useEffect(() => {
-    if (persistenceBlocked.current) {
-      return;
-    }
-
-    saveCart(cart);
-  }, [cart]);
-
-  useEffect(() => {
-    const handler = (e: StorageEvent) => {
-      if (e.key !== CART_KEY) return;
-
-      const result =
-        readPersistedCart(
-          e.newValue,
-        );
-
-      if (result.success === false) {
-        if (
-          result.reason ===
-          "UNSUPPORTED_VERSION"
-        ) {
-          persistenceBlocked.current =
-            true;
-        }
+  useEffect(
+    () => {
+      if (
+        persistenceBlocked.current
+      ) {
         return;
       }
 
-      persistenceBlocked.current =
-        false;
-      setCart(result.data);
-    };
-
-    window.addEventListener("storage", handler);
-
-    return () => window.removeEventListener("storage", handler);
-  }, []);
-
-  const addToCart = useCallback(
-    (product: Product, qty: number = 1) => {
-      persistenceBlocked.current =
-        false;
-      setCart((prev) =>
-        addItemToCart(prev, product, qty)
+      saveCart(
+        cart,
       );
     },
-    []
+    [
+      cart,
+    ],
   );
 
-  const removeFromCart = useCallback((id: string) => {
-    persistenceBlocked.current =
-      false;
-    setCart((prev) =>
-      removeItemFromCart(prev, id)
+  useEffect(
+    () => {
+      const handler =
+        (
+          event:
+            StorageEvent,
+        ) => {
+          if (
+            event.key !==
+            CART_KEY
+          ) {
+            return;
+          }
+
+          const result =
+            readPersistedCart(
+              event.newValue,
+            );
+
+          if (
+            result.success ===
+            false
+          ) {
+            if (
+              result.reason ===
+              "UNSUPPORTED_VERSION"
+            ) {
+              persistenceBlocked.current =
+                true;
+            }
+
+            return;
+          }
+
+          persistenceBlocked.current =
+            false;
+
+          setCart(
+            result.data,
+          );
+        };
+
+      window.addEventListener(
+        "storage",
+        handler,
+      );
+
+      return () =>
+        window.removeEventListener(
+          "storage",
+          handler,
+        );
+    },
+    [],
+  );
+
+  const addToCart =
+    useCallback(
+      (
+        product:
+          Product,
+        qty:
+          number = 1,
+      ) => {
+        persistenceBlocked.current =
+          false;
+
+        setCart(
+          (previous) =>
+            addItemToCart(
+              previous,
+              product,
+              qty,
+            ),
+        );
+      },
+      [],
     );
-  }, []);
 
-  const changeQty = useCallback(
-    (id: string, delta: number) => {
-      persistenceBlocked.current =
-        false;
-      setCart((prev) =>
-        changeCartItemQty(prev, id, delta)
-      );
-    },
-    []
-  );
+  const removeFromCart =
+    useCallback(
+      (
+        id:
+          string,
+      ) => {
+        persistenceBlocked.current =
+          false;
 
-  const setExactQty = useCallback(
-    (id: string, qty: number | null) => {
-      persistenceBlocked.current =
-        false;
-      setCart((prev) =>
-        setCartItemQty(prev, id, qty)
-      );
-    },
-    []
-  );
+        setCart(
+          (previous) =>
+            removeItemFromCart(
+              previous,
+              id,
+            ),
+        );
+      },
+      [],
+    );
 
-  const setItemNote = useCallback(
-    (id: string, note: string) => {
-      persistenceBlocked.current =
-        false;
-      setCart((prev) =>
-        setCartItemNote(prev, id, note)
-      );
-    },
-    []
-  );
+  const changeQty =
+    useCallback(
+      (
+        id:
+          string,
+        delta:
+          number,
+      ) => {
+        persistenceBlocked.current =
+          false;
 
-  const clearCart = useCallback(() => {
-    persistenceBlocked.current =
-      false;
-    setCart([]);
-  }, []);
+        setCart(
+          (previous) =>
+            changeCartItemQty(
+              previous,
+              id,
+              delta,
+            ),
+        );
+      },
+      [],
+    );
 
-  const totalItems = getTotalItems(cart);
+  const setExactQty =
+    useCallback(
+      (
+        id:
+          string,
+        qty:
+          number |
+          null,
+      ) => {
+        persistenceBlocked.current =
+          false;
 
-  const totalPrice = getTotalPrice(cart);
+        setCart(
+          (previous) =>
+            setCartItemQty(
+              previous,
+              id,
+              qty,
+            ),
+        );
+      },
+      [],
+    );
 
-  const savings = getTotalSavings(cart);
+  const setItemNote =
+    useCallback(
+      (
+        id:
+          string,
+        note:
+          string,
+      ) => {
+        persistenceBlocked.current =
+          false;
+
+        setCart(
+          (previous) =>
+            setCartItemNote(
+              previous,
+              id,
+              note,
+            ),
+        );
+      },
+      [],
+    );
+
+  const replaceCart =
+    useCallback(
+      (
+        items:
+          readonly CartItem[],
+      ) => {
+        persistenceBlocked.current =
+          false;
+
+        setCart(
+          replaceCartItems(
+            items,
+          ),
+        );
+      },
+      [],
+    );
+
+  const clearCart =
+    useCallback(
+      () => {
+        persistenceBlocked.current =
+          false;
+
+        setCart([]);
+      },
+      [],
+    );
+
+  const totalItems =
+    getTotalItems(
+      cart,
+    );
+
+  const totalPrice =
+    getTotalPrice(
+      cart,
+    );
+
+  const savings =
+    getTotalSavings(
+      cart,
+    );
 
   return {
     cart,
@@ -155,6 +295,7 @@ export function useCart() {
     changeQty,
     setExactQty,
     setItemNote,
+    replaceCart,
     clearCart,
     totalItems,
     totalPrice,

@@ -1,0 +1,421 @@
+import {
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
+
+import {
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+
+import type {
+  Product,
+} from "@/shared/types/product";
+
+import {
+  AddToCartModal,
+} from "./AddToCartModal";
+
+function createProduct(
+  overrides: Partial<Product> = {},
+): Product {
+  return {
+    id: "FLOR-001",
+    title: "Rosa premium",
+    description:
+      "Producto de prueba.",
+    category: "flores",
+    price_1: 10,
+    price_3: 9,
+    price_12: 7,
+    price_50: 6,
+    price_100: 5,
+    price_offer: null,
+    stock: 30,
+    img:
+      "https://example.com/product.jpg",
+    status: "publicado",
+    ...overrides,
+  };
+}
+
+function renderModal(
+  overrides: Partial<
+    React.ComponentProps<
+      typeof AddToCartModal
+    >
+  > = {},
+) {
+  const props = {
+    open: true,
+    product:
+      createProduct(),
+    currentQty: 0,
+    onClose: vi.fn(),
+    onConfirmQuantity:
+      vi.fn(),
+    onOpenCart: vi.fn(),
+    ...overrides,
+  };
+
+  return {
+    props,
+    ...render(
+      <AddToCartModal
+        {...props}
+      />,
+    ),
+  };
+}
+
+describe(
+  "AddToCartModal",
+  () => {
+    it(
+      "limita el agregado rápido entre 1 y 12",
+      () => {
+        renderModal();
+
+        const decrease =
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Disminuir cantidad",
+            },
+          );
+
+        const increase =
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Aumentar cantidad",
+            },
+          );
+
+        expect(
+          decrease,
+        ).toBeDisabled();
+
+        expect(
+          screen.getByTestId(
+            "quick-add-quantity",
+          ),
+        ).toHaveTextContent(
+          "1",
+        );
+
+        for (
+          let index = 0;
+          index < 11;
+          index++
+        ) {
+          fireEvent.click(
+            increase,
+          );
+        }
+
+        expect(
+          screen.getByTestId(
+            "quick-add-quantity",
+          ),
+        ).toHaveTextContent(
+          "12",
+        );
+
+        expect(
+          increase,
+        ).toBeDisabled();
+      },
+    );
+
+    it(
+      "confirma la cantidad seleccionada antes de agregar al carrito",
+      () => {
+        const {
+          props,
+        } =
+          renderModal();
+
+        expect(
+          props.onConfirmQuantity,
+        ).not.toHaveBeenCalled();
+
+        fireEvent.click(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Aumentar cantidad",
+            },
+          ),
+        );
+
+        fireEvent.click(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Aumentar cantidad",
+            },
+          ),
+        );
+
+        fireEvent.click(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Agregar 3 unidades a mi caja",
+            },
+          ),
+        );
+
+        expect(
+          props.onConfirmQuantity,
+        ).toHaveBeenCalledTimes(
+          1,
+        );
+
+        expect(
+          props.onConfirmQuantity,
+        ).toHaveBeenCalledWith(
+          3,
+        );
+
+        expect(
+          screen.getByRole(
+            "status",
+          ),
+        ).toHaveTextContent(
+          "Ahora tienes 3 unidades",
+        );
+
+        expect(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Ver mi caja",
+            },
+          ),
+        ).toBeInTheDocument();
+
+        expect(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Agregar otro producto",
+            },
+          ),
+        ).toBeInTheDocument();
+      },
+    );
+
+    it(
+      "oculta escalas mayoristas y mantiene la oferta para la cantidad proyectada",
+      () => {
+        renderModal({
+          product:
+            createProduct({
+              price_offer: 8,
+            }),
+        });
+
+        expect(
+          screen.getByText(
+            /La oferta aplica a cualquier cantidad hasta agotar stock\./,
+          ),
+        ).toBeInTheDocument();
+
+        expect(
+          screen.queryByText(
+            "3u",
+          ),
+        ).not.toBeInTheDocument();
+
+        expect(
+          screen.queryByText(
+            "12u",
+          ),
+        ).not.toBeInTheDocument();
+
+        fireEvent.click(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Aumentar cantidad",
+            },
+          ),
+        );
+
+        fireEvent.click(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Aumentar cantidad",
+            },
+          ),
+        );
+
+        expect(
+          screen.getByText(
+            "S/ 8.00",
+          ),
+        ).toBeInTheDocument();
+
+        expect(
+          screen.getByText(
+            "S/ 24.00",
+          ),
+        ).toBeInTheDocument();
+      },
+    );
+
+    it(
+      "mantiene las escalas para un producto sin oferta",
+      () => {
+        const {
+          container,
+        } =
+          renderModal();
+
+        expect(
+          screen.getByText(
+            "3u",
+          ),
+        ).toBeInTheDocument();
+
+        expect(
+          screen.getByText(
+            "12u",
+          ),
+        ).toBeInTheDocument();
+
+        const unitShortcut =
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Seleccionar 1 unidad a S/ 10.00 c/u",
+            },
+          );
+
+        const wholesaleShortcut =
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Seleccionar 3 unidades a S/ 9.00 c/u",
+            },
+          );
+
+        const dozenShortcut =
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Seleccionar 12 unidades a S/ 7.00 c/u",
+            },
+          );
+
+        expect(
+          unitShortcut,
+        ).toHaveClass(
+          "tier",
+          "tier-chip",
+        );
+
+        expect(
+          wholesaleShortcut,
+        ).toHaveClass(
+          "tier",
+          "tier-chip",
+        );
+
+        expect(
+          dozenShortcut,
+        ).toHaveClass(
+          "tier",
+          "tier-chip",
+        );
+
+        expect(
+          unitShortcut.className,
+        ).not.toBe(
+          wholesaleShortcut.className,
+        );
+
+        expect(
+          wholesaleShortcut.className,
+        ).not.toBe(
+          dozenShortcut.className,
+        );
+
+        fireEvent.click(
+          wholesaleShortcut,
+        );
+
+        expect(
+          screen.getByTestId(
+            "quick-add-quantity",
+          ),
+        ).toHaveTextContent(
+          "3",
+        );
+
+        expect(
+          container,
+        ).toHaveTextContent(
+          /PU\s*=\s*S\/\s*9\.00/,
+        );
+      },
+    );
+
+    it(
+      "respeta la etiqueta secundaria personalizada",
+      () => {
+        const {
+          props,
+        } =
+          renderModal({
+            secondaryActionLabel:
+              "Seguir viendo",
+          });
+
+        fireEvent.click(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Agregar 1 unidad a mi caja",
+            },
+          ),
+        );
+
+        fireEvent.click(
+          screen.getByRole(
+            "button",
+            {
+              name:
+                "Seguir viendo",
+            },
+          ),
+        );
+
+        expect(
+          props.onClose,
+        ).toHaveBeenCalledTimes(
+          1,
+        );
+      },
+    );
+  },
+);

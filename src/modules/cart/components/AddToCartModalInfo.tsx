@@ -1,212 +1,290 @@
-import type { Product } from "@/shared/types/product";
-import { VOLUME_PRICES } from "@/shared/domain/volumePricing/VolumePricing";
+import {
+  Minus,
+  Plus,
+} from "lucide-react";
+
 import type {
-  NextVolumePrice,
+  Product,
+} from "@/shared/types/product";
+
+import {
+  getAvailableVolumePrices,
+  getVolumeUnitPrice,
+  hasValidOfferPrice,
 } from "@/shared/domain/volumePricing/VolumePricing";
 
 interface Props {
   product: Product;
   currentQty: number;
-  pulse: boolean;
-  nextTier: NextVolumePrice | null;
+  selectedQty: number;
+  minimumQty: number;
+  maximumQty: number;
+  onDecrease: () => void;
+  onIncrease: () => void;
+  onSelectQuantity: (quantity: number) => void;
 }
+
+const QUICK_QUANTITIES = [
+  1,
+  3,
+  12,
+] as const;
 
 export function AddToCartModalInfo({
   product,
   currentQty,
-  pulse,
-  nextTier,
+  selectedQty,
+  minimumQty,
+  maximumQty,
+  onDecrease,
+  onIncrease,
+  onSelectQuantity,
 }: Props) {
-  const tiers = VOLUME_PRICES.filter((tier) => {
-    const price = product[tier.key];
-
-    return (
-      typeof price === "number" &&
-      Number.isFinite(price) &&
-      price > 0
+  const hasOffer =
+    hasValidOfferPrice(
+      product,
     );
-  }).map((tier) => ({
-    ...tier,
-    price: Number(product[tier.key]),
-  }));
 
-  const currentTier =
-    [...tiers]
-      .reverse()
-      .find((tier) => currentQty >= tier.qty) ?? tiers[0];
-
-  const bestTarget = tiers.at(-1)?.qty ?? 1;
-
-  const targetQty =
-    nextTier?.qty ??
-    bestTarget;
+  const projectedQty =
+    currentQty +
+    selectedQty;
 
   const unitPrice =
-    nextTier?.unitPrice ??
-    product.price_1;
+    getVolumeUnitPrice(
+      product,
+      projectedQty,
+    );
 
-  const missingQty = Math.max(targetQty - currentQty, 0);
+  const accumulatedTotal =
+    projectedQty *
+    unitPrice;
 
-  const activeTiers = tiers.map((tier) => tier.qty);
+  const volumePrices =
+    hasOffer
+      ? []
+      : getAvailableVolumePrices(
+          product,
+        );
 
-  const currentTierIndex = activeTiers.reduce(
-    (acc, qty, index) => (currentQty >= qty ? index : acc),
-    0,
-  );
-
-  const nextTierIndex = activeTiers.findIndex(
-    (qty) => currentQty < qty,
-  );
-
-  const nextIndex =
-    nextTierIndex === -1
-      ? activeTiers.length - 1
-      : nextTierIndex;
-
-  const prevQty = activeTiers[currentTierIndex] ?? 1;
-  const nextQty = activeTiers[nextIndex] ?? prevQty;
-
-  const segmentBase =
-    activeTiers.length > 1
-      ? 100 / (activeTiers.length - 1)
-      : 100;
-
-  const segmentProgress =
-    nextQty > prevQty
-      ? ((currentQty - prevQty) / (nextQty - prevQty)) *
-        segmentBase
-      : 0;
-
-  const rawProgress = Math.min(
-    currentTierIndex * segmentBase + segmentProgress,
-    100,
-  );
-
-  const progress =
-    currentQty > 0
-      ? Math.max(rawProgress, 10)
-      : 0;
-
-  const unlocked = currentQty >= bestTarget;
+  const quickQuantities =
+    QUICK_QUANTITIES.filter(
+      (quantity) =>
+        quantity >=
+          minimumQty &&
+        quantity <=
+          maximumQty,
+    );
 
   return (
-    <div
-      className={[
-        "mt-3 rounded-2xl border border-slate-200 bg-[#f8fafc] p-2.5 transition-transform",
-        pulse ? "scale-[1.02]" : "",
-      ].join(" ")}
-    >
-      <div className="relative mb-2">
-        <img
-          src={product.img || "/placeholder.svg"}
-          alt={product.title}
-          className="h-[320px] w-full rounded-2xl border border-slate-200 bg-white object-cover md:h-[420px]"
-        />
+    <div className="mt-3 rounded-2xl border border-slate-200 bg-[#f8fafc] p-3">
+      <img
+        src={
+          product.img ||
+          "/placeholder.svg"
+        }
+        alt={product.title}
+        className="h-[260px] w-full rounded-2xl border border-slate-200 bg-white object-cover md:h-[330px]"
+      />
 
-        {currentTier && (
-          <div
-            className={[
-              "tier",
-              "tier-badge",
-              currentTier.className,
-              "tier-active",
-              "absolute bottom-3 left-1/2 grid -translate-x-1/2 place-items-center text-[13px] font-black animate-pulse",
-            ].join(" ")}
-          >
-            +{currentQty}
-          </div>
-        )}
-      </div>
-
-      <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5">
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5">
         <span className="rounded-full bg-slate-100 px-2 py-[3px] text-[10px] font-black uppercase text-slate-500">
-          Código: {product.id}
+          Código:{" "}
+          {product.id}
         </span>
 
         <span className="rounded-full bg-[#e6f6f8] px-2 py-[3px] text-[10px] font-black capitalize text-[#1d8299]">
-          {product.category}
+          {
+            product.category
+          }
         </span>
       </div>
 
+      {hasOffer ? (
+        <p className="mt-2 text-center text-[12px] font-bold leading-snug text-rose-600">
+          La oferta aplica a cualquier cantidad hasta agotar stock.
+        </p>
+      ) : null}
+
       <div className="mt-3 rounded-xl bg-white p-3 shadow-sm">
-        <div className="mb-2 flex items-center justify-between text-[12px] font-black md:text-[14px]">
-          <span className="text-slate-600">
-            Ya tienes {currentQty} productos
-          </span>
+        {currentQty > 0 ? (
+          <p className="mb-3 text-center text-[12px] font-semibold text-slate-600">
+            Ya tienes{" "}
+            <strong className="text-[#1d8299]">
+              {currentQty}
+            </strong>{" "}
+            {currentQty === 1
+              ? "unidad"
+              : "unidades"}{" "}
+            en tu caja.
+          </p>
+        ) : null}
+
+        <p className="text-center text-[11px] font-black uppercase tracking-wide text-slate-500">
+          Cantidad a agregar
+        </p>
+
+        <div className="mt-2 flex items-center justify-center gap-4">
+          <button
+            type="button"
+            onClick={
+              onDecrease
+            }
+            disabled={
+              selectedQty <=
+              minimumQty
+            }
+            aria-label="Disminuir cantidad"
+            className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Minus className="h-4 w-4" />
+          </button>
 
           <span
-            className={
-              unlocked
-                ? "text-emerald-600"
-                : "text-orange-500"
-            }
+            data-testid="quick-add-quantity"
+            className="min-w-[72px] rounded-xl border border-slate-200 bg-white px-4 py-2 text-center text-2xl font-black text-slate-800 shadow-sm"
           >
-            {currentQty}/{bestTarget}
+            {selectedQty}
           </span>
+
+          <button
+            type="button"
+            onClick={
+              onIncrease
+            }
+            disabled={
+              selectedQty >=
+              maximumQty
+            }
+            aria-label="Aumentar cantidad"
+            className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
         </div>
 
-        <div className="h-3 overflow-hidden rounded-full bg-slate-200">
-          <div
-            className={[
-              "h-full rounded-full transition-all duration-500",
-              unlocked
-                ? "bg-emerald-500"
-                : "bg-orange-500",
-            ].join(" ")}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {quickQuantities.map(
+            (quantity) => {
+              const shortcutProjectedQty =
+                currentQty +
+                quantity;
 
-        {tiers.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
-            {tiers.map((tier) => {
-              const active = currentQty >= tier.qty;
+              const shortcutUnitPrice =
+                getVolumeUnitPrice(
+                  product,
+                  shortcutProjectedQty,
+                );
+
+              const shortcutTier =
+                hasOffer
+                  ? null
+                  : [
+                      ...volumePrices,
+                    ]
+                      .reverse()
+                      .find(
+                        (tier) =>
+                          shortcutProjectedQty >=
+                          tier.qty,
+                      ) ??
+                    volumePrices[0] ??
+                    null;
+
+              const active =
+                selectedQty ===
+                quantity;
+
+              const quantityLabel =
+                quantity === 1
+                  ? "1 unidad"
+                  : `${quantity} unidades`;
+
+              const accessibleLabel =
+                hasOffer
+                  ? `Seleccionar ${quantityLabel}`
+                  : `Seleccionar ${quantityLabel} a S/ ${shortcutUnitPrice.toFixed(
+                      2,
+                    )} c/u`;
 
               return (
                 <button
-                  key={tier.key}
+                  key={
+                    quantity
+                  }
                   type="button"
-                  disabled
+                  data-testid={`quick-quantity-${quantity}`}
+                  aria-label={
+                    accessibleLabel
+                  }
+                  aria-pressed={
+                    active
+                  }
+                  onClick={() =>
+                    onSelectQuantity(
+                      quantity,
+                    )
+                  }
                   className={[
-                    "tier",
-                    "tier-chip",
-                    tier.className,
-                    "w-auto px-2.5 py-1 text-[12px] md:text-[13px]",
-                    active ? "tier-active" : "",
-                  ].join(" ")}
+                    "min-h-[50px] rounded-xl px-2 py-2 text-center transition active:scale-[.98]",
+                    hasOffer
+                      ? active
+                        ? "border border-[#1d8299] bg-[#e6f6f8] text-[#16697a] shadow-sm"
+                        : "border border-slate-200 bg-slate-50 text-slate-600 hover:border-[#1d8299]/40 hover:bg-[#f2fbfc]"
+                      : [
+                          "tier",
+                          "tier-chip",
+                          shortcutTier?.className ??
+                            "",
+                          active
+                            ? "tier-active ring-2 ring-[#1d8299]/25"
+                            : "",
+                        ].join(
+                          " ",
+                        ),
+                  ].join(
+                    " ",
+                  )}
                 >
-                  <span>{tier.qty}+</span>
-
-                  <span>
-                    S/{tier.price.toFixed(1)}
+                  <span className="block text-[13px] font-black">
+                    {quantity}u
                   </span>
+
+                  {!hasOffer ? (
+                    <span className="mt-0.5 block text-[10px] font-extrabold">
+                      S/{" "}
+                      {shortcutUnitPrice.toFixed(
+                        2,
+                      )}
+                    </span>
+                  ) : null}
                 </button>
               );
-            })}
-          </div>
-        )}
-
-        <p className="mt-2 text-center text-[13px] font-bold leading-snug text-slate-700 md:text-[16px]">
-          {unlocked ? (
-            <>🎉 Mejor precio desbloqueado</>
-          ) : nextTier ? (
-            <>
-              🚀 Agrega{" "}
-              <span className="text-[#1d8299]">
-                {missingQty}
-              </span>{" "}
-              más y paga{" "}
-              <span className="text-[#1d8299]">
-                S/{Number(unitPrice).toFixed(1)}
-              </span>{" "}
-              c/u
-            </>
-          ) : (
-            <>✅ Ya tienes el mejor precio disponible</>
+            },
           )}
-        </p>
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+          <span className="text-[12px] font-bold text-slate-600">
+            PU ={" "}
+            <strong className="text-[14px] font-black text-[#1d8299]">
+              S/{" "}
+              {unitPrice.toFixed(
+                2,
+              )}
+            </strong>
+          </span>
+
+          <span className="text-[12px] font-bold text-slate-600">
+            Total acumulado ={" "}
+            <strong className="text-[17px] font-black text-[#0f172a]">
+              S/{" "}
+              {accumulatedTotal.toFixed(
+                2,
+              )}
+            </strong>
+          </span>
+        </div>
       </div>
     </div>
   );
 }
-

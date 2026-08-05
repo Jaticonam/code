@@ -26,13 +26,36 @@ import type {
  * - estado inválido
  */
 export function sanitizeCartItems(
-  cart: CartItem[],
+  cart: readonly CartItem[],
 ): CartItem[] {
   return cart.filter(
     (item) =>
       isCartItemCommerciallyEligible(
         item,
       ),
+  );
+}
+
+/* =========================================================
+   REEMPLAZAR SNAPSHOT
+   ========================================================= */
+
+/**
+ * Reemplaza el carrito completo usando una colección ya
+ * reconciliada con la fuente comercial vigente.
+ *
+ * Conserva una única frontera de saneamiento antes de que el
+ * nuevo snapshot alcance el estado y la persistencia.
+ */
+export function replaceCartItems(
+  cart: readonly CartItem[],
+): CartItem[] {
+  return sanitizeCartItems(
+    cart,
+  ).map(
+    (item) => ({
+      ...item,
+    }),
   );
 }
 

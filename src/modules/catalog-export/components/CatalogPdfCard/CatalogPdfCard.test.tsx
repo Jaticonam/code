@@ -43,7 +43,7 @@ describe(
   "CatalogPdfCard",
   () => {
     it(
-      "renderiza precio canónico, precio anterior y tiers sin recalcular",
+      "renderiza la oferta exclusiva y oculta los tiers mayoristas",
       () => {
         const { container } =
           render(
@@ -73,17 +73,19 @@ describe(
           "S/ 8.00",
         );
         expect(text).toContain(
+          "Mayorista: consultar con asesora.",
+        );
+        expect(text).not.toContain(
           "Por Mayor (3u) a",
         );
-        expect(text).toContain(
-          "S/ 9.00",
-        );
-        expect(text).toContain(
+        expect(text).not.toContain(
           "Por 100 (100u) a",
         );
-        expect(text).toContain(
-          "S/ 5.00",
-        );
+        expect(
+          container.querySelector(
+            ".catalog-pdf-card__tiers",
+          ),
+        ).toBeNull();
       },
     );
 
@@ -133,7 +135,7 @@ describe(
             <CatalogPdfCard
               product={
                 mapProductToPdfProduct(
-                  createProduct(),
+                  createProduct({ price_offer: null }),
                 )
               }
             />,

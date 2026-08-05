@@ -143,14 +143,14 @@ describe(
       },
       {
         qty: 3,
-        total: 27,
+        total: 24,
       },
       {
         qty: 12,
-        total: 84,
+        total: 96,
       },
     ])(
-      "respeta la tabla comercial canónica para cantidad $qty",
+      "mantiene la oferta dominante para cantidad $qty",
       ({
         qty,
         total,

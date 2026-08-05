@@ -46,6 +46,7 @@ const CategoryPage = () => {
     changeQty,
     setExactQty,
     setItemNote,
+    replaceCart,
     clearCart,
     totalItems,
     totalPrice,
@@ -73,11 +74,10 @@ const CategoryPage = () => {
 
   const handleAddToCart = useCallback(
     (product: Product) => {
-      addToCart(product, 1);
       setSelectedProduct(product);
       setAddModalOpen(true);
     },
-    [addToCart],
+    [],
   );
 
   const handleAddExtra = useCallback(
@@ -148,6 +148,7 @@ const CategoryPage = () => {
         onSetQty={setExactQty}
         onChangeNote={setItemNote}
         onClearCart={clearCart}
+        onReplaceCart={replaceCart}
       />
 
       <ImageZoomModal
@@ -163,7 +164,7 @@ const CategoryPage = () => {
         product={selectedProduct}
         currentQty={currentQtyInCart}
         onClose={() => setAddModalOpen(false)}
-        onAddExtra={handleAddExtra}
+        onConfirmQuantity={handleAddExtra}
         onOpenCart={() => {
           setAddModalOpen(false);
           setCartOpen(true);

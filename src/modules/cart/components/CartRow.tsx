@@ -18,6 +18,7 @@ import {
 
 import {
   getActiveVolumePriceQty,
+  hasValidOfferPrice,
 } from "@/shared/domain/volumePricing/VolumePricing";
 
 import {
@@ -62,6 +63,11 @@ export function CartRow({
     subtotal,
   } =
     getCartLinePricing(
+      item,
+    );
+
+  const hasOffer =
+    hasValidOfferPrice(
       item,
     );
 
@@ -263,10 +269,19 @@ export function CartRow({
       </div>
 
       <div className="flex items-center gap-2">
-        <CartVolumePriceSelector
-          item={item}
-          onSetQty={onSetQty}
-        />
+        {hasOffer ? (
+          <div
+            data-testid="cart-offer-mode"
+            className="flex flex-1 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-[11px] font-black uppercase tracking-wide text-rose-600"
+          >
+            Precio de oferta
+          </div>
+        ) : (
+          <CartVolumePriceSelector
+            item={item}
+            onSetQty={onSetQty}
+          />
+        )}
 
         <CartQtyControls
           item={item}

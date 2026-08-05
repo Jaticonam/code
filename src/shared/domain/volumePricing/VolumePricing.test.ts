@@ -190,7 +190,7 @@ describe(
       });
 
     it(
-      "incluye precio base efectivo por defecto",
+      "expone únicamente la oferta válida por defecto",
       () => {
         expect(
           getSharedAvailableVolumePrices(
@@ -205,28 +205,12 @@ describe(
               "volume-price-1",
             unitPrice: 9,
           },
-          {
-            qty: 3,
-            key: "price_3",
-            label: "3u",
-            className:
-              "volume-price-3",
-            unitPrice: 9,
-          },
-          {
-            qty: 50,
-            key: "price_50",
-            label: "50u",
-            className:
-              "volume-price-50",
-            unitPrice: 7,
-          },
         ]);
       },
     );
 
     it(
-      "puede excluir el precio base",
+      "no expone tiers durante una oferta al excluir el precio principal",
       () => {
         expect(
           getSharedAvailableVolumePrices(
@@ -239,10 +223,7 @@ describe(
             (volumePrice) =>
               volumePrice.qty,
           ),
-        ).toEqual([
-          3,
-          50,
-        ]);
+        ).toEqual([]);
       },
     );
   },
@@ -537,14 +518,14 @@ describe(
           8.5,
           8.5,
           8.5,
-          9,
-          9,
-          8,
-          8,
-          7,
-          7,
-          6,
-          6,
+          8.5,
+          8.5,
+          8.5,
+          8.5,
+          8.5,
+          8.5,
+          8.5,
+          8.5,
         ]);
 
         expect(
@@ -552,10 +533,7 @@ describe(
             product,
             2,
           ),
-        ).toEqual({
-          qty: 3,
-          unitPrice: 9,
-        });
+        ).toBeNull();
 
         expect(
           getSharedNextVolumePrice(
@@ -569,15 +547,15 @@ describe(
             product,
             500,
           ),
-        ).toBe(100);
+        ).toBe(1);
 
         expect(
           getSharedBestVolumePrice(
             product,
           ),
         ).toMatchObject({
-          qty: 100,
-          unitPrice: 6,
+          qty: 1,
+          unitPrice: 8.5,
         });
 
         const partialProduct =

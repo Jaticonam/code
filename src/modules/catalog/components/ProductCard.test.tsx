@@ -47,7 +47,7 @@ describe(
   "ProductCard pricing",
   () => {
     it(
-      "integra precio, oferta anterior y tiers canónicos sin alterar importes",
+      "integra la oferta exclusiva y oculta los tiers mayoristas",
       () => {
         const { container } =
           render(
@@ -74,17 +74,17 @@ describe(
         expect(text).toContain(
           "S/10.0",
         );
-        expect(text).toContain(
-          "Por Mayor (3u) × S/27",
+        expect(text).not.toContain(
+          "Por Mayor (3u)",
         );
-        expect(text).toContain(
-          "Por Docena (12u) × S/84",
+        expect(text).not.toContain(
+          "Por Docena (12u)",
         );
-        expect(text).toContain(
-          "Medio ciento (50u) × S/300",
+        expect(text).not.toContain(
+          "Medio ciento (50u)",
         );
-        expect(text).toContain(
-          "Por Caja (100u) × S/500",
+        expect(text).not.toContain(
+          "Por Caja (100u)",
         );
       },
     );
