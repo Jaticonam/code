@@ -32,7 +32,7 @@ const BADGE_THEME_MAP:
   > = {
     "promotion.flash": {
       className:
-        "bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_0_12px_rgba(37,99,235,0.28)]",
+        "bg-gradient-to-r from-fuchsia-600 via-purple-600 to-violet-600 text-white shadow-[0_0_14px_rgba(147,51,234,0.30)]",
 
       animation:
         "animate-pulse",
@@ -40,7 +40,23 @@ const BADGE_THEME_MAP:
 
     "merchandising.bestSeller": {
       className:
-        "bg-gradient-to-r from-[#f5b025] to-[#d49615] text-slate-950 shadow-[0_0_12px_rgba(245,176,37,0.30)]",
+        "bg-gradient-to-r from-amber-400 via-orange-400 to-orange-500 text-slate-950 shadow-[0_0_12px_rgba(249,115,22,0.28)]",
+
+      animation:
+        "",
+    },
+
+    "merchandising.new": {
+      className:
+        "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_12px_rgba(6,182,212,0.26)]",
+
+      animation:
+        "",
+    },
+
+    "merchandising.premium": {
+      className:
+        "border-amber-300/30 bg-gradient-to-r from-slate-950 via-slate-900 to-zinc-800 text-amber-200 shadow-[0_0_12px_rgba(15,23,42,0.30)]",
 
       animation:
         "",

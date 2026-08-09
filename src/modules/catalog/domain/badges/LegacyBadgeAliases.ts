@@ -44,6 +44,17 @@ const BEST_SELLER_ALIASES = new Set([
   "popular",
 ]);
 
+const NEW_PRODUCT_ALIASES = new Set([
+  "nuevo",
+  "nuevo ingreso",
+  "novedad",
+]);
+
+const PREMIUM_ALIASES = new Set([
+  "premium",
+  "seleccion premium",
+]);
+
 const REDUNDANT_DEFAULT_ALIASES = new Set([
   "evergreen",
 ]);
@@ -99,6 +110,64 @@ export function resolveLegacyBadgeValue(
           "merchandising.bestSeller",
 
         priority: 80,
+      },
+    };
+  }
+
+  if (
+    NEW_PRODUCT_ALIASES.has(
+      normalizedValue,
+    )
+  ) {
+    return {
+      type: "badge",
+
+      badge: {
+        code:
+          "merchandising.new",
+
+        label:
+          "Nuevo",
+
+        icon:
+          "✨",
+
+        kind:
+          "merchandising",
+
+        themeToken:
+          "merchandising.new",
+
+        priority: 75,
+      },
+    };
+  }
+
+  if (
+    PREMIUM_ALIASES.has(
+      normalizedValue,
+    )
+  ) {
+    return {
+      type: "badge",
+
+      badge: {
+        code:
+          "merchandising.premium",
+
+        label:
+          "Premium",
+
+        icon:
+          "💎",
+
+        kind:
+          "merchandising",
+
+        themeToken:
+          "merchandising.premium",
+
+        priority: 70,
       },
     };
   }

@@ -22,7 +22,10 @@ describe(
       ["Top 10", "top 10"],
       ["best-seller", "best-seller"],
       ["", ""],
-      ["producto clasico", "producto clasico"],
+      [
+        "producto clasico",
+        "producto clasico",
+      ],
     ])(
       "normaliza %j como %j",
       (
@@ -36,6 +39,80 @@ describe(
         ).toBe(
           expected,
         );
+      },
+    );
+
+    it.each([
+      [
+        "Más vendido",
+        "merchandising.bestSeller",
+        "Más vendido",
+      ],
+      [
+        "Nuevo",
+        "merchandising.new",
+        "Nuevo",
+      ],
+      [
+        "Nuevo ingreso",
+        "merchandising.new",
+        "Nuevo",
+      ],
+      [
+        "Novedad",
+        "merchandising.new",
+        "Nuevo",
+      ],
+      [
+        "Premium",
+        "merchandising.premium",
+        "Premium",
+      ],
+      [
+        "Selección Premium",
+        "merchandising.premium",
+        "Premium",
+      ],
+    ])(
+      "homologa %j como %j",
+      (
+        value,
+        expectedCode,
+        expectedLabel,
+      ) => {
+        const resolution =
+          resolveLegacyBadgeValue(
+            value,
+          );
+
+        expect(
+          resolution?.type,
+        ).toBe(
+          "badge",
+        );
+
+        if (
+          !resolution ||
+          resolution.type !==
+            "badge"
+        ) {
+          throw new Error(
+            `No se resolvió el badge ${value}`,
+          );
+        }
+
+        expect(
+          resolution.badge,
+        ).toMatchObject({
+          code:
+            expectedCode,
+
+          label:
+            expectedLabel,
+
+          themeToken:
+            expectedCode,
+        });
       },
     );
 
@@ -77,6 +154,8 @@ describe(
 
     it.each([
       "Más vendido",
+      "Nuevo",
+      "Premium",
       "valor desconocido",
     ])(
       "no identifica %j como valor legacy obsoleto",

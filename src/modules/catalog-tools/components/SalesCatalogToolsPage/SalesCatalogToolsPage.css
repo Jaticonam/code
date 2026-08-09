@@ -554,3 +554,31 @@
   }
 }
 
+
+/* ADMIN 1.0 - APPSHELL OVERRIDES */
+
+.sales-catalog-tools {
+  width: 100%;
+  max-width: none;
+  min-height: auto;
+  margin: 0;
+  padding: 18px 20px 72px;
+  background: transparent;
+}
+
+.sales-catalog-tools > .catalog-composition-panel {
+  width: 100%;
+  max-width: none;
+}
+
+@media (max-width: 900px) {
+  .sales-catalog-tools {
+    padding: 14px 14px 70px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sales-catalog-tools {
+    padding: 10px 8px 68px;
+  }
+}

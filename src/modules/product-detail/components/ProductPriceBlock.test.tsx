@@ -1,16 +1,13 @@
 import {
   render,
+  screen,
 } from "@testing-library/react";
+
 import {
   describe,
   expect,
   it,
 } from "vitest";
-
-import {
-  getNextVolumePrice,
-  getVolumeUnitPrice,
-} from "@/shared/domain/volumePricing/VolumePricing";
 
 import {
   ProductPriceBlock,
@@ -20,68 +17,170 @@ describe(
   "ProductPriceBlock",
   () => {
     it(
-      "muestra sin alterar el precio y siguiente tier canónicos",
+      "muestra PU y total sin confundir un precio escalado con una oferta",
       () => {
-        const product = {
-          price_1: 10,
-          price_3: 9,
-          price_12: 8,
-          price_50: 7,
-          price_100: 6,
-          price_offer: null,
-        };
+        render(
+          <ProductPriceBlock
+            unitPrice={9}
+            total={45}
+            effectiveQty={5}
+            pricePulse={false}
+            showUnlock
+            savingsByQty={5}
+            basePrice={10}
+            nextVolumePrice={{
+              qty: 12,
+              unitPrice: 8,
+            }}
+            isQtyInputValid
+            hasOffer={false}
+          />,
+        );
 
-        const effectiveQty = 1;
-        const unitPrice =
-          getVolumeUnitPrice(
-            product,
-            effectiveQty,
-          );
-        const nextVolumePrice =
-          getNextVolumePrice(
-            product,
-            effectiveQty,
-          );
+        expect(
+          screen.getByTestId(
+            "product-detail-unit-price",
+          ),
+        ).toHaveTextContent(
+          "S/ 9.00",
+        );
 
-        const { container } =
-          render(
-            <ProductPriceBlock
-              unitPrice={unitPrice}
-              total={
-                unitPrice *
-                effectiveQty
-              }
-              effectiveQty={
-                effectiveQty
-              }
-              pricePulse={false}
-              showUnlock={false}
-              savingsByQty={0}
-              basePrice={
-                product.price_1
-              }
-              nextVolumePrice={
-                nextVolumePrice
-              }
-              isQtyInputValid
-            />,
+        expect(
+          screen.getByTestId(
+            "product-detail-unit-price",
+          ),
+        ).toHaveClass(
+          "text-[#1d8299]",
+        );
+
+        expect(
+          screen.getByTestId(
+            "product-detail-total",
+          ),
+        ).toHaveTextContent(
+          "S/ 45.00",
+        );
+
+        expect(
+          screen.queryByText(
+            "⚡ AHORRAS",
+          ),
+        ).not.toBeInTheDocument();
+
+        expect(
+          screen.queryByText(
+            "La oferta aplica a cualquier cantidad hasta agotar stock.",
+          ),
+        ).not.toBeInTheDocument();
+
+        expect(
+          screen.queryByText(
+            /Mejor precio desbloqueado/i,
+          ),
+        ).not.toBeInTheDocument();
+
+        expect(
+          screen.queryByText(
+            /Estás pagando/i,
+          ),
+        ).not.toBeInTheDocument();
+
+        expect(
+          screen.queryByText(
+            /Agrega .* más/i,
+          ),
+        ).not.toBeInTheDocument();
+      },
+    );
+
+    it(
+      "mantiene el precio rojo y el badge secundario durante una oferta",
+      () => {
+        render(
+          <ProductPriceBlock
+            unitPrice={5}
+            total={15}
+            effectiveQty={3}
+            pricePulse={false}
+            showUnlock={false}
+            savingsByQty={15}
+            basePrice={10}
+            nextVolumePrice={null}
+            isQtyInputValid
+            hasOffer
+          />,
+        );
+
+        const offerBadge =
+          screen.getByText(
+            "⚡ AHORRAS",
           );
 
         expect(
-          container,
-        ).toHaveTextContent(
-          "10.00",
-        );
+          offerBadge,
+        ).toBeInTheDocument();
+
         expect(
-          container,
-        ).toHaveTextContent(
-          "Agrega 2 más",
+          offerBadge,
+        ).toHaveClass(
+          "text-purple-700",
         );
+
         expect(
-          container,
+          screen.getByText(
+            "La oferta aplica a cualquier cantidad hasta agotar stock.",
+          ),
+        ).toBeInTheDocument();
+
+        expect(
+          screen.getByTestId(
+            "product-detail-unit-price",
+          ),
         ).toHaveTextContent(
-          "9.00",
+          "S/ 5.00",
         );
+
+        expect(
+          screen.getByTestId(
+            "product-detail-unit-price",
+          ),
+        ).toHaveClass(
+          "text-red-600",
+        );
+
+        expect(
+          screen.getByTestId(
+            "product-detail-total",
+          ),
+        ).toHaveTextContent(
+          "S/ 15.00",
+        );
+      },
+    );
+
+    it(
+      "muestra la validación cuando la cantidad es inválida",
+      () => {
+        render(
+          <ProductPriceBlock
+            unitPrice={10}
+            total={10}
+            effectiveQty={1}
+            pricePulse={false}
+            showUnlock={false}
+            savingsByQty={0}
+            basePrice={10}
+            nextVolumePrice={null}
+            isQtyInputValid={false}
+            hasOffer={false}
+          />,
+        );
+
+        expect(
+          screen.getByText(
+            "Ingresa una cantidad válida para continuar",
+          ),
+        ).toBeInTheDocument();
       },
     );
   },

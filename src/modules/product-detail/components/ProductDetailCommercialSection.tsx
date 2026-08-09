@@ -6,8 +6,9 @@ import type {
   Product,
 } from "@/shared/types/product";
 
-import type {
-  NextVolumePrice,
+import {
+  hasValidOfferPrice,
+  type NextVolumePrice,
 } from "@/shared/domain/volumePricing/VolumePricing";
 
 import {
@@ -134,6 +135,7 @@ export function ProductDetailCommercialSection({
           basePrice={product.price_1}
           nextVolumePrice={available ? nextVolumePrice : null}
           isQtyInputValid={available ? isQtyInputValid : true}
+          hasOffer={hasValidOfferPrice(product)}
         />
       )}
 

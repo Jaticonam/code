@@ -25,6 +25,9 @@ type CatalogSyncPanelProps = {
 
   isReady:
     boolean;
+
+  initiallyExpanded?:
+    boolean;
 };
 
 const RESULT_STORAGE_KEY =
@@ -213,12 +216,15 @@ export default function CatalogSyncPanel({
   currentProductCount,
   campaignCount,
   isReady,
+  initiallyExpanded = false,
 }: CatalogSyncPanelProps) {
   const [
     isExpanded,
     setIsExpanded,
   ] = useState(
-    resolveInitialExpandedState,
+    () =>
+      initiallyExpanded ||
+      resolveInitialExpandedState(),
   );
 
   const [

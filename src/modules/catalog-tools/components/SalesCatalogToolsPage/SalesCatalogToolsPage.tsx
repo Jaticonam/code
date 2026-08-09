@@ -21,6 +21,8 @@ import {
 
 import CatalogSyncPanel from "@/modules/catalog-tools/components/CatalogSyncPanel/CatalogSyncPanel";
 
+import CatalogCompositionPanel from "@/modules/catalog-tools/components/CatalogCompositionPanel/CatalogCompositionPanel";
+
 import {
   buildCatalogPdfPath,
   buildCatalogPdfUrl,
@@ -33,6 +35,8 @@ import {
   buildApplicationWhatsAppUrl,
 } from "@/shared/config/application";
 
+import AdminShell from "@/modules/admin/components/AdminShell/AdminShell";
+import AdminModal from "@/modules/admin/components/AdminModal/AdminModal";
 import "./SalesCatalogToolsPage.css";
 
 /* =========================================================
@@ -182,6 +186,12 @@ const buildSalesWhatsappCopy = ({
 };
 
 export default function SalesCatalogToolsPage() {
+  const [
+    isCatalogSyncOpen,
+    setIsCatalogSyncOpen,
+  ] = useState(
+    false,
+  );
   const [
     selectedCategory,
     setSelectedCategory,
@@ -500,19 +510,6 @@ export default function SalesCatalogToolsPage() {
       );
     };
 
-  const resetSelection =
-    () => {
-      setSelectedCategory(
-        "todas",
-      );
-
-      setSelectedCampaign(
-        "",
-      );
-
-      clearCopyStatuses();
-    };
-
   const selectCategory =
     (
       categoryId: string,
@@ -582,42 +579,22 @@ export default function SalesCatalogToolsPage() {
     };
 
   return (
-    <main className="sales-catalog-tools">
-      <section className="sales-catalog-tools__hero">
-        <div>
-          <p className="sales-catalog-tools__eyebrow">
-            Wooly Ventas
-          </p>
-
-          <h1>
-            Explorer de catálogos PDF
-          </h1>
-
-          <p>
-            Herramienta interna para que ventas arme
-            catálogos mayoristas por categoría,
-            campaña o combinación comercial.
-          </p>
-        </div>
-
-        <div className="sales-catalog-tools__heroActions">
-          <a
-            className="sales-catalog-tools__back"
-            href="/catalogo"
-          >
-            Ver catálogo público
-          </a>
-
-          <button
-            type="button"
-            onClick={resetSelection}
-          >
-            Reiniciar
-          </button>
-        </div>
-      </section>
-
-      <CatalogSyncPanel
+    <AdminShell>
+      <main className="sales-catalog-tools">
+            <AdminModal
+        open={
+          isCatalogSyncOpen
+        }
+        size="large"
+        title="Google Sheets"
+        description="Revisa el estado del catálogo y actualiza los datos cuando sea necesario."
+        onClose={() =>
+          setIsCatalogSyncOpen(
+            false,
+          )
+        }
+      >
+<CatalogSyncPanel
         currentProductCount={
           data.length
         }
@@ -627,8 +604,26 @@ export default function SalesCatalogToolsPage() {
         isReady={
           isPanelReady
         }
+        initiallyExpanded
       />
+      </AdminModal>
 
+      <CatalogCompositionPanel
+        products={
+          data
+        }
+        campaigns={
+          campaigns
+        }
+        isReady={
+          isPanelReady
+        }
+        onOpenCatalogSync={() =>
+          setIsCatalogSyncOpen(
+            true,
+          )
+        }
+      />
       {!isPanelReady ? (
         <section className="sales-catalog-tools__notice">
           {isLoading ||
@@ -969,5 +964,6 @@ export default function SalesCatalogToolsPage() {
         </aside>
       </section>
     </main>
+    </AdminShell>
   );
 }
