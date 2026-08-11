@@ -14,13 +14,7 @@ import type {
 } from "@/modules/catalog/domain/CatalogCompositionDraft";
 
 import {
-  DEFAULT_CATALOG_VALIDITY_DAYS,
-} from "@/modules/catalog/domain/CatalogPublication";
-
-import {
   createDefaultCatalogPublicationIdentity,
-  prepareCatalogPublicationIdentity,
-  resolveCatalogPublicationCover,
   type CatalogPublicationIdentity,
 } from "@/modules/catalog/domain/CatalogPublicationIdentity";
 
@@ -34,8 +28,18 @@ interface CatalogDraftManagerProps {
   composition:
     CatalogComposition;
 
-  resolvedProductIds:
-    readonly string[];
+  publicationIdentity:
+    CatalogPublicationIdentity;
+
+  onPublicationIdentityChange:
+    (
+      value:
+        CatalogPublicationIdentity |
+        ((
+          current:
+            CatalogPublicationIdentity,
+        ) => CatalogPublicationIdentity),
+    ) => void;
 
   onLoadComposition:
     (
@@ -118,7 +122,9 @@ function formatDate(
 
 export default function CatalogDraftManager({
   composition,
-  resolvedProductIds,
+  publicationIdentity,
+  onPublicationIdentityChange:
+    setPublicationIdentity,
   onLoadComposition,
   onNewComposition,
 }: CatalogDraftManagerProps) {
@@ -144,14 +150,6 @@ export default function CatalogDraftManager({
   ] =
     useState("");
 
-  const [
-    publicationIdentity,
-    setPublicationIdentity,
-  ] =
-    useState<CatalogPublicationIdentity>(
-      () =>
-        createDefaultCatalogPublicationIdentity(),
-    );
 
   const [
     savedFingerprint,
@@ -170,14 +168,6 @@ export default function CatalogDraftManager({
     setSavedName,
   ] =
     useState("");
-
-  const [
-    lastPublished,
-    setLastPublished,
-  ] =
-    useState<CatalogCompositionDraft | null>(
-      null,
-    );
 
   const [
     isBusy,
@@ -263,19 +253,6 @@ export default function CatalogDraftManager({
           publicationIdentity,
         ),
       [publicationIdentity],
-    );
-
-  const resolvedCover =
-    useMemo(
-      () =>
-        resolveCatalogPublicationCover(
-          publicationIdentity,
-          composition,
-        ),
-      [
-        publicationIdentity,
-        composition,
-      ],
     );
 
   const isDirty =
@@ -393,9 +370,6 @@ export default function CatalogDraftManager({
         ),
       );
 
-      setLastPublished(
-        null,
-      );
     };
 
   const saveDraft =
@@ -413,12 +387,6 @@ export default function CatalogDraftManager({
 
         return;
       }
-
-      const preparedIdentity =
-        prepareCatalogPublicationIdentity(
-          publicationIdentity,
-          normalizedName,
-        );
 
       setIsBusy(
         true,
@@ -441,7 +409,7 @@ export default function CatalogDraftManager({
                     composition,
 
                     publicationIdentity:
-                      preparedIdentity,
+                      publicationIdentity,
                   },
                 )
             : await catalogCompositionProvider
@@ -452,7 +420,7 @@ export default function CatalogDraftManager({
                   composition,
 
                   publicationIdentity:
-                    preparedIdentity,
+                    publicationIdentity,
                 });
 
         applyLoadedDraft(
@@ -560,9 +528,6 @@ export default function CatalogDraftManager({
         return;
       }
 
-      setLastPublished(
-        null,
-      );
 
       clearWorkingDraft(
         "Nuevo catálogo listo.",
@@ -652,9 +617,6 @@ export default function CatalogDraftManager({
 
         await refreshDrafts();
 
-        setLastPublished(
-          null,
-        );
 
         clearWorkingDraft(
           "Borrador archivado. Nuevo catálogo listo.",
@@ -673,75 +635,6 @@ export default function CatalogDraftManager({
       }
     };
 
-  const publishDraft =
-    async () => {
-      if (
-        !currentDraft ||
-        isDirty ||
-        resolvedProductIds.length ===
-          0
-      ) {
-        return;
-      }
-
-      const strategyLabel =
-        currentDraft
-          .composition
-          .mode ===
-        "automatic"
-          ? "dinámico"
-          : "fijo";
-
-      if (
-        !window.confirm(
-          `¿Publicar "${currentDraft.name}" por ${DEFAULT_CATALOG_VALIDITY_DAYS} días como catálogo ${strategyLabel}? Después de publicar ya no podrá editarse.`,
-        )
-      ) {
-        return;
-      }
-
-      setMessage("");
-      setError("");
-      setIsBusy(
-        true,
-      );
-
-      try {
-        const published =
-          await catalogCompositionProvider
-            .publishDraft(
-              currentDraft.id,
-              {
-                resolvedProductIds,
-
-                validityDays:
-                  DEFAULT_CATALOG_VALIDITY_DAYS,
-              },
-            );
-
-        await refreshDrafts();
-
-        clearWorkingDraft(
-          `${published.id} publicado correctamente.`,
-        );
-
-        setLastPublished(
-          published,
-        );
-      } catch (reason) {
-        setError(
-          reason instanceof
-          Error
-            ? reason.message
-            : "No se pudo publicar el catálogo.",
-        );
-      } finally {
-        setIsBusy(
-          false,
-        );
-      }
-    };
-
   return (
     <section className="catalog-draft-manager">
       <header className="catalog-draft-manager__header">
@@ -751,12 +644,12 @@ export default function CatalogDraftManager({
           </span>
 
           <h3>
-            Guarda, prepara y publica
+            Guarda y administra
           </h3>
 
           <p>
-            Trabaja como borrador y publícalo cuando la
-            composición comercial esté lista.
+            Conserva borradores para retomarlos, duplicarlos
+            o archivarlos cuando lo necesites.
           </p>
         </div>
 
@@ -824,49 +717,6 @@ export default function CatalogDraftManager({
           archivados
         </span>
       </div>
-
-      {lastPublished?.publication ? (
-        <div className="catalog-draft-manager__published">
-          <div>
-            <span>
-              Publicado
-            </span>
-
-            <strong>
-              {lastPublished.id}
-            </strong>
-          </div>
-
-          <div>
-            <small>
-              Tipo
-            </small>
-
-            <strong>
-              {lastPublished
-                .publication
-                .strategy ===
-              "dynamic"
-                ? "Dinámico"
-                : "Fijo"}
-            </strong>
-          </div>
-
-          <div>
-            <small>
-              Vigente hasta
-            </small>
-
-            <strong>
-              {formatDate(
-                lastPublished
-                  .publication
-                  .validUntil,
-              )}
-            </strong>
-          </div>
-        </div>
-      ) : null}
 
       <div className="catalog-draft-manager__controls">
         <label>
@@ -941,267 +791,6 @@ export default function CatalogDraftManager({
         </label>
       </div>
 
-      <section className="catalog-draft-manager__identity">
-        <div className="catalog-draft-manager__identityFields">
-          <header>
-            <span>
-              Identidad comercial
-            </span>
-
-            <h4>
-              Cómo se presentará el catálogo
-            </h4>
-          </header>
-
-          <label>
-            <span>
-              Título público
-            </span>
-
-            <input
-              type="text"
-              value={
-                publicationIdentity.title
-              }
-              maxLength={
-                90
-              }
-              placeholder="Ej. Selección mayorista de flores"
-              disabled={
-                isBusy
-              }
-              onChange={(event) =>
-                setPublicationIdentity(
-                  (current) => ({
-                    ...current,
-
-                    title:
-                      event.target.value,
-                  }),
-                )
-              }
-            />
-          </label>
-
-          <label>
-            <span>
-              Descripción
-            </span>
-
-            <textarea
-              value={
-                publicationIdentity.description
-              }
-              maxLength={
-                180
-              }
-              rows={
-                3
-              }
-              placeholder="Describe brevemente esta selección para el cliente."
-              disabled={
-                isBusy
-              }
-              onChange={(event) =>
-                setPublicationIdentity(
-                  (current) => ({
-                    ...current,
-
-                    description:
-                      event.target.value,
-                  }),
-                )
-              }
-            />
-          </label>
-
-          <div className="catalog-draft-manager__coverOptions">
-            <span>
-              Portada
-            </span>
-
-            <label>
-              <input
-                type="radio"
-                name="catalog-cover-strategy"
-                value="auto"
-                checked={
-                  publicationIdentity
-                    .cover
-                    .strategy ===
-                  "auto"
-                }
-                disabled={
-                  isBusy
-                }
-                onChange={() =>
-                  setPublicationIdentity(
-                    (current) => ({
-                      ...current,
-
-                      cover: {
-                        ...current.cover,
-
-                        strategy:
-                          "auto",
-                      },
-                    }),
-                  )
-                }
-              />
-
-              Automática
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="catalog-cover-strategy"
-                value="custom"
-                checked={
-                  publicationIdentity
-                    .cover
-                    .strategy ===
-                  "custom"
-                }
-                disabled={
-                  isBusy
-                }
-                onChange={() =>
-                  setPublicationIdentity(
-                    (current) => ({
-                      ...current,
-
-                      cover: {
-                        ...current.cover,
-
-                        strategy:
-                          "custom",
-                      },
-                    }),
-                  )
-                }
-              />
-
-              Personalizada
-            </label>
-          </div>
-
-          {publicationIdentity
-            .cover
-            .strategy ===
-          "custom" ? (
-            <label>
-              <span>
-                URL de imagen
-              </span>
-
-              <input
-                type="url"
-                value={
-                  publicationIdentity
-                    .cover
-                    .customImageUrl
-                }
-                placeholder="https://..."
-                disabled={
-                  isBusy
-                }
-                onChange={(event) =>
-                  setPublicationIdentity(
-                    (current) => ({
-                      ...current,
-
-                      cover: {
-                        ...current.cover,
-
-                        customImageUrl:
-                          event.target.value,
-                      },
-                    }),
-                  )
-                }
-              />
-            </label>
-          ) : null}
-        </div>
-
-        <aside className="catalog-draft-manager__coverPreview">
-          <span>
-            Vista de portada
-          </span>
-
-          <div>
-            <img
-              src={
-                resolvedCover.imagePath
-              }
-              alt="Portada del catálogo"
-            />
-          </div>
-
-          <strong>
-            {publicationIdentity
-              .title
-              .trim() ||
-              name.trim() ||
-              "Catálogo Wooly"}
-          </strong>
-
-          {publicationIdentity
-            .description
-            .trim() ? (
-            <p>
-              {publicationIdentity.description}
-            </p>
-          ) : null}
-
-          <small>
-            Fuente:
-            {" "}
-            {resolvedCover.source ===
-            "custom"
-              ? "Personalizada"
-              : resolvedCover.source ===
-                  "campaign"
-                ? "Campaña"
-                : "Wooly"}
-          </small>
-        </aside>
-      </section>
-
-      <div className="catalog-draft-manager__publicationInfo">
-        <div>
-          <strong>
-            Publicación
-          </strong>
-
-          <span>
-            Vigencia estándar:
-            {" "}
-            {DEFAULT_CATALOG_VALIDITY_DAYS}
-            {" "}
-            días
-          </span>
-        </div>
-
-        <div>
-          <strong>
-            {composition.mode ===
-            "automatic"
-              ? "Dinámico"
-              : "Fijo"}
-          </strong>
-
-          <span>
-            {composition.mode ===
-            "automatic"
-              ? "La selección se resolverá con sus reglas vigentes."
-              : "Se congelarán los productos visibles al publicar."}
-          </span>
-        </div>
-      </div>
-
       <div className="catalog-draft-manager__buttons">
         <button
           type="button"
@@ -1224,31 +813,6 @@ export default function CatalogDraftManager({
             : currentDraftId
               ? "Guardar cambios"
               : "Guardar borrador"}
-        </button>
-
-        <button
-          type="button"
-          className="is-publish"
-          disabled={
-            isBusy ||
-            !currentDraft ||
-            isDirty ||
-            resolvedProductIds.length ===
-              0
-          }
-          title={
-            isDirty
-              ? "Guarda los cambios antes de publicar."
-              : resolvedProductIds.length ===
-                  0
-                ? "No se puede publicar un catálogo vacío."
-                : "Convertir este borrador en catálogo publicado."
-          }
-          onClick={() =>
-            void publishDraft()
-          }
-        >
-          Publicar catálogo
         </button>
 
         <button

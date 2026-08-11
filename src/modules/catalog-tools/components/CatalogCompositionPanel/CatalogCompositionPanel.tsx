@@ -32,6 +32,11 @@ import CatalogManualSelector from "@/modules/catalog-tools/components/CatalogMan
 
 import CatalogCompositionPreview from "@/modules/catalog-tools/components/CatalogCompositionPreview/CatalogCompositionPreview";
 
+import {
+  createDefaultCatalogPublicationIdentity,
+  type CatalogPublicationIdentity,
+} from "@/modules/catalog/domain/CatalogPublicationIdentity";
+
 import CatalogDraftManager from "@/modules/catalog-tools/components/CatalogDraftManager/CatalogDraftManager";
 import CatalogPosSummary from "@/modules/catalog-tools/components/CatalogPosSummary/CatalogPosSummary";
 
@@ -120,6 +125,14 @@ export default function CatalogCompositionPanel({
     setIsCatalogDetailsOpen,
   ] = useState(
     false,
+  );
+
+  const [
+    publicationIdentity,
+    setPublicationIdentity,
+  ] = useState<CatalogPublicationIdentity>(
+    () =>
+      createDefaultCatalogPublicationIdentity(),
   );
 
 const [
@@ -718,8 +731,11 @@ const changeMode =
         composition={
           composition
         }
-        resolvedProductIds={
-          resolution.productIds
+        publicationIdentity={
+          publicationIdentity
+        }
+        onPublicationIdentityChange={
+          setPublicationIdentity
         }
         onLoadComposition={
           (nextComposition) =>
