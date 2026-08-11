@@ -38,6 +38,7 @@ import {
 } from "@/modules/catalog/domain/CatalogPublicationIdentity";
 
 import CatalogDraftManager from "@/modules/catalog-tools/components/CatalogDraftManager/CatalogDraftManager";
+import CatalogPublishCheckout from "@/modules/catalog-tools/components/CatalogPublishCheckout/CatalogPublishCheckout";
 import CatalogPosSummary from "@/modules/catalog-tools/components/CatalogPosSummary/CatalogPosSummary";
 
 import AdminModal from "@/modules/admin/components/AdminModal/AdminModal";
@@ -123,6 +124,13 @@ export default function CatalogCompositionPanel({
   const [
     isCatalogDetailsOpen,
     setIsCatalogDetailsOpen,
+  ] = useState(
+    false,
+  );
+
+  const [
+    isDraftManagerOpen,
+    setIsDraftManagerOpen,
   ] = useState(
     false,
   );
@@ -688,6 +696,18 @@ const changeMode =
     
 
         
+    <button
+      type="button"
+      className="is-utility"
+      onClick={() =>
+        setIsDraftManagerOpen(
+          true,
+        )
+      }
+    >
+      Mis catálogos
+    </button>
+
 {onOpenCatalogSync ? (
       <button
         type="button"
@@ -713,246 +733,88 @@ const changeMode =
 </header>
 
       <AdminModal
-  open={
-    isCatalogDetailsOpen
-  }
-  size="large"
-  title="Publicar catálogo"
-  description="Realiza los ajustes finales, revisa la presentación y publica el catálogo."
-  onClose={() =>
-    setIsCatalogDetailsOpen(
-      false,
-    )
-  }
->
-<div className="catalog-composition-panel__publishCheckout">
-  <div className="catalog-composition-panel__publishMain">
-<CatalogDraftManager
-        composition={
-          composition
+        open={
+          isDraftManagerOpen
         }
-        publicationIdentity={
-          publicationIdentity
+        size="large"
+        title="Mis catálogos"
+        description="Guarda, abre, duplica o archiva tus borradores comerciales."
+        onClose={() =>
+          setIsDraftManagerOpen(
+            false,
+          )
         }
-        onPublicationIdentityChange={
-          setPublicationIdentity
-        }
-        onLoadComposition={
-          (nextComposition) =>
+      >
+        <CatalogDraftManager
+          composition={
+            composition
+          }
+          publicationIdentity={
+            publicationIdentity
+          }
+          onPublicationIdentityChange={
+            setPublicationIdentity
+          }
+          onLoadComposition={(nextComposition) => {
             setComposition(
               nextComposition,
-            )
-        }
-        onNewComposition={
-          () =>
+            );
+
+            setIsDraftManagerOpen(
+              false,
+            );
+          }}
+          onNewComposition={() => {
             setComposition(
               createEmptyCatalogComposition(
                 "automatic",
               ),
-            )
+            );
+
+            setIsDraftManagerOpen(
+              false,
+            );
+          }}
+        />
+      </AdminModal>
+
+      <AdminModal
+        open={
+          isCatalogDetailsOpen
         }
-      />
-
-  </div>
-
-  <aside
-    className="catalog-composition-panel__publishSummary"
-    aria-label="Resumen rápido del catálogo"
-  >
-    <div className="catalog-composition-panel__publishSummarySticky">
-      <div className="catalog-composition-panel__publishSummaryHead">
-        <div>
-          <span>
-            Tu catálogo
-          </span>
-
-          <h3>
-            {selectedMode.label}
-          </h3>
-        </div>
-
-        <div className="catalog-composition-panel__publishSummaryCount">
-          <strong>
-            {isReady
-              ? resolution.productIds.length
-              : "—"}
-          </strong>
-
-          <small>
-            productos
-          </small>
-        </div>
-      </div>
-
-      {composition.mode ===
-      "hybrid" ? (
-        <div className="catalog-composition-panel__publishSummaryCart">
-          <div>
-            <span>
-              Base
-            </span>
-
-            <strong>
-              {
-                resolution
-                  .automaticProductIds
-                  .length
-              }
-            </strong>
-          </div>
-
-          <div className="is-added">
-            <span>
-              Agregados
-            </span>
-
-            <strong>
-              {
-                manuallyIncludedProductCount
-              }
-            </strong>
-          </div>
-
-          <div className="is-removed">
-            <span>
-              Retirados
-            </span>
-
-            <strong>
-              {
-                manuallyExcludedProductCount
-              }
-            </strong>
-          </div>
-
-          <div className="is-total">
-            <span>
-              Resultado final
-            </span>
-
-            <strong>
-              {
-                resolution
-                  .productIds
-                  .length
-              }
-            </strong>
-          </div>
-        </div>
-      ) : (
-        <div className="catalog-composition-panel__publishSummaryCart">
-          <div>
-            <span>
-              Tipo
-            </span>
-
-            <strong>
-              {composition.mode ===
-              "manual"
-                ? "Producto por producto"
-                : hasRules
-                  ? "Categorías y campañas"
-                  : "Catálogo completo"}
-            </strong>
-          </div>
-
-          <div className="is-total">
-            <span>
-              Resultado final
-            </span>
-
-            <strong>
-              {isReady
-                ? resolution.productIds.length
-                : "—"}
-            </strong>
-          </div>
-        </div>
-      )}
-
-      <div className="catalog-composition-panel__publishSummaryDetails">
-        <div>
-          <span>
-            Categorías
-          </span>
-
-          <strong>
-            {composition.mode ===
-            "manual"
-              ? "Según los productos elegidos"
-              : categorySummary}
-          </strong>
-        </div>
-
-        <div>
-          <span>
-            Campañas
-          </span>
-
-          <strong>
-            {composition.mode ===
-            "manual"
-              ? "No aplica"
-              : campaignSummary}
-          </strong>
-        </div>
-      </div>
-
-      {composition.mode !==
-        "manual" &&
-      selectedCategoryLabels.length >
-        0 ? (
-        <div className="catalog-composition-panel__publishSummaryChips">
-          {selectedCategoryLabels.map(
-            (label) => (
-              <span key={label}>
-                {label}
-              </span>
-            ),
-          )}
-        </div>
-      ) : null}
-
-      {composition.mode !==
-        "manual" &&
-      selectedCampaignLabels.length >
-        0 ? (
-        <div className="catalog-composition-panel__publishSummaryChips catalog-composition-panel__publishSummaryChips--campaigns">
-          {selectedCampaignLabels.map(
-            (label) => (
-              <span key={label}>
-                {label}
-              </span>
-            ),
-          )}
-        </div>
-      ) : null}
-
-      <div className="catalog-composition-panel__publishSummaryStatus">
-        <span
-          className={
-            isReady &&
-            resolution.productIds.length >
-              0
-              ? "is-ready"
-              : ""
+        size="large"
+        title="Publicar catálogo"
+        description="Revisa la presentación y confirma cómo llegará el catálogo a tu cliente."
+        onClose={() =>
+          setIsCatalogDetailsOpen(
+            false,
+          )
+        }
+      >
+        <CatalogPublishCheckout
+          composition={
+            composition
           }
-        >
-          {isReady &&
-          resolution.productIds.length >
-            0
-            ? "✓ Selección lista"
-            : "Esperando selección"}
-        </span>
-
-        <p>
-          Este resumen se actualiza con la selección actual. Revisa la vista completa de abajo antes de publicar.
-        </p>
-      </div>
-    </div>
-  </aside>
-</div>
-</AdminModal>
+          resolution={
+            resolution
+          }
+          publicationIdentity={
+            publicationIdentity
+          }
+          onPublicationIdentityChange={
+            setPublicationIdentity
+          }
+          modeLabel={
+            selectedMode.label
+          }
+          categorySummary={
+            categorySummary
+          }
+          campaignSummary={
+            campaignSummary
+          }
+        />
+      </AdminModal>
       {!isReady ? (
         <div className="catalog-composition-panel__notice">
           Esperando que termine de cargar el catálogo
