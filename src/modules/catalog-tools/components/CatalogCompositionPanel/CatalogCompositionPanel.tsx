@@ -570,6 +570,10 @@ const changeMode =
             current.mode,
           ),
       );
+
+      setPublicationIdentity(
+        createDefaultCatalogPublicationIdentity(),
+      );
     };
 
   return (
