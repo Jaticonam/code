@@ -233,18 +233,8 @@ export default function CatalogPublishCheckout({
       .length >
     0;
 
-  const isV1Publicable =
-    hasProducts &&
-    eligibility.status ===
-      "v1-publicable";
-
-  const isV2Publicable =
-    hasProducts &&
-    eligibility.status ===
-      "v2-publicable";
-
   const publicUrl =
-    isV1Publicable &&
+    hasProducts &&
     eligibility.status ===
       "v1-publicable"
       ? buildCatalogPdfUrl({
@@ -253,7 +243,24 @@ export default function CatalogPublishCheckout({
 
           ...eligibility.v1,
         })
-      : "";
+      : hasProducts &&
+          eligibility.status ===
+            "v2-publicable"
+        ? buildCatalogPdfUrl({
+            origin:
+              window.location.origin,
+
+            version:
+              "2",
+
+            ...eligibility.v2,
+          })
+        : "";
+
+  const isDirectlyPublicable =
+    Boolean(
+      publicUrl,
+    );
 
   const shareMessage =
     publicUrl
@@ -661,7 +668,7 @@ export default function CatalogPublishCheckout({
               continuar.
             </p>
           </div>
-        ) : isV1Publicable ? (
+        ) : isDirectlyPublicable ? (
           <section className="catalog-publish-checkout__ready">
             <header>
               <span>
@@ -730,23 +737,6 @@ export default function CatalogPublishCheckout({
               </a>
             </div>
           </section>
-        ) : isV2Publicable ? (
-          <div className="catalog-publish-checkout__status is-custom">
-            <strong>
-              Combinación múltiple preparada
-            </strong>
-
-            <p>
-              Esta selección puede publicarse mediante
-              el contrato PDF V2.
-            </p>
-
-            <small>
-              El enlace se habilitará cuando el lector
-              público V2 quede conectado. No se generará
-              una URL incompleta mientras tanto.
-            </small>
-          </div>
         ) : (
           <div className="catalog-publish-checkout__status is-custom">
             <strong>
