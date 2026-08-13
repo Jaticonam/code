@@ -5,71 +5,153 @@ import {
   resolveCatalogSelection,
   type CatalogSelectionResult,
 } from "@/modules/catalog/domain/CatalogSelection";
-import { useCatalogCampaigns } from "@/modules/catalog/hooks/useCatalogCampaigns";
-import { useCatalogData } from "@/modules/catalog/hooks/useCatalogData";
-import { parseCatalogPdfLink } from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
-import { CATEGORY_CONFIG } from "@/modules/catalog";
 
-import { mapProductsToPdfProducts } from "../mappers/PdfProductMapper";
-import { buildPdfCategorySections } from "../services/BuildPdfCategorySections";
+import {
+  useCatalogCampaigns,
+} from "@/modules/catalog/hooks/useCatalogCampaigns";
 
-const INVALID_PDF_LINK = "__invalid_pdf_link__";
+import {
+  useCatalogData,
+} from "@/modules/catalog/hooks/useCatalogData";
 
-const formatDate = (date: Date, includeTime = false) =>
-  new Intl.DateTimeFormat("es-PE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    ...(includeTime
-      ? {
-          hour: "2-digit",
-          minute: "2-digit",
-        }
-      : {}),
-  }).format(date);
+import {
+  parseCatalogPdfLink,
+} from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
 
-const addDays = (date: Date, days: number) => {
-  const nextDate = new Date(date);
-  nextDate.setDate(nextDate.getDate() + days);
+import {
+  CATEGORY_CONFIG,
+} from "@/modules/catalog";
+
+import {
+  mapProductsToPdfProducts,
+} from "../mappers/PdfProductMapper";
+
+import {
+  buildPdfCategorySections,
+} from "../services/BuildPdfCategorySections";
+
+import {
+  buildCatalogPdfV2Copy,
+  resolveCatalogPdfV2Selection,
+} from "../services/CatalogPdfV2Selection";
+
+const INVALID_PDF_LINK =
+  "__invalid_pdf_link__";
+
+const formatDate = (
+  date: Date,
+  includeTime = false,
+) =>
+  new Intl.DateTimeFormat(
+    "es-PE",
+    {
+      day:
+        "2-digit",
+      month:
+        "2-digit",
+      year:
+        "numeric",
+
+      ...(includeTime
+        ? {
+            hour:
+              "2-digit",
+            minute:
+              "2-digit",
+          }
+        : {}),
+    },
+  ).format(
+    date,
+  );
+
+const addDays = (
+  date: Date,
+  days: number,
+) => {
+  const nextDate =
+    new Date(
+      date,
+    );
+
+  nextDate.setDate(
+    nextDate.getDate() +
+      days,
+  );
+
   return nextDate;
 };
 
 export const buildCatalogPdfCopy = (
-  selection: CatalogSelectionResult,
+  selection:
+    CatalogSelectionResult,
 ) => {
-  if (selection.isCombination) {
+  if (
+    selection.isCombination
+  ) {
     return {
-      title: `Catálogo Mayorista · ${selection.categoryLabel} + ${selection.campaignLabel}`,
-      subtitle: `Selección comercial de ${selection.categoryLabel} para la campaña ${selection.campaignLabel}. Precios y productos sujetos a disponibilidad.`,
-      segmentLabel: `${selection.categoryLabel} · ${selection.campaignLabel}`,
-      segmentType: "combination" as const,
+      title:
+        `Catálogo Mayorista · ${selection.categoryLabel} + ${selection.campaignLabel}`,
+
+      subtitle:
+        `Selección comercial de ${selection.categoryLabel} para la campaña ${selection.campaignLabel}. Precios y productos sujetos a disponibilidad.`,
+
+      segmentLabel:
+        `${selection.categoryLabel} · ${selection.campaignLabel}`,
+
+      segmentType:
+        "combination" as const,
     };
   }
 
-  if (selection.hasCampaign) {
+  if (
+    selection.hasCampaign
+  ) {
     return {
-      title: `Catálogo Mayorista · ${selection.campaignLabel}`,
-      subtitle: `Productos seleccionados para la campaña ${selection.campaignLabel}. Precios y productos sujetos a disponibilidad.`,
-      segmentLabel: selection.campaignLabel,
-      segmentType: "campaign" as const,
+      title:
+        `Catálogo Mayorista · ${selection.campaignLabel}`,
+
+      subtitle:
+        `Productos seleccionados para la campaña ${selection.campaignLabel}. Precios y productos sujetos a disponibilidad.`,
+
+      segmentLabel:
+        selection.campaignLabel,
+
+      segmentType:
+        "campaign" as const,
     };
   }
 
-  if (selection.hasCategory) {
+  if (
+    selection.hasCategory
+  ) {
     return {
-      title: `Catálogo Mayorista · ${selection.categoryLabel}`,
-      subtitle: `Selección comercial de productos de la categoría ${selection.categoryLabel} para pedidos mayoristas.`,
-      segmentLabel: selection.categoryLabel,
-      segmentType: "category" as const,
+      title:
+        `Catálogo Mayorista · ${selection.categoryLabel}`,
+
+      subtitle:
+        `Selección comercial de productos de la categoría ${selection.categoryLabel} para pedidos mayoristas.`,
+
+      segmentLabel:
+        selection.categoryLabel,
+
+      segmentType:
+        "category" as const,
     };
   }
 
   return {
-    title: "Catálogo Mayorista",
+    title:
+      "Catálogo Mayorista",
+
     subtitle:
       "Productos seleccionados para emprendedores, tiendas y ventas por campaña.",
-    segmentLabel: "General",
-    segmentType: "general" as const,
+
+    segmentLabel:
+      "General",
+
+    segmentType:
+      "general" as const,
   };
 };
 
@@ -77,71 +159,257 @@ export const buildCatalogPdfDates = (
   generatedDate: Date,
   validityDays: number,
 ) => ({
-  generatedAt: formatDate(generatedDate, true),
-  validUntil: formatDate(addDays(generatedDate, validityDays)),
+  generatedAt:
+    formatDate(
+      generatedDate,
+      true,
+    ),
+
+  validUntil:
+    formatDate(
+      addDays(
+        generatedDate,
+        validityDays,
+      ),
+    ),
 });
 
-export const useCatalogPdfPageModel = (validityDays: number) => {
-  const [searchParams] = useSearchParams();
-  const linkContract = useMemo(
-    () => parseCatalogPdfLink(searchParams),
-    [searchParams],
-  );
-  const categoryId = linkContract.ok
-    ? linkContract.contract.categoryId ?? ""
-    : INVALID_PDF_LINK;
-  const campaignId = linkContract.ok
-    ? linkContract.contract.campaignId ?? ""
-    : INVALID_PDF_LINK;
+export const useCatalogPdfPageModel = (
+  validityDays: number,
+) => {
+  const [
+    searchParams,
+  ] =
+    useSearchParams();
 
-  const { data, isLoading, isFullCatalogLoaded } =
-    useCatalogData("todas");
-  const { campaigns, isLoading: isCampaignRegistryLoading } =
-    useCatalogCampaigns({ includeInactive: true });
-  const generatedDate = useMemo(() => new Date(), []);
-  const dates = useMemo(
-    () => buildCatalogPdfDates(generatedDate, validityDays),
-    [generatedDate, validityDays],
-  );
-  const selection = useMemo(
-    () =>
-      resolveCatalogSelection({
-        products: data,
-        categories: CATEGORY_CONFIG,
+  const linkContract =
+    useMemo(
+      () =>
+        parseCatalogPdfLink(
+          searchParams,
+        ),
+      [
+        searchParams,
+      ],
+    );
+
+  const isV2 =
+    linkContract.ok &&
+    linkContract.contract.version ===
+      "2";
+
+  const v2Contract =
+    isV2 &&
+    linkContract.ok &&
+    linkContract.contract.version ===
+      "2"
+      ? linkContract.contract
+      : null;
+
+  const categoryId =
+    linkContract.ok &&
+    linkContract.contract.version ===
+      "1"
+      ? linkContract
+          .contract
+          .categoryId ??
+        ""
+      : linkContract.ok
+        ? ""
+        : INVALID_PDF_LINK;
+
+  const campaignId =
+    linkContract.ok &&
+    linkContract.contract.version ===
+      "1"
+      ? linkContract
+          .contract
+          .campaignId ??
+        ""
+      : linkContract.ok
+        ? ""
+        : INVALID_PDF_LINK;
+
+  const {
+    data,
+    isLoading,
+    isFullCatalogLoaded,
+  } =
+    useCatalogData(
+      "todas",
+    );
+
+  const {
+    campaigns,
+    isLoading:
+      isCampaignRegistryLoading,
+  } =
+    useCatalogCampaigns({
+      includeInactive:
+        true,
+    });
+
+  const generatedDate =
+    useMemo(
+      () =>
+        new Date(),
+      [],
+    );
+
+  const dates =
+    useMemo(
+      () =>
+        buildCatalogPdfDates(
+          generatedDate,
+          validityDays,
+        ),
+      [
+        generatedDate,
+        validityDays,
+      ],
+    );
+
+  const v1Selection =
+    useMemo(
+      () =>
+        resolveCatalogSelection({
+          products:
+            data,
+
+          categories:
+            CATEGORY_CONFIG,
+
+          campaigns,
+
+          categoryId,
+          campaignId,
+        }),
+      [
+        data,
         campaigns,
         categoryId,
         campaignId,
-      }),
-    [data, campaigns, categoryId, campaignId],
-  );
-  const copy = useMemo(
-    () => buildCatalogPdfCopy(selection),
-    [selection],
-  );
-  const products = useMemo(
-    () => mapProductsToPdfProducts(selection.products),
-    [selection.products],
-  );
-  const categorySections = useMemo(
-    () => buildPdfCategorySections(products),
-    [products],
-  );
+      ],
+    );
+
+  const v2Selection =
+    useMemo(
+      () =>
+        v2Contract
+          ? resolveCatalogPdfV2Selection({
+              products:
+                data,
+
+              categories:
+                CATEGORY_CONFIG,
+
+              campaigns,
+
+              contract:
+                v2Contract,
+            })
+          : null,
+      [
+        data,
+        campaigns,
+        v2Contract,
+      ],
+    );
+
+  const selectedProducts =
+    v2Selection
+      ? v2Selection.products
+      : v1Selection.products;
+
+  const copy =
+    useMemo(
+      () =>
+        v2Selection
+          ? buildCatalogPdfV2Copy(
+              v2Selection,
+            )
+          : buildCatalogPdfCopy(
+              v1Selection,
+            ),
+      [
+        v1Selection,
+        v2Selection,
+      ],
+    );
+
+  const products =
+    useMemo(
+      () =>
+        mapProductsToPdfProducts(
+          selectedProducts,
+        ),
+      [
+        selectedProducts,
+      ],
+    );
+
+  const categorySections =
+    useMemo(
+      () =>
+        buildPdfCategorySections(
+          products,
+        ),
+      [
+        products,
+      ],
+    );
+
+  const v2HasCampaign =
+    Boolean(
+      v2Contract
+        ?.campaignIds
+        .length,
+    );
+
   const selectionIsReady =
     isFullCatalogLoaded &&
-    (!campaignId || !isCampaignRegistryLoading);
-  const hasProducts = products.length > 0;
+    (
+      isV2
+        ? (
+            !v2HasCampaign ||
+            !isCampaignRegistryLoading
+          )
+        : (
+            !campaignId ||
+            !isCampaignRegistryLoading
+          )
+    );
+
+  const hasProducts =
+    products.length >
+    0;
 
   return {
     ...dates,
+
     copy,
     products,
     categorySections,
     selectionIsReady,
     hasProducts,
-    showCategorySections: !selection.hasCategory,
+
+    showCategorySections:
+      v2Selection
+        ? v2Selection
+            .showCategorySections
+        : !v1Selection
+            .hasCategory,
+
     showLoadingState:
-      !hasProducts && (isLoading || !selectionIsReady),
+      !hasProducts &&
+      (
+        isLoading ||
+        !selectionIsReady
+      ),
+
     showEmptyState:
-      !hasProducts && !isLoading && selectionIsReady,
+      !hasProducts &&
+      !isLoading &&
+      selectionIsReady,
   };
 };
