@@ -21,6 +21,10 @@ import type {
   CatalogPdfLinkContractV2,
 } from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
 
+import {
+  mixStrategicCatalogProducts,
+} from "./StrategicCatalogMixer";
+
 export interface CatalogPdfV2SelectionResult {
   products: Product[];
 
@@ -203,9 +207,20 @@ export function resolveCatalogPdfV2Selection({
     resolution?.products ??
     [];
 
+  const editorialProducts =
+    mixStrategicCatalogProducts({
+      products:
+        selectedProducts,
+
+      campaigns,
+
+      selectedCampaignIds:
+        campaignIds,
+    });
+
   return {
     products:
-      selectedProducts,
+      editorialProducts,
 
     categoryIds,
     campaignIds,
