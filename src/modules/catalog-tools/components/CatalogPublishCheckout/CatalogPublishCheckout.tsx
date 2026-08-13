@@ -1,3 +1,7 @@
+import {
+  useState,
+} from "react";
+
 import type {
   CatalogComposition,
 } from "@/modules/catalog/domain/CatalogComposition";
@@ -10,6 +14,14 @@ import {
   resolveCatalogPublicationCover,
   type CatalogPublicationIdentity,
 } from "@/modules/catalog/domain/CatalogPublicationIdentity";
+
+import {
+  buildCatalogPdfUrl,
+} from "@/modules/catalog-tools/services/BuildCatalogPdfUrl";
+
+import {
+  buildApplicationWhatsAppUrl,
+} from "@/shared/config/application";
 
 import "./CatalogPublishCheckout.css";
 
@@ -48,6 +60,105 @@ interface CatalogPublishCheckoutProps {
     string;
 }
 
+const copyToClipboard =
+  async (
+    value:
+      string,
+  ) => {
+    if (
+      navigator
+        .clipboard
+        ?.writeText
+    ) {
+      await navigator
+        .clipboard
+        .writeText(
+          value,
+        );
+
+      return;
+    }
+
+    const textarea =
+      document.createElement(
+        "textarea",
+      );
+
+    textarea.value =
+      value;
+
+    textarea.style.position =
+      "fixed";
+
+    textarea.style.opacity =
+      "0";
+
+    document.body.appendChild(
+      textarea,
+    );
+
+    textarea.select();
+
+    document.execCommand(
+      "copy",
+    );
+
+    document.body.removeChild(
+      textarea,
+    );
+  };
+
+const buildCatalogShareMessage =
+  ({
+    categorySummary,
+    campaignSummary,
+    productCount,
+    publicUrl,
+  }: {
+    categorySummary:
+      string;
+
+    campaignSummary:
+      string;
+
+    productCount:
+      number;
+
+    publicUrl:
+      string;
+  }) => {
+    const scope =
+      [
+        categorySummary,
+        campaignSummary !==
+        "Sin campaña específica"
+          ? campaignSummary
+          : "",
+      ]
+        .filter(
+          Boolean,
+        )
+        .join(
+          " · ",
+        );
+
+    return [
+      "Hola 👋, te comparto este catálogo mayorista Wooly.",
+      scope
+        ? `Selección: ${scope}.`
+        : "",
+      `Productos disponibles: ${productCount}.`,
+      "",
+      `Ver catálogo: ${publicUrl}`,
+    ]
+      .filter(
+        Boolean,
+      )
+      .join(
+        "\n",
+      );
+  };
+
 export default function CatalogPublishCheckout({
   composition,
   resolution,
@@ -58,6 +169,18 @@ export default function CatalogPublishCheckout({
   categorySummary,
   campaignSummary,
 }: CatalogPublishCheckoutProps) {
+  const [
+    copyStatus,
+    setCopyStatus,
+  ] =
+    useState<
+      "" |
+      "link" |
+      "message"
+    >(
+      "",
+    );
+
   const resolvedCover =
     resolveCatalogPublicationCover(
       publicationIdentity,
@@ -105,13 +228,93 @@ export default function CatalogPublishCheckout({
       .length;
 
   const hasProducts =
-    resolution.productIds.length >
+    resolution
+      .productIds
+      .length >
     0;
 
   const isV2Publicable =
     hasProducts &&
     eligibility.status ===
       "v2-publicable";
+
+  const publicUrl =
+    isV2Publicable
+      ? buildCatalogPdfUrl({
+          origin:
+            window.location.origin,
+
+          ...eligibility.v2,
+        })
+      : "";
+
+  const shareMessage =
+    publicUrl
+      ? buildCatalogShareMessage({
+          categorySummary,
+          campaignSummary,
+
+          productCount:
+            resolution
+              .productIds
+              .length,
+
+          publicUrl,
+        })
+      : "";
+
+  const whatsappUrl =
+    shareMessage
+      ? buildApplicationWhatsAppUrl(
+          shareMessage,
+        )
+      : "";
+
+  const handleCopyLink =
+    async () => {
+      if (!publicUrl) {
+        return;
+      }
+
+      await copyToClipboard(
+        publicUrl,
+      );
+
+      setCopyStatus(
+        "link",
+      );
+
+      window.setTimeout(
+        () =>
+          setCopyStatus(
+            "",
+          ),
+        1800,
+      );
+    };
+
+  const handleCopyMessage =
+    async () => {
+      if (!shareMessage) {
+        return;
+      }
+
+      await copyToClipboard(
+        shareMessage,
+      );
+
+      setCopyStatus(
+        "message",
+      );
+
+      window.setTimeout(
+        () =>
+          setCopyStatus(
+            "",
+          ),
+        1800,
+      );
+    };
 
   return (
     <section className="catalog-publish-checkout">
@@ -452,16 +655,74 @@ export default function CatalogPublishCheckout({
             </p>
           </div>
         ) : isV2Publicable ? (
-          <div className="catalog-publish-checkout__status is-ready">
-            <strong>
-              ✓ Enlace público disponible
-            </strong>
+          <section className="catalog-publish-checkout__ready">
+            <header>
+              <span>
+                Resultado
+              </span>
 
-            <p>
-              Esta composición puede representarse con
-              el contrato público actual.
-            </p>
-          </div>
+              <h4>
+                ✓ Catálogo listo
+              </h4>
+
+              <p>
+                Este enlace público ya puede abrirse y
+                compartirse con el cliente.
+              </p>
+            </header>
+
+            <div className="catalog-publish-checkout__publicUrl">
+              {publicUrl}
+            </div>
+
+            <div className="catalog-publish-checkout__actions">
+              <a
+                href={
+                  publicUrl
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="is-primary"
+              >
+                Ver catálogo
+              </a>
+
+              <button
+                type="button"
+                onClick={
+                  handleCopyLink
+                }
+              >
+                {copyStatus ===
+                "link"
+                  ? "✓ Enlace copiado"
+                  : "Copiar enlace"}
+              </button>
+
+              <button
+                type="button"
+                onClick={
+                  handleCopyMessage
+                }
+              >
+                {copyStatus ===
+                "message"
+                  ? "✓ Mensaje copiado"
+                  : "Copiar mensaje"}
+              </button>
+
+              <a
+                href={
+                  whatsappUrl
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="is-whatsapp"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </section>
         ) : (
           <div className="catalog-publish-checkout__status is-custom">
             <strong>
@@ -473,13 +734,13 @@ export default function CatalogPublishCheckout({
               público propio para conservar exactamente
               su selección o presentación.
             </p>
+
+            <small>
+              Puedes conservarla en Mis catálogos.
+              No se generará una URL parcial o incorrecta.
+            </small>
           </div>
         )}
-
-        <p className="catalog-publish-checkout__note">
-          La generación del enlace y las acciones para
-          compartir se incorporan en A6-C.
-        </p>
       </aside>
     </section>
   );
