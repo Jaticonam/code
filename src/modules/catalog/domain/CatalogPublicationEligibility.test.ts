@@ -75,7 +75,7 @@ describe(
   "CatalogPublicationEligibility",
   () => {
     it(
-      "publica por V2 el catálogo general",
+      "publica por V1 el catálogo general",
       () => {
         expect(
           resolveCatalogPublicationEligibility({
@@ -87,9 +87,9 @@ describe(
           }),
         ).toEqual({
           status:
-            "v2-publicable",
+            "v1-publicable",
 
-          v2: {},
+          v1: {},
 
           reasons: [],
 
@@ -103,7 +103,7 @@ describe(
     );
 
     it(
-      "publica por V2 una categoría",
+      "publica por V1 una categoría",
       () => {
         const result =
           resolveCatalogPublicationEligibility({
@@ -127,9 +127,9 @@ describe(
           result,
         ).toMatchObject({
           status:
-            "v2-publicable",
+            "v1-publicable",
 
-          v2: {
+          v1: {
             categoryId:
               "flores",
           },
@@ -138,7 +138,7 @@ describe(
     );
 
     it(
-      "publica por V2 una campaña",
+      "publica por V1 una campaña",
       () => {
         const result =
           resolveCatalogPublicationEligibility({
@@ -162,9 +162,9 @@ describe(
           result,
         ).toMatchObject({
           status:
-            "v2-publicable",
+            "v1-publicable",
 
-          v2: {
+          v1: {
             campaignId:
               "navidad",
           },
@@ -173,7 +173,7 @@ describe(
     );
 
     it(
-      "publica por V2 una categoría más una campaña",
+      "publica por V1 una categoría más una campaña",
       () => {
         const result =
           resolveCatalogPublicationEligibility({
@@ -198,9 +198,9 @@ describe(
           result,
         ).toMatchObject({
           status:
-            "v2-publicable",
+            "v1-publicable",
 
-          v2: {
+          v1: {
             categoryId:
               "flores",
 
@@ -212,7 +212,7 @@ describe(
     );
 
     it(
-      "requiere public id para varias categorías",
+      "publica por V2 varias categorías",
       () => {
         const result =
           resolveCatalogPublicationEligibility({
@@ -237,18 +237,26 @@ describe(
           result,
         ).toMatchObject({
           status:
-            "requires-public-id",
+            "v2-publicable",
+
+          v2: {
+            categoryIds: [
+              "flores",
+              "peluches",
+            ],
+
+            campaignIds:
+              [],
+          },
 
           reasons:
-            expect.arrayContaining([
-              "MULTIPLE_CATEGORIES",
-            ]),
+            [],
         });
       },
     );
 
     it(
-      "requiere public id para varias campañas",
+      "publica por V2 varias campañas",
       () => {
         const result =
           resolveCatalogPublicationEligibility({
@@ -273,12 +281,65 @@ describe(
           result,
         ).toMatchObject({
           status:
-            "requires-public-id",
+            "v2-publicable",
+
+          v2: {
+            categoryIds:
+              [],
+
+            campaignIds: [
+              "navidad",
+              "san-valentin",
+            ],
+          },
 
           reasons:
-            expect.arrayContaining([
-              "MULTIPLE_CAMPAIGNS",
-            ]),
+            [],
+        });
+      },
+    );
+
+    it(
+      "publica por V2 múltiples categorías y campañas",
+      () => {
+        const result =
+          resolveCatalogPublicationEligibility({
+            composition:
+              createComposition({
+                filters: {
+                  categoryIds: [
+                    "flores",
+                    "peluches",
+                  ],
+
+                  campaignIds: [
+                    "dia-novia",
+                    "premium",
+                  ],
+                },
+              }),
+
+            resolution:
+              createResolution(),
+          });
+
+        expect(
+          result,
+        ).toMatchObject({
+          status:
+            "v2-publicable",
+
+          v2: {
+            categoryIds: [
+              "flores",
+              "peluches",
+            ],
+
+            campaignIds: [
+              "dia-novia",
+              "premium",
+            ],
+          },
         });
       },
     );
@@ -323,7 +384,7 @@ describe(
           result,
         ).toMatchObject({
           status:
-            "v2-publicable",
+            "v1-publicable",
 
           effectiveAddedProductIds:
             [],
@@ -417,7 +478,7 @@ describe(
           result,
         ).toMatchObject({
           status:
-            "v2-publicable",
+            "v1-publicable",
 
           effectiveRemovedProductIds:
             [],
@@ -472,7 +533,7 @@ describe(
     );
 
     it(
-      "permite V2 cuando inclusión y exclusión no cambian el resultado final",
+      "permite V1 cuando inclusión y exclusión no cambian el resultado final",
       () => {
         const result =
           resolveCatalogPublicationEligibility({
@@ -515,7 +576,7 @@ describe(
         expect(
           result.status,
         ).toBe(
-          "v2-publicable",
+          "v1-publicable",
         );
       },
     );

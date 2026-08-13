@@ -233,18 +233,25 @@ export default function CatalogPublishCheckout({
       .length >
     0;
 
+  const isV1Publicable =
+    hasProducts &&
+    eligibility.status ===
+      "v1-publicable";
+
   const isV2Publicable =
     hasProducts &&
     eligibility.status ===
       "v2-publicable";
 
   const publicUrl =
-    isV2Publicable
+    isV1Publicable &&
+    eligibility.status ===
+      "v1-publicable"
       ? buildCatalogPdfUrl({
           origin:
             window.location.origin,
 
-          ...eligibility.v2,
+          ...eligibility.v1,
         })
       : "";
 
@@ -654,7 +661,7 @@ export default function CatalogPublishCheckout({
               continuar.
             </p>
           </div>
-        ) : isV2Publicable ? (
+        ) : isV1Publicable ? (
           <section className="catalog-publish-checkout__ready">
             <header>
               <span>
@@ -723,6 +730,23 @@ export default function CatalogPublishCheckout({
               </a>
             </div>
           </section>
+        ) : isV2Publicable ? (
+          <div className="catalog-publish-checkout__status is-custom">
+            <strong>
+              Combinación múltiple preparada
+            </strong>
+
+            <p>
+              Esta selección puede publicarse mediante
+              el contrato PDF V2.
+            </p>
+
+            <small>
+              El enlace se habilitará cuando el lector
+              público V2 quede conectado. No se generará
+              una URL incompleta mientras tanto.
+            </small>
+          </div>
         ) : (
           <div className="catalog-publish-checkout__status is-custom">
             <strong>

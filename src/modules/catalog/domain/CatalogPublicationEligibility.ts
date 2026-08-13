@@ -12,8 +12,6 @@ import type {
 
 export type CatalogPublicationEligibilityReason =
   | "MANUAL_MODE"
-  | "MULTIPLE_CATEGORIES"
-  | "MULTIPLE_CAMPAIGNS"
   | "EFFECTIVE_INCLUDED_PRODUCTS"
   | "EFFECTIVE_EXCLUDED_PRODUCTS"
   | "CUSTOM_TITLE"
@@ -24,10 +22,18 @@ export type CatalogPublicationEligibilityReason =
   | "MISSING_INCLUDED_PRODUCTS"
   | "UNRESOLVED_COMPOSITION";
 
-export interface CatalogV2PublicationParams {
+export interface CatalogV1PublicationParams {
   categoryId?: string;
 
   campaignId?: string;
+}
+
+export interface CatalogV2PublicationParams {
+  categoryIds:
+    readonly string[];
+
+  campaignIds:
+    readonly string[];
 }
 
 export interface ResolveCatalogPublicationEligibilityParams {
@@ -50,6 +56,18 @@ interface CatalogPublicationEligibilityBase {
 }
 
 export type CatalogPublicationEligibility =
+  | (
+      CatalogPublicationEligibilityBase & {
+        status:
+          "v1-publicable";
+
+        v1:
+          CatalogV1PublicationParams;
+
+        reasons:
+          readonly [];
+      }
+    )
   | (
       CatalogPublicationEligibilityBase & {
         status:
@@ -248,23 +266,6 @@ export function resolveCatalogPublicationEligibility({
     );
   }
 
-  if (
-    categoryIds.length >
-    1
-  ) {
-    reasons.push(
-      "MULTIPLE_CATEGORIES",
-    );
-  }
-
-  if (
-    campaignIds.length >
-    1
-  ) {
-    reasons.push(
-      "MULTIPLE_CAMPAIGNS",
-    );
-  }
 
   if (
     effectiveAddedProductIds.length >
@@ -391,15 +392,39 @@ export function resolveCatalogPublicationEligibility({
     };
   }
 
-  const v2:
-    CatalogV2PublicationParams =
+  if (
+    categoryIds.length >
+      1 ||
+    campaignIds.length >
+      1
+  ) {
+    return {
+      status:
+        "v2-publicable",
+
+      v2: {
+        categoryIds,
+
+        campaignIds,
+      },
+
+      reasons: [],
+
+      effectiveAddedProductIds,
+
+      effectiveRemovedProductIds,
+    };
+  }
+
+  const v1:
+    CatalogV1PublicationParams =
       {};
 
   if (
     categoryIds.length ===
     1
   ) {
-    v2.categoryId =
+    v1.categoryId =
       categoryIds[0];
   }
 
@@ -407,15 +432,15 @@ export function resolveCatalogPublicationEligibility({
     campaignIds.length ===
     1
   ) {
-    v2.campaignId =
+    v1.campaignId =
       campaignIds[0];
   }
 
   return {
     status:
-      "v2-publicable",
+      "v1-publicable",
 
-    v2,
+    v1,
 
     reasons: [],
 
