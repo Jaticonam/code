@@ -18,6 +18,10 @@ import {
   parseCatalogPdfLink,
 } from "@/modules/catalog-tools/services/CatalogPdfLinkContract";
 
+import type {
+  CatalogPublicationProvider,
+} from "@/modules/catalog/providers/CatalogPublicationProvider";
+
 import {
   CATEGORY_CONFIG,
 } from "@/modules/catalog";
@@ -34,6 +38,10 @@ import {
   buildCatalogPdfV2Copy,
   resolveCatalogPdfV2Selection,
 } from "../services/CatalogPdfV2Selection";
+
+import {
+  useCatalogPublicPublication,
+} from "./useCatalogPublicPublication";
 
 const INVALID_PDF_LINK =
   "__invalid_pdf_link__";
@@ -176,6 +184,9 @@ export const buildCatalogPdfDates = (
 
 export const useCatalogPdfPageModel = (
   validityDays: number,
+
+  publicationProvider:
+    CatalogPublicationProvider | null = null,
 ) => {
   const [
     searchParams,
@@ -215,12 +226,22 @@ export const useCatalogPdfPageModel = (
    * Este guard evita que ?id=... pueda degradarse
    * accidentalmente al catálogo general V1.
    */
+  const publicId =
+    linkContract.ok
+      ? linkContract
+          .contract
+          .publicId ?? ""
+      : "";
+
   const isPublicId =
-    linkContract.ok &&
     Boolean(
-      linkContract
-        .contract
-        .publicId,
+      publicId,
+    );
+
+  const publicPublication =
+    useCatalogPublicPublication(
+      publicId,
+      publicationProvider,
     );
 
   const categoryId =
@@ -385,6 +406,7 @@ export const useCatalogPdfPageModel = (
     );
 
   const selectionIsReady =
+    !isPublicId &&
     isFullCatalogLoaded &&
     (
       isV2
@@ -411,6 +433,14 @@ export const useCatalogPdfPageModel = (
     selectionIsReady,
     hasProducts,
 
+    isPublicId,
+
+    publicPublicationStatus:
+      publicPublication.status,
+
+    publicPublication:
+      publicPublication.publication,
+
     showCategorySections:
       v2Selection
         ? v2Selection
@@ -419,6 +449,7 @@ export const useCatalogPdfPageModel = (
             .hasCategory,
 
     showLoadingState:
+      !isPublicId &&
       !hasProducts &&
       (
         isLoading ||
@@ -426,6 +457,7 @@ export const useCatalogPdfPageModel = (
       ),
 
     showEmptyState:
+      !isPublicId &&
       !hasProducts &&
       !isLoading &&
       selectionIsReady,

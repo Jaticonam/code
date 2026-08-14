@@ -15,6 +15,56 @@ import "./CatalogPdfPage.css";
 const applicationConfig =
   getApplicationConfig();
 
+const PUBLIC_PUBLICATION_STATE_COPY = {
+  unavailable: {
+    title:
+      "Catálogo personalizado no disponible",
+
+    description:
+      "Este enlace personalizado todavía no puede abrirse desde este entorno.",
+  },
+
+  loading: {
+    title:
+      "Cargando catálogo personalizado...",
+
+    description:
+      "Estamos verificando la publicación asociada a este enlace.",
+  },
+
+  "not-found": {
+    title:
+      "Catálogo no encontrado",
+
+    description:
+      "El enlace no corresponde a una publicación disponible.",
+  },
+
+  expired: {
+    title:
+      "Este catálogo ha vencido",
+
+    description:
+      "Solicita un enlace actualizado para consultar la selección vigente.",
+  },
+
+  error: {
+    title:
+      "No pudimos abrir este catálogo",
+
+    description:
+      "Ocurrió un problema al verificar la publicación. Intenta nuevamente.",
+  },
+
+  ready: {
+    title:
+      "Catálogo personalizado validado",
+
+    description:
+      "La publicación está vigente y fue verificada correctamente.",
+  },
+} as const;
+
 export default function CatalogPdfPage() {
   const {
     generatedAt,
@@ -27,10 +77,19 @@ export default function CatalogPdfPage() {
     showCategorySections,
     showLoadingState,
     showEmptyState,
+    isPublicId,
+    publicPublicationStatus,
   } = useCatalogPdfPageModel(
     applicationConfig.commerce.pdfValidityDays,
   );
 
+  const publicPublicationState =
+    publicPublicationStatus ===
+      "idle"
+      ? null
+      : PUBLIC_PUBLICATION_STATE_COPY[
+          publicPublicationStatus
+        ];
   const handlePrint = () => {
     window.print();
   };
@@ -52,7 +111,7 @@ export default function CatalogPdfPage() {
             desde el navegador.
           </p>
 
-          {!selectionIsReady ? (
+          {!isPublicId && !selectionIsReady ? (
             <p className="catalog-pdf-toolbar__warning">
               El catálogo o el registro de campañas
               todavía está cargando. Espera unos
@@ -89,6 +148,21 @@ export default function CatalogPdfPage() {
           )}
           isComplete={selectionIsReady}
         />
+
+        {publicPublicationState ? (
+          <section
+            className="catalog-pdf-state no-print"
+            aria-live="polite"
+          >
+            <h2>
+              {publicPublicationState.title}
+            </h2>
+
+            <p>
+              {publicPublicationState.description}
+            </p>
+          </section>
+        ) : null}
 
         {showLoadingState ? (
           <section className="catalog-pdf-state">
