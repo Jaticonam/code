@@ -56,13 +56,7 @@ const PUBLIC_PUBLICATION_STATE_COPY = {
       "Ocurrió un problema al verificar la publicación. Intenta nuevamente.",
   },
 
-  ready: {
-    title:
-      "Catálogo personalizado validado",
 
-    description:
-      "La publicación está vigente y fue verificada correctamente.",
-  },
 } as const;
 
 export default function CatalogPdfPage() {
@@ -85,7 +79,9 @@ export default function CatalogPdfPage() {
 
   const publicPublicationState =
     publicPublicationStatus ===
-      "idle"
+      "idle" ||
+    publicPublicationStatus ===
+      "ready"
       ? null
       : PUBLIC_PUBLICATION_STATE_COPY[
           publicPublicationStatus

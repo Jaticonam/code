@@ -40,6 +40,10 @@ import {
 } from "../services/CatalogPdfV2Selection";
 
 import {
+  resolveCatalogPublicPublicationSelection,
+} from "../services/CatalogPublicPublicationSelection";
+
+import {
   useCatalogPublicPublication,
 } from "./useCatalogPublicPublication";
 
@@ -244,6 +248,10 @@ export const useCatalogPdfPageModel = (
       publicationProvider,
     );
 
+  const publicResource =
+    publicPublication
+      .publication;
+
   const categoryId =
     linkContract.ok &&
     linkContract.contract.version ===
@@ -297,12 +305,36 @@ export const useCatalogPdfPageModel = (
   const dates =
     useMemo(
       () =>
-        buildCatalogPdfDates(
-          generatedDate,
-          validityDays,
-        ),
+        isPublicId &&
+        publicResource
+          ? {
+              generatedAt:
+                formatDate(
+                  new Date(
+                    publicResource
+                      .publication
+                      .publishedAt,
+                  ),
+                  true,
+                ),
+
+              validUntil:
+                formatDate(
+                  new Date(
+                    publicResource
+                      .publication
+                      .validUntil,
+                  ),
+                ),
+            }
+          : buildCatalogPdfDates(
+              generatedDate,
+              validityDays,
+            ),
       [
         generatedDate,
+        isPublicId,
+        publicResource,
         validityDays,
       ],
     );
@@ -354,17 +386,88 @@ export const useCatalogPdfPageModel = (
       ],
     );
 
+  const publicHasCampaign =
+    Boolean(
+      publicResource
+        ?.composition
+        .filters
+        .campaignIds
+        .length,
+    );
+
+  const publicCatalogIsReady =
+    isPublicId &&
+    publicPublication.status ===
+      "ready" &&
+    Boolean(
+      publicResource,
+    ) &&
+    isFullCatalogLoaded &&
+    (
+      !publicHasCampaign ||
+      !isCampaignRegistryLoading
+    );
+
+  const publicSelection =
+    useMemo(
+      () => {
+        if (
+          !publicCatalogIsReady ||
+          !publicResource
+        ) {
+          return null;
+        }
+
+        return resolveCatalogPublicPublicationSelection({
+          publication:
+            publicResource,
+
+          products:
+            data,
+
+          campaigns,
+        });
+      },
+      [
+        campaigns,
+        data,
+        publicCatalogIsReady,
+        publicResource,
+      ],
+    );
+
   const copy =
     useMemo(
       () =>
-        v2Selection
-          ? buildCatalogPdfV2Copy(
-              v2Selection,
-            )
-          : buildCatalogPdfCopy(
-              v1Selection,
-            ),
+        isPublicId &&
+        publicResource
+          ? {
+              title:
+                publicResource
+                  .publicationIdentity
+                  .title,
+
+              subtitle:
+                publicResource
+                  .publicationIdentity
+                  .description,
+
+              segmentLabel:
+                "Personalizado",
+
+              segmentType:
+                "general" as const,
+            }
+          : v2Selection
+            ? buildCatalogPdfV2Copy(
+                v2Selection,
+              )
+            : buildCatalogPdfCopy(
+                v1Selection,
+              ),
       [
+        isPublicId,
+        publicResource,
         v1Selection,
         v2Selection,
       ],
@@ -375,13 +478,18 @@ export const useCatalogPdfPageModel = (
       () =>
         mapProductsToPdfProducts(
           isPublicId
-            ? []
+            ? (
+                publicSelection
+                  ?.products ??
+                []
+              )
             : v2Selection
               ? v2Selection.products
               : v1Selection.products,
         ),
       [
         isPublicId,
+        publicSelection,
         v1Selection,
         v2Selection,
       ],
@@ -406,19 +514,22 @@ export const useCatalogPdfPageModel = (
     );
 
   const selectionIsReady =
-    !isPublicId &&
-    isFullCatalogLoaded &&
-    (
-      isV2
-        ? (
-            !v2HasCampaign ||
-            !isCampaignRegistryLoading
+    isPublicId
+      ? publicCatalogIsReady
+      : (
+          isFullCatalogLoaded &&
+          (
+            isV2
+              ? (
+                  !v2HasCampaign ||
+                  !isCampaignRegistryLoading
+                )
+              : (
+                  !campaignId ||
+                  !isCampaignRegistryLoading
+                )
           )
-        : (
-            !campaignId ||
-            !isCampaignRegistryLoading
-          )
-    );
+        );
 
   const hasProducts =
     products.length >
@@ -442,24 +553,48 @@ export const useCatalogPdfPageModel = (
       publicPublication.publication,
 
     showCategorySections:
-      v2Selection
-        ? v2Selection
-            .showCategorySections
-        : !v1Selection
-            .hasCategory,
+      isPublicId
+        ? (
+            publicSelection
+              ?.showCategorySections ??
+            false
+          )
+        : v2Selection
+          ? v2Selection
+              .showCategorySections
+          : !v1Selection
+              .hasCategory,
 
     showLoadingState:
-      !isPublicId &&
       !hasProducts &&
       (
-        isLoading ||
-        !selectionIsReady
+        isPublicId
+          ? (
+              publicPublication
+                .status ===
+                "ready" &&
+              !selectionIsReady
+            )
+          : (
+              isLoading ||
+              !selectionIsReady
+            )
       ),
 
     showEmptyState:
-      !isPublicId &&
       !hasProducts &&
-      !isLoading &&
-      selectionIsReady,
+      (
+        isPublicId
+          ? (
+              publicPublication
+                .status ===
+                "ready" &&
+              selectionIsReady
+            )
+          : (
+              !isLoading &&
+              selectionIsReady
+            )
+      ),
   };
 };
