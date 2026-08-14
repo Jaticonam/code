@@ -1,6 +1,6 @@
-import type {
-  CatalogComposition,
-  CatalogCompositionMode,
+import {
+  sanitizeCatalogComposition,
+  type CatalogComposition,
 } from "@/modules/catalog/domain/CatalogComposition";
 
 import {
@@ -52,14 +52,6 @@ export interface CatalogCompositionDraft {
     typeof CATALOG_COMPOSITION_DRAFT_VERSION;
 }
 
-const VALID_MODES:
-  readonly CatalogCompositionMode[] =
-  [
-    "automatic",
-    "hybrid",
-    "manual",
-  ];
-
 const VALID_STATUSES:
   readonly CatalogCompositionDraftStatus[] =
   [
@@ -81,186 +73,6 @@ function isRecord(
       value,
     )
   );
-}
-
-function sanitizeStringArray(
-  value: unknown,
-): string[] | null {
-  if (!Array.isArray(value)) {
-    return null;
-  }
-
-  const result:
-    string[] = [];
-
-  const seen =
-    new Set<string>();
-
-  for (const candidate of value) {
-    if (
-      typeof candidate !==
-        "string"
-    ) {
-      return null;
-    }
-
-    const normalized =
-      candidate.trim();
-
-    if (!normalized) {
-      continue;
-    }
-
-    if (
-      seen.has(
-        normalized,
-      )
-    ) {
-      continue;
-    }
-
-    seen.add(
-      normalized,
-    );
-
-    result.push(
-      normalized,
-    );
-  }
-
-  return result;
-}
-
-function sanitizeComposition(
-  value: unknown,
-): CatalogComposition | null {
-  if (!isRecord(value)) {
-    return null;
-  }
-
-  if (
-    typeof value.mode !==
-      "string" ||
-    !VALID_MODES.includes(
-      value.mode as CatalogCompositionMode,
-    )
-  ) {
-    return null;
-  }
-
-  if (
-    !isRecord(
-      value.filters,
-    ) ||
-    !isRecord(
-      value.overrides,
-    )
-  ) {
-    return null;
-  }
-
-  const categoryIds =
-    sanitizeStringArray(
-      value.filters.categoryIds,
-    );
-
-  const campaignIds =
-    sanitizeStringArray(
-      value.filters.campaignIds,
-    );
-
-  const includedProductIds =
-    sanitizeStringArray(
-      value.overrides
-        .includedProductIds,
-    );
-
-  const excludedProductIds =
-    sanitizeStringArray(
-      value.overrides
-        .excludedProductIds,
-    );
-
-  if (
-    categoryIds ===
-      null ||
-    campaignIds ===
-      null ||
-    includedProductIds ===
-      null ||
-    excludedProductIds ===
-      null
-  ) {
-    return null;
-  }
-
-  let colors:
-    string[] = [];
-
-  let tags:
-    string[] = [];
-
-  if (
-    value.filters.attributes !==
-      undefined
-  ) {
-    if (
-      !isRecord(
-        value.filters.attributes,
-      )
-    ) {
-      return null;
-    }
-
-    const parsedColors =
-      sanitizeStringArray(
-        value.filters.attributes
-          .colors ??
-          [],
-      );
-
-    const parsedTags =
-      sanitizeStringArray(
-        value.filters.attributes
-          .tags ??
-          [],
-      );
-
-    if (
-      parsedColors ===
-        null ||
-      parsedTags ===
-        null
-    ) {
-      return null;
-    }
-
-    colors =
-      parsedColors;
-
-    tags =
-      parsedTags;
-  }
-
-  return {
-    mode:
-      value.mode as CatalogCompositionMode,
-
-    filters: {
-      categoryIds,
-      campaignIds,
-
-      attributes: {
-        colors,
-        tags,
-      },
-    },
-
-    overrides: {
-      includedProductIds,
-      excludedProductIds,
-    },
-  };
 }
 
 function isValidIsoDate(
@@ -421,7 +233,7 @@ export function sanitizeCatalogCompositionDraft(
   }
 
   const composition =
-    sanitizeComposition(
+    sanitizeCatalogComposition(
       value.composition,
     );
 

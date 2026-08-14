@@ -1,13 +1,17 @@
-import type {
-  CatalogComposition,
+import {
+  sanitizeCatalogComposition,
+  type CatalogComposition,
 } from "@/modules/catalog/domain/CatalogComposition";
 
-import type {
-  CatalogPublicationSnapshot,
+import {
+  resolveCatalogPublicationStrategy,
+  sanitizeCatalogPublicationSnapshot,
+  type CatalogPublicationSnapshot,
 } from "@/modules/catalog/domain/CatalogPublication";
 
-import type {
-  CatalogPublicationIdentity,
+import {
+  sanitizeCatalogPublicationIdentity,
+  type CatalogPublicationIdentity,
 } from "@/modules/catalog/domain/CatalogPublicationIdentity";
 
 /**
@@ -43,4 +47,104 @@ export interface CatalogPublicPublication {
 
   version:
     typeof CATALOG_PUBLIC_PUBLICATION_VERSION;
+}
+
+function isRecord(
+  value: unknown,
+): value is Record<string, unknown> {
+  return (
+    typeof value ===
+      "object" &&
+    value !==
+      null &&
+    !Array.isArray(
+      value,
+    )
+  );
+}
+
+/**
+ * Reconstruye un recurso público desde una frontera
+ * externa sin confiar en la forma recibida.
+ *
+ * Public ID mantiene mayúsculas y minúsculas. El
+ * alfabeto definitivo pertenece al futuro adapter de
+ * persistencia; aquí solo se exige un identificador no
+ * vacío.
+ */
+export function sanitizeCatalogPublicPublication(
+  value: unknown,
+): CatalogPublicPublication | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  if (
+    value.version !==
+      CATALOG_PUBLIC_PUBLICATION_VERSION
+  ) {
+    return null;
+  }
+
+  if (
+    typeof value.publicId !==
+      "string"
+  ) {
+    return null;
+  }
+
+  const publicId =
+    value.publicId.trim();
+
+  if (!publicId) {
+    return null;
+  }
+
+  const composition =
+    sanitizeCatalogComposition(
+      value.composition,
+    );
+
+  if (!composition) {
+    return null;
+  }
+
+  const publicationIdentity =
+    sanitizeCatalogPublicationIdentity(
+      value.publicationIdentity,
+    );
+
+  if (!publicationIdentity) {
+    return null;
+  }
+
+  const publication =
+    sanitizeCatalogPublicationSnapshot(
+      value.publication,
+    );
+
+  if (!publication) {
+    return null;
+  }
+
+  const expectedStrategy =
+    resolveCatalogPublicationStrategy(
+      composition.mode,
+    );
+
+  if (
+    publication.strategy !==
+      expectedStrategy
+  ) {
+    return null;
+  }
+
+  return {
+    publicId,
+    composition,
+    publicationIdentity,
+    publication,
+    version:
+      CATALOG_PUBLIC_PUBLICATION_VERSION,
+  };
 }

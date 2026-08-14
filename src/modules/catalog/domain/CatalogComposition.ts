@@ -80,6 +80,216 @@ export interface CatalogComposition {
   overrides: CatalogCompositionOverrides;
 }
 
+const VALID_MODES:
+  readonly CatalogCompositionMode[] =
+[
+  "automatic",
+  "hybrid",
+  "manual",
+];
+
+function isRecord(
+  value: unknown,
+): value is Record<string, unknown> {
+  return (
+    typeof value ===
+      "object" &&
+    value !==
+      null &&
+    !Array.isArray(
+      value,
+    )
+  );
+}
+
+function sanitizeStringArray(
+  value: unknown,
+): string[] | null {
+  if (!Array.isArray(value)) {
+    return null;
+  }
+
+  const result:
+    string[] = [];
+
+  const seen =
+    new Set<string>();
+
+  for (const candidate of value) {
+    if (
+      typeof candidate !==
+        "string"
+    ) {
+      return null;
+    }
+
+    const normalized =
+      candidate.trim();
+
+    if (!normalized) {
+      continue;
+    }
+
+    if (
+      seen.has(
+        normalized,
+      )
+    ) {
+      continue;
+    }
+
+    seen.add(
+      normalized,
+    );
+
+    result.push(
+      normalized,
+    );
+  }
+
+  return result;
+}
+
+/**
+ * Sanitiza una composición proveniente de persistencia
+ * o de cualquier frontera externa.
+ *
+ * La regla vive en el dominio de composición para que
+ * drafts y publicaciones públicas compartan exactamente
+ * la misma semántica.
+ */
+export function sanitizeCatalogComposition(
+  value: unknown,
+): CatalogComposition | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  if (
+    typeof value.mode !==
+      "string" ||
+    !VALID_MODES.includes(
+      value.mode as CatalogCompositionMode,
+    )
+  ) {
+    return null;
+  }
+
+  if (
+    !isRecord(
+      value.filters,
+    ) ||
+    !isRecord(
+      value.overrides,
+    )
+  ) {
+    return null;
+  }
+
+  const categoryIds =
+    sanitizeStringArray(
+      value.filters.categoryIds,
+    );
+
+  const campaignIds =
+    sanitizeStringArray(
+      value.filters.campaignIds,
+    );
+
+  const includedProductIds =
+    sanitizeStringArray(
+      value.overrides
+        .includedProductIds,
+    );
+
+  const excludedProductIds =
+    sanitizeStringArray(
+      value.overrides
+        .excludedProductIds,
+    );
+
+  if (
+    categoryIds ===
+      null ||
+    campaignIds ===
+      null ||
+    includedProductIds ===
+      null ||
+    excludedProductIds ===
+      null
+  ) {
+    return null;
+  }
+
+  let colors:
+    string[] = [];
+
+  let tags:
+    string[] = [];
+
+  if (
+    value.filters.attributes !==
+      undefined
+  ) {
+    if (
+      !isRecord(
+        value.filters.attributes,
+      )
+    ) {
+      return null;
+    }
+
+    const parsedColors =
+      sanitizeStringArray(
+        value.filters.attributes
+          .colors ??
+          [],
+      );
+
+    const parsedTags =
+      sanitizeStringArray(
+        value.filters.attributes
+          .tags ??
+          [],
+      );
+
+    if (
+      parsedColors ===
+        null ||
+      parsedTags ===
+        null
+    ) {
+      return null;
+    }
+
+    colors =
+      parsedColors;
+
+    tags =
+      parsedTags;
+  }
+
+  return {
+    mode:
+      value.mode as CatalogCompositionMode,
+
+    filters: {
+      categoryIds,
+      campaignIds,
+
+      attributes: {
+        colors,
+        tags,
+      },
+    },
+
+    overrides: {
+      includedProductIds,
+      excludedProductIds,
+    },
+  };
+}
+
 export const createEmptyCatalogComposition = (
   mode: CatalogCompositionMode = "automatic",
 ): CatalogComposition => ({
