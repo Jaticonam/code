@@ -23,6 +23,9 @@ export interface BuildCatalogPdfPathV1Params {
 
   campaignIds?:
     never;
+
+  publicId?:
+    never;
 }
 
 export interface BuildCatalogPdfPathV2Params {
@@ -40,11 +43,35 @@ export interface BuildCatalogPdfPathV2Params {
 
   campaignId?:
     never;
+
+  publicId?:
+    never;
+}
+
+export interface BuildCatalogPdfPathPublicIdParams {
+  publicId:
+    string;
+
+  version?:
+    never;
+
+  categoryId?:
+    never;
+
+  campaignId?:
+    never;
+
+  categoryIds?:
+    never;
+
+  campaignIds?:
+    never;
 }
 
 export type BuildCatalogPdfPathParams =
   | BuildCatalogPdfPathV1Params
-  | BuildCatalogPdfPathV2Params;
+  | BuildCatalogPdfPathV2Params
+  | BuildCatalogPdfPathPublicIdParams;
 
 export type BuildCatalogPdfUrlParams =
   BuildCatalogPdfPathParams & {
@@ -63,6 +90,16 @@ const cleanValue = (
   )
     .trim()
     .toLowerCase();
+
+const cleanPublicId = (
+  value?:
+    string |
+    null,
+) =>
+  String(
+    value ??
+    "",
+  ).trim();
 
 const normalizeValues = (
   values:
@@ -108,6 +145,26 @@ export const buildCatalogPdfPath = (
       .catalogPdf;
 
   if (
+    params.publicId !==
+    undefined
+  ) {
+    const publicId =
+      cleanPublicId(
+        params.publicId,
+      );
+
+    if (!publicId) {
+      throw new Error(
+        "No se puede construir un enlace PDF sin Public ID.",
+      );
+    }
+
+    return `${route}?id=${encodeURIComponent(
+      publicId,
+    )}`;
+  }
+
+  if (
     params.version ===
     CATALOG_PDF_LINK_VERSION_V2
   ) {
@@ -149,62 +206,64 @@ export const buildCatalogPdfPath = (
       );
     }
 
-    return `${route}?${query.join("&")}`;
+    return `${route}?${query.join(
+      "&",
+    )}`;
   }
 
-  const cleanCategoryId =
+  const categoryId =
     cleanValue(
       params.categoryId,
     );
 
-  const cleanCampaignId =
+  const campaignId =
     cleanValue(
       params.campaignId,
     );
 
-  const searchParams =
-    new URLSearchParams();
-
-  searchParams.set(
-    "v",
-    CATALOG_PDF_LINK_VERSION,
-  );
+  const query:
+    string[] =
+    [
+      `v=${CATALOG_PDF_LINK_VERSION}`,
+    ];
 
   if (
-    cleanCategoryId &&
-    cleanCategoryId !==
+    categoryId &&
+    categoryId !==
       "todas"
   ) {
-    searchParams.set(
-      "cat",
-      cleanCategoryId,
+    query.push(
+      `cat=${encodeURIComponent(
+        categoryId,
+      )}`,
     );
   }
 
   if (
-    cleanCampaignId
+    campaignId
   ) {
-    searchParams.set(
-      "cpg",
-      cleanCampaignId,
+    query.push(
+      `cpg=${encodeURIComponent(
+        campaignId,
+      )}`,
     );
   }
 
-  return `${route}?${searchParams.toString()}`;
+  return `${route}?${query.join(
+    "&",
+  )}`;
 };
 
-export const buildCatalogPdfUrl = (
-  params:
-    BuildCatalogPdfUrlParams,
-) => {
+export const buildCatalogPdfUrl = ({
+  origin,
+  ...params
+}: BuildCatalogPdfUrlParams) => {
   const path =
     buildCatalogPdfPath(
       params,
     );
 
-  if (
-    !params.origin
-  ) {
+  if (!origin) {
     return path;
   }
 
@@ -220,17 +279,15 @@ export const buildCatalogPdfUrl = (
 
         origin:
           String(
-            params.origin,
-          )
-            .replace(
-              /\/+$/,
-              "",
-            ),
+            origin,
+          ).replace(
+            /\/+$/,
+            "",
+          ),
       },
     }) +
     path.slice(
-      config
-        .routes
+      config.routes
         .catalogPdf
         .length,
     )

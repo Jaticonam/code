@@ -206,6 +206,23 @@ export const useCatalogPdfPageModel = (
       ? linkContract.contract
       : null;
 
+  /**
+   * A8-G1:
+   *
+   * El contrato reconoce Public ID antes de que exista
+   * todavía un provider público real.
+   *
+   * Este guard evita que ?id=... pueda degradarse
+   * accidentalmente al catálogo general V1.
+   */
+  const isPublicId =
+    linkContract.ok &&
+    Boolean(
+      linkContract
+        .contract
+        .publicId,
+    );
+
   const categoryId =
     linkContract.ok &&
     linkContract.contract.version ===
@@ -316,11 +333,6 @@ export const useCatalogPdfPageModel = (
       ],
     );
 
-  const selectedProducts =
-    v2Selection
-      ? v2Selection.products
-      : v1Selection.products;
-
   const copy =
     useMemo(
       () =>
@@ -341,10 +353,16 @@ export const useCatalogPdfPageModel = (
     useMemo(
       () =>
         mapProductsToPdfProducts(
-          selectedProducts,
+          isPublicId
+            ? []
+            : v2Selection
+              ? v2Selection.products
+              : v1Selection.products,
         ),
       [
-        selectedProducts,
+        isPublicId,
+        v1Selection,
+        v2Selection,
       ],
     );
 

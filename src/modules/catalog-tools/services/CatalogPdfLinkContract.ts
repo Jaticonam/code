@@ -25,12 +25,15 @@ export interface CatalogPdfLinkContractV1 {
 
   /**
    * Mantiene acceso estructural seguro desde consumidores
-   * V1 mientras el reader V2 se integra en A8-B.
+   * V1 mientras convive con los contratos posteriores.
    */
   categoryIds?:
     never;
 
   campaignIds?:
+    never;
+
+  publicId?:
     never;
 }
 
@@ -52,16 +55,48 @@ export interface CatalogPdfLinkContractV2 {
 
   campaignId?:
     never;
+
+  publicId?:
+    never;
+}
+
+/**
+ * Catálogo publicado mediante identidad pública.
+ *
+ * No utiliza v=1 ni v=2 porque el Public ID identifica
+ * una publicación persistida, no una combinación de
+ * filtros transportada por la URL.
+ */
+export interface CatalogPdfLinkContractPublicId {
+  publicId:
+    string;
+
+  version?:
+    never;
+
+  categoryId?:
+    never;
+
+  campaignId?:
+    never;
+
+  categoryIds?:
+    never;
+
+  campaignIds?:
+    never;
 }
 
 export type CatalogPdfLinkContract =
   | CatalogPdfLinkContractV1
-  | CatalogPdfLinkContractV2;
+  | CatalogPdfLinkContractV2
+  | CatalogPdfLinkContractPublicId;
 
 export type PdfLinkIssueCode =
   | "UNSUPPORTED_VERSION"
   | "INVALID_CATEGORY_ID"
   | "INVALID_CAMPAIGN_ID"
+  | "INVALID_PUBLIC_ID"
   | "LEGACY_PARAMETER_USED"
   | "CONFLICTING_PARAMETER"
   | "UNKNOWN_PARAMETER";
@@ -129,6 +164,22 @@ function clean(
     .toLowerCase();
 }
 
+function cleanPublicId(
+  value:
+    string | null,
+): string {
+  /**
+   * Public ID no se fuerza a lower-case.
+   *
+   * La futura capa persistente será responsable de
+   * decidir si sus identificadores son case-sensitive.
+   * El contrato web no debe destruir esa información.
+   */
+  return String(
+    value ?? "",
+  ).trim();
+}
+
 function validatedId(
   value:
     string,
@@ -163,6 +214,33 @@ function validatedId(
             ? "categoría"
             : "campaña"
         } no es válido.`,
+    };
+  }
+
+  return null;
+}
+
+function validatedPublicId(
+  value:
+    string,
+): PdfLinkIssue | null {
+  if (
+    !value ||
+    value.length >
+      MAX_ID_LENGTH ||
+    !ID_PATTERN.test(
+      value,
+    )
+  ) {
+    return {
+      code:
+        "INVALID_PUBLIC_ID",
+
+      parameter:
+        "id",
+
+      message:
+        "El Public ID del catálogo no es válido.",
     };
   }
 
@@ -365,6 +443,24 @@ function addParameterConflict(
   });
 }
 
+function addPublicIdParameterConflict(
+  errors:
+    PdfLinkIssue[],
+
+  parameter:
+    string,
+) {
+  errors.push({
+    code:
+      "CONFLICTING_PARAMETER",
+
+    parameter,
+
+    message:
+      `El parámetro "${parameter}" no puede combinarse con Public ID.`,
+  });
+}
+
 export function parseCatalogPdfLink(
   input:
     URLSearchParams |
@@ -395,6 +491,7 @@ export function parseCatalogPdfLink(
   const knownParameters =
     new Set([
       "v",
+      "id",
       ...V1_PARAMETERS,
       ...V2_PARAMETERS,
     ]);
@@ -418,6 +515,99 @@ export function parseCatalogPdfLink(
           `El parámetro desconocido "${parameter}" será ignorado.`,
       });
     }
+  }
+
+  /**
+   * Public ID tiene precedencia estructural.
+   *
+   * Si aparece "id", el enlace deja de pertenecer a V1/V2.
+   * Cualquier mezcla con filtros o versión es rechazada.
+   */
+  const publicIdValues =
+    params.getAll(
+      "id",
+    );
+
+  if (
+    publicIdValues.length >
+    0
+  ) {
+    const publicId =
+      cleanPublicId(
+        publicIdValues[0] ??
+          "",
+      );
+
+    if (
+      publicIdValues.length !==
+      1
+    ) {
+      errors.push({
+        code:
+          "CONFLICTING_PARAMETER",
+
+        parameter:
+          "id",
+
+        message:
+          "El enlace contiene más de un Public ID.",
+      });
+    }
+
+    const publicIdIssue =
+      validatedPublicId(
+        publicId,
+      );
+
+    if (
+      publicIdIssue
+    ) {
+      errors.push(
+        publicIdIssue,
+      );
+    }
+
+    [
+      "v",
+      ...V1_PARAMETERS,
+      ...V2_PARAMETERS,
+    ].forEach(
+      (parameter) => {
+        if (
+          params.has(
+            parameter,
+          )
+        ) {
+          addPublicIdParameterConflict(
+            errors,
+            parameter,
+          );
+        }
+      },
+    );
+
+    if (
+      errors.length >
+      0
+    ) {
+      return {
+        ok:
+          false,
+
+        errors,
+      };
+    }
+
+    return {
+      ok:
+        true,
+
+      contract: {
+        publicId,
+      },
+
+      warnings,
+    };
   }
 
   const requestedVersion =

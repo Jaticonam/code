@@ -605,3 +605,170 @@ describe(
     );
   },
 );
+describe(
+  "CatalogPdfLinkContract Public ID",
+  () => {
+    it(
+      "genera ruta pública canónica sin v=1 ni v=2",
+      () => {
+        expect(
+          buildCatalogPdfPath({
+            publicId:
+              " PUB-AbC123 ",
+          }),
+        ).toBe(
+          "/catalogo/pdf?id=PUB-AbC123",
+        );
+      },
+    );
+
+    it(
+      "parsea Public ID sin degradarlo a V1",
+      () => {
+        expect(
+          parseCatalogPdfLink(
+            "id=PUB-AbC123",
+          ),
+        ).toEqual({
+          ok:
+            true,
+
+          contract: {
+            publicId:
+              "PUB-AbC123",
+          },
+
+          warnings:
+            [],
+        });
+      },
+    );
+
+    it.each([
+      [
+        "vacío",
+        "id=",
+      ],
+      [
+        "espacios",
+        "id=valor%20invalido",
+      ],
+      [
+        "barra",
+        "id=%2Fhack",
+      ],
+    ])(
+      "rechaza Public ID %s",
+      (
+        _label,
+        query,
+      ) => {
+        expect(
+          parseCatalogPdfLink(
+            query,
+          ),
+        ).toMatchObject({
+          ok:
+            false,
+
+          errors:
+            expect.arrayContaining([
+              expect.objectContaining({
+                code:
+                  "INVALID_PUBLIC_ID",
+
+                parameter:
+                  "id",
+              }),
+            ]),
+        });
+      },
+    );
+
+    it(
+      "rechaza múltiples Public ID en el mismo enlace",
+      () => {
+        expect(
+          parseCatalogPdfLink(
+            "id=PUB123&id=PUB456",
+          ),
+        ).toMatchObject({
+          ok:
+            false,
+
+          errors:
+            expect.arrayContaining([
+              expect.objectContaining({
+                code:
+                  "CONFLICTING_PARAMETER",
+
+                parameter:
+                  "id",
+              }),
+            ]),
+        });
+      },
+    );
+
+    it.each([
+      "id=PUB123&v=1",
+      "id=PUB123&v=2",
+      "id=PUB123&cat=flores",
+      "id=PUB123&cpg=navidad",
+      "id=PUB123&cats=flores,peluches",
+      "id=PUB123&cpgs=navidad,premium",
+    ])(
+      "rechaza mezcla Public ID con otro contrato: %s",
+      (query) => {
+        expect(
+          parseCatalogPdfLink(
+            query,
+          ),
+        ).toMatchObject({
+          ok:
+            false,
+
+          errors:
+            expect.arrayContaining([
+              expect.objectContaining({
+                code:
+                  "CONFLICTING_PARAMETER",
+              }),
+            ]),
+        });
+      },
+    );
+
+    it(
+      "mantiene diagnóstico de parámetros desconocidos",
+      () => {
+        expect(
+          parseCatalogPdfLink(
+            "id=PUB123&extra=valor",
+          ),
+        ).toEqual({
+          ok:
+            true,
+
+          contract: {
+            publicId:
+              "PUB123",
+          },
+
+          warnings: [
+            {
+              code:
+                "UNKNOWN_PARAMETER",
+
+              parameter:
+                "extra",
+
+              message:
+                'El parámetro desconocido "extra" será ignorado.',
+            },
+          ],
+        });
+      },
+    );
+  },
+);
