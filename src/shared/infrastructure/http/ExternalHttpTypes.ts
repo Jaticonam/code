@@ -32,6 +32,16 @@ export interface ExternalRequestOptions {
   signal?: AbortSignal;
   expectedContentTypes?:
     readonly string[];
+
+  /**
+   * Opciones HTTP opcionales.
+   *
+   * Si no se especifican, fetch conserva el
+   * comportamiento GET existente.
+   */
+  method?: string;
+  headers?: HeadersInit;
+  body?: BodyInit | null;
 }
 
 export class ExternalHttpRequestError

@@ -208,6 +208,34 @@ export async function requestText(
         {
           signal:
             controller.signal,
+
+          ...(
+            options.method
+              ? {
+                  method:
+                    options.method,
+                }
+              : {}
+          ),
+
+          ...(
+            options.headers
+              ? {
+                  headers:
+                    options.headers,
+                }
+              : {}
+          ),
+
+          ...(
+            options.body !==
+              undefined
+              ? {
+                  body:
+                    options.body,
+                }
+              : {}
+          ),
         },
       );
 

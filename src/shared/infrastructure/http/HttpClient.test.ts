@@ -467,3 +467,147 @@ describe(
     );
   },
 );
+
+describe("HttpClient write options", () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(),
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it(
+    "conserva GET existente cuando no se envían opciones de escritura",
+    async () => {
+      vi.mocked(fetch)
+        .mockResolvedValue(
+          response(
+            "ok",
+          ),
+        );
+
+      await requestText(
+        "/resource",
+        {
+          source:
+            SOURCE,
+        },
+      );
+
+      expect(
+        fetch,
+      ).toHaveBeenCalledTimes(
+        1,
+      );
+
+      const requestInit =
+        vi.mocked(fetch)
+          .mock
+          .calls[0]?.[1];
+
+      expect(
+        requestInit,
+      ).toBeDefined();
+
+      expect(
+        requestInit,
+      ).not.toHaveProperty(
+        "method",
+      );
+
+      expect(
+        requestInit,
+      ).not.toHaveProperty(
+        "headers",
+      );
+
+      expect(
+        requestInit,
+      ).not.toHaveProperty(
+        "body",
+      );
+
+      expect(
+        requestInit?.signal,
+      ).toBeDefined();
+    },
+  );
+
+  it(
+    "propaga method headers y body cuando se especifican",
+    async () => {
+      vi.mocked(fetch)
+        .mockResolvedValue(
+          response(
+            '{"ok":true}',
+            {
+              contentType:
+                "application/json",
+            },
+          ),
+        );
+
+      const body =
+        JSON.stringify({
+          catalog:
+            "PUB-TEST",
+        });
+
+      await requestJson<{
+        ok:
+          boolean;
+      }>(
+        "/publications",
+        {
+          source:
+            SOURCE,
+
+          method:
+            "POST",
+
+          headers: {
+            "content-type":
+              "application/json",
+          },
+
+          body,
+        },
+      );
+
+      expect(
+        fetch,
+      ).toHaveBeenCalledTimes(
+        1,
+      );
+
+      const requestInit =
+        vi.mocked(fetch)
+          .mock
+          .calls[0]?.[1];
+
+      expect(
+        requestInit?.method,
+      ).toBe(
+        "POST",
+      );
+
+      expect(
+        requestInit?.headers,
+      ).toEqual({
+        "content-type":
+          "application/json",
+      });
+
+      expect(
+        requestInit?.body,
+      ).toBe(
+        body,
+      );
+    },
+  );
+});
