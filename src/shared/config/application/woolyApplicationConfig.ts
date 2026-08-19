@@ -43,6 +43,9 @@ export const woolyApplicationConfig = {
   catalog: {
     source: "google-sheets",
   },
+  catalogPublication: {
+    apiBaseUrl: null,
+  },
   integrations: {
     meta: {
       brandName: "Wooly Imports",

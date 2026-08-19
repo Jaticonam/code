@@ -14,6 +14,7 @@ export type ApplicationConfigIssueCode =
   | "INVALID_ROUTE"
   | "INVALID_ASSET_URL"
   | "INVALID_NUMBER"
+  | "INVALID_PUBLICATION_API_URL"
   | "UNKNOWN_CATALOG_SOURCE";
 
 export interface ApplicationConfigIssue {
@@ -47,6 +48,44 @@ function isAsset(value: string): boolean {
   if (value.startsWith("/")) return !value.startsWith("//");
   try {
     return ["http:", "https:"].includes(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+}
+
+function isCatalogPublicationApiBaseUrl(
+  value: unknown,
+  mode: ApplicationRuntimeMode,
+): boolean {
+  if (value === null) return true;
+
+  if (
+    typeof value !== "string" ||
+    !value.trim() ||
+    value !== value.trim()
+  ) {
+    return false;
+  }
+
+  try {
+    const url = new URL(value);
+
+    if (
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash
+    ) {
+      return false;
+    }
+
+    return (
+      url.protocol === "https:" ||
+      (
+        mode !== "production" &&
+        url.protocol === "http:"
+      )
+    );
   } catch {
     return false;
   }
@@ -111,6 +150,17 @@ export function validateApplicationConfig(
     !Number.isInteger(config.commerce?.pdfValidityDays) ||
     config.commerce.pdfValidityDays <= 0
   ) issue("INVALID_NUMBER", "commerce.pdfValidityDays");
+  if (
+    !isCatalogPublicationApiBaseUrl(
+      config.catalogPublication?.apiBaseUrl,
+      mode,
+    )
+  ) {
+    issue(
+      "INVALID_PUBLICATION_API_URL",
+      "catalogPublication.apiBaseUrl",
+    );
+  }
   const catalogSource =
     config.catalog?.source;
   const catalogSourceAllowed =

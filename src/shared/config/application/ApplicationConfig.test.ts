@@ -38,6 +38,7 @@ describe("ApplicationConfig", () => {
     ["asset", { assets: { ...woolyApplicationConfig.assets, logoUrl: "javascript:alert(1)" } }, "INVALID_ASSET_URL"],
     ["homepage asset", { assets: { ...woolyApplicationConfig.assets, shippingImageUrl: "javascript:alert(1)" } }, "INVALID_ASSET_URL"],
     ["validity", { commerce: { pdfValidityDays: 0 } }, "INVALID_NUMBER"],
+    ["publication api", { catalogPublication: { apiBaseUrl: "http://api.example.com/catalog-publications" } }, "INVALID_PUBLICATION_API_URL"],
     ["source", { catalog: { source: "unknown" } }, "UNKNOWN_CATALOG_SOURCE"],
   ])("rechaza %s", (_label, patch, code) => {
     const result = validateApplicationConfig({
@@ -164,6 +165,98 @@ describe("ApplicationConfig", () => {
     const result = resolveApplicationConfig({ publicSiteOrigin: "javascript:alert(1)" });
     expect(result.config.publicSite.origin).toBe(woolyApplicationConfig.publicSite.origin);
     expect(result.issues.map((item) => item.code)).toContain("INVALID_ORIGIN");
+  });
+
+  it("mantiene deshabilitada la publicación pública por defecto", () => {
+    const result =
+      resolveApplicationConfig();
+
+    expect(
+      result.config
+        .catalogPublication
+        .apiBaseUrl,
+    ).toBeNull();
+  });
+
+  it("normaliza un endpoint HTTPS público válido", () => {
+    const result =
+      resolveApplicationConfig(
+        {
+          catalogPublicationApiBaseUrl:
+            "https://api.example.com/catalog-publications/",
+        },
+        "production",
+      );
+
+    expect(
+      result.config
+        .catalogPublication
+        .apiBaseUrl,
+    ).toBe(
+      "https://api.example.com/catalog-publications",
+    );
+
+    expect(
+      result.issues,
+    ).toEqual([]);
+  });
+
+  it.each([
+    "http://api.example.com/catalog-publications",
+    "https://user:password@api.example.com/catalog-publications",
+    "https://api.example.com/catalog-publications?tenant=wooly",
+    "https://api.example.com/catalog-publications#private",
+    "javascript:alert(1)",
+  ])(
+    "descarta endpoint público inválido en producción: %s",
+    (apiBaseUrl) => {
+      const result =
+        resolveApplicationConfig(
+          {
+            catalogPublicationApiBaseUrl:
+              apiBaseUrl,
+          },
+          "production",
+        );
+
+      expect(
+        result.config
+          .catalogPublication
+          .apiBaseUrl,
+      ).toBeNull();
+
+      expect(
+        result.issues.map(
+          (item) =>
+            item.code,
+        ),
+      ).toContain(
+        "INVALID_PUBLICATION_API_URL",
+      );
+    },
+  );
+
+  it("permite HTTP explícito solo fuera de producción", () => {
+    const result =
+      resolveApplicationConfig(
+        {
+          catalogPublicationApiBaseUrl:
+            "http://localhost:3000/catalog-publications/",
+        },
+        "development",
+      );
+
+    expect(
+      result.config
+        .catalogPublication
+        .apiBaseUrl,
+    ).toBe(
+      "http://localhost:3000/catalog-publications",
+    );
+
+    expect(
+      result.issues,
+    ).toEqual([]);
   });
 
   it("construye URLs públicas sin duplicar slash", () => {

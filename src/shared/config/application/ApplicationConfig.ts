@@ -39,6 +39,9 @@ export interface ApplicationConfig {
   readonly catalog: {
     readonly source: CatalogSourceMode;
   };
+  readonly catalogPublication: {
+    readonly apiBaseUrl: string | null;
+  };
   readonly integrations: {
     readonly meta: {
       readonly brandName: string;
@@ -54,4 +57,5 @@ export type ApplicationRuntimeMode =
 export interface ApplicationPublicOverrides {
   readonly catalogSource?: unknown;
   readonly publicSiteOrigin?: unknown;
+  readonly catalogPublicationApiBaseUrl?: unknown;
 }

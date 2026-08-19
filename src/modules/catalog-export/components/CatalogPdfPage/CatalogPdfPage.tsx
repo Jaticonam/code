@@ -4,6 +4,9 @@ import {
 import {
   formatWhatsAppPhone,
 } from "@/modules/product-detail/utils/WhatsAppLink";
+import {
+  catalogPublicationProvider,
+} from "@/modules/catalog/providers/DefaultCatalogPublicationProvider";
 import { useCatalogPdfPageModel } from "../../hooks/useCatalogPdfPageModel";
 
 import CatalogPdfHeader from "../CatalogPdfHeader/CatalogPdfHeader";
@@ -75,6 +78,7 @@ export default function CatalogPdfPage() {
     publicPublicationStatus,
   } = useCatalogPdfPageModel(
     applicationConfig.commerce.pdfValidityDays,
+    catalogPublicationProvider,
   );
 
   const publicPublicationState =
