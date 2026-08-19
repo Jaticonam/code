@@ -99,7 +99,7 @@ export default function CatalogPdfPage() {
       <section className="catalog-pdf-toolbar no-print">
         <div>
           <p className="catalog-pdf-toolbar__eyebrow">
-            PDF MVP
+            Catálogo PDF
           </p>
 
           <h1 className="catalog-pdf-toolbar__title">

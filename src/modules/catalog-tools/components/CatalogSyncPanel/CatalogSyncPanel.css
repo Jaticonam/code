@@ -348,7 +348,7 @@
     grid-template-columns: 1fr;
   }
 }
-/* V1.1-A: campaign reliability */
+/* Campaign reliability */
 
 .catalog-sync-panel__metrics article small {
   display: block;
@@ -392,7 +392,7 @@
     grid-template-columns: 1fr;
   }
 }
-/* V1.1-A: collapsible panel */
+/* Collapsible panel */
 
 .catalog-sync-panel__headerActions {
   display: flex;

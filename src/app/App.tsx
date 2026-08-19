@@ -163,7 +163,7 @@ export default function App() {
                   }
                 />
 
-                {/* REDIRECCIÓN LEGACY */}
+                {/* COMPATIBILIDAD DE RUTA */}
                 <Route
                   path="/ventas/catalogos"
                   element={
@@ -188,7 +188,7 @@ export default function App() {
                   }
                 />
 
-                {/* LEGACY COMERCIAL */}
+                {/* COMPATIBILIDAD COMERCIAL */}
                 <Route
                   path="/producto/:id"
                   element={

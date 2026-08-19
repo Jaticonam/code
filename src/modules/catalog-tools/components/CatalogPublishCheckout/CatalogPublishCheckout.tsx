@@ -740,13 +740,13 @@ export default function CatalogPublishCheckout({
         ) : (
           <div className="catalog-publish-checkout__status is-custom">
             <strong>
-              Publicación individual necesaria
+              Enlace público pendiente
             </strong>
 
             <p>
-              Esta composición necesita un enlace
+              Esta composición requiere un enlace
               público propio para conservar exactamente
-              su selección o presentación.
+              su selección y presentación.
             </p>
 
             <small>
