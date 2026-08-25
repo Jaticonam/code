@@ -31,11 +31,16 @@ import {
    COMPOSICION RUNTIME DEL CATALOGO
    ========================================================= */
 
+const viteEnv =
+  (import.meta as ImportMeta & {
+    readonly env?: ImportMetaEnv;
+  }).env;
+
 const runtimeMode:
   ApplicationRuntimeMode =
-    import.meta.env.PROD
-      ? "production"
-      : "development";
+    viteEnv?.PROD === false
+      ? "development"
+      : "production";
 
 export const catalogRuntimeComposition =
   createCatalogRuntimeComposition(

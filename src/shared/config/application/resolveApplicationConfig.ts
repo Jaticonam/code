@@ -156,14 +156,23 @@ let cachedConfig: ApplicationConfig | undefined;
 
 export function getApplicationConfig(): ApplicationConfig {
   if (!cachedConfig) {
+    const viteEnv =
+      (import.meta as ImportMeta & {
+        readonly env?: ImportMetaEnv;
+      }).env;
+
     cachedConfig = resolveApplicationConfig(
       {
-        catalogSource: import.meta.env.VITE_CATALOG_SOURCE,
-        publicSiteOrigin: import.meta.env.VITE_PUBLIC_SITE_ORIGIN,
+        catalogSource:
+          viteEnv?.VITE_CATALOG_SOURCE,
+        publicSiteOrigin:
+          viteEnv?.VITE_PUBLIC_SITE_ORIGIN,
         catalogPublicationApiBaseUrl:
-          import.meta.env.VITE_CATALOG_PUBLICATION_API_BASE_URL,
+          viteEnv?.VITE_CATALOG_PUBLICATION_API_BASE_URL,
       },
-      import.meta.env.PROD ? "production" : "development",
+      viteEnv?.PROD === false
+        ? "development"
+        : "production",
     ).config;
   }
   return cachedConfig;
