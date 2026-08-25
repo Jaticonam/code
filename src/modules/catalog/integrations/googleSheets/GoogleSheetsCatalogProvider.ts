@@ -34,6 +34,10 @@ import {
 
 import { validateProducts } from "./validateProducts";
 
+import {
+  overrideProductsWithCoreMedia,
+} from "@/modules/catalog/integrations/jungCoreMedia/JungCoreMediaOverride";
+
 /* =========================================================
    SCHEMA DE PRODUCTOS
    ========================================================= */
@@ -169,8 +173,14 @@ export const googleSheetsCatalogProvider: CatalogProvider = {
       ),
     );
 
-    return validateProducts(normalizedProducts).map(
-      ({ updated_at, ...product }) => product,
+    const publishedProducts =
+      validateProducts(normalizedProducts).map(
+        ({ updated_at, ...product }) => product,
+      );
+
+    return overrideProductsWithCoreMedia(
+      publishedProducts,
     );
   },
 };
+
