@@ -1,5 +1,7 @@
 import {
+  fireEvent,
   render,
+  waitFor,
 } from "@testing-library/react";
 
 import {
@@ -18,8 +20,19 @@ import type {
 } from "@/shared/types/product";
 
 import {
+  downloadProductCardCapture,
+} from "@/modules/catalog/utils/ProductCardCapture";
+
+import {
   ProductCard,
 } from "./ProductCard";
+
+vi.mock(
+  "@/modules/catalog/utils/ProductCardCapture",
+  () => ({
+    downloadProductCardCapture: vi.fn(),
+  }),
+);
 
 function createProduct(
   overrides: Partial<Product> = {},
@@ -129,6 +142,104 @@ describe(
         ).toBeNull();
         expect(text).not.toContain(
           "Precios mayorista",
+        );
+      },
+    );
+  },
+);
+describe(
+  "ProductCard capture",
+  () => {
+    it(
+      "muestra Capturar producto y descarga usando el codigo",
+      async () => {
+        vi.mocked(
+          downloadProductCardCapture,
+        ).mockResolvedValue();
+
+        const { getByRole } =
+          render(
+            <MemoryRouter
+              future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+              }}
+            >
+              <ProductCard
+                product={createProduct()}
+                onAddToCart={vi.fn()}
+              />
+            </MemoryRouter>,
+          );
+
+        const captureButton =
+          getByRole(
+            "button",
+            {
+              name: "Capturar producto",
+            },
+          );
+
+        expect(
+          captureButton.className,
+        ).toContain(
+          "bottom-2.5",
+        );
+
+        expect(
+          captureButton.className,
+        ).toContain(
+          "left-1/2",
+        );
+
+        fireEvent.click(
+          captureButton,
+        );
+
+        await waitFor(
+          () => {
+            expect(
+              downloadProductCardCapture,
+            ).toHaveBeenCalledTimes(
+              1,
+            );
+          },
+        );
+
+        expect(
+          downloadProductCardCapture,
+        ).toHaveBeenCalledWith(
+          expect.any(
+            HTMLElement,
+          ),
+          "FLOR-001",
+        );
+
+        const captureNode =
+          vi.mocked(
+            downloadProductCardCapture,
+          ).mock.calls[0][0];
+
+        expect(
+          captureNode.dataset
+            .productCaptureNode,
+        ).toBe("true");
+
+        expect(
+          captureNode.style.left,
+        ).toBe("");
+
+        expect(
+          captureNode.parentElement
+            ?.dataset
+            .productCaptureHost,
+        ).toBe("true");
+
+        expect(
+          captureNode.parentElement
+            ?.style.left,
+        ).toBe(
+          "-10000px",
         );
       },
     );

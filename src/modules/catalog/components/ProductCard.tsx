@@ -1,5 +1,6 @@
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MessageCircle, PlusCircle } from "lucide-react";
+import { Camera, MessageCircle, PlusCircle } from "lucide-react";
 
 import type { Product } from "@/shared/types/product";
 import type { CartItem } from "@/modules/cart/types";
@@ -7,7 +8,9 @@ import { getCategoryColor } from "@/shared/config/categoryColors";
 import { ProductCardBadges } from "@/modules/catalog/components/ProductCardBadges";
 import { ProductCardPrice } from "@/modules/catalog/components/ProductCardPrice";
 import { ProductCardStock } from "@/modules/catalog/components/ProductCardStock";
+import { ProductCaptureCard } from "@/modules/catalog/components/ProductCaptureCard";
 import { ProductVolumePriceBadges } from "@/modules/catalog/components/ProductVolumePriceBadges";
+import { downloadProductCardCapture } from "@/modules/catalog/utils/ProductCardCapture";
 import { useProductCard } from "@/modules/product-detail/hooks/useProductCard";
 
 interface Props {
@@ -24,6 +27,8 @@ export function ProductCard({
   onImageClick,
 }: Props) {
   const navigate = useNavigate();
+  const captureRef = useRef<HTMLDivElement | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
 
   const {
     available,
@@ -48,6 +53,22 @@ export function ProductCard({
       return;
 
     goToDetail();
+  };
+
+  const handleCapture = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    if (isCapturing || !captureRef.current) return;
+
+    setIsCapturing(true);
+
+    try {
+      await downloadProductCardCapture(captureRef.current, p.id);
+    } catch (error) {
+      console.error("No se pudo capturar el producto.", error);
+    } finally {
+      setIsCapturing(false);
+    }
   };
 
   const buttonLabel = isAgotado
@@ -95,6 +116,29 @@ export function ProductCard({
           ].join(" ")}
           loading="lazy"
         />
+
+        <button
+          type="button"
+          data-no-card-click
+          aria-label={isCapturing ? "Capturando producto" : "Capturar producto"}
+          disabled={isCapturing}
+          onClick={handleCapture}
+          className={[
+            "absolute bottom-2.5 left-1/2 z-20 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-white/70 bg-white/95 px-3 py-1.5 text-[10px] font-black text-slate-700 shadow-[0_6px_18px_rgba(15,23,42,.22)] backdrop-blur-md transition-all active:scale-[.96] sm:text-[11px]",
+            isCapturing
+              ? "cursor-wait opacity-90"
+              : "hover:-translate-y-[1px] hover:bg-white hover:shadow-[0_8px_22px_rgba(15,23,42,.28)]",
+          ].join(" ")}
+        >
+          <Camera
+            className={[
+              "h-3.5 w-3.5 shrink-0 transition-transform duration-200",
+              isCapturing ? "motion-safe:animate-pulse scale-90" : "",
+            ].join(" ")}
+          />
+
+          <span>{isCapturing ? "Capturando..." : "Capturar"}</span>
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col justify-between px-1">
@@ -168,6 +212,31 @@ export function ProductCard({
             {buttonLabel}
           </span>
         </button>
+      </div>
+
+      <div
+        aria-hidden="true"
+        data-product-capture-host
+        style={{
+          position: "fixed",
+          left: "-10000px",
+          top: 0,
+          width: 360,
+          height: 640,
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          ref={captureRef}
+          data-product-capture-node
+          className="h-[640px] w-[360px]"
+        >
+          <ProductCaptureCard
+            product={p}
+            available={available}
+            isPreventa={isPreventa}
+          />
+        </div>
       </div>
     </div>
   );
