@@ -13,6 +13,7 @@ import { CategoryEmpty } from "@/modules/category/components/CategoryEmpty";
 import { CategoryGrid } from "@/modules/category/components/CategoryGrid";
 import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
 import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
+import { ProductCaptureButton } from "@/modules/catalog/components/ProductCaptureButton";
 import { CategorySkeleton } from "@/shared/components/skeletons/CategorySkeleton";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
 import { CATEGORY_CONFIG } from "@/modules/catalog";
@@ -37,6 +38,7 @@ const CategoryPage = () => {
     media: ProductMedia[];
     initialIndex: number;
     title: string;
+    product: Product;
   } | null>(null);
 
   const {
@@ -123,6 +125,7 @@ const CategoryPage = () => {
                 media: getProductMedia(product),
                 initialIndex: 0,
                 title: product.title,
+                product,
               })
             }
           />
@@ -156,6 +159,11 @@ const CategoryPage = () => {
         initialIndex={zoomGallery?.initialIndex ?? 0}
         open={!!zoomGallery}
         title={zoomGallery?.title ?? ""}
+        footerAction={
+          zoomGallery?.product ? (
+            <ProductCaptureButton product={zoomGallery.product} />
+          ) : undefined
+        }
         onClose={() => setZoomGallery(null)}
       />
 

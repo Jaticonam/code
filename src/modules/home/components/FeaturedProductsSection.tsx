@@ -37,6 +37,7 @@ import {
 import {
   ImageZoomModal,
 } from "@/shared/components/media/ImageZoomModal";
+import { ProductCaptureButton } from "@/modules/catalog/components/ProductCaptureButton";
 
 import type {
   Product,
@@ -82,6 +83,9 @@ export default function FeaturedProductsSection() {
 
     title:
       string;
+
+    product:
+      Product;
   } | null>(
     null,
   );
@@ -280,6 +284,9 @@ export default function FeaturedProductsSection() {
 
                       title:
                         selected.title,
+
+                      product:
+                        selected,
                     })
                   }
                 />
@@ -338,6 +345,15 @@ export default function FeaturedProductsSection() {
         title={
           zoomImage?.title ??
           ""
+        }
+        footerAction={
+          zoomImage?.product ? (
+            <ProductCaptureButton
+              product={
+                zoomImage.product
+              }
+            />
+          ) : undefined
         }
         onClose={() =>
           setZoomImage(

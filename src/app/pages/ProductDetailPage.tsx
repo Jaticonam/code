@@ -62,6 +62,7 @@ import {
 import {
   ImageZoomModal,
 } from "@/shared/components/media/ImageZoomModal";
+import { ProductCaptureButton } from "@/modules/catalog/components/ProductCaptureButton";
 
 import {
   ProductSkeleton,
@@ -1143,6 +1144,11 @@ const ProductDetailPage =
         }
         title={
           product.title
+        }
+        footerAction={
+          <ProductCaptureButton
+            product={product}
+          />
         }
         onClose={() =>
           setZoomGallery(

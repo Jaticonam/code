@@ -10,6 +10,7 @@ import { FloatingButtons } from "@/shared/components/layout/FloatingButtons";
 import { ImageZoomModal } from "@/shared/components/media/ImageZoomModal";
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
 import { ProductCard } from "@/modules/catalog/components/ProductCard";
+import { ProductCaptureButton } from "@/modules/catalog/components/ProductCaptureButton";
 import { CartSidebar } from "@/modules/cart/components/CartSidebar";
 import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
 import { RecentActivity } from "@/modules/feedback/components/RecentActivity";
@@ -49,6 +50,7 @@ const CatalogPage = () => {
     media: ProductMedia[];
     initialIndex: number;
     title: string;
+    product: Product;
   } | null>(null);
   const [exploreOpen, setExploreOpen] = useState(false);
 
@@ -131,6 +133,7 @@ const CatalogPage = () => {
                 media: gallery,
                 initialIndex: 0,
                 title: product.title,
+                product,
               });
             }}
           />
@@ -330,6 +333,11 @@ const CatalogPage = () => {
         initialIndex={zoomGallery?.initialIndex ?? 0}
         open={!!zoomGallery}
         title={zoomGallery?.title ?? ""}
+        footerAction={
+          zoomGallery?.product ? (
+            <ProductCaptureButton product={zoomGallery.product} />
+          ) : undefined
+        }
         onClose={() => setZoomGallery(null)}
       />
 

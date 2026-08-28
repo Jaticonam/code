@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, type ReactNode } from "react";
 import { X, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
 import type { ProductMedia } from "@/shared/lib/productMedia";
 
@@ -9,6 +9,7 @@ interface ImageZoomModalProps {
   src?: string | null;
   title: string;
   onClose: () => void;
+  footerAction?: ReactNode;
 }
 
 const clamp = (value: number, min: number, max: number) =>
@@ -27,6 +28,7 @@ export function ImageZoomModal({
   src,
   title,
   onClose,
+  footerAction,
 }: ImageZoomModalProps) {
   const normalizedMedia =
     media.length > 0
@@ -331,7 +333,12 @@ export function ImageZoomModal({
           </div>
         </div>
         {normalizedMedia.length > 1 && (
-          <div className="absolute bottom-14 left-1/2 z-40 flex max-w-[88vw] -translate-x-1/2 gap-2 overflow-x-auto rounded-2xl bg-black/25 p-2 backdrop-blur-md lg:bottom-6 lg:left-4 lg:top-20 lg:max-w-none lg:translate-x-0 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden">
+          <div
+            className={[
+              "absolute left-1/2 z-40 flex max-w-[88vw] -translate-x-1/2 gap-2 overflow-x-auto rounded-2xl bg-black/25 p-2 backdrop-blur-md lg:bottom-6 lg:left-4 lg:top-20 lg:max-w-none lg:translate-x-0 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden",
+              footerAction ? "bottom-28" : "bottom-14",
+            ].join(" ")}
+          >
             {normalizedMedia.map((item, index) => (
               <button
                 key={item.id}
@@ -389,10 +396,22 @@ export function ImageZoomModal({
               <ChevronRight className="h-6 w-6" />
             </button>
 
-            <div className="absolute bottom-4 left-1/2 z-40 -translate-x-1/2 rounded-full bg-black/40 px-3 py-1.5 text-xs font-black text-white backdrop-blur-md">
-              {activeIndex + 1} / {normalizedMedia.length}
-            </div>
           </>
+        )}
+
+        {(footerAction || (hasMany && scale <= 1)) && (
+          <div
+            data-image-zoom-footer
+            className="absolute bottom-4 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center gap-2"
+          >
+            {hasMany && scale <= 1 && (
+              <div className="rounded-full bg-black/40 px-3 py-1.5 text-xs font-black text-white backdrop-blur-md">
+                {activeIndex + 1} / {normalizedMedia.length}
+              </div>
+            )}
+
+            {footerAction}
+          </div>
         )}
 
         <div className="relative flex h-full w-full items-center justify-center lg:pl-24">
